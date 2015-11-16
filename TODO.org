@@ -18,12 +18,14 @@
 
 ** Syntax Checking
 *** DONE Ruby
-*** TODO JS
+*** DONE JS
 *** TODO Clojure
 *** TODO Markdown
 
 ** Emacs specific
 *** TODO expand-region mode
+*** TODO Clojure integration
+*** TODO ClojureScript integration
     
 ** Less Important
 *** TODO Text Bubbling
