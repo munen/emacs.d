@@ -1,0 +1,32 @@
+#+TITLE: Setup Emacs
+
+* Tasks
+** TODO Fugitive
+** TODO file-line
+** TODO minibufexpl
+** TODO ctrlp
+** DONE color scheme solarized bright/dark
+** TODO Powerline
+** TODO RailsVim
+** TODO Rspec
+** TODO Rspec
+** TODO Spell checking
+
+** Map Leader
+*** DONE Basic Install
+*** TODO All map leader settings from vimrc
+
+** Syntax Checking
+*** DONE Ruby
+*** TODO JS
+*** TODO Clojure
+*** TODO Markdown
+
+** Emacs specific
+*** TODO expand-region mode
+    
+** Less Important
+*** TODO Text Bubbling
+*** TODO Task List
+*** TODO Auto delete trailing white space
+*** TODO Jump to last open position when opening a file
