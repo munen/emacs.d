@@ -9,7 +9,11 @@
 (depends-on "evil-leader")
 (depends-on "web-mode")
 (depends-on "color-theme-solarized")
+(depends-on "clojure-mode")
+(depends-on "cider" "0.9.1")
+(depends-on "projectile")
 (depends-on "powerline-evil")
+(depends-on "markdown-mode")
 
 
 
