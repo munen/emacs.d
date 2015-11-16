@@ -25,9 +25,10 @@
 ;"}" 'evil-prev-buffer)
 
 ; Themes
-;(load-theme 'wombat)
-(set-frame-parameter nil 'background-mode 'dark)
-(load-theme 'solarized t)
+(load-theme 'wombat)
+; Presentation on Beamer Theme
+;(set-frame-parameter nil 'background-mode 'light)
+;(load-theme 'solarized t)
 
 ; Do not display GUI Toolbar
 (tool-bar-mode 0)
