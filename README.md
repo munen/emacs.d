@@ -21,7 +21,7 @@ This Emacs installation is managed via [Cask](http://cask.readthedocs.org/).
 
 ## Impatient Mode - Live Coding Emacs/Browser
 
-https://github.com/skeeto/impatient-mode
+https://github.com/netguy204/imp.el
 
 Enable the web server provided by simple-httpd:
 
