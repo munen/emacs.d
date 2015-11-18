@@ -17,6 +17,7 @@
 (evil-leader/set-key
   "w" 'basic-save-buffer
   "s" 'ispell
+  "b" 'evil-buffer
   "q" 'evil-quit)
 
 ; Fast switching between buffers
