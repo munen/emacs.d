@@ -17,13 +17,11 @@
 (evil-leader/set-key
   "w" 'basic-save-buffer
   "s" 'ispell
-; TODO: figure out what the buffer quit function is
-;  "q" 'buffer-quit-function)
-  "q" 'quit-window)
+  "q" 'evil-quit)
 
+; Fast switching between buffers
 (define-key evil-normal-state-map (kbd "{") 'evil-next-buffer)
 (define-key evil-normal-state-map (kbd "}") 'evil-prev-buffer)
-
 
 ; Fuzzy matching of files
 (ido-mode t)
