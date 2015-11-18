@@ -19,8 +19,8 @@
 ** Syntax Checking
 *** DONE Ruby
 *** DONE JS
-*** TODO Clojure
-*** TODO Markdown
+*** DONE Clojure
+*** DONE Markdown
 
 ** Emacs specific
 *** TODO expand-region mode

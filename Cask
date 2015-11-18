@@ -14,6 +14,7 @@
 (depends-on "projectile")
 (depends-on "powerline-evil")
 (depends-on "markdown-mode")
+(depends-on "impatient-mode")
 
 
 
