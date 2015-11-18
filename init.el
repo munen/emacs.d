@@ -28,7 +28,6 @@
 (ido-mode t)
 (ido-everywhere t)
 
-
 ; Themes
 (load-theme 'wombat)
 ; Presentation on Beamer Theme
@@ -41,9 +40,6 @@
 
 ; Enable global syntax checking through flycheck
 (add-hook 'after-init-hook #'global-flycheck-mode)
-; Show tooltip on error instead of status bar
-(with-eval-after-load 'flycheck
-  (flycheck-pos-tip-mode))
 
 ; For syntax checking to work, also run the following commands:
 ; RUBY
@@ -74,9 +70,10 @@
 ; Show matching paren
 (show-paren-mode t)
 
-
 ; Do not create backup files
 (setq make-backup-files nil)
+
+
 
 ;Remember the cursor position of files when reopening them
 (setq save-place-file "~/.emacs.d/saveplace")

@@ -4,7 +4,6 @@
 (depends-on "cask")
 (depends-on "flycheck")
 (depends-on "flycheck-cask")
-(depends-on "flycheck-pos-tip")
 (depends-on "evil")
 (depends-on "evil-leader")
 (depends-on "web-mode")
