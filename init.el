@@ -15,18 +15,20 @@
 (global-evil-leader-mode)
 (evil-leader/set-leader ",")
 (evil-leader/set-key
-  "w" 'basic-save-buffer)
+  "w" 'basic-save-buffer
+  "s" 'ispell
 ; TODO: figure out what the buffer quit function is
 ;  "q" 'buffer-quit-function)
+  "q" 'quit-window)
+
+(define-key evil-normal-state-map (kbd "{") 'evil-next-buffer)
+(define-key evil-normal-state-map (kbd "}") 'evil-prev-buffer)
+
 
 ; Fuzzy matching of files
 (ido-mode t)
 (ido-everywhere t)
 
-
-; TODO: Map "Fast switching of buffers"
-;"{" 'evil-next-buffer
-;"}" 'evil-prev-buffer)
 
 ; Themes
 (load-theme 'wombat)
