@@ -6,6 +6,7 @@
 (depends-on "flycheck-cask")
 (depends-on "evil")
 (depends-on "evil-leader")
+(depends-on "evil-numbers")
 (depends-on "web-mode")
 (depends-on "color-theme-solarized")
 (depends-on "clojure-mode")

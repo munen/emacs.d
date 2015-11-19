@@ -24,6 +24,12 @@
 (define-key evil-normal-state-map (kbd "{") 'evil-next-buffer)
 (define-key evil-normal-state-map (kbd "}") 'evil-prev-buffer)
 
+;;; Increment / Decrement numbers
+(global-set-key (kbd "C-c +") 'evil-numbers/inc-at-pt)
+(global-set-key (kbd "C-c -") 'evil-numbers/dec-at-pt)
+(define-key evil-normal-state-map (kbd "C-c +") 'evil-numbers/inc-at-pt)
+(define-key evil-normal-state-map (kbd "C-c -") 'evil-numbers/dec-at-pt)
+
 ;;; Fuzzy matching of files
 (ido-mode t)
 (ido-everywhere t)
@@ -81,6 +87,9 @@
 ;;; For p_slides presentations, run markdown-mode
 ;;; This is a very primitive check
 (add-to-list 'auto-mode-alist '("presentation.html" . markdown-mode))
+
+
+
 
 
 ;;; init.el ends here
