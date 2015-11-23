@@ -6,8 +6,9 @@
 **Dependencies**
 Emacs dependencies/libraries are managed via the internal
 [package management system](https://www.gnu.org/software/emacs/manual/html_node/emacs/Packages.html#Packages). To
-initially install packages, open `~/.emacs.d/init.el` and run it using
-`M-x eval-buffer`.
+initially install packages, open `~/.emacs.d/init.el`, refresh your
+package list with `M-x package-refresh-contents` and install
+everything using `M-x eval-buffer`.
 
 ## Clojure
 
