@@ -2,9 +2,33 @@
 ;;; Commentary:
 ;;; Code:
 
-;; Initialise Cask for dependency management
-(require 'cask "/usr/local/share/emacs/site-lisp/cask/cask.el")
-(cask-initialize)
+;;; Begin dependency management
+(require 'package)
+
+(setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
+                         ("marmalade" . "https://marmalade-repo.org/packages/")
+                         ("melpa" . "https://melpa.org/packages/")))
+(package-initialize)
+
+(defvar my-packages '(flycheck
+                      flycheck-cask
+                      evil
+                      evil-leader
+                      evil-numbers
+                      web-mode
+                      color-theme-solarized
+                      clojure-mode
+                      cider
+                      projectile
+                      powerline-evil
+                      markdown-mode
+                      impatient-mode))
+
+(dolist (p my-packages)
+  (unless (package-installed-p p)
+    (package-install p)))
+;;; End dependency management
+
 
 ;; Enable Evil Mode
 (evil-mode t)
@@ -19,6 +43,8 @@
   "s" 'ispell
   "b" 'evil-buffer
   "q" 'evil-quit)
+
+;; TODO: Bind M-. and M-, for Cider Mode
 
 ;; Fast switching between buffers
 (define-key evil-normal-state-map (kbd "{") 'evil-next-buffer)
@@ -37,8 +63,8 @@
 ;; Themes
 (load-theme 'wombat)
 ;; Presentation on Beamer Theme
-;(set-frame-parameter nil 'background-mode 'light)
-;(load-theme 'solarized t)
+;;(set-frame-parameter nil 'background-mode 'light)
+;;(load-theme 'solarized t)
 ;; TODO: Make this a shortcut
 
 ;; Do not display GUI Toolbar
