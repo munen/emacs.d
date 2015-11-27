@@ -12,16 +12,18 @@
 
 (defvar my-packages '(flycheck
                       flycheck-cask
-                      evil
-                      evil-leader
-                      evil-numbers
                       web-mode
                       color-theme-solarized
                       clojure-mode
                       cider
+                      js2-mode
+                      auto-complete
                       projectile
-                      powerline-evil
                       markdown-mode
+                      evil
+                      evil-leader
+                      evil-numbers
+                      powerline-evil
                       impatient-mode))
 
 (dolist (p my-packages)
@@ -29,8 +31,7 @@
     (package-install p)))
 ;;; End dependency management
 
-
-;; Enable Evil Mode
+;;; Evil Mode
 (evil-mode t)
 ;; Enable "M-x" in evil mode
 (global-set-key (kbd "M-x") 'execute-extended-command)
@@ -93,15 +94,6 @@
 (define-key evil-normal-state-map (kbd "j") 'evil-next-visual-line)
 (define-key evil-normal-state-map (kbd "k") 'evil-previous-visual-line)
 
-;; Use spaces instead of tabs
-(setq-default tab-width 2 indent-tabs-mode nil)
-
-;; Auto-indent with the Return key
-(define-key global-map (kbd "RET") 'newline-and-indent)
-
-;; Show matching paren
-(show-paren-mode t)
-
 ;; Do not create backup files
 (setq make-backup-files nil)
 
@@ -114,8 +106,22 @@
 ;; This is a very primitive check
 (add-to-list 'auto-mode-alist '("presentation.html" . markdown-mode))
 
+;;; Programming Languages configuration
 
+;; Configure auto-complete
+(ac-config-default)
 
+;; Javascript
+(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+
+;; Use spaces instead of tabs
+(setq-default tab-width 2 indent-tabs-mode nil)
+
+;; Auto-indent with the Return key
+(define-key global-map (kbd "RET") 'newline-and-indent)
+
+;; Show matching paren
+(show-paren-mode t)
 
 
 ;;; init.el ends here
