@@ -10,6 +10,20 @@ initially install packages, open `~/.emacs.d/init.el`, refresh your
 package list with `M-x package-refresh-contents` and install
 everything using `M-x eval-buffer`.
 
+## orgmode
+### Pomodoro
+A very leightweight implementation of the Pomodoro Technique is
+implemented in customizing orgmode in `init.el`. For every Clock that
+is started (`C-c C-x C-i`) an automatic Timer is scheduled to
+25min. After these 25min are up, a "Time to take a break!" message is
+played and a pop-up notification is shown.
+
+The timer is not automatically stopped on clocking out, because
+clocking in should still work on new tasks without resetting the
+Pomodoro.
+
+The timer can manyally be stopped with `M-x org-timer-stop`.
+
 ## Clojure
 
 ### Cider

@@ -64,8 +64,8 @@
 ;; Themes
 (load-theme 'wombat)
 ;; Presentation on Beamer Theme
-;;(set-frame-parameter nil 'background-mode 'light)
-;;(load-theme 'solarized t)
+;; (set-frame-parameter nil 'background-mode 'light)
+;; (load-theme 'solarized t)
 ;; TODO: Make this a shortcut
 
 ;; Do not display GUI Toolbar
@@ -123,5 +123,27 @@
 ;; Show matching paren
 (show-paren-mode t)
 
+
+;;; orgmode
+(require 'org)
+
+;; Pomodoro configuration
+;; For every todo clock that is started, also set a default timer to
+;; run for 25min.
+(add-to-list 'org-modules 'org-timer)
+
+(setq org-timer-default-timer 25)
+
+;; Modify the org-clock-in so that a timer is started with the default
+;; value except if a timer is already started already
+(add-hook 'org-clock-in-hook (lambda ()
+      (if (not org-timer-current-timer)
+      (org-timer-set-timer '(16)))))
+
+(add-hook 'org-timer-done-hook (lambda ()
+                                 (if (eq system-type 'darwin)
+                                     (shell-command "say 'Time to take a break'")
+                                     nil)
+                                 (message-box "Time to take a break")))
 
 ;;; init.el ends here
