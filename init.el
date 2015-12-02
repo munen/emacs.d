@@ -197,5 +197,22 @@
                                (if (not org-timer-current-timer)
                                    (pomodoro-start))))
 
+;;; OS X
+(defun arrange-emacs-positon (w h x y)
+"Set the W(idth), H(eight), and X/Y position of the current frame."
+(let ((frame (selected-frame)))
+    (delete-other-windows)
+    (set-frame-position frame x y)
+    (set-frame-size frame w h)))
+
+(when (eq system-type 'darwin)
+  ; Use Spotlight to search with M-x locate
+  (setq locate-command "mdfind")
+
+
+  ; Start Emacs in full right on the right side of the screen
+  ; Works on a 15.4-inch (2880 x 1800) MBP
+  (add-hook 'window-setup-hook (lambda()
+                                 (arrange-emacs-positon 114 71 843 0))))
 
 ;;; init.el ends here
