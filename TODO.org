@@ -3,14 +3,14 @@
 * Tasks
 ** TODO Fugitive
 ** TODO file-line
-** TODO minibufexpl
-** TODO ctrlp
+** DONE minibufexpl
+** DONE ctrlp
 ** DONE color scheme solarized bright/dark
-** TODO Powerline
+** DONE Powerline
 ** TODO RailsVim
 ** TODO Rspec
 ** TODO Rspec
-** TODO Spell checking
+** DONE Spell checking
 
 ** Map Leader
 *** DONE Basic Install
@@ -24,11 +24,11 @@
 
 ** Emacs specific
 *** TODO expand-region mode
-*** TODO Clojure integration
-*** TODO ClojureScript integration
+*** DONE Clojure integration
+*** DONE ClojureScript integration
     
 ** Less Important
-*** TODO Text Bubbling
-*** TODO Task List
+*** DONE Text Bubbling
+*** DONE Task List
 *** TODO Auto delete trailing white space
-*** TODO Jump to last open position when opening a file
+*** DONE Jump to last open position when opening a file
