@@ -12,16 +12,17 @@
 
 
 (defvar my-packages '(flycheck
+                      auto-complete
                       web-mode
                       color-theme-solarized
                       clojure-mode
                       cider
+                      ac-cider
                       js2-mode
                       ac-js2
                       tern
                       tern-auto-complete
                       coffee-mode
-                      auto-complete
                       projectile
                       markdown-mode
                       evil
@@ -138,6 +139,16 @@
 ;; Show matching paren
 (show-paren-mode t)
 
+;; Clojure
+(require 'ac-cider)
+;;(setq ac-quick-help-delay 0.5)
+(add-hook 'cider-mode-hook 'ac-flyspell-workaround)
+(add-hook 'cider-mode-hook 'ac-cider-setup)
+(add-hook 'cider-repl-mode-hook 'ac-cider-setup)
+(eval-after-load "auto-complete"
+  '(progn
+     (add-to-list 'ac-modes 'cider-mode)
+     (add-to-list 'ac-modes 'cider-repl-mode)))
 
 ;;; orgmode
 (require 'org)
@@ -186,8 +197,5 @@
                                (if (not org-timer-current-timer)
                                    (pomodoro-start))))
 
-;;; OS X
-;; Use Spotlight to search with M-x locate
-(setq locate-command "mdfind")
 
 ;;; init.el ends here
