@@ -12,7 +12,6 @@
 
 
 (defvar my-packages '(flycheck
-                      flycheck-cask
                       web-mode
                       color-theme-solarized
                       clojure-mode
@@ -186,5 +185,9 @@
                                (remove-hook 'org-timer-done-hook 'set-break-timer)
                                (if (not org-timer-current-timer)
                                    (pomodoro-start))))
+
+;;; OS X
+;; Use Spotlight to search with M-x locate
+(setq locate-command "mdfind")
 
 ;;; init.el ends here
