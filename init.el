@@ -10,6 +10,7 @@
                          ("melpa" . "https://melpa.org/packages/")))
 (package-initialize)
 
+
 (defvar my-packages '(flycheck
                       flycheck-cask
                       web-mode
@@ -17,13 +18,16 @@
                       clojure-mode
                       cider
                       js2-mode
+                      ac-js2
+                      tern
+                      tern-auto-complete
+                      coffee-mode
                       auto-complete
                       projectile
                       markdown-mode
                       evil
                       evil-leader
                       evil-numbers
-                      powerline-evil
                       impatient-mode))
 
 (dolist (p my-packages)
@@ -87,8 +91,8 @@
 (setq inhibit-splash-screen t)
 (setq inhibit-startup-message t)
 
-(powerline-evil-vim-color-theme)
 (display-time-mode t)
+
 
 ;; j/k for browsing wrapped lines
 (define-key evil-normal-state-map (kbd "j") 'evil-next-visual-line)
@@ -113,6 +117,18 @@
 
 ;; Javascript
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+(add-hook 'js-mode-hook 'js2-minor-mode)
+(setq js2-highlight-level 3)
+
+;; Tern
+(add-hook 'js-mode-hook (lambda () (tern-mode t)))
+(eval-after-load 'tern
+   '(progn
+      (require 'tern-auto-complete)
+      (tern-ac-setup)))
+
+;; CoffeeScript
+(custom-set-variables '(coffee-tab-width 2))
 
 ;; Use spaces instead of tabs
 (setq-default tab-width 2 indent-tabs-mode nil)

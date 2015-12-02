@@ -44,7 +44,7 @@ https://github.com/clojure-emacs/cider
 
 More Cider shortcuts [here](https://github.com/clojure-emacs/cider#cider-mode).
 
-### Impatient Mode - Live Coding Emacs/Browser
+## Impatient Mode - Live Coding Emacs/Browser
 
 https://github.com/netguy204/imp.el
 
@@ -56,5 +56,44 @@ Publish buffers by enabling the minor mode impatient-mode.
 
     M-x impatient-mode
 
-And then point your browser to http://localhost:8080/imp/, select a buffer, and watch your changes appear as you type!
+And then point your browser to http://localhost:8080/imp/, select a
+buffer, and watch your changes appear as you type!
 
+## JavaScript
+
+JavaScript is improved with `js2-mode` as well as [Tern](http://ternjs.net/).
+
+Tern is a stand-alone code-analysis engine for JavaScript used for:
+
+    * Auto completion on variables and properties
+    * Function argument hints
+    * Querying the type of an expression
+    * Finding the definition of something
+    * Automatic refactoring
+
+Tern is installed as an NPM package: `npm install -g tern`.
+
+To enable Tern in emacs, also the `tern` and `tern-auto-complete`
+packages are installed.
+
+For completion to work in a Node.js project, a `.tern-project` file like this is required:
+
+```json
+{"plugins": {"node": {}}}
+```
+
+or
+```json
+{"libs": ["browser", "jquery"]}
+```
+
+[Here](http://ternjs.net/doc/manual.html#configuration) is more
+documentation on how to configure a Tern project.
+
+Tern shortcuts:
+
+* `M-.` Jump to the definition of the thing under the cursor.
+* `M-,` Brings you back to last place you were when you pressed M-..
+* `C-c C-r` Rename the variable under the cursor.
+* `C-c C-c` Find the type of the thing under the cursor.
+* `C-c C-d` Find docs of the thing under the cursor. Press again to open the associated URL (if any).
