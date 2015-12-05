@@ -67,9 +67,11 @@
 
 ;; Themes
 (load-theme 'wombat)
+;; (set-default-font "Menlo 14")
 ;; Presentation on Beamer Theme
 ;; (set-frame-parameter nil 'background-mode 'light)
 ;; (load-theme 'solarized t)
+;; (set-default-font "Menlo 18")
 ;; TODO: Make this a shortcut
 
 ;; Do not display GUI Toolbar
@@ -127,8 +129,9 @@
       (require 'tern-auto-complete)
       (tern-ac-setup)))
 
-;; CoffeeScript
-(custom-set-variables '(coffee-tab-width 2))
+;; custom-set-variables was added by Custom.
+(custom-set-variables
+ '(coffee-tab-width 2))
 
 ;; Use spaces instead of tabs
 (setq-default tab-width 2 indent-tabs-mode nil)
@@ -153,49 +156,25 @@
 ;;; orgmode
 (require 'org)
 
+(setq org-directory "~/Dropbox/org/")
+
+;; Set org-capture inbox
+(setq org-default-notes-file (concat org-directory "inbox.org"))
+(define-key global-map "\C-cc" 'org-capture)
+
+(setq org-agenda-files (list (concat org-directory "things.org")
+                             (concat org-directory "inbox.org")))
+
+(defun things ()
+  "Open main 'org-mode' file and start 'org-agenda' for today."
+  (interactive)
+  (find-file (concat org-directory "things.org"))
+  (org-agenda-list)
+  (org-agenda-day-view)
+  (other-window 1))
+
 ;; Pomodoro configuration
-(add-to-list 'org-modules 'org-timer)
-
-(defun set-break-timer ()
-  "When the timer is over, go back to work."
-
-  (if (eq system-type 'darwin)
-      (shell-command "say 'Break is over'")
-    nil)
-  (message-box "Break is over"))
-
-(defun set-start-timer ()
-  "When the timer is over, let the user take a break!"
-
-  (if (eq system-type 'darwin)
-      (shell-command "say 'Time to take a break'")
-    nil)
-  (message-box "Time to take a break"))
-  
-
-(defun pomodoro-break ()
-  "."
-  (interactive)
-  (remove-hook 'org-timer-done-hook 'set-start-timer)
-  (add-hook 'org-timer-done-hook 'set-break-timer)
-  (org-timer-set-timer 5))
-
-(defun pomodoro-start ()
-  "."
-  (interactive)
-  (remove-hook 'org-timer-done-hook 'set-break-timer)
-  (add-hook 'org-timer-done-hook 'set-start-timer)
-  (org-timer-set-timer 25)
-  (if (eq system-type 'darwin)
-      (shell-command "say 'Ready, set, go!'")
-    nil))
-
-;; Modify the org-clock-in so that a pomodoro timer is started except
-;; if a timer is already started already.
-(add-hook 'org-clock-in-hook (lambda ()
-                               (remove-hook 'org-timer-done-hook 'set-break-timer)
-                               (if (not org-timer-current-timer)
-                                   (pomodoro-start))))
+(load "~/.emacs.d/org-pomodoro")
 
 ;;; OS X
 (defun arrange-emacs-positon (w h x y)
@@ -216,3 +195,9 @@
                                  (arrange-emacs-positon 114 71 843 0))))
 
 ;;; init.el ends here
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
