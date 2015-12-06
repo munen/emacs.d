@@ -173,6 +173,10 @@
   (org-agenda-day-view)
   (other-window 1))
 
+
+(evil-leader/set-key
+  "a" 'org-archive-subtree-default)
+
 ;; Pomodoro configuration
 (load "~/.emacs.d/org-pomodoro")
 
