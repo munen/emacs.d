@@ -180,6 +180,7 @@
   (find-file (concat org-directory "things.org"))
   (org-agenda-list)
   (org-agenda-day-view)
+  (shrink-window-if-larger-than-buffer)
   (other-window 1))
 
 (evil-leader/set-key
