@@ -13,7 +13,8 @@
 (setq mu4e-maildir "~/Maildir"
       smtpmail-debug-info t
       message-kill-buffer-on-exit t
-      mu4e-show-images t)
+      mu4e-show-images t
+      mu4e-get-mail-command "offlineimap")
 
 (setq mu4e-html2text-command
   "textutil -stdin -format html -convert txt -stdout")
