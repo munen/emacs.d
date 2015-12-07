@@ -131,7 +131,12 @@
 
 ;; custom-set-variables was added by Custom.
 (custom-set-variables
- '(coffee-tab-width 2))
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(coffee-tab-width 2)
+ '(send-mail-function (quote smtpmail-send-it)))
 
 ;; Use spaces instead of tabs
 (setq-default tab-width 2 indent-tabs-mode nil)
@@ -156,6 +161,9 @@
 ;;; orgmode
 (require 'org)
 
+;; Pomodoro configuration
+(load "~/.emacs.d/org-pomodoro")
+
 (setq org-directory "~/Dropbox/org/")
 
 ;; Set org-capture inbox
@@ -163,7 +171,8 @@
 (define-key global-map "\C-cc" 'org-capture)
 
 (setq org-agenda-files (list (concat org-directory "things.org")
-                             (concat org-directory "inbox.org")))
+                             (concat org-directory "inbox.org")
+                             (concat org-directory "reference.org")))
 
 (defun things ()
   "Open main 'org-mode' file and start 'org-agenda' for today."
@@ -173,12 +182,8 @@
   (org-agenda-day-view)
   (other-window 1))
 
-
 (evil-leader/set-key
   "a" 'org-archive-subtree-default)
-
-;; Pomodoro configuration
-(load "~/.emacs.d/org-pomodoro")
 
 ;;; OS X
 (defun arrange-emacs-positon (w h x y)
@@ -198,10 +203,14 @@
   (add-hook 'window-setup-hook (lambda()
                                  (arrange-emacs-positon 114 71 843 0))))
 
-;;; init.el ends here
+;;; Mu4e
+(load "~/.emacs.d/mu4e-config")
+
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+
+;;; init.el ends here

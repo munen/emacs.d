@@ -97,3 +97,19 @@ Tern shortcuts:
 * `C-c C-r` Rename the variable under the cursor.
 * `C-c C-c` Find the type of the thing under the cursor.
 * `C-c C-d` Find docs of the thing under the cursor. Press again to open the associated URL (if any).
+
+
+## Mail
+
+As MTA [MU4E](http://www.djcbsoftware.nl/code/mu/mu4e/) is used. As
+SMTP Emacs smtpmail package.
+
+MU works on a local Maildir folder, for synching that `offlineimap` is
+used. To install:
+`brew install offlineimap`
+
+For MU4E to work, install MU and MU4E:
+`brew install mu --with-emacs`
+
+For starttls to work when sending mail, install gnutls:
+`brew install gnutls`
