@@ -164,7 +164,7 @@
 ;; Pomodoro configuration
 (load "~/.emacs.d/org-pomodoro")
 
-(setq org-directory "~/Dropbox/org/")
+(setq org-directory "~/switchdrive/org/")
 
 ;; Set org-capture inbox
 (setq org-default-notes-file (concat org-directory "inbox.org"))

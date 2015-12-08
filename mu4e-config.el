@@ -2,6 +2,13 @@
 ;;; Commentary:
 ;;; Code:
 
+;; * TODOs
+;; ** Use Quoted printable text for outgoing messages to enable automatic line breaks
+;; *** If this is successfull, send upstream PR to MU4E
+;; https://mathiasbynens.be/notes/gmail-plain-text
+;; https://mothereff.in/quoted-printable
+;; https://www.gnu.org/software/emacs/manual/html_node/emacs-mime/qp.html
+
 (require 'mu4e)
 (require 'org-mu4e)
 
@@ -15,7 +22,8 @@
       smtpmail-debug-info t
       message-kill-buffer-on-exit t
       mu4e-show-images t
-      mu4e-get-mail-command "offlineimap")
+      mu4e-get-mail-command "offlineimap"
+      mu4e-attachment-dir "~/switchdrive/org/files/inbox")
 
 (setq mu4e-html2text-command
   "textutil -stdin -format html -convert txt -stdout")
@@ -90,5 +98,23 @@
       (error "No email account found"))))
 
 (add-hook 'mu4e-compose-pre-hook 'my-mu4e-set-account)
+
+(setq mu4e-refile-folder
+  (lambda (msg)
+    (cond
+      ((string-match "^/dispatched.*"
+        (mu4e-message-field msg :maildir))
+        "/dispatched/INBOX.Archive")
+      ((string-match "^/200ok.*"
+        (mu4e-message-field msg :maildir))
+        "/200ok/INBOX.Archive")
+      ((string-match "^/voicerepublic.*"
+        (mu4e-message-field msg :maildir))
+        "/voicerepublic/INBOX.Archive")
+      ((string-match "^/zhaw.*"
+        (mu4e-message-field msg :maildir))
+        "/zhaw/INBOX.Archive")
+      ;; everything else goes to /archive
+      (t  "/archive"))))
 
 ;;; mu4e-config.el ends here
