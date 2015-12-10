@@ -10,7 +10,6 @@
 ;; https://www.gnu.org/software/emacs/manual/html_node/emacs-mime/qp.html
 
 (require 'mu4e)
-(require 'org-mu4e)
 
 ;; Default account on startup
 (setq user-full-name  "Munen Alain M. Lafon"
@@ -27,6 +26,7 @@
 
 (setq mu4e-html2text-command
   "textutil -stdin -format html -convert txt -stdout")
+
 
 (defvar my-mu4e-account-alist
   '(("200ok"
@@ -116,5 +116,22 @@
         "/zhaw/INBOX.Archive")
       ;; everything else goes to /archive
       (t  "/archive"))))
+
+;; Re-define all standard bookmarks to not include the spam folders
+;; for searches
+
+;; Empty the initial bookmark list
+(setq mu4e-bookmarks '())
+
+(defvar d-spam "NOT maildir:/dispatched/INBOX.spambucket")
+
+(add-to-list 'mu4e-bookmarks
+             '((concat d-spam " AND flag:unread AND NOT flag:trashed") "Unread messages"      ?u))
+(add-to-list 'mu4e-bookmarks
+             '((concat d-spam " AND date:today..now")                  "Today's messages"     ?t))
+(add-to-list 'mu4e-bookmarks
+             '((concat d-spam " AND date:7d..now")                     "Last 7 days"          ?w))
+(add-to-list 'mu4e-bookmarks
+             '((concat d-spam " AND mime:image/*")                     "Messages with images" ?p))
 
 ;;; mu4e-config.el ends here
