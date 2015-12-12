@@ -69,8 +69,7 @@
 (load-theme 'wombat)
 ;; (set-default-font "Menlo 14")
 ;; Presentation on Beamer Theme
-;; (set-frame-parameter nil 'background-mode 'light)
-;; (load-theme 'solarized t)
+;; (load-theme 'leuven t)
 ;; (set-default-font "Menlo 18")
 ;; TODO: Make this a shortcut
 
@@ -86,8 +85,12 @@
 ;; JS
 ;; $ npm install -g eslint
 
-;; Enable web-mode for html files
+;; web-mode
 (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+
+(setq web-mode-enable-current-element-highlight t)
+(setq web-mode-ac-sources-alist
+  '(("html" . (ac-source-words-in-buffer ac-source-abbrev))))
 
 ;; Disable startup message
 (setq inhibit-splash-screen t)
