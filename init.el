@@ -20,15 +20,18 @@
                       ac-cider
                       js2-mode
                       ac-js2
+                      sass-mode
                       tern
                       tern-auto-complete
                       coffee-mode
                       projectile
                       markdown-mode
+                      enh-ruby-mode
                       evil
                       evil-leader
                       evil-numbers
-                      impatient-mode))
+                      impatient-mode
+                      magit))
 
 (dolist (p my-packages)
   (unless (package-installed-p p)
@@ -91,6 +94,10 @@
 (setq web-mode-enable-current-element-highlight t)
 (setq web-mode-ac-sources-alist
   '(("html" . (ac-source-words-in-buffer ac-source-abbrev))))
+
+;; Ruby
+(add-hook 'ruby-mode-hook 'linum-mode)
+(add-to-list 'auto-mode-alist '("\\.scss?\\'" . sass-mode))
 
 ;; Disable startup message
 (setq inhibit-splash-screen t)
@@ -207,8 +214,15 @@
   (add-hook 'window-setup-hook (lambda()
                                  (arrange-emacs-positon 114 71 843 0))))
 
+;;; Linux
+(when (eq system-type 'gnu/linux)
+  (menu-bar-mode -1))
+
 ;;; Mu4e
 (load "~/.emacs.d/mu4e-config")
+
+;;; Magit
+(global-set-key (kbd "C-x g") 'magit-status)
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
