@@ -20,15 +20,18 @@
                       ac-cider
                       js2-mode
                       ac-js2
+                      sass-mode
                       tern
                       tern-auto-complete
                       coffee-mode
                       projectile
                       markdown-mode
+                      enh-ruby-mode
                       evil
                       evil-leader
                       evil-numbers
-                      impatient-mode))
+                      impatient-mode
+                      magit))
 
 (dolist (p my-packages)
   (unless (package-installed-p p)
@@ -85,6 +88,10 @@
 ;; $ gem install rubocop ruby-lint
 ;; JS
 ;; $ npm install -g eslint
+
+;; Ruby
+(add-hook 'ruby-mode-hook 'linum-mode)
+(add-to-list 'auto-mode-alist '("\\.scss?\\'" . sass-mode))
 
 ;; Enable web-mode for html files
 (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
@@ -204,8 +211,15 @@
   (add-hook 'window-setup-hook (lambda()
                                  (arrange-emacs-positon 114 71 843 0))))
 
+;;; Linux
+(when (eq system-type 'gnu/linux)
+  (menu-bar-mode -1))
+
 ;;; Mu4e
 (load "~/.emacs.d/mu4e-config")
+
+;;; Magit
+(global-set-key (kbd "C-x g") 'magit-status)
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
