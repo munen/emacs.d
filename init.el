@@ -164,6 +164,9 @@
 ;; Show matching paren
 (show-paren-mode t)
 
+;; Indentation cannot insert tabs
+(setq-default indent-tabs-mode nil)
+
 ;; Clojure
 (require 'ac-cider)
 ;;(setq ac-quick-help-delay 0.5)
