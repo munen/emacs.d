@@ -64,9 +64,16 @@
 (define-key evil-normal-state-map (kbd "C-=") 'evil-numbers/inc-at-pt)
 (define-key evil-normal-state-map (kbd "C--") 'evil-numbers/dec-at-pt)
 
-;; Fuzzy matching of files
+;; ido-mode
 (ido-mode t)
 (ido-everywhere t)
+(setq ido-enable-flex-matching t)
+(global-set-key (kbd "C-x C-b") 'ibuffer)
+
+; Replace i-search-(forward|backward) with their respective regexp
+; capable counterparts
+(global-set-key (kbd "C-s") 'isearch-forward-regexp)
+(global-set-key (kbd "C-r") 'isearch-backward-regexp)
 
 ;; Themes
 (load-theme 'wombat)
