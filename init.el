@@ -194,6 +194,13 @@
                              (concat org-directory "inbox.org")
                              (concat org-directory "reference.org")))
 
+(setq org-capture-templates
+      '(("t" "Todo" entry (file+headline (concat org-directory "inbox.org") "Tasks")
+         "* TODO %?\n  %U\n  %i\n  %a")
+        ("m" "Media" entry
+         (file+datetree (concat org-directory "media.org"))
+         "* %?\nURL: \nEntered on %U\n")))
+
 (defun things ()
   "Open main 'org-mode' file and start 'org-agenda' for today."
   (interactive)
