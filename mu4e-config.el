@@ -24,9 +24,12 @@
       mu4e-get-mail-command "offlineimap"
       mu4e-attachment-dir "~/switchdrive/org/files/inbox")
 
-(setq mu4e-html2text-command
-  "textutil -stdin -format html -convert txt -stdout")
+(when (eq system-type 'darwin)
+  (setq mu4e-html2text-command
+        "textutil -stdin -format html -convert txt -stdout"))
 
+(when (eq system-type 'gnu/linux)
+  (setq mu4e-html2text-command "html2text -utf8 -width 72"))
 
 (defvar my-mu4e-account-alist
   '(("200ok"
