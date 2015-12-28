@@ -21,6 +21,7 @@
                       js2-mode
                       ac-js2
                       sass-mode
+                      yaml-mode
                       tern
                       tern-auto-complete
                       coffee-mode
@@ -167,6 +168,10 @@
   '(progn
      (add-to-list 'ac-modes 'cider-mode)
      (add-to-list 'ac-modes 'cider-repl-mode)))
+
+;; yaml
+(require 'yaml-mode)
+(add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode))
 
 ;;; orgmode
 (require 'org)
