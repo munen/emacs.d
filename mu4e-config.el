@@ -102,6 +102,9 @@
 
 (add-hook 'mu4e-compose-pre-hook 'my-mu4e-set-account)
 
+;; Automatic line breaks when reading mail
+(add-hook 'mu4e-view-mode-hook 'visual-line-mode)
+
 (setq mu4e-refile-folder
   (lambda (msg)
     (cond

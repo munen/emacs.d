@@ -65,9 +65,16 @@
 (define-key evil-normal-state-map (kbd "C-=") 'evil-numbers/inc-at-pt)
 (define-key evil-normal-state-map (kbd "C--") 'evil-numbers/dec-at-pt)
 
-;; Fuzzy matching of files
+;; ido-mode
 (ido-mode t)
 (ido-everywhere t)
+(setq ido-enable-flex-matching t)
+(global-set-key (kbd "C-x C-b") 'ibuffer)
+
+; Replace i-search-(forward|backward) with their respective regexp
+; capable counterparts
+(global-set-key (kbd "C-s") 'isearch-forward-regexp)
+(global-set-key (kbd "C-r") 'isearch-backward-regexp)
 
 ;; Themes
 (load-theme 'wombat)
@@ -158,6 +165,9 @@
 ;; Show matching paren
 (show-paren-mode t)
 
+;; Indentation cannot insert tabs
+(setq-default indent-tabs-mode nil)
+
 ;; Clojure
 (require 'ac-cider)
 ;;(setq ac-quick-help-delay 0.5)
@@ -188,6 +198,13 @@
 (setq org-agenda-files (list (concat org-directory "things.org")
                              (concat org-directory "inbox.org")
                              (concat org-directory "reference.org")))
+
+(setq org-capture-templates
+      '(("t" "Todo" entry (file+headline (concat org-directory "inbox.org") "Tasks")
+         "* TODO %?\n  %U\n  %i\n  %a")
+        ("m" "Media" entry
+         (file+datetree (concat org-directory "media.org"))
+         "* %?\nURL: \nEntered on %U\n")))
 
 (defun things ()
   "Open main 'org-mode' file and start 'org-agenda' for today."
