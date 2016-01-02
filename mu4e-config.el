@@ -22,13 +22,12 @@
 (setq mu4e-maildir "~/Maildir"
       smtpmail-debug-info t
       message-kill-buffer-on-exit t
-      mu4e-show-images t
       mu4e-get-mail-command "offlineimap"
       mu4e-attachment-dir "~/switchdrive/org/files/inbox")
 
+;; (setq mu4e-html2text-command "w3m -dump -T text/html")
 (setq mu4e-html2text-command
   "textutil -stdin -format html -convert txt -stdout")
-
 
 (defvar my-mu4e-account-alist
   '(("200ok"
