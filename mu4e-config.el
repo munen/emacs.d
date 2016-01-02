@@ -25,14 +25,15 @@
       mu4e-get-mail-command "offlineimap"
       mu4e-attachment-dir "~/switchdrive/org/files/inbox")
 
+;; HTML Mails
+(require 'mu4e-contrib)
+(setq mu4e-html2text-command 'mu4e-shr2text)
+(add-to-list 'mu4e-view-actions '("ViewInBrowser" . mu4e-action-view-in-browser) t)
 
-(when (eq system-type 'darwin)
-  (setq mu4e-html2text-command
-        "textutil -stdin -format html -convert txt -stdout"))
-
-(when (eq system-type 'gnu/linux)
-  (setq mu4e-html2text-command "html2text -utf8 -width 72"))
-
+;; Alternatives are the following, however in first tests they
+;; show inferior results
+;; (setq mu4e-html2text-command "textutil -stdin -format html -convert txt -stdout")
+;; (setq mu4e-html2text-command "html2text -utf8 -width 72")
 ;; (setq mu4e-html2text-command "w3m -dump -T text/html")
 
 (defvar my-mu4e-account-alist
