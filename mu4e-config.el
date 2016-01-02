@@ -11,6 +11,8 @@
 
 (require 'mu4e)
 
+(require 'org-mu4e)
+
 ;; Default account on startup
 (setq user-full-name  "Munen Alain M. Lafon"
       mu4e-sent-folder "/200ok/INBOX.Sent"
