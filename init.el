@@ -14,9 +14,9 @@
 (defvar my-packages '(flycheck
                       auto-complete
                       web-mode
-                      color-theme-solarized
                       clojure-mode
                       cider
+                      exec-path-from-shell
                       ac-cider
                       js2-mode
                       ac-js2
@@ -227,7 +227,11 @@
 (when (eq system-type 'darwin)
   ; Use Spotlight to search with M-x locate
   (setq locate-command "mdfind")
-
+  ; Set $MANPATH, $PATH and exec-path from shell even when started
+  ; from Spotlight
+  (exec-path-from-shell-initialize)
+  ; exec-path-from-shell-initialize might make this line obsolete
+  ;(setq mu4e-mu-binary "/usr/local/bin/mu")
 
   ; Start Emacs in full right on the right side of the screen
   ; Works on a 15.4-inch (2880 x 1800) MBP
