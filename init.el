@@ -181,6 +181,9 @@
 ;;; orgmode
 (require 'org)
 
+(add-hook 'org-mode-hook 'auto-fill-mode)
+(add-hook 'org-mode-hook 'flyspell-mode)
+
 ;; Pomodoro configuration
 (load "~/.emacs.d/org-pomodoro")
 
@@ -241,6 +244,22 @@
 ;;; Magit
 (global-set-key (kbd "C-x g") 'magit-status)
 
+;;; Flyspell
+;; Order corrections by likeliness, not by the default of alphabetical
+;; ordering
+(setq flyspell-sort-corrections nil)
+
+;; Configure ispell backend
+;; The german dictionary has been installed taken from here:
+;; http://fmg-www.cs.ucla.edu/geoff/ispell-dictionaries.html#German-dicts
+(defun flyspell-switch-dictionary()
+  "Switch between German and English dictionaries"
+  (interactive)
+  (let* ((dic ispell-current-dictionary)
+         (change (if (string= dic "deutsch") "english" "deutsch")))
+    (ispell-change-dictionary change)
+    (message "Dictionary switched from %s to %s" dic change)))
+    
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
