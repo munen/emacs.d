@@ -31,7 +31,8 @@
                       evil-leader
                       evil-numbers
                       impatient-mode
-                      magit))
+                      magit
+                      zenburn-theme))
 
 (dolist (p my-packages)
   (unless (package-installed-p p)
@@ -76,6 +77,7 @@
 (global-set-key (kbd "C-r") 'isearch-backward-regexp)
 
 ;; Themes
+(set-frame-parameter nil 'background-mode 'dark)
 (load-theme 'wombat)
 ;; (set-default-font "Menlo 14")
 ;; Presentation on Beamer Theme
@@ -153,6 +155,10 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(coffee-tab-width 2)
+ '(custom-safe-themes
+   (quote
+    ("8db4b03b9ae654d4a57804286eb3e332725c84d7cdab38463cb6b97d5762ad26" "85c59044bd46f4a0deedc8315ffe23aa46d2a967a81750360fb8600b53519b8a" default)))
+ '(frame-background-mode (quote dark))
  '(send-mail-function (quote smtpmail-send-it)))
 
 ;; Use spaces instead of tabs
