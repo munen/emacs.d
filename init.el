@@ -14,9 +14,9 @@
 (defvar my-packages '(flycheck
                       auto-complete
                       web-mode
-                      color-theme-solarized
                       clojure-mode
                       cider
+                      exec-path-from-shell
                       ac-cider
                       js2-mode
                       ac-js2
@@ -33,7 +33,8 @@
                       evil-leader
                       evil-numbers
                       impatient-mode
-                      magit))
+                      magit
+                      zenburn-theme))
 
 (dolist (p my-packages)
   (unless (package-installed-p p)
@@ -84,6 +85,7 @@
 (global-set-key (kbd "C-r") 'isearch-backward-regexp)
 
 ;; Themes
+(set-frame-parameter nil 'background-mode 'dark)
 (load-theme 'wombat)
 ;; (set-default-font "Menlo 14")
 ;; Presentation on Beamer Theme
@@ -161,6 +163,10 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(coffee-tab-width 2)
+ '(custom-safe-themes
+   (quote
+    ("8db4b03b9ae654d4a57804286eb3e332725c84d7cdab38463cb6b97d5762ad26" "85c59044bd46f4a0deedc8315ffe23aa46d2a967a81750360fb8600b53519b8a" default)))
+ '(frame-background-mode (quote dark))
  '(send-mail-function (quote smtpmail-send-it)))
 
 ;; Use spaces instead of tabs
@@ -192,6 +198,9 @@
 
 ;;; orgmode
 (require 'org)
+
+(add-hook 'org-mode-hook 'auto-fill-mode)
+(add-hook 'org-mode-hook 'flyspell-mode)
 
 ;; Pomodoro configuration
 (load "~/.emacs.d/org-pomodoro")
@@ -236,7 +245,11 @@
 (when (eq system-type 'darwin)
   ; Use Spotlight to search with M-x locate
   (setq locate-command "mdfind")
-
+  ; Set $MANPATH, $PATH and exec-path from shell even when started
+  ; from Spotlight
+  (exec-path-from-shell-initialize)
+  ; exec-path-from-shell-initialize might make this line obsolete
+  ;(setq mu4e-mu-binary "/usr/local/bin/mu")
 
   ; Start Emacs in full right on the right side of the screen
   ; Works on a 15.4-inch (2880 x 1800) MBP
@@ -253,6 +266,22 @@
 ;;; Magit
 (global-set-key (kbd "C-x g") 'magit-status)
 
+;;; Flyspell
+;; Order corrections by likeliness, not by the default of alphabetical
+;; ordering
+(setq flyspell-sort-corrections nil)
+
+;; Configure ispell backend
+;; The german dictionary has been installed taken from here:
+;; http://fmg-www.cs.ucla.edu/geoff/ispell-dictionaries.html#German-dicts
+(defun flyspell-switch-dictionary()
+  "Switch between German and English dictionaries"
+  (interactive)
+  (let* ((dic ispell-current-dictionary)
+         (change (if (string= dic "deutsch") "english" "deutsch")))
+    (ispell-change-dictionary change)
+    (message "Dictionary switched from %s to %s" dic change)))
+    
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

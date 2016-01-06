@@ -11,6 +11,8 @@
 
 (require 'mu4e)
 
+(require 'org-mu4e)
+
 ;; Default account on startup
 (setq user-full-name  "Munen Alain M. Lafon"
       mu4e-sent-folder "/200ok/INBOX.Sent"
@@ -20,16 +22,19 @@
 (setq mu4e-maildir "~/Maildir"
       smtpmail-debug-info t
       message-kill-buffer-on-exit t
-      mu4e-show-images t
       mu4e-get-mail-command "offlineimap"
       mu4e-attachment-dir "~/switchdrive/org/files/inbox")
 
-(when (eq system-type 'darwin)
-  (setq mu4e-html2text-command
-        "textutil -stdin -format html -convert txt -stdout"))
+;; HTML Mails
+(require 'mu4e-contrib)
+(setq mu4e-html2text-command 'mu4e-shr2text)
+(add-to-list 'mu4e-view-actions '("ViewInBrowser" . mu4e-action-view-in-browser) t)
 
-(when (eq system-type 'gnu/linux)
-  (setq mu4e-html2text-command "html2text -utf8 -width 72"))
+;; Alternatives are the following, however in first tests they
+;; show inferior results
+;; (setq mu4e-html2text-command "textutil -stdin -format html -convert txt -stdout")
+;; (setq mu4e-html2text-command "html2text -utf8 -width 72")
+;; (setq mu4e-html2text-command "w3m -dump -T text/html")
 
 (defvar my-mu4e-account-alist
   '(("200ok"
@@ -101,6 +106,11 @@
       (error "No email account found"))))
 
 (add-hook 'mu4e-compose-pre-hook 'my-mu4e-set-account)
+(add-hook 'mu4e-compose-mode-hook 'flyspell-mode)
+
+;; gpg
+(add-hook 'mu4e-compose-mode-hook 'epa-mail-mode)
+(add-hook 'mu4e-view-mode-hook 'epa-mail-mode)
 
 ;; Automatic line breaks when reading mail
 (add-hook 'mu4e-view-mode-hook 'visual-line-mode)
