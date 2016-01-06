@@ -28,6 +28,7 @@
                       projectile
                       markdown-mode
                       enh-ruby-mode
+                      robe
                       evil
                       evil-leader
                       evil-numbers
@@ -95,6 +96,13 @@
 ;; $ gem install rubocop ruby-lint
 ;; JS
 ;; $ npm install -g eslint
+;; Ruby
+(add-to-list 'auto-mode-alist '("\\.scss?\\'" . sass-mode))
+
+(add-to-list 'auto-mode-alist '("\\.rb?\\'" . enh-ruby-mode))
+(add-to-list 'auto-mode-alist '("\\.rake?\\'" . enh-ruby-mode))
+(add-hook 'enh-ruby-mode-hook 'linum-mode)
+(add-hook 'enh-ruby-mode-hook 'robe-mode)
 
 ;; web-mode
 (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
@@ -102,10 +110,6 @@
 (setq web-mode-enable-current-element-highlight t)
 (setq web-mode-ac-sources-alist
   '(("html" . (ac-source-words-in-buffer ac-source-abbrev))))
-
-;; Ruby
-(add-hook 'ruby-mode-hook 'linum-mode)
-(add-to-list 'auto-mode-alist '("\\.scss?\\'" . sass-mode))
 
 ;; Disable startup message
 (setq inhibit-splash-screen t)
