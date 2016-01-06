@@ -66,6 +66,12 @@
 (define-key evil-normal-state-map (kbd "C-=") 'evil-numbers/inc-at-pt)
 (define-key evil-normal-state-map (kbd "C--") 'evil-numbers/dec-at-pt)
 
+;; Enable Projectile globally
+(projectile-global-mode)
+
+;; Configure auto-complete
+(ac-config-default)
+
 ;; ido-mode
 (ido-mode t)
 (ido-everywhere t)
@@ -135,9 +141,6 @@
 (add-to-list 'auto-mode-alist '("presentation.html" . markdown-mode))
 
 ;;; Programming Languages configuration
-
-;; Configure auto-complete
-(ac-config-default)
 
 ;; Javascript
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
