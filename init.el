@@ -105,12 +105,21 @@
 ;; JS
 ;; $ npm install -g eslint
 ;; Ruby
+(setq ruby-indent-level 2)
 (add-to-list 'auto-mode-alist '("\\.scss?\\'" . sass-mode))
 
 (add-to-list 'auto-mode-alist '("\\.rb?\\'" . enh-ruby-mode))
 (add-to-list 'auto-mode-alist '("\\.rake?\\'" . enh-ruby-mode))
 (add-hook 'enh-ruby-mode-hook 'linum-mode)
 (add-hook 'enh-ruby-mode-hook 'robe-mode)
+
+; From Phil
+(add-hook 'ruby-mode-hook
+         (lambda ()
+           (add-to-list 'write-file-functions 'delete-trailing-whitespace)))
+
+; set tab width to 2 for all buffers
+(setq-default tab-width 2)
 
 ;; web-mode
 (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
@@ -148,7 +157,8 @@
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
 (add-hook 'js-mode-hook 'js2-minor-mode)
 (setq js2-highlight-level 3)
-
+(setq js-indent-level 2)
+     
 ;; Tern
 (add-hook 'js-mode-hook (lambda () (tern-mode t)))
 (eval-after-load 'tern
