@@ -105,10 +105,17 @@
               account-vars)
       (error "No email account found"))))
 
+
 (add-hook 'mu4e-compose-pre-hook 'my-mu4e-set-account)
 (add-hook 'mu4e-compose-mode-hook 'flyspell-mode)
+(add-hook 'mu4e-compose-mode-hook (lambda ()
+                                   (ispell-change-dictionary "deutsch")))
 
 ;; gpg
+;; C-c C-e s to sign
+;; C-c C-e e to encrypt
+;; C-c C-e v to verify the signature
+;; C-c C-e d to decrypt
 (add-hook 'mu4e-compose-mode-hook 'epa-mail-mode)
 (add-hook 'mu4e-view-mode-hook 'epa-mail-mode)
 
@@ -124,6 +131,9 @@
       ((string-match "^/200ok.*"
         (mu4e-message-field msg :maildir))
         "/200ok/INBOX.Archive")
+      ((string-match "^/vr_tech.*"
+        (mu4e-message-field msg :maildir))
+        "/voicerepublic/INBOX.Archive")
       ((string-match "^/voicerepublic.*"
         (mu4e-message-field msg :maildir))
         "/voicerepublic/INBOX.Archive")
@@ -133,8 +143,24 @@
       ;; everything else goes to /archive
       (t  "/archive"))))
 
+
 ;; Re-define all standard bookmarks to not include the spam folders
 ;; for searches
+
+;; For mail completion, only consider emails that have been seen in
+;; the last 12 months to get rid of all the legacy mail addresses of
+;; people. Yeah, the calculation of the last 12 months totally sucks
+;; and is not correct. I do not mind, because mail completion is not
+;; science.
+(setq mu4e-compose-complete-only-after (let* ((year (car (split-string (format-time-string "%Y-%m-%d") "-"))))
+                                         (concat (number-to-string (- (string-to-number year) 1))
+                                                 (format-time-string "-%m-%d"))))
+
+;; Only consider addresses that were seen in personal messages – that
+;; is, messages in which one of my e-mail addresses was seen in one of
+;; the address fields.
+(setq mu4e-compose-complete-only-personal t)
+
 
 ;; Empty the initial bookmark list
 (setq mu4e-bookmarks '())
