@@ -28,6 +28,7 @@
                       projectile
                       markdown-mode
                       enh-ruby-mode
+                      robe
                       evil
                       evil-leader
                       evil-numbers
@@ -66,6 +67,12 @@
 (define-key evil-normal-state-map (kbd "C-=") 'evil-numbers/inc-at-pt)
 (define-key evil-normal-state-map (kbd "C--") 'evil-numbers/dec-at-pt)
 
+;; Enable Projectile globally
+(projectile-global-mode)
+
+;; Configure auto-complete
+(ac-config-default)
+
 ;; ido-mode
 (ido-mode t)
 (ido-everywhere t)
@@ -97,6 +104,22 @@
 ;; $ gem install rubocop ruby-lint
 ;; JS
 ;; $ npm install -g eslint
+;; Ruby
+(setq ruby-indent-level 2)
+(add-to-list 'auto-mode-alist '("\\.scss?\\'" . sass-mode))
+
+(add-to-list 'auto-mode-alist '("\\.rb?\\'" . enh-ruby-mode))
+(add-to-list 'auto-mode-alist '("\\.rake?\\'" . enh-ruby-mode))
+(add-hook 'enh-ruby-mode-hook 'linum-mode)
+(add-hook 'enh-ruby-mode-hook 'robe-mode)
+
+; From Phil
+(add-hook 'ruby-mode-hook
+         (lambda ()
+           (add-to-list 'write-file-functions 'delete-trailing-whitespace)))
+
+; set tab width to 2 for all buffers
+(setq-default tab-width 2)
 
 ;; web-mode
 (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
@@ -104,10 +127,6 @@
 (setq web-mode-enable-current-element-highlight t)
 (setq web-mode-ac-sources-alist
   '(("html" . (ac-source-words-in-buffer ac-source-abbrev))))
-
-;; Ruby
-(add-hook 'ruby-mode-hook 'linum-mode)
-(add-to-list 'auto-mode-alist '("\\.scss?\\'" . sass-mode))
 
 ;; Disable startup message
 (setq inhibit-splash-screen t)
@@ -134,14 +153,12 @@
 
 ;;; Programming Languages configuration
 
-;; Configure auto-complete
-(ac-config-default)
-
 ;; Javascript
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
 (add-hook 'js-mode-hook 'js2-minor-mode)
 (setq js2-highlight-level 3)
-
+(setq js-indent-level 2)
+     
 ;; Tern
 (add-hook 'js-mode-hook (lambda () (tern-mode t)))
 (eval-after-load 'tern
