@@ -144,17 +144,12 @@
       (t  "/archive"))))
 
 
-;; Re-define all standard bookmarks to not include the spam folders
-;; for searches
-
 ;; For mail completion, only consider emails that have been seen in
-;; the last 12 months to get rid of all the legacy mail addresses of
-;; people. Yeah, the calculation of the last 12 months totally sucks
-;; and is not correct. I do not mind, because mail completion is not
-;; science.
-(setq mu4e-compose-complete-only-after (let* ((year (car (split-string (format-time-string "%Y-%m-%d") "-"))))
-                                         (concat (number-to-string (- (string-to-number year) 1))
-                                                 (format-time-string "-%m-%d"))))
+;; the last 6 months to get rid of all the legacy mail addresses of
+;; people.
+(setq mu4e-compose-complete-only-after (format-time-string
+                                        "%Y-%m-%d"
+                                        (time-subtract (current-time) (days-to-time 150))))
 
 ;; Only consider addresses that were seen in personal messages – that
 ;; is, messages in which one of my e-mail addresses was seen in one of
@@ -165,6 +160,8 @@
 ;; Empty the initial bookmark list
 (setq mu4e-bookmarks '())
 
+;; Re-define all standard bookmarks to not include the spam folders
+;; for searches
 (defvar d-spam "NOT maildir:/dispatched/INBOX.spambucket")
 
 (add-to-list 'mu4e-bookmarks
