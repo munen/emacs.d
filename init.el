@@ -80,10 +80,10 @@
 ;; Themes
 (set-frame-parameter nil 'background-mode 'dark)
 (load-theme 'wombat)
-;; (set-default-font "Menlo 14")
+(set-frame-font "Menlo 14")
 ;; Presentation on Beamer Theme
 ;; (load-theme 'leuven t)
-;; (set-default-font "Menlo 18")
+;; (set-frame-font "Menlo 18")
 ;; TODO: Make this a shortcut
 
 ;; Do not display GUI Toolbar
@@ -192,8 +192,19 @@
 ;;; orgmode
 (require 'org)
 
+; langauges for org-babel support
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '(
+   (sh . t)
+   (ruby . t)
+   ))
+
 (add-hook 'org-mode-hook 'auto-fill-mode)
 (add-hook 'org-mode-hook 'flyspell-mode)
+
+;; markdown
+(add-hook 'markdown-mode-hook 'auto-fill-mode)
 
 ;; Pomodoro configuration
 (load "~/.emacs.d/org-pomodoro")
@@ -274,6 +285,7 @@
          (change (if (string= dic "deutsch") "english" "deutsch")))
     (ispell-change-dictionary change)
     (message "Dictionary switched from %s to %s" dic change)))
+
     
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
