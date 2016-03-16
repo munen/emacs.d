@@ -151,12 +151,6 @@
                                         "%Y-%m-%d"
                                         (time-subtract (current-time) (days-to-time 150))))
 
-;; Only consider addresses that were seen in personal messages – that
-;; is, messages in which one of my e-mail addresses was seen in one of
-;; the address fields.
-(setq mu4e-compose-complete-only-personal t)
-
-
 ;; Empty the initial bookmark list
 (setq mu4e-bookmarks '())
 
