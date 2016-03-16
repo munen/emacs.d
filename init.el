@@ -87,7 +87,6 @@
 ;; Themes
 (set-frame-parameter nil 'background-mode 'dark)
 (load-theme 'wombat)
-(set-frame-font "Menlo 14")
 ;; Presentation on Beamer Theme
 ;; (load-theme 'leuven t)
 ;; (set-frame-font "Menlo 18")
@@ -264,6 +263,7 @@
     (set-frame-size frame w h)))
 
 (when (eq system-type 'darwin)
+  (set-frame-font "Menlo 14")
   ; Use Spotlight to search with M-x locate
   (setq locate-command "mdfind")
   ; Set $MANPATH, $PATH and exec-path from shell even when started
