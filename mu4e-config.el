@@ -122,6 +122,9 @@
 ;; Automatic line breaks when reading mail
 (add-hook 'mu4e-view-mode-hook 'visual-line-mode)
 
+;; Do not set a footer by default
+(setq mu4e-compose-signature-auto-include nil)
+
 (setq mu4e-refile-folder
   (lambda (msg)
     (cond
