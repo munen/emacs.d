@@ -20,6 +20,7 @@
                       ac-cider
                       js2-mode
                       ac-js2
+                      fixme-mode
                       sass-mode
                       yaml-mode
                       tern
@@ -34,11 +35,13 @@
                       evil-numbers
                       impatient-mode
                       magit
+                      darktooth-theme
                       zenburn-theme))
 
 (dolist (p my-packages)
   (unless (package-installed-p p)
     (package-install p)))
+
 ;;; End dependency management
 
 ;;; Evil Mode
@@ -86,7 +89,13 @@
 
 ;; Themes
 (set-frame-parameter nil 'background-mode 'dark)
+;; Dark, High Contrast
 (load-theme 'wombat)
+;; Dark, Low contrast
+;; (load-theme 'darktooth)
+;; Dark, Lowest contrast
+;; (load-theme 'zenburn)
+
 ;; Presentation on Beamer Theme
 ;; TODO: Make this a shortcut
 ;; (load-theme 'leuven t)
@@ -152,6 +161,9 @@
 
 ;;; Programming Languages configuration
 
+;; Highlights FIXME, TODO and BUG statements
+(fixme-mode t)
+
 ;; Javascript
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
 (add-hook 'js-mode-hook 'js2-minor-mode)
@@ -174,8 +186,10 @@
  '(coffee-tab-width 2)
  '(custom-safe-themes
    (quote
-    ("8db4b03b9ae654d4a57804286eb3e332725c84d7cdab38463cb6b97d5762ad26" "85c59044bd46f4a0deedc8315ffe23aa46d2a967a81750360fb8600b53519b8a" default)))
+    ("df3e05e16180d77732ceab47a43f2fcdb099714c1c47e91e8089d2fcf5882ea3" "d09467d742f713443c7699a546c0300db1a75fed347e09e3f178ab2f3aa2c617" "8db4b03b9ae654d4a57804286eb3e332725c84d7cdab38463cb6b97d5762ad26" "85c59044bd46f4a0deedc8315ffe23aa46d2a967a81750360fb8600b53519b8a" default)))
  '(frame-background-mode (quote dark))
+ '(pos-tip-background-color "#36473A")
+ '(pos-tip-foreground-color "#FFFFC8")
  '(send-mail-function (quote smtpmail-send-it)))
 
 ;; Use spaces instead of tabs
@@ -221,6 +235,8 @@
 
 (add-hook 'org-mode-hook 'auto-fill-mode)
 (add-hook 'org-mode-hook 'flyspell-mode)
+
+(global-set-key "\C-cl" 'org-store-link)
 
 ;; markdown
 (add-hook 'markdown-mode-hook 'auto-fill-mode)
