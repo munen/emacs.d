@@ -87,10 +87,10 @@
 ;; Themes
 (set-frame-parameter nil 'background-mode 'dark)
 (load-theme 'wombat)
+;; TODO: Make this a shortcut
 ;; Presentation on Beamer Theme
 ;; (load-theme 'leuven t)
-;; (set-frame-font "Menlo 13")
-;; TODO: Make this a shortcut
+;; (set-face-attribute 'default nil :height 140)
 
 ;; Do not display GUI Toolbar
 (tool-bar-mode 0)
@@ -158,7 +158,7 @@
 (add-hook 'js-mode-hook 'js2-minor-mode)
 (setq js2-highlight-level 3)
 (setq js-indent-level 2)
-     
+
 ;; Tern
 (add-hook 'js-mode-hook (lambda () (tern-mode t)))
 (eval-after-load 'tern
@@ -190,6 +190,9 @@
 
 ;; Indentation cannot insert tabs
 (setq-default indent-tabs-mode nil)
+
+;; Delete trailing whitespace
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
 
 ;; Clojure
 (require 'ac-cider)
@@ -293,7 +296,7 @@
     (ispell-change-dictionary change)
     (message "Dictionary switched from %s to %s" dic change)))
 
-    
+
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
