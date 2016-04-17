@@ -87,19 +87,27 @@
 (global-set-key (kbd "C-s") 'isearch-forward-regexp)
 (global-set-key (kbd "C-r") 'isearch-backward-regexp)
 
-;; Themes
-(set-frame-parameter nil 'background-mode 'dark)
-;; Dark, High Contrast
-(load-theme 'wombat)
-;; Dark, Low contrast
-;; (load-theme 'darktooth)
-;; Dark, Lowest contrast
-;; (load-theme 'zenburn)
+(defun standard-mode ()
+  "Default theme and font size.  Pendant: (presentation-mode)."
+  (interactive)
+  (set-face-attribute 'default nil :height 110)
+  ;; Themes
+  (set-frame-parameter nil 'background-mode 'dark)
+  ;; Dark, High Contrast
+  (load-theme 'wombat)
+  ;; Dark, Low contrast
+  ;; (load-theme 'darktooth)
+  ;; Dark, Lowest contrast
+  ;; (load-theme 'zenburn)
+   )
 
-;; Presentation on Beamer Theme
-;; TODO: Make this a shortcut
-;; (load-theme 'leuven t)
-;; (set-face-attribute 'default nil :height 140)
+(defun presentation-mode ()
+  "Presentation friendly theme and font size.  Pendant: (standard-mode)."
+  (interactive)
+  (load-theme 'leuven t)
+  (set-face-attribute 'default nil :height 140))
+
+(standard-mode)
 
 ;; Do not display GUI Toolbar
 (tool-bar-mode 0)
