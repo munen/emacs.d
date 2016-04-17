@@ -158,6 +158,7 @@
 ;; For p_slides presentations, run markdown-mode
 ;; This is a very primitive check
 (add-to-list 'auto-mode-alist '("presentation.html" . markdown-mode))
+(add-hook 'markdown-mode-hook 'flyspell-mode)
 
 ;;; Programming Languages configuration
 
@@ -274,13 +275,6 @@
   "a" 'org-archive-subtree-default)
 
 ;;; OS X
-(defun arrange-emacs-positon (w h x y)
-"Set the W(idth), H(eight), and X/Y position of the current frame."
-(let ((frame (selected-frame)))
-    (delete-other-windows)
-    (set-frame-position frame x y)
-    (set-frame-size frame w h)))
-
 (when (eq system-type 'darwin)
   (set-frame-font "Menlo 14")
   ; Use Spotlight to search with M-x locate
@@ -290,11 +284,7 @@
   (exec-path-from-shell-initialize)
   ; exec-path-from-shell-initialize might make this line obsolete
   ;(setq mu4e-mu-binary "/usr/local/bin/mu")
-
-  ; Start Emacs in full right on the right side of the screen
-  ; Works on a 15.4-inch (2880 x 1800) MBP
-  (add-hook 'window-setup-hook (lambda()
-                                 (arrange-emacs-positon 114 71 843 0))))
+  )
 
 ;;; Linux
 (when (eq system-type 'gnu/linux)
