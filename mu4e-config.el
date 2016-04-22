@@ -19,11 +19,15 @@
       mu4e-drafts-folder "/200ok/INBOX.Drafts"
       mu4e-trash-folder "/200ok/INBOX.Trash")
 
-(setq mu4e-maildir "~/Maildir"
-      smtpmail-debug-info t
+(setq smtpmail-debug-info t
       message-kill-buffer-on-exit t
       mu4e-get-mail-command "offlineimap"
       mu4e-attachment-dir "~/switchdrive/org/files/inbox")
+
+(when (eq system-type 'gnu/linux)
+  (setq mu4e-maildir "/media/sf_preek/Dropbox/Maildir/"))
+(when (eq system-type 'darwin)
+  (setq mu4e-maildir "~/Maildir/"))
 
 ;; HTML Mails
 (require 'mu4e-contrib)
