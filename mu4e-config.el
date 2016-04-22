@@ -166,7 +166,8 @@
 (defvar d-spam "NOT maildir:/dispatched/INBOX.spambucket")
 
 (add-to-list 'mu4e-bookmarks
-             '((concat d-spam " AND flag:unread AND NOT flag:trashed") "Unread messages"      ?u))
+             '((concat d-spam " AND flag:unread AND NOT flag:trashed OR flag:flagged")
+               "Unread messages"      ?u))
 (add-to-list 'mu4e-bookmarks
              '((concat d-spam " AND date:today..now")                  "Today's messages"     ?t))
 (add-to-list 'mu4e-bookmarks
