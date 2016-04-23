@@ -32,6 +32,7 @@
                       robe
                       evil
                       evil-leader
+                      evil-surround
                       evil-numbers
                       impatient-mode
                       magit
@@ -57,6 +58,11 @@
   "s" 'ispell
   "b" 'evil-buffer
   "q" 'evil-quit)
+
+
+;; Evil Surround, emulating tpope's surround.vim
+(require 'evil-surround)
+(global-evil-surround-mode 1)
 
 ;; TODO: Bind M-. and M-, for Cider Mode
 
