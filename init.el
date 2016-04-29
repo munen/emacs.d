@@ -15,6 +15,7 @@
                       auto-complete
                       web-mode
                       clojure-mode
+                      clj-refactor
                       cider
                       exec-path-from-shell
                       ac-cider
@@ -233,6 +234,15 @@
      (add-to-list 'ac-modes 'cider-mode)
      (add-to-list 'ac-modes 'cider-repl-mode)))
 
+(require 'clj-refactor)
+(add-hook 'clojure-mode-hook
+          (lambda ()
+            (clj-refactor-mode 1)
+            (setq cljr-warn-on-eval nil)
+            (yas-minor-mode 1) ; for adding require/use/import statements
+            ;; This choice of keybinding leaves cider-macroexpand-1 unbound
+            (cljr-add-keybindings-with-prefix "C-c C-m")))
+
 ;; yaml
 (require 'yaml-mode)
 (add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode))
@@ -326,6 +336,19 @@
     (ispell-change-dictionary change)
     (message "Dictionary switched from %s to %s" dic change)))
 
+;; Helper functions to clean up the gazillion buffers
+(defun kill-other-buffers ()
+  "Kill all other buffers."
+  (interactive)
+  (mapc 'kill-buffer (delq (current-buffer) (buffer-list))))
+
+(defun kill-dired-buffers ()
+  "Kill all open dired buffers."
+  (interactive)
+  (mapc (lambda (buffer)
+          (when (eq 'dired-mode (buffer-local-value 'major-mode buffer))
+            (kill-buffer buffer)))
+        (buffer-list)))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

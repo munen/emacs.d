@@ -44,6 +44,14 @@ https://github.com/clojure-emacs/cider
 
 More Cider shortcuts [here](https://github.com/clojure-emacs/cider#cider-mode).
 
+**Dependencies**
+Create a `~/.lein/profiles.clj` file with:
+```clojure
+{:user {:plugins [[cider/cider-nrepl "0.13.0-SNAPSHOT"]
+                  [refactor-nrepl "2.2.0"]]
+        :dependencies [[org.clojure/tools.nrepl "0.2.12"]]}}
+```
+
 ## Impatient Mode - Live Coding Emacs/Browser
 
 https://github.com/netguy204/imp.el
