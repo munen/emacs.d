@@ -11,7 +11,8 @@
 (package-initialize)
 
 
-(defvar my-packages '(flycheck
+(defvar my-packages '(ag
+                      flycheck
                       auto-complete
                       web-mode
                       clojure-mode
