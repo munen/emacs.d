@@ -24,10 +24,7 @@
       mu4e-get-mail-command "offlineimap"
       mu4e-attachment-dir "~/switchdrive/org/files/inbox")
 
-(when (eq system-type 'gnu/linux)
-  (setq mu4e-maildir "/media/sf_preek/Dropbox/Maildir/"))
-(when (eq system-type 'darwin)
-  (setq mu4e-maildir "~/Maildir/"))
+(setq mu4e-maildir "~/Maildir/")
 
 ;; HTML Mails
 (require 'mu4e-contrib)
