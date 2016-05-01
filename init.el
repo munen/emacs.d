@@ -283,6 +283,10 @@
 (setq org-capture-templates
       '(("t" "Todo" entry (file+headline (concat org-directory "inbox.org") "Tasks")
          "* TODO %?\n  %U\n  %i\n  %a")
+        ("s" "Code Snippet" entry
+         (file (concat org-directory "snippets.org"))
+         ;; Prompt for tag and language
+         "* %?\t%^g\n#+BEGIN_SRC %^{language}\n\n#+END_SRC")
         ("m" "Media" entry
          (file+datetree (concat org-directory "media.org"))
          "* %?\nURL: \nEntered on %U\n")))
