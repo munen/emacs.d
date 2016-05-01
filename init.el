@@ -355,6 +355,12 @@
             (kill-buffer buffer)))
         (buffer-list)))
 
+(defun dict (word)
+  "Lookup a WORD in the dictionary.  Expects 'dict' to be on the $PATH."
+  (interactive "sWord: ")
+  (async-shell-command (concat "dict" " " word))
+  (other-window 1))
+
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
