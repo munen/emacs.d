@@ -162,14 +162,31 @@
 ;; for searches
 (defvar d-spam "NOT maildir:/dispatched/INBOX.spambucket")
 
-(add-to-list 'mu4e-bookmarks
-             '((concat d-spam " AND flag:unread AND NOT flag:trashed OR flag:flagged")
-               "Unread messages"      ?u))
+(defvar draft-folders (string-join '("maildir:/dispatched/INBOX.Drafts"
+                                     "maildir:/zhaw/INBOX.Drafts"
+                                     "maildir:/200ok/INBOX.Drafts"
+                                     "maildir:/voicerepublic/INBOX.Drafts")
+                                   " OR "))
+
+(defvar spam-folders (string-join '("maildir:/dispatched/INBOX.spambucket"
+                                     "maildir:/zhaw/INBOX.spambucket"
+                                     "maildir:/200ok/INBOX.spambucket"
+                                     "maildir:/vr_tech/INBOX.spambucket"
+                                     "maildir:/voicerepublic/INBOX.Spam")
+                                  " OR "))
+
 (add-to-list 'mu4e-bookmarks
              '((concat d-spam " AND date:today..now")                  "Today's messages"     ?t))
 (add-to-list 'mu4e-bookmarks
              '((concat d-spam " AND date:7d..now")                     "Last 7 days"          ?w))
 (add-to-list 'mu4e-bookmarks
              '((concat d-spam " AND mime:image/*")                     "Messages with images" ?p))
+(add-to-list 'mu4e-bookmarks
+             '(spam-folders "All spambuckets"     ?S))
+(add-to-list 'mu4e-bookmarks
+             '(draft-folders "All drafts"     ?d))
+(add-to-list 'mu4e-bookmarks
+             '((concat d-spam " AND flag:unread AND NOT flag:trashed OR flag:flagged")
+               "Unread messages"      ?u))
 
 ;;; mu4e-config.el ends here
