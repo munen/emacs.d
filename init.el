@@ -286,7 +286,7 @@
         ("s" "Code Snippet" entry
          (file (concat org-directory "snippets.org"))
          ;; Prompt for tag and language
-         "* %?\t%^g\n#+BEGIN_SRC %^{language}\n\n#+END_SRC")
+         "* %?\t%^g\n#+BEGIN_SRC %^{language}\n%i\n#+END_SRC")
         ("m" "Media" entry
          (file+datetree (concat org-directory "media.org"))
          "* %?\nURL: \nEntered on %U\n")))
