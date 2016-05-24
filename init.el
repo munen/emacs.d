@@ -355,10 +355,11 @@
             (kill-buffer buffer)))
         (buffer-list)))
 
-(defun dict (word)
+(defun dict ()
   "Lookup a WORD in the dictionary.  Expects 'dict' to be on the $PATH."
-  (interactive "sWord: ")
-  (async-shell-command (concat "dict" " " word))
+  (interactive)
+  (let ((word (read-string "Word: " (word-at-point))))
+    (async-shell-command (concat "dict" " " word)))
   (other-window 1))
 
 (custom-set-faces
