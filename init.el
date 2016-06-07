@@ -37,6 +37,7 @@
                       evil-surround
                       evil-numbers
                       impatient-mode
+                      restclient
                       magit
                       darktooth-theme
                       zenburn-theme))
@@ -340,6 +341,10 @@
          (change (if (string= dic "deutsch") "english" "deutsch")))
     (ispell-change-dictionary change)
     (message "Dictionary switched from %s to %s" dic change)))
+
+;; Default Browser
+(setq browse-url-browser-function 'browse-url-generic
+      browse-url-generic-program "chromium")
 
 ;; Helper functions to clean up the gazillion buffers
 (defun kill-other-buffers ()
