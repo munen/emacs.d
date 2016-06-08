@@ -186,7 +186,7 @@
 (add-to-list 'mu4e-bookmarks
              '(draft-folders "All drafts"     ?d))
 (add-to-list 'mu4e-bookmarks
-             '((concat d-spam " AND flag:unread AND NOT flag:trashed OR flag:flagged")
+             '((concat d-spam " AND flag:unread AND NOT (flag:trashed OR flag:flagged OR maildir:/voicerepublic/INBOX.Notifications)")
                "Unread messages"      ?u))
 
 ;;; mu4e-config.el ends here
