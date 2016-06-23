@@ -40,6 +40,7 @@
                       restclient
                       magit
                       darktooth-theme
+                      writeroom-mode
                       zenburn-theme))
 
 (dolist (p my-packages)
