@@ -319,6 +319,9 @@
 
 ;;; Linux
 (when (eq system-type 'gnu/linux)
+  ;; Default Browser
+  (setq browse-url-browser-function 'browse-url-generic
+        browse-url-generic-program "chromium")
   (menu-bar-mode -1))
 
 ;;; Mu4e
@@ -342,10 +345,6 @@
          (change (if (string= dic "deutsch") "english" "deutsch")))
     (ispell-change-dictionary change)
     (message "Dictionary switched from %s to %s" dic change)))
-
-;; Default Browser
-(setq browse-url-browser-function 'browse-url-generic
-      browse-url-generic-program "chromium")
 
 ;; Helper functions to clean up the gazillion buffers
 (defun kill-other-buffers ()
