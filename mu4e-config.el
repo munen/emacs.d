@@ -1,4 +1,4 @@
-;;; package --- Munen Mail config
+;;; package --- Mail config
 ;;; Commentary:
 ;;; Code:
 
@@ -14,7 +14,7 @@
 (require 'org-mu4e)
 
 ;; Default account on startup
-(setq user-full-name  "Munen Alain M. Lafon"
+(setq user-full-name  "Alain M. Lafon"
       mu4e-sent-folder "/200ok/INBOX.Sent"
       mu4e-drafts-folder "/200ok/INBOX.Drafts"
       mu4e-trash-folder "/200ok/INBOX.Trash")
@@ -42,7 +42,7 @@
      (mu4e-sent-folder "/200ok/INBOX.Sent")
      (mu4e-drafts-folder "/200ok/INBOX.Drafts")
      (mu4e-trash-folder "/200ok/INBOX.Trash")
-     (user-mail-address "munen@200ok.ch")
+     (user-mail-address "alain@200ok.ch")
      (smtpmail-default-smtp-server "mail.your-server.de")
      (smtpmail-local-domain "200ok.ch")
      (smtpmail-smtp-user "munen@200ok.ch")
@@ -75,7 +75,7 @@
      (mu4e-sent-folder "/dispatched/INBOX.Sent")
      (mu4e-drafts-folder "/dispatched/INBOX.Drafts")
      (mu4e-trash-folder "/dispatched/INBOX.Trash")
-     (user-mail-address "munen@dispatched.ch")
+     (user-mail-address "alain.lafon@dispatched.ch")
      (smtpmail-default-smtp-server "mail.your-server.de")
      (smtpmail-local-domain "dispatched.ch")
      (smtpmail-smtp-user "munen@dispatched.ch")
