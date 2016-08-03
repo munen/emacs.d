@@ -169,4 +169,19 @@
              '((concat d-spam " AND (flag:unread OR flag:flagged) AND NOT flag:trashed")
                "Unread messages"      ?u))
 
+;; simple regexp used to check the message. Tweak to your own need.
+(defvar my-message-attachment-regexp "\\([Ww]e send\\|[Ii] send\\|attach\\)")
+;; the function that checks the message
+(defun my-message-check-attachment nil
+  "Check if there is an attachment in the message if I claim it."
+  (save-excursion
+    (message-goto-body)
+    (when (search-forward-regexp my-message-attachment-regexp nil t nil)
+      (message-goto-body)
+      (unless (or (search-forward "<#part" nil t nil)
+                  (message-y-or-n-p
+                   "No attachment. Send the message ?" nil nil))
+        (error "No message sent")))))
+(add-hook 'message-send-hook 'my-message-check-attachment)
+
 ;;; mu4e-config.el ends here
