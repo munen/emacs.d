@@ -60,17 +60,6 @@
      (smtpmail-smtp-server "mail.your-server.de")
      (smtpmail-stream-type starttls)
      (smtpmail-smtp-service 25))
-    ("voicerepublic"
-     (mu4e-sent-folder "/voicerepublic/INBOX.Sent")
-     (mu4e-drafts-folder "/voicerepublic/INBOX.Drafts")
-     (mu4e-trash-folder "/voicerepublic/INBOX.Trash")
-     (user-mail-address "munen@voicerepublic.com")
-     (smtpmail-default-smtp-server "smtp-voicerepublic.atmailcloud.com")
-     (smtpmail-local-domain "voicerepublic.com")
-     (smtpmail-smtp-user "munen@voicerepublic.com")
-     (smtpmail-smtp-server "smtp-voicerepublic.atmailcloud.com")
-     (smtpmail-stream-type starttls)
-     (smtpmail-smtp-service 25))
     ("dispatched"
      (mu4e-sent-folder "/dispatched/INBOX.Sent")
      (mu4e-drafts-folder "/dispatched/INBOX.Drafts")
@@ -135,12 +124,6 @@
       ((string-match "^/200ok.*"
         (mu4e-message-field msg :maildir))
         "/200ok/INBOX.Archive")
-      ((string-match "^/vr_tech.*"
-        (mu4e-message-field msg :maildir))
-        "/voicerepublic/INBOX.Archive")
-      ((string-match "^/voicerepublic.*"
-        (mu4e-message-field msg :maildir))
-        "/voicerepublic/INBOX.Archive")
       ((string-match "^/zhaw.*"
         (mu4e-message-field msg :maildir))
         "/zhaw/INBOX.Archive")
@@ -164,15 +147,12 @@
 
 (defvar draft-folders (string-join '("maildir:/dispatched/INBOX.Drafts"
                                      "maildir:/zhaw/INBOX.Drafts"
-                                     "maildir:/200ok/INBOX.Drafts"
-                                     "maildir:/voicerepublic/INBOX.Drafts")
+                                     "maildir:/200ok/INBOX.Drafts")
                                    " OR "))
 
 (defvar spam-folders (string-join '("maildir:/dispatched/INBOX.spambucket"
                                      "maildir:/zhaw/INBOX.spambucket"
-                                     "maildir:/200ok/INBOX.spambucket"
-                                     "maildir:/vr_tech/INBOX.spambucket"
-                                     "maildir:/voicerepublic/INBOX.Spam")
+                                     "maildir:/200ok/INBOX.spambucket")
                                   " OR "))
 
 (add-to-list 'mu4e-bookmarks
@@ -186,7 +166,7 @@
 (add-to-list 'mu4e-bookmarks
              '(draft-folders "All drafts"     ?d))
 (add-to-list 'mu4e-bookmarks
-             '((concat d-spam " AND (flag:unread OR flag:flagged) AND NOT (flag:trashed OR maildir:/voicerepublic/INBOX.Notifications)")
+             '((concat d-spam " AND (flag:unread OR flag:flagged) AND NOT flag:trashed")
                "Unread messages"      ?u))
 
 ;;; mu4e-config.el ends here
