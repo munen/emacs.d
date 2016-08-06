@@ -335,6 +335,8 @@
 ;; ordering
 (setq flyspell-sort-corrections nil)
 
+(add-hook 'text-mode-hook 'auto-fill-mode)
+
 ;; Configure ispell backend
 ;; The german dictionary has been installed taken from here:
 ;; http://fmg-www.cs.ucla.edu/geoff/ispell-dictionaries.html#German-dicts
