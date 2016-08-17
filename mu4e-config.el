@@ -170,7 +170,7 @@
                "Unread messages"      ?u))
 
 ;; Check for supposed attachments prior to sending them
-(defvar my-message-attachment-regexp "\\([Ww]e send\\|[Ii] send\\|attach\\|angehäng\\|[aA]nhang\\|angehaeng\\)")
+(defvar my-message-attachment-regexp "\\([Ww]e send\\|[Ii] send\\|attach\\|angehängt\\|[aA]nhang\\|angehaengt\\)")
 (defun my-message-check-attachment nil
   "Check if there is an attachment in the message if I claim it."
   (save-excursion
