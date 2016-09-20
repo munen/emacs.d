@@ -340,6 +340,10 @@
 
 (add-hook 'text-mode-hook 'auto-fill-mode)
 
+;; Enable narrow-to-region (C-x n n / C-x n w). This is disabled by
+;; default to not confuse beginners.
+(put 'narrow-to-region 'disabled nil)
+
 ;; Configure ispell backend
 ;; The german dictionary has been installed taken from here:
 ;; http://fmg-www.cs.ucla.edu/geoff/ispell-dictionaries.html#German-dicts
