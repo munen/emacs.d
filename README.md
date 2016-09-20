@@ -112,17 +112,15 @@ Tern shortcuts:
 As MTA [MU4E](http://www.djcbsoftware.nl/code/mu/mu4e/) is used. As
 SMTP Emacs smtpmail package.
 
+### Installation
+
 ### General
 
-To open PDFs within Mu4e with Emacs, then there's one thing to
-configure. Mu4e uses `xdg-open` to chose the app to open any mime
-type.
+* Configure `.offlineimaprc` file for IMAP
+* Configure `.authinfo` file for SMTP
+ - https://www.emacswiki.org/emacs/GnusAuthinfo
 
-Configure `xdg-open` to use Emacs:
-
-    `xdg-mime default emacs.desktop application/pdf`
-
-### OS X
+#### OS X
 
 MU works on a local Maildir folder, for synching that `offlineimap` is
 used. To install:
@@ -133,3 +131,19 @@ For MU4E to work, install MU and MU4E:
 
 For starttls to work when sending mail, install gnutls:
 `brew install gnutls`
+
+#### Debian
+
+`apt-get install offlineimap mu4e gnutls-bin`
+
+### General
+
+#### PDFs
+
+To open PDFs within Mu4e with Emacs, then there's one thing to
+configure. Mu4e uses `xdg-open` to chose the app to open any mime
+type.
+
+Configure `xdg-open` to use Emacs:
+
+    `xdg-mime default emacs.desktop application/pdf`
