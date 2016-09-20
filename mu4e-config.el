@@ -143,7 +143,7 @@
 
 ;; Re-define all standard bookmarks to not include the spam folders
 ;; for searches
-(defvar d-spam "NOT maildir:/dispatched/INBOX.spambucket")
+(defvar d-spam "NOT (maildir:/dispatched/INBOX.spambucket OR maildir:/200ok/INBOX.spambucket)")
 
 (defvar draft-folders (string-join '("maildir:/dispatched/INBOX.Drafts"
                                      "maildir:/zhaw/INBOX.Drafts"
@@ -170,7 +170,7 @@
                "Unread messages"      ?u))
 
 ;; Check for supposed attachments prior to sending them
-(defvar my-message-attachment-regexp "\\([Ww]e send\\|[Ii] send\\|attach\\|angehäng\\|[aA]nhang\\|angehaeng\\)")
+(defvar my-message-attachment-regexp "\\([Ww]e send\\|[Ii] send\\|attach\\|angehängt\\|[aA]nhang\\|angehaengt\\)")
 (defun my-message-check-attachment nil
   "Check if there is an attachment in the message if I claim it."
   (save-excursion

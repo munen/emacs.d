@@ -25,6 +25,7 @@
                       fixme-mode
                       sass-mode
                       yaml-mode
+                      pdf-tools
                       tern
                       tern-auto-complete
                       coffee-mode
@@ -334,6 +335,11 @@
 ;; Order corrections by likeliness, not by the default of alphabetical
 ;; ordering
 (setq flyspell-sort-corrections nil)
+
+(add-hook 'text-mode-hook 'auto-fill-mode)
+
+;; enable pdf-tools
+(pdf-tools-install)
 
 ;; Configure ispell backend
 ;; The german dictionary has been installed taken from here:
