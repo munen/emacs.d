@@ -367,6 +367,20 @@
     (async-shell-command (concat "dict" " " word)))
   (other-window 1))
 
+(defun encode-html (start end)
+  "Encodes HTML entities; works great in Visual Mode (START END)."
+  (interactive "r")
+  (save-excursion
+    (save-restriction
+      (narrow-to-region start end)
+      (goto-char (point-min))
+      (replace-string "&" "&amp;")
+      (goto-char (point-min))
+      (replace-string "<" "&lt;")
+      (goto-char (point-min))
+      (replace-string ">" "&gt;")
+      )))
+
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
