@@ -323,7 +323,9 @@
   ;; Default Browser
   (setq browse-url-browser-function 'browse-url-generic
         browse-url-generic-program "chromium")
-  (menu-bar-mode -1))
+  (menu-bar-mode -1)
+  ;; enable pdf-tools
+  (pdf-tools-install))
 
 ;;; Mu4e
 (load "~/.emacs.d/mu4e-config")
@@ -337,9 +339,6 @@
 (setq flyspell-sort-corrections nil)
 
 (add-hook 'text-mode-hook 'auto-fill-mode)
-
-;; enable pdf-tools
-(pdf-tools-install)
 
 ;; Configure ispell backend
 ;; The german dictionary has been installed taken from here:
