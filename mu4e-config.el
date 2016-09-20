@@ -143,7 +143,7 @@
 
 ;; Re-define all standard bookmarks to not include the spam folders
 ;; for searches
-(defvar d-spam "NOT maildir:/dispatched/INBOX.spambucket")
+(defvar d-spam "NOT (maildir:/dispatched/INBOX.spambucket OR maildir:/200ok/INBOX.spambucket)")
 
 (defvar draft-folders (string-join '("maildir:/dispatched/INBOX.Drafts"
                                      "maildir:/zhaw/INBOX.Drafts"
