@@ -112,6 +112,18 @@ Tern shortcuts:
 As MTA [MU4E](http://www.djcbsoftware.nl/code/mu/mu4e/) is used. As
 SMTP Emacs smtpmail package.
 
+### General
+
+To open PDFs within Mu4e with Emacs, then there's one thing to
+configure. Mu4e uses `xdg-open` to chose the app to open any mime
+type.
+
+Configure `xdg-open` to use Emacs:
+
+    `xdg-mime default emacs.desktop application/pdf`
+
+### OS X
+
 MU works on a local Maildir folder, for synching that `offlineimap` is
 used. To install:
 `brew install offlineimap`
