@@ -394,10 +394,11 @@
   "Compiles the currently loaded markdown file using pandoc into a PDF"
   (interactive)
   (save-buffer)
-  (shell-command (concat "pandoc " (buffer-name) " -o "
-                         (replace-regexp-in-string "md" "pdf" (buffer-name)))))
+  (shell-command (concat "pandoc " (buffer-file-name) " -o "
+                         (replace-regexp-in-string "md" "pdf" (buffer-file-name)))))
 
 (defun update-other-buffer ()
+  (interactive)
   (other-window 1)
   (revert-buffer nil t)
   (other-window 1))
@@ -409,8 +410,18 @@
   (md-compile)
   (update-other-buffer))
 
+(defun org-compile-and-update-other-buffer ()
+  "Has as a premise that it's run from an org-mode buffer and the
+   other buffer already has the PDF open"
+  (interactive)
+  (org-beamer-export-to-pdf)
+  ;; (org-latex-export-to-pdf)
+  (update-other-buffer))
+
+(define-key org-mode-map (kbd "C-c r") 'org-compile-and-update-other-buffer)
+
 (eval-after-load 'markdown-mode
-  '(define-key markdown-mode-map (kbd "C-c C-r") 'md-compile-and-update-other-buffer))
+  '(define-key markdown-mode-map (kbd "C-c r") 'md-compile-and-update-other-buffer))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
