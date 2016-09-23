@@ -306,6 +306,8 @@
 (evil-leader/set-key
   "a" 'org-archive-subtree-default)
 
+
+
 ;;; OS X
 (when (eq system-type 'darwin)
   (set-frame-font "Menlo 14")
@@ -316,6 +318,13 @@
   (exec-path-from-shell-initialize)
   ; exec-path-from-shell-initialize might make this line obsolete
   ;(setq mu4e-mu-binary "/usr/local/bin/mu")
+
+  ; Use left Cmd to create Umlauts (thx JCF)
+  (define-key key-translation-map [dead-diaeresis]
+    (lookup-key key-translation-map "\C-x8\""))
+  (define-key isearch-mode-map [dead-diaeresis] nil)
+  (global-set-key (kbd "M-u")
+                  (lookup-key key-translation-map "\C-x8\""))
   )
 
 ;;; Linux
