@@ -349,6 +349,10 @@
 
 (add-hook 'text-mode-hook 'auto-fill-mode)
 
+;; Enable narrow-to-region (C-x n n / C-x n w). This is disabled by
+;; default to not confuse beginners.
+(put 'narrow-to-region 'disabled nil)
+
 ;; Configure ispell backend
 ;; The german dictionary has been installed taken from here:
 ;; http://fmg-www.cs.ucla.edu/geoff/ispell-dictionaries.html#German-dicts
@@ -395,6 +399,28 @@
       (replace-string ">" "&gt;")
       )))
 
+(defun md-compile ()
+  "Compiles the currently loaded markdown file using pandoc into a PDF"
+  (interactive)
+  (save-buffer)
+  (shell-command (concat "pandoc " (buffer-name) " -o "
+                         (replace-regexp-in-string "md" "pdf" (buffer-name)))))
+
+(defun update-other-buffer ()
+  (other-window 1)
+  (revert-buffer nil t)
+  (other-window 1))
+
+(defun md-compile-and-update-other-buffer ()
+  "Has as a premise that it's run from a markdown-mode buffer and the
+   other buffer already has the PDF open"
+  (interactive)
+  (md-compile)
+  (update-other-buffer))
+
+(eval-after-load 'markdown-mode
+  '(define-key markdown-mode-map (kbd "C-c C-r") 'md-compile-and-update-other-buffer))
+
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -402,4 +428,4 @@
  ;; If there is more than one, they won't work right.
  )
 
-;;; init.el ends here
+;;; el ends here
