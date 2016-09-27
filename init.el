@@ -306,6 +306,18 @@
 (evil-leader/set-key
   "a" 'org-archive-subtree-default)
 
+;; Allow =pdflatex= to use shell-commands
+;; This will allow it to use =pygments= as syntax highlighter for exports to PDF
+(setq org-latex-pdf-process
+      '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+        "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+        "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+
+;; Include =minted= package for LaTeX exports
+(add-to-list 'org-latex-packages-alist '("" "minted"))
+(setq org-latex-listings 'minted)
+
+
 ; Use left Cmd to create Umlauts (thx JCF)
 (define-key key-translation-map [dead-diaeresis]
   (lookup-key key-translation-map "\C-x8\""))
