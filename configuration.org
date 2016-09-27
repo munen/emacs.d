@@ -173,7 +173,6 @@ default to not confuse beginners.
   (require 'saveplace)
 #+END_SRC
 
-
 * Evil Mode
 ** Enable Evil
 #+BEGIN_SRC emacs-lisp
@@ -516,11 +515,12 @@ Enable Projectile globally
 
   (require 'org)
 
-  ; langauges for org-babel support
+  ; languages for org-babel support
   (org-babel-do-load-languages
    'org-babel-load-languages
    '(
      (sh . t)
+     (js . t)
      (ruby . t)
      ))
 
