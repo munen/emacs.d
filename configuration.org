@@ -569,6 +569,8 @@ Set up capture templates for:
 - Shopping Items which get appended to the Shopping List in =things.org=
 - Media Entries (watch/read later items) that land in =media.org=
 
+Org Capture Templates are explained [[http://orgmode.org/manual/Capture-templates.html][here]], Org Template expansion [[http://orgmode.org/manual/Template-expansion.html#Template-expansion][here.]]
+
 #+BEGIN_SRC emacs-lisp
   ;; Set org-capture inbox
   (setq org-default-notes-file (concat org-directory "inbox.org"))
