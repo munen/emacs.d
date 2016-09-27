@@ -62,6 +62,74 @@ management system]]. To initially install packages, open
       (package-install p)))
 #+END_SRC
 
+* Default Settings
+
+** Gargabe Collection
+
+Allow 20MB of memory (instead of 0.76MB) before calling garbage
+collection. This means GC runs less often, which speeds up some
+operations.
+
+#+BEGIN_SRC emacs-lisp
+  (setq gc-cons-threshold 20000000)
+#+END_SRC
+
+** Backups and Auto-Saves in =/tmp=
+
+Store backups and auto-saved files in TEMPORARY-FILE-DIRECTORY (which
+defaults to /tmp on Unix), instead of in the same directory as the
+file.
+
+#+BEGIN_SRC emacs-lisp
+  (setq backup-directory-alist
+        `((".*" . ,temporary-file-directory)))
+  (setq auto-save-file-name-transforms
+        `((".*" ,temporary-file-directory t)))
+#+END_SRC
+
+** Always follow symlinks
+   When opening a file, always follow symlinks.
+
+#+BEGIN_SRC emacs-lisp
+  (setq vc-follow-symlinks t)
+#+END_SRC
+
+** Sentences have one space after a period
+Don't assume that sentences should have two spaces after
+periods.
+
+#+BEGIN_SRC emacs-lisp
+  (setq sentence-end-double-space nil)
+#+END_SRC
+
+** Confirm before closing Emacs
+#+BEGIN_SRC emacs-lisp
+  (setq confirm-kill-emacs 'y-or-n-p)
+#+END_SRC
+
+** Human readable units in =dired-mode=
+
+#+BEGIN_SRC emacs-lisp
+  (setq-default dired-listing-switches "-alh")
+#+END_SRC
+
+** Ask =y/n= instead of =yes/no=
+** Auto revert files on change
+When something changes a file, automatically refresh the
+buffer containing that file so they can't get out of sync.
+
+#+BEGIN_SRC emacs-lisp
+(global-auto-revert-mode t)
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+  (fset 'yes-or-no-p 'y-or-n-p)
+#+END_SRC
+** Shortcut for changing font-size
+#+BEGIN_SRC emacs-lisp
+  (define-key global-map (kbd "C-1") 'text-scale-increase)
+  (define-key global-map (kbd "C-0") 'text-scale-decrease)
+#+END_SRC
 * Evil Mode
 
 #+BEGIN_SRC emacs-lisp
