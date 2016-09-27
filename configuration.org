@@ -74,7 +74,12 @@ operations.
   (setq gc-cons-threshold 20000000)
 #+END_SRC
 
-** Backups and Auto-Saves in =/tmp=
+** Do not create backup files
+#+BEGIN_SRC emacs-lisp
+  (setq make-backup-files nil)
+#+END_SRC
+
+** Auto-Save in =/tmp=
 
 Store backups and auto-saved files in TEMPORARY-FILE-DIRECTORY (which
 defaults to /tmp on Unix), instead of in the same directory as the
@@ -114,6 +119,9 @@ periods.
 #+END_SRC
 
 ** Ask =y/n= instead of =yes/no=
+#+BEGIN_SRC emacs-lisp
+  (fset 'yes-or-no-p 'y-or-n-p)
+#+END_SRC
 ** Auto revert files on change
 When something changes a file, automatically refresh the
 buffer containing that file so they can't get out of sync.
@@ -121,23 +129,62 @@ buffer containing that file so they can't get out of sync.
 #+BEGIN_SRC emacs-lisp
 (global-auto-revert-mode t)
 #+END_SRC
-
-#+BEGIN_SRC emacs-lisp
-  (fset 'yes-or-no-p 'y-or-n-p)
-#+END_SRC
 ** Shortcut for changing font-size
 #+BEGIN_SRC emacs-lisp
   (define-key global-map (kbd "C-1") 'text-scale-increase)
   (define-key global-map (kbd "C-0") 'text-scale-decrease)
 #+END_SRC
-* Evil Mode
+** Disable startup message
 
+#+BEGIN_SRC emacs-lisp
+  (setq inhibit-splash-screen t)
+  (setq inhibit-startup-message t)
+
+#+END_SRC
+
+** Display the current time
+#+BEGIN_SRC emacs-lisp
+  (display-time-mode t)
+#+END_SRC
+
+** Do not display GUI Toolbar
+
+#+BEGIN_SRC emacs-lisp
+  (tool-bar-mode 0)
+#+END_SRC
+
+** Automatic Line Breaks
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'text-mode-hook 'auto-fill-mode)
+#+END_SRC
+
+** Enable Narrow To Regiion
+
+Enable narrow-to-region (C-x n n / C-x n w). This is disabled by
+default to not confuse beginners.
+
+#+BEGIN_SRC emacs-lisp
+  (put 'narrow-to-region 'disabled nil)
+#+END_SRC
+** Remember the cursor position of files when reopening them
+#+BEGIN_SRC emacs-lisp
+  (setq save-place-file "~/.emacs.d/saveplace")
+  (setq-default save-place t)
+  (require 'saveplace)
+#+END_SRC
+
+
+* Evil Mode
+** Enable Evil
 #+BEGIN_SRC emacs-lisp
   (evil-mode t)
   ;; Enable "M-x" in evil mode
   (global-set-key (kbd "M-x") 'execute-extended-command)
+#+END_SRC
 
-  ;; Leader Mode Config
+** Leader Mode Config
+
+#+BEGIN_SRC emacs-lisp
   (global-evil-leader-mode)
   (evil-leader/set-leader ",")
   (evil-leader/set-key
@@ -145,31 +192,45 @@ buffer containing that file so they can't get out of sync.
     "s" 'ispell
     "b" 'evil-buffer
     "q" 'evil-quit)
+#+END_SRC
 
+** Evil Surround, emulating tpope's =surround.vim=
 
-  ;; Evil Surround, emulating tpope's surround.vim
+#+BEGIN_SRC emacs-lisp
   (require 'evil-surround)
   (global-evil-surround-mode 1)
+#+END_SRC
 
-  ;; TODO: Bind M-. and M-, for Cider Mode
-
-  ;; Fast switching between buffers
+** Fast switching between buffers
+#+BEGIN_SRC emacs-lisp
   (define-key evil-normal-state-map (kbd "{") 'evil-next-buffer)
   (define-key evil-normal-state-map (kbd "}") 'evil-prev-buffer)
+#+END_SRC
 
-  ;; Increment / Decrement numbers
+** Increment / Decrement numbers
+
+#+BEGIN_SRC emacs-lisp
   (global-set-key (kbd "C-=") 'evil-numbers/inc-at-pt)
   (global-set-key (kbd "C--") 'evil-numbers/dec-at-pt)
   (define-key evil-normal-state-map (kbd "C-=") 'evil-numbers/inc-at-pt)
   (define-key evil-normal-state-map (kbd "C--") 'evil-numbers/dec-at-pt)
+#+END_SRC
 
-
-  ;; j/k for browsing wrapped lines
+** Use =j/k= for browsing wrapped lines
+#+BEGIN_SRC emacs-lisp
   (define-key evil-normal-state-map (kbd "j") 'evil-next-visual-line)
   (define-key evil-normal-state-map (kbd "k") 'evil-previous-visual-line)
 #+END_SRC
 
+** TODO Bind M-. and M-, for Cider Mode
+
 * ido-mode
+
+=ido= means "Interactively Do Things"
+
+This changes many defaults like =find-file= and switching
+buffers. =ido= has a completion engine that's sensible to use
+everywhere.
 
 #+BEGIN_SRC emacs-lisp
   (ido-mode t)
@@ -196,28 +257,45 @@ capable counterparts
 #+BEGIN_SRC emacs-lisp
   (ac-config-default)
 #+END_SRC
-
-
+*** Tabs
 Set tab width to 2 for all buffers
 #+BEGIN_SRC emacs-lisp
-  ;; Highlights FIXME, TODO and BUG statements
-  (fixme-mode t)
-
   (setq-default tab-width 2)
+#+END_SRC
 
-  ;; Use spaces instead of tabs
+Use spaces instead of tabs
+
+#+BEGIN_SRC emacs-lisp
   (setq-default tab-width 2 indent-tabs-mode nil)
+#+END_SRC
 
-  ;; Auto-indent with the Return key
-  (define-key global-map (kbd "RET") 'newline-and-indent)
 
-  ;; Show matching paren
-  (show-paren-mode t)
+Indentation cannot insert tabs
 
-  ;; Indentation cannot insert tabs
+#+BEGIN_SRC emacs-lisp
   (setq-default indent-tabs-mode nil)
+#+END_SRC
 
-  ;; Delete trailing whitespace
+*** Highlight FIXME, TODO and BUG statements
+#+BEGIN_SRC emacs-lisp
+  (fixme-mode t)
+#+END_SRC
+
+*** Auto-indent with the Return key
+
+#+BEGIN_SRC emacs-lisp
+  (define-key global-map (kbd "RET") 'newline-and-indent)
+#+END_SRC
+
+*** Show matching paren
+
+#+BEGIN_SRC emacs-lisp
+  (show-paren-mode t)
+#+END_SRC
+
+*** Delete trailing whitespace
+
+#+BEGIN_SRC emacs-lisp
   (add-hook 'before-save-hook 'delete-trailing-whitespace)
 #+END_SRC
 
@@ -395,7 +473,7 @@ buffer, and watch your changes appear as you type!
 
 ** p_slides
 
-For p_slides presentations, run markdown-mode. This is a very
+For [[https://github.com/munen/p_slides][p_slides]] presentations, run markdown-mode. This is a very
 primitive check.
 #+BEGIN_SRC emacs-lisp
   (add-to-list 'auto-mode-alist '("presentation.html" . markdown-mode))
@@ -425,57 +503,12 @@ Create shortcut for =magit=.
 
 ** Projectile
 
+Enable Projectile globally
 #+BEGIN_SRC emacs-lisp
-  ;; Enable Projectile globally
   (projectile-global-mode)
 #+END_SRC
 
 * Emacs Startup
-
-** Disable startup message
-
-#+BEGIN_SRC emacs-lisp
-  (setq inhibit-splash-screen t)
-  (setq inhibit-startup-message t)
-
-#+END_SRC
-
-** Display the current time
-#+BEGIN_SRC emacs-lisp
-  (display-time-mode t)
-#+END_SRC
-
-** Backup Files
-Do not create backup files
-#+BEGIN_SRC emacs-lisp
-  (setq make-backup-files nil)
-#+END_SRC
-
-** Do not display GUI Toolbar
-
-#+BEGIN_SRC emacs-lisp
-  (tool-bar-mode 0)
-#+END_SRC
-
-** Automatic Line Breaks
-#+BEGIN_SRC emacs-lisp
-  (add-hook 'text-mode-hook 'auto-fill-mode)
-#+END_SRC
-
-** Enable Narrow To Regiion
-
-Enable narrow-to-region (C-x n n / C-x n w). This is disabled by
-default to not confuse beginners.
-
-#+BEGIN_SRC emacs-lisp
-  (put 'narrow-to-region 'disabled nil)
-#+END_SRC
-** Remember the cursor position of files when reopening them
-#+BEGIN_SRC emacs-lisp
-  (setq save-place-file "~/.emacs.d/saveplace")
-  (setq-default save-place t)
-  (require 'saveplace)
-#+END_SRC
 
 * org-mode
 
