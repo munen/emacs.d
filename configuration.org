@@ -1,0 +1,737 @@
+#+TITLE: Emacs configuration
+#+AUTHOR: Alain M. Lafon
+#+EMAIL: alain@200ok.ch
+
+* Dependency management
+
+#+BEGIN_SRC emacs-lisp
+  (require 'package)
+
+  (setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
+                           ("marmalade" . "https://marmalade-repo.org/packages/")
+                           ("melpa" . "https://melpa.org/packages/")))
+  (package-initialize)
+
+
+  (defvar my-packages '(ag
+                        flycheck
+                        auto-complete
+                        web-mode
+                        clojure-mode
+                        clj-refactor
+                        cider
+                        exec-path-from-shell
+                        ac-cider
+                        js2-mode
+                        ac-js2
+                        fixme-mode
+                        sass-mode
+                        yaml-mode
+                        pdf-tools
+                        tern
+                        tern-auto-complete
+                        coffee-mode
+                        projectile
+                        markdown-mode
+                        enh-ruby-mode
+                        robe
+                        evil
+                        evil-leader
+                        evil-surround
+                        evil-numbers
+                        impatient-mode
+                        restclient
+                        magit
+                        darktooth-theme
+                        writeroom-mode
+                        zenburn-theme))
+
+  (dolist (p my-packages)
+    (unless (package-installed-p p)
+      (package-install p)))
+#+END_SRC
+
+* Evil Mode
+
+#+BEGIN_SRC emacs-lisp
+  (evil-mode t)
+  ;; Enable "M-x" in evil mode
+  (global-set-key (kbd "M-x") 'execute-extended-command)
+
+  ;; Leader Mode Config
+  (global-evil-leader-mode)
+  (evil-leader/set-leader ",")
+  (evil-leader/set-key
+    "w" 'basic-save-buffer
+    "s" 'ispell
+    "b" 'evil-buffer
+    "q" 'evil-quit)
+
+
+  ;; Evil Surround, emulating tpope's surround.vim
+  (require 'evil-surround)
+  (global-evil-surround-mode 1)
+
+  ;; TODO: Bind M-. and M-, for Cider Mode
+
+  ;; Fast switching between buffers
+  (define-key evil-normal-state-map (kbd "{") 'evil-next-buffer)
+  (define-key evil-normal-state-map (kbd "}") 'evil-prev-buffer)
+
+  ;; Increment / Decrement numbers
+  (global-set-key (kbd "C-=") 'evil-numbers/inc-at-pt)
+  (global-set-key (kbd "C--") 'evil-numbers/dec-at-pt)
+  (define-key evil-normal-state-map (kbd "C-=") 'evil-numbers/inc-at-pt)
+  (define-key evil-normal-state-map (kbd "C--") 'evil-numbers/dec-at-pt)
+
+
+  ;; j/k for browsing wrapped lines
+  (define-key evil-normal-state-map (kbd "j") 'evil-next-visual-line)
+  (define-key evil-normal-state-map (kbd "k") 'evil-previous-visual-line)
+#+END_SRC
+
+* ido-mode
+
+#+BEGIN_SRC emacs-lisp
+  (ido-mode t)
+  (ido-everywhere t)
+  (setq ido-enable-flex-matching t)
+  (global-set-key (kbd "C-x C-b") 'ibuffer)
+#+END_SRC
+
+* Search
+
+Replace i-search-(forward|backward) with their respective regexp
+capable counterparts
+
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "C-s") 'isearch-forward-regexp)
+  (global-set-key (kbd "C-r") 'isearch-backward-regexp)
+
+#+END_SRC
+
+* Programming
+** General
+*** Auto Complete
+
+#+BEGIN_SRC emacs-lisp
+  (ac-config-default)
+#+END_SRC
+
+
+Set tab width to 2 for all buffers
+#+BEGIN_SRC emacs-lisp
+  ;; Highlights FIXME, TODO and BUG statements
+  (fixme-mode t)
+
+  (setq-default tab-width 2)
+
+  ;; Use spaces instead of tabs
+  (setq-default tab-width 2 indent-tabs-mode nil)
+
+  ;; Auto-indent with the Return key
+  (define-key global-map (kbd "RET") 'newline-and-indent)
+
+  ;; Show matching paren
+  (show-paren-mode t)
+
+  ;; Indentation cannot insert tabs
+  (setq-default indent-tabs-mode nil)
+
+  ;; Delete trailing whitespace
+  (add-hook 'before-save-hook 'delete-trailing-whitespace)
+#+END_SRC
+
+** Ruby
+
+For syntax checking to work, also run the following commands:
+
+- =$ gem install rubocop ruby-lint=
+- =npm install -g eslint=
+
+#+BEGIN_SRC emacs-lisp
+  (setq ruby-indent-level 2)
+  (add-to-list 'auto-mode-alist '("\\.scss?\\'" . sass-mode))
+
+  (add-to-list 'auto-mode-alist '("\\.rb?\\'" . enh-ruby-mode))
+  (add-to-list 'auto-mode-alist '("\\.rake?\\'" . enh-ruby-mode))
+  (add-hook 'enh-ruby-mode-hook 'linum-mode)
+  (add-hook 'enh-ruby-mode-hook 'robe-mode)
+
+  ; From Phil
+  (add-hook 'ruby-mode-hook
+           (lambda ()
+             (add-to-list 'write-file-functions 'delete-trailing-whitespace)))
+#+END_SRC
+
+** Clojure
+#+BEGIN_SRC emacs-lisp
+
+  (require 'ac-cider)
+  ;;(setq ac-quick-help-delay 0.5)
+  (add-hook 'cider-mode-hook 'ac-flyspell-workaround)
+  (add-hook 'cider-mode-hook 'ac-cider-setup)
+  (add-hook 'cider-repl-mode-hook 'ac-cider-setup)
+  (eval-after-load "auto-complete"
+    '(progn
+       (add-to-list 'ac-modes 'cider-mode)
+       (add-to-list 'ac-modes 'cider-repl-mode)))
+
+  (require 'clj-refactor)
+  (add-hook 'clojure-mode-hook
+            (lambda ()
+              (clj-refactor-mode 1)
+              (setq cljr-warn-on-eval nil)
+              (yas-minor-mode 1) ; for adding require/use/import statements
+              ;; This choice of keybinding leaves cider-macroexpand-1 unbound
+              (cljr-add-keybindings-with-prefix "C-c C-m")))
+
+
+#+END_SRC
+** JavaScript
+
+#+BEGIN_SRC emacs-lisp
+
+  (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+  (add-hook 'js-mode-hook 'js2-minor-mode)
+  (setq js2-highlight-level 3)
+  (setq js-indent-level 2)
+
+  ;; Tern
+  (add-hook 'js-mode-hook (lambda () (tern-mode t)))
+  (eval-after-load 'tern
+     '(progn
+        (require 'tern-auto-complete)
+        (tern-ac-setup)))
+
+
+#+END_SRC
+** Web
+
+#+BEGIN_SRC emacs-lisp
+  ;; web-mode
+  (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+
+  (setq web-mode-enable-current-element-highlight t)
+  (setq web-mode-ac-sources-alist
+    '(("html" . (ac-source-words-in-buffer ac-source-abbrev))))
+#+END_SRC
+
+** p_slides
+
+For p_slides presentations, run markdown-mode. This is a very
+primitive check.
+#+BEGIN_SRC emacs-lisp
+  (add-to-list 'auto-mode-alist '("presentation.html" . markdown-mode))
+  (add-hook 'markdown-mode-hook 'flyspell-mode)
+#+END_SRC
+
+** yaml
+
+#+BEGIN_SRC emacs-lisp
+  (require 'yaml-mode)
+  (add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode))
+#+END_SRC
+
+** Markdown
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'markdown-mode-hook 'auto-fill-mode)
+
+#+END_SRC
+
+** Git
+
+Create shortcut for =magit=.
+
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "C-x g") 'magit-status)
+#+END_SRC
+
+** Projectile
+
+#+BEGIN_SRC emacs-lisp
+  ;; Enable Projectile globally
+  (projectile-global-mode)
+#+END_SRC
+
+* Emacs Startup
+
+** Disable startup message
+
+#+BEGIN_SRC emacs-lisp
+  (setq inhibit-splash-screen t)
+  (setq inhibit-startup-message t)
+
+#+END_SRC
+
+** Display the current time
+#+BEGIN_SRC emacs-lisp
+  (display-time-mode t)
+#+END_SRC
+
+** Backup Files
+Do not create backup files
+#+BEGIN_SRC emacs-lisp
+  (setq make-backup-files nil)
+#+END_SRC
+
+** Do not display GUI Toolbar
+
+#+BEGIN_SRC emacs-lisp
+  (tool-bar-mode 0)
+#+END_SRC
+
+** Automatic Line Breaks
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'text-mode-hook 'auto-fill-mode)
+#+END_SRC
+
+** Enable Narrow To Regiion
+
+Enable narrow-to-region (C-x n n / C-x n w). This is disabled by
+default to not confuse beginners.
+
+#+BEGIN_SRC emacs-lisp
+  (put 'narrow-to-region 'disabled nil)
+#+END_SRC
+** Remember the cursor position of files when reopening them
+#+BEGIN_SRC emacs-lisp
+  (setq save-place-file "~/.emacs.d/saveplace")
+  (setq-default save-place t)
+  (require 'saveplace)
+#+END_SRC
+
+* org-mode
+#+BEGIN_SRC emacs-lisp
+
+  (require 'org)
+
+  ; langauges for org-babel support
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '(
+     (sh . t)
+     (ruby . t)
+     ))
+
+  (add-hook 'org-mode-hook 'auto-fill-mode)
+  (add-hook 'org-mode-hook 'flyspell-mode)
+
+  (setq org-directory "~/switchdrive/org/")
+
+  ;; Set org-capture inbox
+  (setq org-default-notes-file (concat org-directory "inbox.org"))
+  (define-key global-map "\C-cc" 'org-capture)
+
+  (setq org-agenda-files (list (concat org-directory "things.org")
+                               (concat org-directory "inbox.org")
+                               (concat org-directory "reference.org")))
+
+  (setq org-capture-templates
+        '(("t" "Todo" entry (file+headline (concat org-directory "inbox.org") "Tasks")
+           "* TODO %?\n  %U\n  %i\n  %a")
+          ("s" "Code Snippet" entry
+           (file (concat org-directory "snippets.org"))
+           ;; Prompt for tag and language
+           "* %?\t%^g\n#+BEGIN_SRC %^{language}\n%i\n#+END_SRC")
+          ("m" "Media" entry
+           (file+datetree (concat org-directory "media.org"))
+           "* %?\nURL: \nEntered on %U\n")))
+
+  (global-set-key "\C-cl" 'org-store-link)
+
+  (defun things ()
+    "Open main 'org-mode' file and start 'org-agenda' for today."
+    (interactive)
+    (find-file (concat org-directory "things.org"))
+    (org-agenda-list)
+    (org-agenda-day-view)
+    (shrink-window-if-larger-than-buffer)
+    (other-window 1))
+
+  (evil-leader/set-key
+    "a" 'org-archive-subtree-default)
+
+  ;; Allow =pdflatex= to use shell-commands
+  ;; This will allow it to use =pygments= as syntax highlighter for exports to PDF
+  (setq org-latex-pdf-process
+        '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+          "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+          "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+
+  ;; Include =minted= package for LaTeX exports
+  (add-to-list 'org-latex-packages-alist '("" "minted"))
+  (setq org-latex-listings 'minted)
+
+
+#+END_SRC
+
+** Pomodoro
+#+BEGIN_SRC emacs-lisp
+  (load "~/.emacs.d/org-pomodoro")
+#+END_SRC
+* Misc Custom Improvements
+
+** TODO Refactor these into separate headers
+#+BEGIN_SRC emacs-lisp
+
+  ;; Helper functions to clean up the gazillion buffers
+  (defun kill-other-buffers ()
+    "Kill all other buffers."
+    (interactive)
+    (mapc 'kill-buffer (delq (current-buffer) (buffer-list))))
+
+  (defun kill-dired-buffers ()
+    "Kill all open dired buffers."
+    (interactive)
+    (mapc (lambda (buffer)
+            (when (eq 'dired-mode (buffer-local-value 'major-mode buffer))
+              (kill-buffer buffer)))
+          (buffer-list)))
+
+  (defun dict ()
+    "Lookup a WORD in the dictionary.  Expects 'dict' to be on the $PATH."
+    (interactive)
+    (let ((word (read-string "Word: " (word-at-point))))
+      (async-shell-command (concat "dict" " " word)))
+    (other-window 1))
+
+  (defun encode-html (start end)
+    "Encodes HTML entities; works great in Visual Mode (START END)."
+    (interactive "r")
+    (save-excursion
+      (save-restriction
+        (narrow-to-region start end)
+        (goto-char (point-min))
+        (replace-string "&" "&amp;")
+        (goto-char (point-min))
+        (replace-string "<" "&lt;")
+        (goto-char (point-min))
+        (replace-string ">" "&gt;")
+        )))
+
+  (defun md-compile ()
+    "Compiles the currently loaded markdown file using pandoc into a PDF"
+    (interactive)
+    (save-buffer)
+    (shell-command (concat "pandoc " (buffer-file-name) " -o "
+                           (replace-regexp-in-string "md" "pdf" (buffer-file-name)))))
+
+  (defun update-other-buffer ()
+    (interactive)
+    (other-window 1)
+    (revert-buffer nil t)
+    (other-window 1))
+
+  (defun md-compile-and-update-other-buffer ()
+    "Has as a premise that it's run from a markdown-mode buffer and the
+     other buffer already has the PDF open"
+    (interactive)
+    (md-compile)
+    (update-other-buffer))
+
+  (defun org-compile-and-update-other-buffer ()
+    "Has as a premise that it's run from an org-mode buffer and the
+     other buffer already has the PDF open"
+    (interactive)
+    (org-beamer-export-to-pdf)
+    ;; (org-latex-export-to-pdf)
+    (update-other-buffer))
+
+  (define-key org-mode-map (kbd "C-c r") 'org-compile-and-update-other-buffer)
+
+  (eval-after-load 'markdown-mode
+    '(define-key markdown-mode-map (kbd "C-c r") 'md-compile-and-update-other-buffer))
+
+#+END_SRC
+
+** Use left Cmd to create Umlauts (thx JCF)
+
+#+BEGIN_SRC emacs-lisp
+  (define-key key-translation-map [dead-diaeresis]
+    (lookup-key key-translation-map "\C-x8\""))
+  (define-key isearch-mode-map [dead-diaeresis] nil)
+  (global-set-key (kbd "M-u")
+                  (lookup-key key-translation-map "\C-x8\""))
+
+#+END_SRC
+
+* OS Specific
+
+** Linux
+
+#+BEGIN_SRC emacs-lisp
+
+  (when (eq system-type 'gnu/linux)
+    ;; Default Browser
+    (setq browse-url-browser-function 'browse-url-generic
+          browse-url-generic-program "chromium")
+    (menu-bar-mode -1)
+    ;; enable pdf-tools
+    (pdf-tools-install))
+
+#+END_SRC
+
+** macOS
+
+#+BEGIN_SRC emacs-lisp
+
+  (when (eq system-type 'darwin)
+    (set-frame-font "Menlo 14")
+    ; Use Spotlight to search with M-x locate
+    (setq locate-command "mdfind")
+    ; Set $MANPATH, $PATH and exec-path from shell even when started
+    ; from Spotlight
+    (exec-path-from-shell-initialize)
+    ; exec-path-from-shell-initialize might make this line obsolete
+    ;(setq mu4e-mu-binary "/usr/local/bin/mu")
+    )
+
+#+END_SRC
+
+* Mail
+
+** mu4e
+#+BEGIN_SRC emacs-lisp
+
+(require 'mu4e)
+
+(require 'org-mu4e)
+
+;; Default account on startup
+(setq user-full-name  "Alain M. Lafon"
+      mu4e-sent-folder "/200ok/INBOX.Sent"
+      mu4e-drafts-folder "/200ok/INBOX.Drafts"
+      mu4e-trash-folder "/200ok/INBOX.Trash")
+
+(setq smtpmail-debug-info t
+      message-kill-buffer-on-exit t
+      mu4e-get-mail-command "offlineimap"
+      mu4e-attachment-dir "~/switchdrive/org/files/inbox")
+
+(setq mu4e-maildir "~/Maildir/")
+
+;; HTML Mails
+(require 'mu4e-contrib)
+(setq mu4e-html2text-command 'mu4e-shr2text)
+(add-to-list 'mu4e-view-actions '("ViewInBrowser" . mu4e-action-view-in-browser) t)
+
+;; Alternatives are the following, however in first tests they
+;; show inferior results
+;; (setq mu4e-html2text-command "textutil -stdin -format html -convert txt -stdout")
+;; (setq mu4e-html2text-command "html2text -utf8 -width 72")
+;; (setq mu4e-html2text-command "w3m -dump -T text/html")
+
+(defvar my-mu4e-account-alist
+  '(("200ok"
+     (mu4e-sent-folder "/200ok/INBOX.Sent")
+     (mu4e-drafts-folder "/200ok/INBOX.Drafts")
+     (mu4e-trash-folder "/200ok/INBOX.Trash")
+     (user-mail-address "alain@200ok.ch")
+     (smtpmail-default-smtp-server "mail.your-server.de")
+     (smtpmail-local-domain "200ok.ch")
+     (smtpmail-smtp-user "munen@200ok.ch")
+     (smtpmail-smtp-server "mail.your-server.de")
+     (smtpmail-stream-type starttls)
+     (smtpmail-smtp-service 25))
+    ("zhaw"
+     (mu4e-sent-folder "/zhaw/INBOX.Sent Messages")
+     (mu4e-drafts-folder "/zhaw/INBOX.Drafts")
+     (mu4e-trash-folder "/zhaw/INBOX.Trash")
+     (user-mail-address "lafo@zhaw.ch")
+     (smtpmail-default-smtp-server "mail.your-server.de")
+     (smtpmail-local-domain "zhaw.ch")
+     (smtpmail-smtp-user "zhaw@dispatched.ch")
+     (smtpmail-smtp-server "mail.your-server.de")
+     (smtpmail-stream-type starttls)
+     (smtpmail-smtp-service 25))
+    ("dispatched"
+     (mu4e-sent-folder "/dispatched/INBOX.Sent")
+     (mu4e-drafts-folder "/dispatched/INBOX.Drafts")
+     (mu4e-trash-folder "/dispatched/INBOX.Trash")
+     (user-mail-address "alain.lafon@dispatched.ch")
+     (smtpmail-default-smtp-server "mail.your-server.de")
+     (smtpmail-local-domain "dispatched.ch")
+     (smtpmail-smtp-user "munen@dispatched.ch")
+     (smtpmail-smtp-server "mail.your-server.de")
+     (smtpmail-stream-type starttls)
+     (smtpmail-smtp-service 25))))
+
+;; Whenever a new mail is to be composed, change all relevant
+;; configuration variables to the respective account. This method is
+;; taken from the MU4E documentation:
+;; http://www.djcbsoftware.nl/code/mu/mu4e/Multiple-accounts.html#Multiple-accounts
+(defun my-mu4e-set-account ()
+  "Set the account for composing a message."
+  (let* ((account
+          (if mu4e-compose-parent-message
+              (let ((maildir (mu4e-message-field mu4e-compose-parent-message :maildir)))
+                (string-match "/\\(.*?\\)/" maildir)
+                (match-string 1 maildir))
+            (completing-read (format "Compose with account: (%s) "
+                                     (mapconcat #'(lambda (var) (car var))
+                                                my-mu4e-account-alist "/"))
+                             (mapcar #'(lambda (var) (car var)) my-mu4e-account-alist)
+                             nil t nil nil (caar my-mu4e-account-alist))))
+         (account-vars (cdr (assoc account my-mu4e-account-alist))))
+    (if account-vars
+        (mapc #'(lambda (var)
+                  (set (car var) (cadr var)))
+              account-vars)
+      (error "No email account found"))))
+
+
+(add-hook 'mu4e-compose-pre-hook 'my-mu4e-set-account)
+(add-hook 'mu4e-compose-mode-hook 'flyspell-mode)
+(add-hook 'mu4e-compose-mode-hook (lambda ()
+                                   (ispell-change-dictionary "deutsch")))
+
+;; gpg
+;; C-c C-e s to sign
+;; C-c C-e e to encrypt
+;; C-c C-e v to verify the signature
+;; C-c C-e d to decrypt
+(add-hook 'mu4e-compose-mode-hook 'epa-mail-mode)
+(add-hook 'mu4e-view-mode-hook 'epa-mail-mode)
+
+;; Automatic line breaks when reading mail
+(add-hook 'mu4e-view-mode-hook 'visual-line-mode)
+
+;; Do not set a footer by default
+(setq mu4e-compose-signature-auto-include nil)
+
+(setq mu4e-refile-folder
+  (lambda (msg)
+    (cond
+      ((string-match "^/dispatched.*"
+        (mu4e-message-field msg :maildir))
+        "/dispatched/INBOX.Archive")
+      ((string-match "^/200ok.*"
+        (mu4e-message-field msg :maildir))
+        "/200ok/INBOX.Archive")
+      ((string-match "^/zhaw.*"
+        (mu4e-message-field msg :maildir))
+        "/zhaw/INBOX.Archive")
+      ;; everything else goes to /archive
+      (t  "/archive"))))
+
+
+;; For mail completion, only consider emails that have been seen in
+;; the last 6 months to get rid of all the legacy mail addresses of
+;; people.
+(setq mu4e-compose-complete-only-after (format-time-string
+                                        "%Y-%m-%d"
+                                        (time-subtract (current-time) (days-to-time 150))))
+
+;; Empty the initial bookmark list
+(setq mu4e-bookmarks '())
+
+;; Re-define all standard bookmarks to not include the spam folders
+;; for searches
+(defvar d-spam "NOT (maildir:/dispatched/INBOX.spambucket OR maildir:/200ok/INBOX.spambucket)")
+
+(defvar draft-folders (string-join '("maildir:/dispatched/INBOX.Drafts"
+                                     "maildir:/zhaw/INBOX.Drafts"
+                                     "maildir:/200ok/INBOX.Drafts")
+                                   " OR "))
+
+(defvar spam-folders (string-join '("maildir:/dispatched/INBOX.spambucket"
+                                     "maildir:/zhaw/INBOX.spambucket"
+                                     "maildir:/200ok/INBOX.spambucket")
+                                  " OR "))
+
+(add-to-list 'mu4e-bookmarks
+             '((concat d-spam " AND date:today..now")                  "Today's messages"     ?t))
+(add-to-list 'mu4e-bookmarks
+             '((concat d-spam " AND date:7d..now")                     "Last 7 days"          ?w))
+(add-to-list 'mu4e-bookmarks
+             '((concat d-spam " AND mime:image/*")                     "Messages with images" ?p))
+(add-to-list 'mu4e-bookmarks
+             '(spam-folders "All spambuckets"     ?S))
+(add-to-list 'mu4e-bookmarks
+             '(draft-folders "All drafts"     ?d))
+(add-to-list 'mu4e-bookmarks
+             '((concat d-spam " AND (flag:unread OR flag:flagged) AND NOT flag:trashed")
+               "Unread messages"      ?u))
+
+;; Check for supposed attachments prior to sending them
+(defvar my-message-attachment-regexp "\\([Ww]e send\\|[Ii] send\\|attach\\|angehängt\\|[aA]nhang\\|angehaengt\\)")
+(defun my-message-check-attachment nil
+  "Check if there is an attachment in the message if I claim it."
+  (save-excursion
+    (message-goto-body)
+    (when (search-forward-regexp my-message-attachment-regexp nil t nil)
+      (message-goto-body)
+      (unless (or (search-forward "<#part" nil t nil)
+                  (message-y-or-n-p
+                   "No attachment. Send the message ?" nil nil))
+        (error "No message sent")))))
+(add-hook 'message-send-hook 'my-message-check-attachment)
+
+;;; mu4e-config.el ends here
+
+#+END_SRC
+
+** TODO Use Quoted printable text for outgoing messages to enable automatic line breaks
+*** If this is successfull, send upstream PR to MU4E
+https://mathiasbynens.be/notes/gmail-plain-text
+https://mothereff.in/quoted-printable
+https://www.gnu.org/software/emacs/manual/html_node/emacs-mime/qp.html
+
+* Spell Checking
+
+** Flyspell
+#+BEGIN_SRC emacs-lisp
+  ;; Order corrections by likeliness, not by the default of alphabetical
+  ;; ordering
+  (setq flyspell-sort-corrections nil)
+  ;; Configure ispell backend
+  ;; The german dictionary has been installed taken from here:
+  ;; http://fmg-www.cs.ucla.edu/geoff/ispell-dictionaries.html#German-dicts
+  (defun flyspell-switch-dictionary()
+    "Switch between German and English dictionaries"
+    (interactive)
+    (let* ((dic ispell-current-dictionary)
+           (change (if (string= dic "deutsch") "english" "deutsch")))
+      (ispell-change-dictionary change)
+      (message "Dictionary switched from %s to %s" dic change)))
+
+  ;; Enable global syntax checking through flycheck
+  (add-hook 'after-init-hook #'global-flycheck-mode)
+#+END_SRC
+
+* Presentation / Beamer
+
+** Configure default theme and font size
+#+BEGIN_SRC emacs-lisp
+  (defun standard-mode ()
+    "Default theme and font size.  Pendant: (presentation-mode)."
+    (interactive)
+    (set-face-attribute 'default nil :height 110)
+    ;; Themes
+    (set-frame-parameter nil 'background-mode 'dark)
+    ;; Dark, High Contrast
+    (load-theme 'wombat)
+    ;; Dark, Low contrast
+    ;; (load-theme 'darktooth)
+    ;; Dark, Lowest contrast
+    ;; (load-theme 'zenburn)
+     )
+
+#+END_SRC
+
+** Configure presentation theme and font size
+
+#+BEGIN_SRC emacs-lisp
+  (defun presentation-mode ()
+    "Presentation friendly theme and font size.  Pendant: (standard-mode)."
+    (interactive)
+    (load-theme 'leuven t)
+    (set-face-attribute 'default nil :height 140))
+#+END_SRC
+
+** Enable default theme and font
+
+#+BEGIN_SRC emacs-lisp
+  (standard-mode)
+#+END_SRC
