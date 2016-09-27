@@ -529,24 +529,9 @@ Enable Projectile globally
 
   (setq org-directory "~/switchdrive/org/")
 
-  ;; Set org-capture inbox
-  (setq org-default-notes-file (concat org-directory "inbox.org"))
-  (define-key global-map "\C-cc" 'org-capture)
-
   (setq org-agenda-files (list (concat org-directory "things.org")
                                (concat org-directory "inbox.org")
                                (concat org-directory "reference.org")))
-
-  (setq org-capture-templates
-        '(("t" "Todo" entry (file+headline (concat org-directory "inbox.org") "Tasks")
-           "* TODO %?\n  %U\n  %i\n  %a")
-          ("s" "Code Snippet" entry
-           (file (concat org-directory "snippets.org"))
-           ;; Prompt for tag and language
-           "* %?\t%^g\n#+BEGIN_SRC %^{language}\n%i\n#+END_SRC")
-          ("m" "Media" entry
-           (file+datetree (concat org-directory "media.org"))
-           "* %?\nURL: \nEntered on %U\n")))
 
   (global-set-key "\C-cl" 'org-store-link)
 
@@ -573,6 +558,36 @@ Enable Projectile globally
   (add-to-list 'org-latex-packages-alist '("" "minted"))
   (setq org-latex-listings 'minted)
 
+
+#+END_SRC
+
+** Capture Templates
+Set up capture templates for:
+
+- Todos which land in =inbox.org=
+- Code Snippets which land in =snippets.org=
+- Shopping Items which get appended to the Shopping List in =things.org=
+- Media Entries (watch/read later items) that land in =media.org=
+
+#+BEGIN_SRC emacs-lisp
+  ;; Set org-capture inbox
+  (setq org-default-notes-file (concat org-directory "inbox.org"))
+  (define-key global-map "\C-cc" 'org-capture)
+
+  (setq org-capture-templates
+        '(("t" "Todo" entry (file+headline (concat org-directory "inbox.org") "Tasks")
+           "* TODO %?\n  %U\n  %i\n  %a")
+          ("s" "Code Snippet" entry
+           (file (concat org-directory "snippets.org"))
+           ;; Prompt for tag and language
+           "* %?\t%^g\n#+BEGIN_SRC %^{language}\n%i\n#+END_SRC")
+          ("S" "Shopping Item" entry
+           (file+headline (concat org-directory "things.org") "Shopping")
+           ;; Prompt for tag and language
+           "* TODO %?\n  %U\n")
+          ("m" "Media" entry
+           (file+datetree (concat org-directory "media.org"))
+           "* %?\nURL: \nEntered on %U\n")))
 
 #+END_SRC
 
