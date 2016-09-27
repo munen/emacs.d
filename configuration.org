@@ -495,11 +495,8 @@ manually be started without clocking in via =M-x pomodoro-start=.
   (load "~/.emacs.d/org-pomodoro")
 #+END_SRC
 * Misc Custom Improvements
-
-** TODO Refactor these into separate headers
+** Helper functions to clean up the gazillion buffers
 #+BEGIN_SRC emacs-lisp
-
-  ;; Helper functions to clean up the gazillion buffers
   (defun kill-other-buffers ()
     "Kill all other buffers."
     (interactive)
@@ -512,7 +509,9 @@ manually be started without clocking in via =M-x pomodoro-start=.
             (when (eq 'dired-mode (buffer-local-value 'major-mode buffer))
               (kill-buffer buffer)))
           (buffer-list)))
-
+#+END_SRC
+** Lookup a word in the dictionary (using dict.cc)
+#+BEGIN_SRC emacs-lisp
   (defun dict ()
     "Lookup a WORD in the dictionary.  Expects 'dict' to be on the $PATH."
     (interactive)
@@ -520,6 +519,9 @@ manually be started without clocking in via =M-x pomodoro-start=.
       (async-shell-command (concat "dict" " " word)))
     (other-window 1))
 
+#+END_SRC
+** Encode HTML to HTML entities
+#+BEGIN_SRC emacs-lisp
   (defun encode-html (start end)
     "Encodes HTML entities; works great in Visual Mode (START END)."
     (interactive "r")
@@ -533,7 +535,12 @@ manually be started without clocking in via =M-x pomodoro-start=.
         (goto-char (point-min))
         (replace-string ">" "&gt;")
         )))
+#+END_SRC
+** Convenience functions when working with PDF exports
+[[https://www.youtube.com/watch?v%3DPd0JwOqh-gI][Here]] is a screencast showing how I edit Markdown or org-mode files in
+Emacs whilst having a PDF preview.
 
+#+BEGIN_SRC emacs-lisp
   (defun md-compile ()
     "Compiles the currently loaded markdown file using pandoc into a PDF"
     (interactive)
@@ -566,9 +573,7 @@ manually be started without clocking in via =M-x pomodoro-start=.
 
   (eval-after-load 'markdown-mode
     '(define-key markdown-mode-map (kbd "C-c r") 'md-compile-and-update-other-buffer))
-
 #+END_SRC
-
 ** Use left Cmd to create Umlauts (thx JCF)
 
 #+BEGIN_SRC emacs-lisp
