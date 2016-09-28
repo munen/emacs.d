@@ -258,22 +258,42 @@ capable counterparts
 #+END_SRC
 *** Tabs
 Set tab width to 2 for all buffers
+
 #+BEGIN_SRC emacs-lisp
   (setq-default tab-width 2)
 #+END_SRC
 
-Use spaces instead of tabs
+Use 2 spaces instead of a tab.
 
 #+BEGIN_SRC emacs-lisp
   (setq-default tab-width 2 indent-tabs-mode nil)
 #+END_SRC
 
-
-Indentation cannot insert tabs
+Indentation cannot insert tabs.
 
 #+BEGIN_SRC emacs-lisp
   (setq-default indent-tabs-mode nil)
 #+END_SRC
+
+Use 2 spaces instead of tabs for programming languages.
+
+#+BEGIN_SRC emacs-lisp
+  (setq js-indent-level 2)
+
+  (setq coffee-tab-width 2)
+
+  (setq python-indent 2)
+
+  (setq css-indent-offset 2)
+
+  (add-hook 'sh-mode-hook
+            (lambda ()
+              (setq sh-basic-offset 2
+                    sh-indentation 2)))
+
+  (setq web-mode-markup-indent-offset 2)
+#+END_SRC
+
 
 *** Highlight FIXME, TODO and BUG statements
 #+BEGIN_SRC emacs-lisp
