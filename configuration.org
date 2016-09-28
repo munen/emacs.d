@@ -803,6 +803,8 @@ For starttls to work when sending mail, install gnutls:
 
 (require 'org-mu4e)
 
+(setq send-mail-function 'smtpmail-send-it)
+
 ;; Default account on startup
 (setq user-full-name  "Alain M. Lafon"
       mu4e-sent-folder "/200ok/INBOX.Sent"
@@ -1008,17 +1010,29 @@ https://www.gnu.org/software/emacs/manual/html_node/emacs-mime/qp.html
 #+END_SRC
 
 * Presentation / Beamer
+** Set safe themes (to execute LISP code)
 
+#+BEGIN_SRC emacs-lisp
+  (setq custom-safe-themes
+     (quote
+      ("df3e05e16180d77732ceab47a43f2fcdb099714c1c47e91e8089d2fcf5882ea3"
+       "d09467d742f713443c7699a546c0300db1a75fed347e09e3f178ab2f3aa2c617"
+       "8db4b03b9ae654d4a57804286eb3e332725c84d7cdab38463cb6b97d5762ad26"
+       "85c59044bd46f4a0deedc8315ffe23aa46d2a967a81750360fb8600b53519b8a"
+       default)))
+#+END_SRC
 ** Configure default theme and font size
 #+BEGIN_SRC emacs-lisp
   (defun standard-mode ()
     "Default theme and font size.  Pendant: (presentation-mode)."
     (interactive)
+
     (set-face-attribute 'default nil :height 110)
     ;; Themes
-    (set-frame-parameter nil 'background-mode 'dark)
+    ;; (set-frame-parameter nil 'background-mode 'dark)
     ;; Dark, High Contrast
     (load-theme 'wombat)
+    (setq frame-background-mode (quote dark))
     ;; Dark, Low contrast
     ;; (load-theme 'darktooth)
     ;; Dark, Lowest contrast
