@@ -314,8 +314,14 @@ Use 2 spaces instead of tabs for programming languages.
 
 *** Delete trailing whitespace
 
+Delete trailing whitespace in any mode, _except_ when editing
+Markdown, because it uses [[http://daringfireball.net/projects/markdown/syntax#p][two trailing blanks]] as a signal to create a
+line break.
+
 #+BEGIN_SRC emacs-lisp
-  (add-hook 'before-save-hook 'delete-trailing-whitespace)
+  (add-hook 'before-save-hook '(lambda()
+                                (when (not (derived-mode-p 'markdown-mode))
+                                  (delete-trailing-whitespace))))
 #+END_SRC
 
 ** Ruby
@@ -427,8 +433,7 @@ or
     {"libs": ["browser", "jquery"]}
 #+END_EXAMPLE
 
-[[http://ternjs.net/doc/manual.html#configuration][Here]] is more
-documentation on how to configure a Tern project.
+[[http://ternjs.net/doc/manual.html#configuration][Here]] is more documentation on how to configure a Tern project.
 
 Tern shortcuts:
 
