@@ -29,6 +29,7 @@ management system]]. To initially install packages, open
                         auto-complete
                         web-mode
                         clojure-mode
+                        parinfer
                         clj-refactor
                         cider
                         exec-path-from-shell
@@ -344,6 +345,20 @@ For syntax checking to work, also run the following commands:
   (add-hook 'ruby-mode-hook
            (lambda ()
              (add-to-list 'write-file-functions 'delete-trailing-whitespace)))
+#+END_SRC
+
+** Lisp
+When working with Lisp, there's the option of handing parentheses
+manually or let them be dealt with by the magic that is [[http://shaunlebron.github.io/parinfer/][Parinfer]]. I'm
+using the wonderful [[https://github.com/DogLooksGood/parinfer-mode][parinfer-mode]].
+
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'clojure-mode-hook #'parinfer-mode)
+  (add-hook 'emacs-lisp-mode-hook #'parinfer-mode)
+  (setq parinfer-extensions '(company pretty-parens evil))
+  (define-key parinfer-mode-map (kbd "C-,") 'parinfer-toggle-mode)
+  (define-key parinfer-region-mode-map (kbd ">") 'parinfer-shift-right)
+  (define-key parinfer-region-mode-map (kbd "<") 'parinfer-shift-left)
 #+END_SRC
 
 ** Clojure
