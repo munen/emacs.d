@@ -353,14 +353,14 @@ manually or let them be dealt with by the magic that is [[http://shaunlebron.git
 using the wonderful [[https://github.com/DogLooksGood/parinfer-mode][parinfer-mode]].
 
 #+BEGIN_SRC emacs-lisp
-  (add-hook 'clojure-mode-hook #'parinfer-mode)
-  (add-hook 'emacs-lisp-mode-hook #'parinfer-mode)
-  (setq parinfer-extensions '(company pretty-parens evil))
-  (eval-after-load "parinfer"
-    '(progn
-       (define-key parinfer-mode-map (kbd "C-,") 'parinfer-toggle-mode)
-       (define-key parinfer-region-mode-map (kbd ">") 'parinfer-shift-right)
-       (define-key parinfer-region-mode-map (kbd "<") 'parinfer-shift-left)))
+  ;; (add-hook 'clojure-mode-hook #'parinfer-mode)
+  ;; (add-hook 'emacs-lisp-mode-hook #'parinfer-mode)
+  ;; (setq parinfer-extensions '(company pretty-parens evil))
+  ;; (eval-after-load "parinfer"
+  ;;   '(progn
+  ;;      (define-key parinfer-mode-map (kbd "C-,") 'parinfer-toggle-mode)
+  ;;      (define-key parinfer-region-mode-map (kbd ">") 'parinfer-shift-right)
+  ;;      (define-key parinfer-region-mode-map (kbd "<") 'parinfer-shift-left)))
 #+END_SRC
 
 ** Clojure
@@ -392,6 +392,8 @@ Create a =~/.lein/profiles.clj= file with:
 
 *** Emacs configuration
 
+Setup Cider with =auto-complete=.
+
 #+BEGIN_SRC emacs-lisp
 
   (require 'ac-cider)
@@ -404,6 +406,11 @@ Create a =~/.lein/profiles.clj= file with:
        (add-to-list 'ac-modes 'cider-mode)
        (add-to-list 'ac-modes 'cider-repl-mode)))
 
+#+END_SRC
+
+Setup =clj-refactor=.
+
+#+BEGIN_SRC emacs-lisp
   (require 'clj-refactor)
   (add-hook 'clojure-mode-hook
             (lambda ()
@@ -412,9 +419,8 @@ Create a =~/.lein/profiles.clj= file with:
               (yas-minor-mode 1) ; for adding require/use/import statements
               ;; This choice of keybinding leaves cider-macroexpand-1 unbound
               (cljr-add-keybindings-with-prefix "C-c C-m")))
-
-
 #+END_SRC
+
 ** JavaScript
 
 *** =js2-mode= and =tern=
