@@ -47,6 +47,7 @@ management system]]. To initially install packages, open
                         markdown-mode
                         enh-ruby-mode
                         robe
+                        smex
                         evil
                         evil-leader
                         evil-surround
@@ -239,6 +240,16 @@ everywhere.
   (global-set-key (kbd "C-x C-b") 'ibuffer)
 #+END_SRC
 
+** Use =smex= as M-X enhancement
+Smex is a M-x enhancement for Emacs. Built on top of Ido, it provides
+a convenient interface to your recently and most frequently used
+commands. And to all the other commands, too.
+
+#+BEGIN_SRC emacs-lisp
+  (smex-initialize)
+  (global-set-key (kbd "M-x") 'smex)
+  (global-set-key (kbd "M-X") 'smex-major-mode-commands)
+#+END_SRC
 * Search
 
 Replace i-search-(forward|backward) with their respective regexp
@@ -353,14 +364,14 @@ manually or let them be dealt with by the magic that is [[http://shaunlebron.git
 using the wonderful [[https://github.com/DogLooksGood/parinfer-mode][parinfer-mode]].
 
 #+BEGIN_SRC emacs-lisp
-  ;; (add-hook 'clojure-mode-hook #'parinfer-mode)
+  (add-hook 'clojure-mode-hook #'parinfer-mode)
   ;; (add-hook 'emacs-lisp-mode-hook #'parinfer-mode)
-  ;; (setq parinfer-extensions '(company pretty-parens evil))
-  ;; (eval-after-load "parinfer"
-  ;;   '(progn
-  ;;      (define-key parinfer-mode-map (kbd "C-,") 'parinfer-toggle-mode)
-  ;;      (define-key parinfer-region-mode-map (kbd ">") 'parinfer-shift-right)
-  ;;      (define-key parinfer-region-mode-map (kbd "<") 'parinfer-shift-left)))
+  (setq parinfer-extensions '(company pretty-parens evil))
+  (eval-after-load "parinfer"
+    '(progn
+       (define-key parinfer-mode-map (kbd "C-,") 'parinfer-toggle-mode)
+       (define-key parinfer-region-mode-map (kbd ">") 'parinfer-shift-right)
+       (define-key parinfer-region-mode-map (kbd "<") 'parinfer-shift-left)))
 #+END_SRC
 
 ** Clojure
@@ -555,8 +566,6 @@ Enable Projectile globally
   (projectile-global-mode)
 #+END_SRC
 
-* Emacs Startup
-
 * org-mode
 
 #+BEGIN_SRC emacs-lisp
@@ -660,6 +669,28 @@ manually be started without clocking in via =M-x pomodoro-start=.
 #+BEGIN_SRC emacs-lisp
   (load "~/.emacs.d/org-pomodoro")
 #+END_SRC
+** Keyword sets
+
+I use two workflow sets:
+
+- One for TODOs which can either be TODO or DONE
+- Another for tasks that I am WAITING for something to happen
+
+Additionally I sometimes use the keywords PROJECT and AGENDA to denote
+special bullets that I might tag (schedule/deadline) in the agenda.
+These keywords give semantics to those bullets.
+
+Note that "|" denotes a semantic state change that is reflected in a
+different color. Putting the pipe at the end means that all states
+prior should be shown in the same color.
+
+#+BEGIN_SRC emacs-lisp
+  (setq org-todo-keywords
+            '((sequence "TODO" "|" "DONE")
+              (sequence "PROJECT" "AGENDA" "|" "MINUTES")
+              (sequence "WAITING" "|")))
+#+END_SRC
+
 * Misc Custom Improvements
 ** Helper functions to clean up the gazillion buffers
 #+BEGIN_SRC emacs-lisp
@@ -727,6 +758,16 @@ Emacs whilst having a PDF preview.
     (md-compile)
     (update-other-buffer))
 
+  (defun latex-compile-and-update-other-buffer ()
+    "Has as a premise that it's run from a latex-mode buffer and the
+     other buffer already has the PDF open"
+    (interactive)
+    (save-buffer)
+    (shell-command (concat "pdflatex " (buffer-file-name)))
+    (switch-to-buffer (other-buffer))
+    (kill-buffer)
+    (update-other-buffer))
+
   (defun org-compile-and-update-other-buffer ()
     "Has as a premise that it's run from an org-mode buffer and the
      other buffer already has the PDF open"
@@ -734,6 +775,9 @@ Emacs whilst having a PDF preview.
     (org-beamer-export-to-pdf)
     ;; (org-latex-export-to-pdf)
     (update-other-buffer))
+
+  (eval-after-load 'latex-mode
+    '(define-key latex-mode-map (kbd "C-c r") 'latex-compile-and-update-other-buffer))
 
   (define-key org-mode-map (kbd "C-c r") 'org-compile-and-update-other-buffer)
 
