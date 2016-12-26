@@ -448,6 +448,23 @@ Setup =clj-refactor=.
 
 ** JavaScript
 
+*** =flycheck-flow=
+**** Type Inference
+Flow uses type inference to find bugs even without type annotations.
+It precisely tracks the types of variables as they flow through your
+program.
+
+**** Idiomatic JS
+Flow is designed for JavaScript programmers. It understands common
+JavaScript idioms and very dynamic code.
+
+**** Realtime Feedback
+Flow incrementally rechecks your changes as you work, preserving the
+fast feedback cycle of developing plain JavaScript.
+#+BEGIN_SRC elisp
+(require 'flycheck-flow)
+(add-hook 'javascript-mode-hook 'flycheck-mode)
+#+END_SRC
 *** =js2-mode= and =tern=
 
 JavaScript is improved with =js2-mode= as well as
