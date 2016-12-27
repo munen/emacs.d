@@ -1092,14 +1092,11 @@ For starttls to work when sending mail, install gnutls:
           (error "No message sent")))))
   (add-hook 'message-send-hook 'my-message-check-attachment)
 
-  ;;; mu4e-config.el ends here
-
 #+END_SRC
-
 
 ** Do not reply to self
 
-#+BEGIN_SRC elisp
+#+BEGIN_SRC emacs-lisp
   (setq mu4e-compose-dont-reply-to-self t)
 
   (add-to-list 'mu4e-user-mail-address-list "alain@200ok.ch")
