@@ -59,6 +59,7 @@ management system]]. To initially install packages, open
                         magit
                         darktooth-theme
                         writeroom-mode
+                        writegood-mode
                         zenburn-theme))
 
   (dolist (p my-packages)
@@ -1110,7 +1111,15 @@ https://mathiasbynens.be/notes/gmail-plain-text
 https://mothereff.in/quoted-printable
 https://www.gnu.org/software/emacs/manual/html_node/emacs-mime/qp.html
 
-* Spell Checking
+* Write Quality
+
+** =writegood-mode=
+https://github.com/bnbeckwith/writegood-mode
+
+This is a minor mode to aid in finding common writing problems.
+
+It highlights text based on a set of weasel-words, passive-voice and
+duplicate words.
 
 ** Flyspell
 #+BEGIN_SRC emacs-lisp
