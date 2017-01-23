@@ -144,7 +144,6 @@ buffer containing that file so they can't get out of sync.
 #+BEGIN_SRC emacs-lisp
   (setq inhibit-splash-screen t)
   (setq inhibit-startup-message t)
-
 #+END_SRC
 
 ** Display the current time
@@ -240,6 +239,12 @@ session is easy.
   (define-key evil-normal-state-map (kbd "k") 'evil-previous-visual-line)
 #+END_SRC
 
+** Paste in Visual Mode
+
+#+BEGIN_SRC emacs-lisp
+  (define-key evil-insert-state-map (kbd "C-v") 'evil-visual-paste)
+
+#+END_SRC
 ** TODO Bind M-. and M-, for Cider Mode
 * ido-mode
 
@@ -970,6 +975,17 @@ For starttls to work when sending mail, install gnutls:
        (smtpmail-smtp-server "mail.your-server.de")
        (smtpmail-stream-type starttls)
        (smtpmail-smtp-service 25))
+      ("insopor"
+       (mu4e-sent-folder "/insopor/INBOX.Sent")
+       (mu4e-drafts-folder "/insopor/INBOX.Drafts")
+       (mu4e-trash-folder "/insopor/INBOX.Trash")
+       (user-mail-address "alain@insopor.com")
+       (smtpmail-default-smtp-server "mail.your-server.de")
+       (smtpmail-local-domain "insopor.com")
+       (smtpmail-smtp-user "alain@insopor.com")
+       (smtpmail-smtp-server "mail.your-server.de")
+       (smtpmail-stream-type starttls)
+       (smtpmail-smtp-service 25))
       ("dispatched"
        (mu4e-sent-folder "/dispatched/INBOX.Sent")
        (mu4e-drafts-folder "/dispatched/INBOX.Drafts")
@@ -1026,19 +1042,22 @@ For starttls to work when sending mail, install gnutls:
   (setq mu4e-compose-signature-auto-include nil)
 
   (setq mu4e-refile-folder
-    (lambda (msg)
-      (cond
-        ((string-match "^/dispatched.*"
-          (mu4e-message-field msg :maildir))
-          "/dispatched/INBOX.Archive")
-        ((string-match "^/200ok.*"
-          (mu4e-message-field msg :maildir))
-          "/200ok/INBOX.Archive")
-        ((string-match "^/zhaw.*"
-          (mu4e-message-field msg :maildir))
-          "/zhaw/INBOX.Archive")
-        ;; everything else goes to /archive
-        (t  "/archive"))))
+        (lambda (msg)
+          (cond
+           ((string-match "^/dispatched.*"
+                          (mu4e-message-field msg :maildir))
+            "/dispatched/INBOX.Archive")
+           ((string-match "^/insopor.*"
+                          (mu4e-message-field msg :maildir))
+            "/insopor/INBOX.Archive")
+           ((string-match "^/200ok.*"
+                          (mu4e-message-field msg :maildir))
+            "/200ok/INBOX.Archive")
+           ((string-match "^/zhaw.*"
+                          (mu4e-message-field msg :maildir))
+            "/zhaw/INBOX.Archive")
+           ;; everything else goes to /archive
+           (t  "/archive"))))
 
 
   ;; For mail completion, only consider emails that have been seen in
@@ -1053,15 +1072,17 @@ For starttls to work when sending mail, install gnutls:
 
   ;; Re-define all standard bookmarks to not include the spam folders
   ;; for searches
-  (defvar d-spam "NOT (maildir:/dispatched/INBOX.spambucket OR maildir:/200ok/INBOX.spambucket OR maildir:/zhaw/INBOX.spambucket)")
+  (defvar d-spam "NOT (maildir:/dispatched/INBOX.spambucket OR maildir:/insopor/INBOX.spambucket maildir:/200ok/INBOX.spambucket OR maildir:/zhaw/INBOX.spambucket)")
 
   (defvar draft-folders (string-join '("maildir:/dispatched/INBOX.Drafts"
                                        "maildir:/zhaw/INBOX.Drafts"
+                                       "maildir:/insopor/INBOX.Drafts"
                                        "maildir:/200ok/INBOX.Drafts")
                                      " OR "))
 
   (defvar spam-folders (string-join '("maildir:/dispatched/INBOX.spambucket"
                                        "maildir:/zhaw/INBOX.spambucket"
+                                       "maildir:/insopor/INBOX.spambucket"
                                        "maildir:/200ok/INBOX.spambucket")
                                     " OR "))
 
