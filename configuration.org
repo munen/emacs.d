@@ -952,6 +952,12 @@ For starttls to work when sending mail, install gnutls:
   ;; (setq mu4e-html2text-command "html2text -utf8 -width 72")
   ;; (setq mu4e-html2text-command "w3m -dump -T text/html")
 
+  ;; Do not a footer by default
+  (setq mu4e-compose-signature-auto-include nil)
+
+  ;; Abilisty to set a signature with C-c C-w for 200ok
+  (setq mu4e-compose-signature "200ok GmbH\nhttp://200ok.ch\n\nCheck out our newest incubator: https://collecture.io/")
+
   (defvar my-mu4e-account-alist
     '(("200ok"
        (mu4e-sent-folder "/200ok/INBOX.Sent")
@@ -1037,9 +1043,6 @@ For starttls to work when sending mail, install gnutls:
 
   ;; Automatic line breaks when reading mail
   (add-hook 'mu4e-view-mode-hook 'visual-line-mode)
-
-  ;; Do not set a footer by default
-  (setq mu4e-compose-signature-auto-include nil)
 
   (setq mu4e-refile-folder
         (lambda (msg)
