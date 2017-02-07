@@ -1075,7 +1075,7 @@ For starttls to work when sending mail, install gnutls:
 
   ;; Re-define all standard bookmarks to not include the spam folders
   ;; for searches
-  (defvar d-spam "NOT (maildir:/dispatched/INBOX.spambucket OR maildir:/insopor/INBOX.spambucket maildir:/200ok/INBOX.spambucket OR maildir:/zhaw/INBOX.spambucket)")
+  (defvar d-spam "NOT (maildir:/dispatched/INBOX.spambucket OR maildir:/insopor/INBOX.spambucket OR maildir:/200ok/INBOX.spambucket OR maildir:/zhaw/INBOX.spambucket)")
 
   (defvar draft-folders (string-join '("maildir:/dispatched/INBOX.Drafts"
                                        "maildir:/zhaw/INBOX.Drafts"
