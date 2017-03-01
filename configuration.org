@@ -785,7 +785,7 @@ prior should be shown in the same color.
         )))
 #+END_SRC
 ** Convenience functions when working with PDF exports
-[[https://www.youtube.com/watch?v%3DPd0JwOqh-gI][Here]] is a screencast showing how I edit Markdown or org-mode files in
+[[https://www.youtube.com/watch?v=Pd0JwOqh-gI][Here]] is a screencast showing how I edit Markdown or org-mode files in
 Emacs whilst having a PDF preview.
 
 #+BEGIN_SRC emacs-lisp
