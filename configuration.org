@@ -819,18 +819,25 @@ Emacs whilst having a PDF preview.
     (kill-buffer)
     (update-other-buffer))
 
-  (defun org-compile-and-update-other-buffer ()
+  (defun org-compile-beamer-and-update-other-buffer ()
     "Has as a premise that it's run from an org-mode buffer and the
      other buffer already has the PDF open"
     (interactive)
     (org-beamer-export-to-pdf)
-    ;; (org-latex-export-to-pdf)
+    (update-other-buffer))
+
+  (defun org-compile-latex-and-update-other-buffer ()
+    "Has as a premise that it's run from an org-mode buffer and the
+     other buffer already has the PDF open"
+    (interactive)
+    (org-latex-export-to-pdf)
     (update-other-buffer))
 
   (eval-after-load 'latex-mode
     '(define-key latex-mode-map (kbd "C-c r") 'latex-compile-and-update-other-buffer))
 
-  (define-key org-mode-map (kbd "C-c r") 'org-compile-and-update-other-buffer)
+  (define-key org-mode-map (kbd "C-c lr") 'org-compile-latex-and-update-other-buffer)
+  (define-key org-mode-map (kbd "C-c br") 'org-compile-beamer-and-update-other-buffer)
 
   (eval-after-load 'markdown-mode
     '(define-key markdown-mode-map (kbd "C-c r") 'md-compile-and-update-other-buffer))
