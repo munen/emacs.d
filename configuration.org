@@ -617,6 +617,27 @@ Enable Projectile globally
 
 * org-mode
 
+** Tufte org-mode export
+
+#+BEGIN_SRC emacs-lisp
+
+(require 'ox-latex)
+(add-to-list 'org-latex-classes
+	     '("tuftehandout"
+	       "\\documentclass{tufte-handout}
+\\usepackage{color}
+\\usepackage{amssymb}
+\\usepackage{amsmath}
+\\usepackage{gensymb}
+\\usepackage{nicefrac}
+\\usepackage{units}"
+	       ("\\section{%s}" . "\\section*{%s}")
+	       ("\\subsection{%s}" . "\\subsection*{%s}")
+	       ("\\paragraph{%s}" . "\\paragraph*{%s}")
+	       ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+
+#+END_SRC
+
 #+BEGIN_SRC emacs-lisp
 
   (require 'org)
