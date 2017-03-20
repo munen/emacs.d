@@ -974,6 +974,9 @@ For starttls to work when sending mail, install gnutls:
   (setq mu4e-html2text-command 'mu4e-shr2text)
   (add-to-list 'mu4e-view-actions '("ViewInBrowser" . mu4e-action-view-in-browser) t)
 
+  ;; Format=Flowed for those other mail clients
+  (setq mu4e-compose-format-flowed t)
+
   ;; Alternatives are the following, however in first tests they
   ;; show inferior results
   ;; (setq mu4e-html2text-command "textutil -stdin -format html -convert txt -stdout")
