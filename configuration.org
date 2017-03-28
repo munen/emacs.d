@@ -1012,14 +1012,14 @@ For starttls to work when sending mail, install gnutls:
        (smtpmail-smtp-server "mail.your-server.de")
        (smtpmail-stream-type starttls)
        (smtpmail-smtp-service 25))
-      ("insopor"
-       (mu4e-sent-folder "/insopor/INBOX.Sent")
-       (mu4e-drafts-folder "/insopor/INBOX.Drafts")
-       (mu4e-trash-folder "/insopor/INBOX.Trash")
-       (user-mail-address "alain@insopor.com")
+      ("zen-tempel"
+       (mu4e-sent-folder "/zen-tempel/INBOX.Sent")
+       (mu4e-drafts-folder "/zen-tempel/INBOX.Drafts")
+       (mu4e-trash-folder "/zen-tempel/INBOX.Trash")
+       (user-mail-address "alain@zen-tempel.ch")
        (smtpmail-default-smtp-server "mail.your-server.de")
-       (smtpmail-local-domain "insopor.com")
-       (smtpmail-smtp-user "alain@insopor.com")
+       (smtpmail-local-domain "zen-tempel.ch")
+       (smtpmail-smtp-user "alain@zen-tempel.ch")
        (smtpmail-smtp-server "mail.your-server.de")
        (smtpmail-stream-type starttls)
        (smtpmail-smtp-service 25))
@@ -1081,9 +1081,9 @@ For starttls to work when sending mail, install gnutls:
            ((string-match "^/dispatched.*"
                           (mu4e-message-field msg :maildir))
             "/dispatched/INBOX.Archive")
-           ((string-match "^/insopor.*"
+           ((string-match "^/zen-tempel.*"
                           (mu4e-message-field msg :maildir))
-            "/insopor/INBOX.Archive")
+            "/zen-tempel/INBOX.Archive")
            ((string-match "^/200ok.*"
                           (mu4e-message-field msg :maildir))
             "/200ok/INBOX.Archive")
@@ -1106,17 +1106,17 @@ For starttls to work when sending mail, install gnutls:
 
   ;; Re-define all standard bookmarks to not include the spam folders
   ;; for searches
-  (defvar d-spam "NOT (maildir:/dispatched/INBOX.spambucket OR maildir:/insopor/INBOX.spambucket OR maildir:/200ok/INBOX.spambucket OR maildir:/zhaw/INBOX.spambucket)")
+  (defvar d-spam "NOT (maildir:/dispatched/INBOX.spambucket OR maildir:/zen-tempel/INBOX.spambucket OR maildir:/200ok/INBOX.spambucket OR maildir:/zhaw/INBOX.spambucket)")
 
   (defvar draft-folders (string-join '("maildir:/dispatched/INBOX.Drafts"
                                        "maildir:/zhaw/INBOX.Drafts"
-                                       "maildir:/insopor/INBOX.Drafts"
+                                       "maildir:/zen-tempel/INBOX.Drafts"
                                        "maildir:/200ok/INBOX.Drafts")
                                      " OR "))
 
   (defvar spam-folders (string-join '("maildir:/dispatched/INBOX.spambucket"
                                        "maildir:/zhaw/INBOX.spambucket"
-                                       "maildir:/insopor/INBOX.spambucket"
+                                       "maildir:/zen-tempel/INBOX.spambucket"
                                        "maildir:/200ok/INBOX.spambucket")
                                     " OR "))
 
