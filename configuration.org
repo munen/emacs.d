@@ -983,14 +983,11 @@ For starttls to work when sending mail, install gnutls:
   ;; (setq mu4e-html2text-command "html2text -utf8 -width 72")
   ;; (setq mu4e-html2text-command "w3m -dump -T text/html")
 
-  ;; Do not a footer by default
-  (setq mu4e-compose-signature-auto-include nil)
-
-  ;; Abilisty to set a signature with C-c C-w for 200ok
-  (setq mu4e-compose-signature "200ok GmbH\nGeschäftsführer\n\nalain@200ok.ch\n+41 76 405 05 67\n\nCheck out our newest incubator: https://collecture.io/")
-
   (defvar my-mu4e-account-alist
     '(("200ok"
+       (user-full-name  "Alain M. Lafon")
+       (mu4e-compose-signature "200ok GmbH\nGeschäftsführer\n\nalain@200ok.ch\n+41 76 405 05 67\n\nCheck out our newest incubator: https://collecture.io/")
+       (mu4e-compose-signature-auto-include t)
        (mu4e-sent-folder "/200ok/INBOX.Sent")
        (mu4e-drafts-folder "/200ok/INBOX.Drafts")
        (mu4e-trash-folder "/200ok/INBOX.Trash")
@@ -1002,6 +999,8 @@ For starttls to work when sending mail, install gnutls:
        (smtpmail-stream-type starttls)
        (smtpmail-smtp-service 25))
       ("zhaw"
+       (mu4e-compose-signature-auto-include nil)
+       (user-full-name  "Alain M. Lafon")
        (mu4e-sent-folder "/zhaw/INBOX.Sent Messages")
        (mu4e-drafts-folder "/zhaw/INBOX.Drafts")
        (mu4e-trash-folder "/zhaw/INBOX.Trash")
@@ -1013,6 +1012,9 @@ For starttls to work when sending mail, install gnutls:
        (smtpmail-stream-type starttls)
        (smtpmail-smtp-service 25))
       ("zen-tempel"
+       (user-full-name  "Zen Mönch Alain M. Lafon")
+       (mu4e-compose-signature "Insopor Zen Akademie\nZen Mönch\n\nalain@zen-tempel.ch\n+41 76 405 05 67\n\nhttp://zen-temple.net/")
+       (mu4e-compose-signature-auto-include t)
        (mu4e-sent-folder "/zen-tempel/INBOX.Sent")
        (mu4e-drafts-folder "/zen-tempel/INBOX.Drafts")
        (mu4e-trash-folder "/zen-tempel/INBOX.Trash")
@@ -1024,6 +1026,8 @@ For starttls to work when sending mail, install gnutls:
        (smtpmail-stream-type starttls)
        (smtpmail-smtp-service 25))
       ("dispatched"
+       (user-full-name  "Alain M. Lafon")
+       (mu4e-compose-signature-auto-include nil)
        (mu4e-sent-folder "/dispatched/INBOX.Sent")
        (mu4e-drafts-folder "/dispatched/INBOX.Drafts")
        (mu4e-trash-folder "/dispatched/INBOX.Trash")
