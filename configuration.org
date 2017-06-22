@@ -58,6 +58,7 @@ management system]]. To initially install packages, open
                         restclient
                         magit
                         darktooth-theme
+                        which-key
                         writeroom-mode
                         writegood-mode
                         zenburn-theme))
@@ -280,6 +281,14 @@ capable counterparts
   (global-set-key (kbd "C-s") 'isearch-forward-regexp)
   (global-set-key (kbd "C-r") 'isearch-backward-regexp)
 
+#+END_SRC
+
+* Which Key
+  =which-key= displays available keybindings in a popup.
+
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'org-mode-hook 'which-key-mode)
+  (add-hook 'cider-mode-hook 'which-key-mode)
 #+END_SRC
 
 * Programming
@@ -616,7 +625,15 @@ Enable Projectile globally
 #+END_SRC
 
 * org-mode
+** KOMA Script export
 
+#+BEGIN_SRC emacs-lisp
+(require 'ox-latex)
+(add-to-list 'org-latex-classes
+             '("scrartcl"
+               "\\documentclass{scrartcl}"
+               ("\\section{%s}" . "\\section*{%s}")))
+#+END_SRC
 ** Tufte org-mode export
 
 #+BEGIN_SRC emacs-lisp
