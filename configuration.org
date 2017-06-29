@@ -191,7 +191,12 @@ Getting from many windows to one window is easy: 'C-x 1' will do it.
 But getting back to a delicate WindowConfiguration is difficult. This
 is where Winner Mode comes in: With it, going back to a previous
 session is easy.
+** Bell
+   Do not ring the system bell, but show a visible feedback.
 
+#+BEGIN_SRC emacs-lisp
+(setq visible-bell nil)
+#+END_SRC
 * Evil Mode
 ** Enable Evil
 #+BEGIN_SRC emacs-lisp
@@ -993,6 +998,10 @@ For starttls to work when sending mail, install gnutls:
 
   ;; Format=Flowed for those other mail clients
   (setq mu4e-compose-format-flowed t)
+
+  ;; show full addresses in view message (instead of just names)
+  ;; toggle per name with M-RET
+  (setq mu4e-view-show-addresses t)
 
   ;; Alternatives are the following, however in first tests they
   ;; show inferior results
