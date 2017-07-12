@@ -195,7 +195,7 @@ session is easy.
    Do not ring the system bell, but show a visible feedback.
 
 #+BEGIN_SRC emacs-lisp
-(setq visible-bell nil)
+(setq visible-bell t)
 #+END_SRC
 * Evil Mode
 ** Enable Evil
