@@ -58,6 +58,7 @@ management system]]. To initially install packages, open
                         restclient
                         magit
                         darktooth-theme
+                        which-key
                         writeroom-mode
                         writegood-mode
                         zenburn-theme))
@@ -190,7 +191,12 @@ Getting from many windows to one window is easy: 'C-x 1' will do it.
 But getting back to a delicate WindowConfiguration is difficult. This
 is where Winner Mode comes in: With it, going back to a previous
 session is easy.
+** Bell
+   Do not ring the system bell, but show a visible feedback.
 
+#+BEGIN_SRC emacs-lisp
+(setq visible-bell t)
+#+END_SRC
 * Evil Mode
 ** Enable Evil
 #+BEGIN_SRC emacs-lisp
@@ -280,6 +286,14 @@ capable counterparts
   (global-set-key (kbd "C-s") 'isearch-forward-regexp)
   (global-set-key (kbd "C-r") 'isearch-backward-regexp)
 
+#+END_SRC
+
+* Which Key
+  =which-key= displays available keybindings in a popup.
+
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'org-mode-hook 'which-key-mode)
+  (add-hook 'cider-mode-hook 'which-key-mode)
 #+END_SRC
 
 * Programming
@@ -616,7 +630,15 @@ Enable Projectile globally
 #+END_SRC
 
 * org-mode
+** KOMA Script export
 
+#+BEGIN_SRC emacs-lisp
+(require 'ox-latex)
+(add-to-list 'org-latex-classes
+             '("scrartcl"
+               "\\documentclass{scrartcl}"
+               ("\\section{%s}" . "\\section*{%s}")))
+#+END_SRC
 ** Tufte org-mode export
 
 #+BEGIN_SRC emacs-lisp
@@ -708,8 +730,7 @@ Org Capture Templates are explained [[http://orgmode.org/manual/Capture-template
   (setq org-capture-templates
         '(("t" "Todo" entry (file+headline (concat org-directory "inbox.org") "Tasks")
            "* TODO %?\n  %U\n  %i\n  %a")
-          ("s" "Code Snippet" entry
-           (file (concat org-directory "snippets.org"))
+          ("s" "Code Snippet" entry (file+headline "~/src/200ok/knowledge/README.org" "Snippets")
            ;; Prompt for tag and language
            "* %?\t%^g\n#+BEGIN_SRC %^{language}\n%i\n#+END_SRC")
           ("S" "Shopping Item" entry
@@ -976,6 +997,10 @@ For starttls to work when sending mail, install gnutls:
 
   ;; Format=Flowed for those other mail clients
   (setq mu4e-compose-format-flowed t)
+
+  ;; show full addresses in view message (instead of just names)
+  ;; toggle per name with M-RET
+  (setq mu4e-view-show-addresses t)
 
   ;; Alternatives are the following, however in first tests they
   ;; show inferior results
