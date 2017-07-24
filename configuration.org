@@ -466,6 +466,12 @@ Setup =clj-refactor=.
               (cljr-add-keybindings-with-prefix "C-c C-m")))
 #+END_SRC
 
+When connecting to a repl, don't pop to the new repl buffer.
+
+#+BEGIN_SRC emacs-lisp
+(setq cider-repl-pop-to-buffer-on-connect nil)
+#+END_SRC
+
 ** JavaScript
 
 *** =flycheck-flow=
