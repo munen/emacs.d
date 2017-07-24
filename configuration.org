@@ -62,9 +62,9 @@ management system]]. To initially install packages, open
                         zenburn-theme))
 
   (dolist (p my-packages)
-    (add-to-list 'package-selected-packages p)
     (unless (package-installed-p p)
-      (package-install p)))
+      (package-install p))
+    (add-to-list 'package-selected-packages p))
 #+END_SRC
 
 * Default Settings
