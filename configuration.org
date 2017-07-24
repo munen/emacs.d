@@ -15,12 +15,19 @@ management system]]. To initially install packages, open
 
 * Dependency management
 
+** Define package repositories(archives)
+
 #+BEGIN_SRC emacs-lisp
   (require 'package)
 
   (setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
                            ("marmalade" . "https://marmalade-repo.org/packages/")
                            ("melpa" . "https://melpa.org/packages/")))
+#+END_SRC
+
+** Define packages that are to be installed
+
+#+BEGIN_SRC emacs-lisp
 
   (defvar my-packages '(ag
                         flycheck
@@ -60,6 +67,16 @@ management system]]. To initially install packages, open
                         writeroom-mode
                         writegood-mode
                         zenburn-theme))
+#+END_SRC
+
+** Install packages
+
+Note: If there is an error on startup =error: Package ‘which-key-’ is
+unavailable=, when the package list is not up to date. Run =M-x
+package-refresh-contents= and after that execute the code block below
+again with =C-x C-e=.
+
+#+BEGIN_SRC emacs-lisp
 
   (dolist (p my-packages)
     (unless (package-installed-p p)
