@@ -18,7 +18,6 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
-
  '(mml-secure-key-preferences
    (quote
     ((OpenPGP
@@ -27,7 +26,10 @@
        ("tpo@sourcepole.ch" "549A598550F2C6DB416F287C9EF854EDFC992520")))
      (CMS
       (sign)
-      (encrypt))))))
+      (encrypt)))))
+ '(package-selected-packages
+   (quote
+    (elfeed-goodies elfeed-org zenburn-theme writegood-mode writeroom-mode which-key darktooth-theme magit restclient impatient-mode evil-numbers evil-surround evil-leader evil smex ledger-mode robe enh-ruby-mode markdown-mode projectile coffee-mode tern-auto-complete tern pdf-tools yaml-mode sass-mode fixme-mode flycheck-flow ac-js2 js2-mode ac-cider exec-path-from-shell cider clj-refactor parinfer clojure-mode web-mode auto-complete flycheck ag))))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

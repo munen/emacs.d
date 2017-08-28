@@ -35,6 +35,8 @@ management system]]. To initially install packages, open
                         web-mode
                         clojure-mode
                         parinfer
+                        elfeed
+                        elfeed-goodies
                         clj-refactor
                         cider
                         exec-path-from-shell
@@ -266,6 +268,13 @@ session is easy.
 #+BEGIN_SRC emacs-lisp
   (define-key evil-insert-state-map (kbd "C-v") 'evil-visual-paste)
 
+#+END_SRC
+
+** Disable evil for some modes
+#+BEGIN_SRC emacs-lisp
+(mapc (lambda (mode)
+        (evil-set-initial-state mode 'emacs))
+      '(elfeed-show-mode elfeed-search-mode))
 #+END_SRC
 ** TODO Bind M-. and M-, for Cider Mode
 * ido-mode
@@ -806,6 +815,29 @@ prior should be shown in the same color.
               (sequence "WAITING" "|")))
 #+END_SRC
 
+* Elfeed
+
+** Initialize
+Elfeed is an extensible web feed reader for Emacs, supporting both
+Atom and RSS.
+
+#+BEGIN_SRC emacs-lisp
+
+  (require 'elfeed)
+  (require 'elfeed-goodies)
+
+  (elfeed-goodies/setup)
+
+#+END_SRC
+
+** Define elfeed feeds
+#+BEGIN_SRC emacs-lisp
+(setq elfeed-feeds
+    '(("http://nullprogram.com/feed/" emacs)
+        ("https://www.booleanknot.com/blog/feed.xml" emacs important)
+        ("http://howardism.org/Technical/Emacs/index.xml" emacs)
+        ("http://planet.emacsen.org/atom.xml" emacs)))
+#+END_SRC
 * Misc Custom Improvements
 ** Helper functions to clean up the gazillion buffers
 #+BEGIN_SRC emacs-lisp
