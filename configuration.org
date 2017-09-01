@@ -843,7 +843,7 @@ Atom and RSS.
 ** Translations
 This is a wrapper application around the dict.cc translation service.
 
-Demo: [[https://asciinema.org/a/hMTM9EDHE0cphaDRFr4JXr1iw][[[https://asciinema.org/a/hMTM9EDHE0cphaDRFr4JXr1iw.png]]]]
+Demo: [[https://asciinema.org/a/hMTM9EDHE0cphaDRFr4JXr1iw][https://asciinema.org/a/hMTM9EDHE0cphaDRFr4JXr1iw.png]]
 
 #+BEGIN_SRC emacs-lisp
 
