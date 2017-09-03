@@ -195,6 +195,13 @@ default to not confuse beginners.
   (setq-default save-place t)
   (require 'saveplace)
 #+END_SRC
+** Set $MANPATH, $PATH and exec-path from shell even when started from GUI helpers like =dmenu= or =Spotlight=
+
+#+BEGIN_SRC emacs-lisp
+
+    (exec-path-from-shell-initialize)
+
+#+END_SRC
 ** =winner-mode=
 
 Allows to 'undo' (and 'redo') changes in the window configuration with
@@ -1062,7 +1069,6 @@ Emacs whilst having a PDF preview.
 #+END_SRC
 
 * OS Specific
-
 ** Linux
 
 #+BEGIN_SRC emacs-lisp
@@ -1085,9 +1091,6 @@ Emacs whilst having a PDF preview.
     (set-frame-font "Menlo 14")
     ; Use Spotlight to search with M-x locate
     (setq locate-command "mdfind")
-    ; Set $MANPATH, $PATH and exec-path from shell even when started
-    ; from Spotlight
-    (exec-path-from-shell-initialize)
     ; exec-path-from-shell-initialize might make this line obsolete
     ;(setq mu4e-mu-binary "/usr/local/bin/mu")
     )
