@@ -878,6 +878,9 @@ Demo: [[https://asciinema.org/a/hMTM9EDHE0cphaDRFr4JXr1iw][https://asciinema.org
         (split-string (substring (buffer-string) begin end)
                       "\,")))))
 
+  ;; (with-current-buffer res
+  ;;   (while (re-search-forward "my_regexp")
+  ;;     (print (match-string 0))))
 
 
   (defun insert-translation-to-buffer
@@ -939,6 +942,8 @@ Demo: [[https://asciinema.org/a/hMTM9EDHE0cphaDRFr4JXr1iw][https://asciinema.org
                     (lambda (status)
                       (setq res (current-buffer))
                       (let ((res (current-buffer)))
+                        ;; Debug for REPL
+                        ;; (setq res (current-buffer))
                         (main res))))))
 
   (defun dict ()
