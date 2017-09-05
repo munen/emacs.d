@@ -917,7 +917,7 @@ Demo: [[https://asciinema.org/a/hMTM9EDHE0cphaDRFr4JXr1iw][https://asciinema.org
       ;; shared between all buffers of the same major mode!
       ;; (local-set-key (kbd "q") '(lambda()
       ;;                             (interactive)
-      ;;                             (kill-buffer-and-window)))
+      ;;                             (delete-window)))
 
       (insert (concat "* Translations for: " search-term "\n\n"))))
 
@@ -1082,8 +1082,9 @@ Emacs whilst having a PDF preview.
 
   (when (eq system-type 'gnu/linux)
     ;; Default Browser
-    (setq browse-url-browser-function 'browse-url-generic
-          browse-url-generic-program "chromium")
+    ;; Disable this temporarily, because Chromium 60 doesn't open links anymore...
+    ;; (setq browse-url-browser-function 'browse-url-generic
+    ;;       browse-url-generic-program "chromium")
     (menu-bar-mode -1)
     ;; enable pdf-tools
     (pdf-tools-install))
