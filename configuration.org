@@ -1082,9 +1082,8 @@ Emacs whilst having a PDF preview.
 
   (when (eq system-type 'gnu/linux)
     ;; Default Browser
-    ;; Disable this temporarily, because Chromium 60 doesn't open links anymore...
-    ;; (setq browse-url-browser-function 'browse-url-generic
-    ;;       browse-url-generic-program "chromium")
+    (setq browse-url-browser-function 'browse-url-generic
+          browse-url-generic-program "chromium")
     (menu-bar-mode -1)
     ;; enable pdf-tools
     (pdf-tools-install))
