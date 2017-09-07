@@ -1353,6 +1353,13 @@ For starttls to work when sending mail, install gnutls:
           (error "No message sent")))))
   (add-hook 'message-send-hook 'my-message-check-attachment)
 
+
+  ;; Periodic updates - every 15 minutes
+  (setq mu4e-update-interval (* 15 60))
+
+  ;; Updates happen in the background
+  (setq mu4e-index-update-in-background t)
+
 #+END_SRC
 
 ** Do not reply to self
