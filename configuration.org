@@ -1340,7 +1340,7 @@ For starttls to work when sending mail, install gnutls:
                  "Unread messages"      ?u))
 
   ;; Check for supposed attachments prior to sending them
-  (defvar my-message-attachment-regexp "\\([Ww]e send\\|[Ii] send\\|attach\\|angehängt\\|[aA]nhang\\|angehaengt\\haenge\\hänge|)")
+  (defvar my-message-attachment-regexp "\\([Ww]e send\\|[Ii] send\\|attach\\|angehängt\\|[aA]nhang\\|angehaengt\\|haenge\\|hänge\\)")
   (defun my-message-check-attachment nil
     "Check if there is an attachment in the message if I claim it."
     (save-excursion
