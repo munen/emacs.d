@@ -55,6 +55,7 @@ management system]]. To initially install packages, open
                         markdown-mode
                         enh-ruby-mode
                         robe
+                        evil-mc
                         ledger-mode
                         smex
                         evil
@@ -247,6 +248,23 @@ session is easy.
 #+BEGIN_SRC emacs-lisp
   (require 'evil-surround)
   (global-evil-surround-mode 1)
+#+END_SRC
+
+** Multiple Cursors
+https://github.com/gabesoft/evil-mc
+
+evil-mc provides multiple cursors functionality for Emacs when used with evil-mode.
+
+=C-n / C-p= are used for creating cursors, and =M-n / M-p= are used
+for cycling through cursors. The commands that create cursors wrap
+around; but, the ones that cycle them do not. To skip creating a
+cursor forward use =C-t= or =grn= and backward =grp=. Finally use
+=gru= to remove all cursors.
+
+*** Enable =evil-mc= for all buffers
+
+#+BEGIN_SRC emacs-lisp
+(global-evil-mc-mode  1)
 #+END_SRC
 
 ** Fast switching between buffers
