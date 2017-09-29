@@ -1446,7 +1446,7 @@ duplicate words.
     "Default theme and font size.  Pendant: (presentation-mode)."
     (interactive)
 
-    (set-face-attribute 'default nil :height 110)
+    (set-face-attribute 'default nil :height 130)
     ;; Themes
     ;; (set-frame-parameter nil 'background-mode 'dark)
     ;; Dark, High Contrast
