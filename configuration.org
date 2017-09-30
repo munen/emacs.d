@@ -846,6 +846,19 @@ prior should be shown in the same color.
               (sequence "WAITING" "|")))
 #+END_SRC
 
+* pdf-tools
+
+When using =evil-mode= and =pdf-tools= and looking at a zoomed PDF, it
+will blink, because the cursor blinks. This configuration disables
+this whilst retaining the blinking cursor in other modes.
+
+#+BEGIN_SRC emacs-lisp
+(evil-set-initial-state 'pdf-view-mode 'emacs)
+(add-hook 'pdf-view-mode-hook
+  (lambda ()
+    (set (make-local-variable 'evil-emacs-state-cursor) (list nil))))
+#+END_SRC
+
 * Elfeed
 
 ** Initialize
