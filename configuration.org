@@ -182,13 +182,18 @@ buffer containing that file so they can't get out of sync.
   (add-hook 'text-mode-hook 'auto-fill-mode)
 #+END_SRC
 
-** Enable Narrow To Regiion
+** Enable Narrow To Region
 
 Enable narrow-to-region (C-x n n / C-x n w). This is disabled by
 default to not confuse beginners.
 
 #+BEGIN_SRC emacs-lisp
   (put 'narrow-to-region 'disabled nil)
+#+END_SRC
+
+** Disable scroll bars
+#+BEGIN_SRC emacs-lisp
+(scroll-bar-mode -1)
 #+END_SRC
 ** Remember the cursor position of files when reopening them
 #+BEGIN_SRC emacs-lisp
