@@ -468,6 +468,7 @@ Shortcuts:
 
 - =C-c C-d= Lookup documentation
 - =M-.= Jump to definition
+- =TAB= Auto-completion through =auto-complete-mode=
 
 **** =auto-complete= for =robe-mode=
 
