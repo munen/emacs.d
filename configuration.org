@@ -446,7 +446,6 @@ For syntax checking to work, also run the following commands:
   (add-to-list 'auto-mode-alist '("\\.rb?\\'" . enh-ruby-mode))
   (add-to-list 'auto-mode-alist '("\\.rake?\\'" . enh-ruby-mode))
   (add-hook 'enh-ruby-mode-hook 'linum-mode)
-  (add-hook 'enh-ruby-mode-hook 'auto-complete-mode)
 
   ; From Phil
   (add-hook 'ruby-mode-hook
@@ -469,6 +468,14 @@ Shortcuts:
 
 - =C-c C-d= Lookup documentation
 - =M-.= Jump to definition
+
+**** =auto-complete= for =robe-mode=
+
+#+BEGIN_SRC emacs-lisp
+
+(add-hook 'enh-ruby-mode-hook 'auto-complete-mode)
+
+#+END_SRC
 
 ** Lisp
 When working with Lisp, there's the option of handing parentheses
