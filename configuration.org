@@ -300,11 +300,11 @@ cursor forward use =C-t= or =grn= and backward =grp=. Finally use
 
 #+END_SRC
 
-** Disable evil for some modes
+** Disable =evil-mode= for some modes
 #+BEGIN_SRC emacs-lisp
 (mapc (lambda (mode)
         (evil-set-initial-state mode 'emacs))
-      '(elfeed-show-mode elfeed-search-mode dired-mode))
+      '(elfeed-show-mode elfeed-search-mode dired-mode image-dired-mode image-dired-thumbnail-mode))
 #+END_SRC
 ** TODO Bind M-. and M-, for Cider Mode
 * ido-mode
