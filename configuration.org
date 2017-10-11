@@ -228,6 +228,12 @@ session is easy.
 #+BEGIN_SRC emacs-lisp
 (setq visible-bell t)
 #+END_SRC
+** =auto-complete=
+Basic Configuration
+
+#+BEGIN_SRC emacs-lisp
+(ac-config-default)
+#+END_SRC
 * Evil Mode
 ** Enable Evil
 #+BEGIN_SRC emacs-lisp
@@ -440,6 +446,7 @@ For syntax checking to work, also run the following commands:
   (add-to-list 'auto-mode-alist '("\\.rb?\\'" . enh-ruby-mode))
   (add-to-list 'auto-mode-alist '("\\.rake?\\'" . enh-ruby-mode))
   (add-hook 'enh-ruby-mode-hook 'linum-mode)
+  (add-hook 'enh-ruby-mode-hook 'auto-complete-mode)
 
   ; From Phil
   (add-hook 'ruby-mode-hook
@@ -455,6 +462,8 @@ Code navigation, documentation lookup and completion for Ruby
   (add-hook 'enh-ruby-mode-hook 'robe-mode)
   (add-hook 'robe-mode-hook 'ac-robe-setup)
 #+END_SRC
+
+Start =robe-mode= with =M-x robe-start=.
 
 Shortcuts:
 
