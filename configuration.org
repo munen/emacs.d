@@ -440,13 +440,26 @@ For syntax checking to work, also run the following commands:
   (add-to-list 'auto-mode-alist '("\\.rb?\\'" . enh-ruby-mode))
   (add-to-list 'auto-mode-alist '("\\.rake?\\'" . enh-ruby-mode))
   (add-hook 'enh-ruby-mode-hook 'linum-mode)
-  (add-hook 'enh-ruby-mode-hook 'robe-mode)
 
   ; From Phil
   (add-hook 'ruby-mode-hook
            (lambda ()
              (add-to-list 'write-file-functions 'delete-trailing-whitespace)))
 #+END_SRC
+
+*** =robe-mode=
+
+Code navigation, documentation lookup and completion for Ruby
+
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'enh-ruby-mode-hook 'robe-mode)
+  (add-hook 'robe-mode-hook 'ac-robe-setup)
+#+END_SRC
+
+Shortcuts:
+
+- =C-c C-d= Lookup documentation
+- =M-.= Jump to definition
 
 ** Lisp
 When working with Lisp, there's the option of handing parentheses
@@ -661,6 +674,33 @@ primitive check.
 #+BEGIN_SRC emacs-lisp
   (add-to-list 'auto-mode-alist '("presentation.html" . markdown-mode))
   (add-hook 'markdown-mode-hook 'flyspell-mode)
+#+END_SRC
+
+*** TODO Auto Reload
+
+#+BEGIN_SRC
+
+;;(defun sync-to-pi ()
+;;  "Sync org file to Raspberry Pi with external script."
+;;  (when (eq major-mode 'web-mode)
+;;    (shell-command-to-string "xdotool search --onlyvisible --class Chromium windowfocus key ctrl+r")))
+;;
+;;(add-hook 'after-save-hook #'sync-to-pi)
+
+
+;;echo "$(date --rfc-3339=seconds) Refresh: $FILE"
+;;CUR_WID=$(xdotool getwindowfocus)
+;;
+;;#gets the first $BROWSER window, if you have more than one
+;;#$BROWSER window open, it might not refresh the right one,
+;;#as an alternative you can search by the window/html title
+;;WID=$(xdotool search --onlyvisible --class $BROWSER|head -1)
+;;#TITLE="window/html file title"
+;;#WID=$(xdotool search --title "$TITLE"|head -1)
+;;xdotool windowactivate $WID
+;;xdotool key 'ctrl+r'
+;;xdotool windowactivate $CUR_WID
+
 #+END_SRC
 
 ** yaml
