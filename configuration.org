@@ -1170,6 +1170,16 @@ Emacs whilst having a PDF preview.
 
 #+END_SRC
 
+** Clean up messy buffers (i.e. web wikis or elfeed-show)
+#+BEGIN_SRC emacs-lisp
+
+  (defun visual-clean ()
+    "Clean up messy buffers (i.e. web wikis or elfeed-show)"
+    (interactive)
+    (visual-line-mode)
+    (visual-fill-column-mode))
+
+#+END_SRC
 * OS Specific
 ** Linux
 
