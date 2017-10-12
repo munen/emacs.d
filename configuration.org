@@ -925,10 +925,17 @@ Atom and RSS.
 
 #+BEGIN_SRC emacs-lisp
 
-  (require 'elfeed)
-  (require 'elfeed-goodies)
+    (require 'elfeed)
+    (require 'elfeed-goodies)
 
-  (elfeed-goodies/setup)
+    (elfeed-goodies/setup)
+
+;; This should work, but there seems to be a bug
+;; https://github.com/joostkremers/visual-fill-column/issues/21
+;; For the time being, use =M-x visual-fill-column-mode=
+;;    (add-hook 'elfeed-show-mode-hook '(lambda()
+;;                                        (if (string-equal "*elfeed-entry*" (buffer-name))
+;;                                            (visual-fill-column-mode))))
 
 #+END_SRC
 
