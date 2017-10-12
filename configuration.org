@@ -460,6 +460,7 @@ Code navigation, documentation lookup and completion for Ruby
 #+BEGIN_SRC emacs-lisp
   (add-hook 'enh-ruby-mode-hook 'robe-mode)
   (add-hook 'robe-mode-hook 'ac-robe-setup)
+  (add-to-list 'auto-mode-alist '("\\.erb?\\'" . robe-mode))
 #+END_SRC
 
 Start =robe-mode= with =M-x robe-start=.
@@ -933,15 +934,7 @@ Atom and RSS.
 
 ** Define elfeed feeds
 #+BEGIN_SRC emacs-lisp
-(setq elfeed-feeds
-    '(("http://nullprogram.com/feed/" emacs)
-        ("https://www.booleanknot.com/blog/feed.xml" emacs important)
-        ("https://labs.uswitch.com/rss/" programming)
-        ("http://howardism.org/Technical/Emacs/index.xml" emacs)
-        ("http://blog.fogus.me/feed/" clojure)
-        ("http://planet.emacsen.org/atom.xml" emacs)
-        ("https://emacsair.me/feed.xml" emacs)
-        ("http://200ok.ch/atom.xml" 200ok)))
+(load "~/.emacs.d/elfeed-feeds.el")
 #+END_SRC
 * Misc Custom Improvements
 ** Translations
