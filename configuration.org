@@ -1231,7 +1231,7 @@ configure. Mu4e uses =xdg-open= to chose the app to open any mime type.
 Configure =xdg-open= to use Emacs:
 
 #+BEGIN_EXAMPLE
-    `xdg-mime default emacs.desktop application/pdf`
+    xdg-mime default emacs.desktop application/pdf
 #+END_EXAMPLE
 
 **** OS X
