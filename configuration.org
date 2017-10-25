@@ -441,7 +441,7 @@ For syntax checking to work, also run the following commands:
 
 #+BEGIN_SRC emacs-lisp
   (setq ruby-indent-level 2)
-  (add-to-list 'auto-mode-alist '("\\.scss?\\'" . sass-mode))
+  (add-to-list 'auto-mode-alist '("\\.scss?\\'" . scss-mode))
 
   (add-to-list 'auto-mode-alist '("\\.rb?\\'" . enh-ruby-mode))
   (add-to-list 'auto-mode-alist '("\\.rake?\\'" . enh-ruby-mode))
@@ -802,6 +802,7 @@ Enable Projectile globally
                                (concat org-directory "inbox.org")
                                (concat "~/Dropbox/ZHAW/web3-unterlagen/README.org")
                                (concat "~/Dropbox/ZHAW/weng-unterlagen/README.org")
+                               (concat "~/src/200ok/crowdfunding/README.org")
                                (concat org-directory "reference.org")))
 
   (global-set-key "\C-cl" 'org-store-link)
