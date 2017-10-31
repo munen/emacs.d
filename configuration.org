@@ -750,6 +750,14 @@ Enable Projectile globally
 #+END_SRC
 
 * org-mode
+** Plain Lists
+Allow ‘a.’, ‘A.’, ‘a)’ and ‘A) as list elements:
+
+#+BEGIN_SRC emacs-lisp
+
+(setq org-list-allow-alphabetical t)
+
+#+END_SRC
 ** KOMA Script export
 
 #+BEGIN_SRC emacs-lisp
