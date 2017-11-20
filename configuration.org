@@ -641,6 +641,8 @@ An emacs plugin for Flow, a static typechecker for JavaScript.
   (add-hook 'js-mode-hook 'js2-minor-mode)
   (setq js2-highlight-level 3)
   (setq js-indent-level 2)
+  ;; Semicolons are optional in JS, do not warn about them missing
+  (setq js2-strict-missing-semi-warning nil)
 
   ;; Tern
   (add-hook 'js-mode-hook (lambda () (tern-mode t)))
