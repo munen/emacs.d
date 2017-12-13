@@ -249,7 +249,7 @@ Basic Configuration
   (evil-leader/set-leader ",")
   (evil-leader/set-key
     "w" 'basic-save-buffer
-    "s" 'ispell
+    "s" 'flyspell-buffer
     "b" 'evil-buffer
     "q" 'evil-quit)
 #+END_SRC
@@ -1526,6 +1526,28 @@ duplicate words.
   ;; Enable global syntax checking through flycheck
   (add-hook 'after-init-hook #'global-flycheck-mode)
 #+END_SRC
+
+*** Do not loose all spellchecking information after adding one word to a personal dictionary
+
+Advice to re-check the buffer after a word has been added to the
+dictionary. This has the benefit of the word actually being cleared,
+but the downside that the whole buffer has to be re-checked which an
+take some time.
+
+#+BEGIN_SRC emacs-lisp
+
+(defun flyspell-buffer-after-pdict-save (&rest _)
+  (flyspell-buffer))
+
+(advice-add 'ispell-pdict-save :after #'flyspell-buffer-after-pdict-save)
+
+#+END_SRC
+
+The proper solution (for which I don't have time now) is to just mark
+all further occurrences of the word you just saved as correct (without
+having to recheck the whole buffer).
+
+*** TODO Implement =ispell-pdict-save= with above requirement
 
 * Presentation / Beamer
 ** Set safe themes (to execute LISP code)
