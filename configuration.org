@@ -810,9 +810,10 @@ Allow ‘a.’, ‘A.’, ‘a)’ and ‘A) as list elements:
 
   (setq org-agenda-files (list (concat org-directory "things.org")
                                (concat org-directory "inbox.org")
+                               (concat org-directory "refile-beorg.org")
                                (concat "~/Dropbox/ZHAW/web3-unterlagen/README.org")
                                (concat "~/Dropbox/ZHAW/weng-unterlagen/README.org")
-                               (concat "~/src/200ok/crowdfunding/README.org")
+                               (concat "~/src/200ok/crowdfunding/TODO.org")
                                (concat org-directory "reference.org")))
 
   (global-set-key "\C-cl" 'org-store-link)
