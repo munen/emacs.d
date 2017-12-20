@@ -1129,7 +1129,7 @@ Emacs whilst having a PDF preview.
     (interactive)
     (other-window 1)
     (revert-buffer nil t)
-    (other-window 1))
+    (other-window -1))
 
   (defun md-compile-and-update-other-buffer ()
     "Has as a premise that it's run from a markdown-mode buffer and the
