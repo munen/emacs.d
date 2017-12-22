@@ -1235,6 +1235,15 @@ As MTA [[http://www.djcbsoftware.nl/code/mu/mu4e/][MU4E]] is used. As SMTP the E
 -  Configure =.authinfo= file for SMTP
 -  https://www.emacswiki.org/emacs/GnusAuthinfo
 
+
+**** Authentication
+Tell Emacs where to find the encrypted =.authinfo= file.
+
+#+BEGIN_SRC
+(setq auth-sources
+    '((:source "~/.authinfo.gpg")))
+#+END_SRC
+
 **** PDFs
 
 To open PDFs within Mu4e with Emacs, then there's one thing to
