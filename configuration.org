@@ -402,7 +402,15 @@ Use 2 spaces instead of tabs for programming languages.
   (setq web-mode-markup-indent-offset 2)
 #+END_SRC
 
+*** Syntax Checking
 
+Enable global syntax checking through flycheck
+
+#+BEGIN_SRC emacs-lisp
+
+  (add-hook 'after-init-hook #'global-flycheck-mode)
+
+#+END_SRC
 *** Highlight FIXME, TODO and BUG statements
 #+BEGIN_SRC emacs-lisp
   (fixme-mode t)
@@ -1532,9 +1540,6 @@ duplicate words.
            (change (if (string= dic "deutsch") "english" "deutsch")))
       (ispell-change-dictionary change)
       (message "Dictionary switched from %s to %s" dic change)))
-
-  ;; Enable global syntax checking through flycheck
-  (add-hook 'after-init-hook #'global-flycheck-mode)
 #+END_SRC
 
 *** Do not loose all spellchecking information after adding one word to a personal dictionary
