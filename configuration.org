@@ -646,6 +646,7 @@ An emacs plugin for Flow, a static typechecker for JavaScript.
 #+BEGIN_SRC emacs-lisp
 
   (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+
   (add-hook 'js-mode-hook 'js2-minor-mode)
   (setq js2-highlight-level 3)
   (setq js-indent-level 2)
@@ -1332,10 +1333,10 @@ For starttls to work when sending mail, install gnutls:
        (mu4e-drafts-folder "/200ok/INBOX.Drafts")
        (mu4e-trash-folder "/200ok/INBOX.Trash")
        (user-mail-address "alain@200ok.ch")
-       (smtpmail-default-smtp-server "mail.your-server.de")
+       (smtpmail-default-smtp-server "smtp.mailgun.org")
        (smtpmail-local-domain "200ok.ch")
-       (smtpmail-smtp-user "munen@200ok.ch")
-       (smtpmail-smtp-server "mail.your-server.de")
+       (smtpmail-smtp-user "alain@200ok.ch")
+       (smtpmail-smtp-server "smtp.mailgun.org")
        (smtpmail-stream-type starttls)
        (smtpmail-smtp-service 25))
       ("zhaw"
