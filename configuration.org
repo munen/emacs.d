@@ -312,7 +312,14 @@ cursor forward use =C-t= or =grn= and backward =grp=. Finally use
         (evil-set-initial-state mode 'emacs))
       '(elfeed-show-mode elfeed-search-mode dired-mode image-dired-mode image-dired-thumbnail-mode))
 #+END_SRC
-** TODO Bind M-. and M-, for Cider Mode
+** Unbind M-. and M- in =evil-mode=
+=M-.= and =M-,= are popular keybindings for "jump to definition" and
+"back".
+
+#+BEGIN_SRC emacs-lisp
+  (define-key evil-normal-state-map (kbd "M-.") nil)
+  (define-key evil-normal-state-map (kbd "M-,") nil)
+#+END_SRC
 * ido-mode
 
 =ido= means "Interactively Do Things"
