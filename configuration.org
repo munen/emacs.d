@@ -42,6 +42,7 @@ management system]]. To initially install packages, open
                         exec-path-from-shell
                         ac-cider
                         js2-mode
+                        json-mode
                         ac-js2
                         flycheck-flow
                         fixme-mode
