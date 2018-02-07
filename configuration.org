@@ -42,7 +42,6 @@ management system]]. To initially install packages, open
                         exec-path-from-shell
                         ac-cider
                         js2-mode
-                        json-mode
                         ac-js2
                         flycheck-flow
                         fixme-mode
@@ -697,7 +696,12 @@ buffer, and watch your changes appear as you type!
 #+BEGIN_SRC emacs-lisp
   ;; web-mode
   (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+  ;; Ruby Templates
   (add-to-list 'auto-mode-alist '("\\.erb?\\'" . web-mode))
+  ;; Handlebars
+  (add-to-list 'auto-mode-alist '("\\.hbs?\\'" . web-mode))
+  ;; JSON
+  (add-to-list 'auto-mode-alist '("\\.json?\\'" . web-mode))
 
   (setq web-mode-enable-current-element-highlight t)
   (setq web-mode-ac-sources-alist
