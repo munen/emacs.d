@@ -942,6 +942,29 @@ prior should be shown in the same color.
               (sequence "WAITING" "|")))
 #+END_SRC
 
+** Clock Table
+
+When using a clock table, org will by default sum up the time in
+perfectly human readable terms like this:
+
+| Headline     | Time      |
+|--------------+-----------|
+| *Total time* | *1d 1:03* |
+
+For easy calculations (I don't want to parse our hours, weeks and what
+not), I do prefer that the summation is done only in hours and
+minutes. Therefore, I over-wrote the =org-time-clocksum-format= function:
+
+#+BEGIN_SRC emacs-lisp
+(setq org-time-clocksum-format (quote (:hours "%d" :require-hours t :minutes ":%02d" :require-minutes t)))
+#+END_SRC
+
+This will render the same time as above as:
+
+| Headline     | Time    |
+|--------------+---------|
+| *Total time* | *25:03* |
+
 * pdf-tools
 
 When using =evil-mode= and =pdf-tools= and looking at a zoomed PDF, it
