@@ -1389,7 +1389,7 @@ For starttls to work when sending mail, install gnutls:
        (smtpmail-smtp-service 25))
       ("zen-tempel"
        (user-full-name  "Zen Mönch Alain M. Lafon")
-       (mu4e-compose-signature "Insopor Zen Akademie\nZen Mönch\n\nalain@zen-tempel.ch\n+41 76 405 05 67\n\nhttp://zen-temple.net/")
+       (mu4e-compose-signature "Insopor Zen Akademie\nZen Mönch\n\nalain@zen-tempel.ch\n+41 76 405 05 67\n\nhttps://zen-temple.net/")
        (mu4e-compose-signature-auto-include t)
        (mu4e-sent-folder "/zen-tempel/INBOX.Sent")
        (mu4e-drafts-folder "/zen-tempel/INBOX.Drafts")
