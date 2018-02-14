@@ -44,7 +44,7 @@ management system]]. To initially install packages, open
                         js2-mode
                         ac-js2
                         flycheck-flow
-                        fixme-mode
+                        comment-tags
                         sass-mode
                         yaml-mode
                         pdf-tools
@@ -418,9 +418,34 @@ Enable global syntax checking through flycheck
   (add-hook 'after-init-hook #'global-flycheck-mode)
 
 #+END_SRC
-*** Highlight FIXME, TODO and BUG statements
+*** Highlight and list comment tags such as 'TODO', 'FIXME', 'XXX'
+
+Commands:
+
+    - =b= to list tags in current buffer (comment-tags-list-tags-buffer).
+    - =a= to list tags in all buffers (comment-tags-list-tags-buffers).
+    - =s= to jump to tag in current buffer by a word or phrase using reading-completion (comment-tags-find-tags-buffer).
+    - =n= to jump to next tag from point (comment-tags-next-tag).
+    - =p= to jump to previous tag from point (comment-tags-previous-tag).
+
 #+BEGIN_SRC emacs-lisp
-  (fixme-mode t)
+  (setq comment-tags-keymap-prefix (kbd "C-c t"))
+  (with-eval-after-load "comment-tags"
+    (setq comment-tags-keyword-faces
+          `(("TODO" . ,(list :weight 'bold :foreground "#DF5427"))
+            ("FIXME" . ,(list :weight 'bold :foreground "#DF5427"))
+            ("BUG" . ,(list :weight 'bold :foreground "#DF5427"))
+            ("HACK" . ,(list :weight 'bold :foreground "#DF5427"))
+            ("KLUDGE" . ,(list :weight 'bold :foreground "#DF5427"))
+            ("XXX" . ,(list :weight 'bold :foreground "#DF5427"))
+            ("INFO" . ,(list :weight 'bold :foreground "#1FDA9A"))
+            ("DONE" . ,(list :weight 'bold :foreground "#1FDA9A"))))
+    (setq comment-tags-comment-start-only t
+          comment-tags-require-colon t
+          comment-tags-case-sensitive t
+          comment-tags-show-faces t
+          comment-tags-lighter nil))
+  (add-hook 'prog-mode-hook 'comment-tags-mode)
 #+END_SRC
 
 *** Auto-indent with the Return key
