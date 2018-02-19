@@ -1269,6 +1269,9 @@ Emacs whilst having a PDF preview.
 * OS Specific
 ** Linux
 
+"Fira Code Retina" as default font. Get it via the =fonts-firacode=
+Debian package.
+
 #+BEGIN_SRC emacs-lisp
 
   (when (eq system-type 'gnu/linux)
