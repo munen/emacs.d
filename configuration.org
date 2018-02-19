@@ -1272,6 +1272,7 @@ Emacs whilst having a PDF preview.
 #+BEGIN_SRC emacs-lisp
 
   (when (eq system-type 'gnu/linux)
+    (set-frame-font "Fira Code Retina 15")
     ;; Default Browser
     (setq browse-url-browser-function 'browse-url-generic
           browse-url-generic-program "chromium")
@@ -1648,7 +1649,7 @@ having to recheck the whole buffer).
     "Default theme and font size.  Pendant: (presentation-mode)."
     (interactive)
 
-    (set-face-attribute 'default nil :height 130)
+    (set-face-attribute 'default nil :height 150)
     ;; Themes
     ;; (set-frame-parameter nil 'background-mode 'dark)
     ;; Dark, High Contrast
