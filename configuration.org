@@ -716,6 +716,15 @@ Publish buffers by enabling the minor mode impatient-mode.
 And then point your browser to http://localhost:8080/imp/, select a
 buffer, and watch your changes appear as you type!
 
+*** Pretty print JSON
+
+Pretty print JSON using a standard Python Library.
+
+#+BEGIN_SRC emacs-lisp
+(defun pretty-print-json(&optional b e)
+  (interactive "r")
+  (shell-command-on-region b e "python -m json.tool" t t))
+#+END_SRC
 *** Emacs Configuration
 
 #+BEGIN_SRC emacs-lisp
