@@ -1297,6 +1297,20 @@ Emacs whilst having a PDF preview.
     (visual-fill-column-mode))
 
 #+END_SRC
+** Generate passwords
+   Through =pwgen=.
+
+   Thanks to @branch14 for the function!
+#+BEGIN_SRC emacs-lisp
+
+(defun generate-password ()
+  "Generates and inserts a new password"
+  (interactive)
+  (insert
+   (shell-command-to-string
+    (concat "pwgen -A " (read-string "Length: " "16") " 1"))))
+
+#+END_SRC
 * OS Specific
 ** Linux
 
