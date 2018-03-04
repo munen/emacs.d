@@ -42,6 +42,7 @@ management system]]. To initially install packages, open
                         exec-path-from-shell
                         ac-cider
                         js2-mode
+                        js2-refactor
                         ac-js2
                         flycheck-flow
                         comment-tags
@@ -662,6 +663,13 @@ Tern shortcuts:
 -  =C-c C-d= Find docs of the thing under the cursor. Press again to
    open the associated URL (if any).
 
+*** =js2-refactor=
+A JavaScript refactoring library for Emacs.
+
+#+BEGIN_SRC emacs-lisp
+(add-hook 'js2-mode-hook #'js2-refactor-mode)
+(js2r-add-keybindings-with-prefix "C-c C-m")
+#+END_SRC
 *** =flow=
 https://github.com/flowtype/flow-for-emacs/
 
