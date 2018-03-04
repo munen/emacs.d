@@ -473,6 +473,20 @@ line break.
                                   (delete-trailing-whitespace))))
 #+END_SRC
 
+*** Code Folding
+
+Enable code folding for programming modes.
+
+- =zc=: Fold
+- =za=: Unfold
+- =zR=: Unfold everything
+
+#+BEGIN_SRC emacs-lisp
+
+(add-hook 'prog-mode-hook #'hs-minor-mode)
+
+#+END_SRC
+
 ** Ruby
 
 For syntax checking to work, also run the following commands:
