@@ -671,7 +671,7 @@ or
 Tern shortcuts:
 
 -  =M-.= Jump to the definition of the thing under the cursor.
--  <code>M-,</code> Brings you back to last place you were when you pressed M-..
+-  =M-,= Brings you back to last place you were when you pressed M-..
 -  =C-c C-r= Rename the variable under the cursor.
 -  =C-c C-c= Find the type of the thing under the cursor.
 -  =C-c C-d= Find docs of the thing under the cursor. Press again to
