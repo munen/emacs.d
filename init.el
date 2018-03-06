@@ -10,7 +10,11 @@
 (package-initialize)
 
 ;; This loads the actual configuration in literate org-mode elisp
-(org-babel-load-file "~/.emacs.d/configuration.org")
+(defun load-config()
+  (interactive)
+  (org-babel-load-file "~/.emacs.d/configuration.org"))
+
+(load-config)
 
 ;; custom-set-variables was added by Custom.
 (custom-set-variables
@@ -18,6 +22,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(cider-boot-parameters "cider repl -s wait")
  '(mml-secure-key-preferences
    (quote
     ((OpenPGP
@@ -27,9 +32,12 @@
      (CMS
       (sign)
       (encrypt)))))
+ '(org-agenda-files
+   (quote
+    ("~/switchdrive/org/things.org" "~/switchdrive/org/inbox.org" "~/Dropbox/ZHAW/web3-unterlagen/README.org" "~/Dropbox/ZHAW/weng-unterlagen/README.org" "~/switchdrive/org/reference.org")))
  '(package-selected-packages
    (quote
-    (elfeed-goodies elfeed-org zenburn-theme writegood-mode writeroom-mode which-key darktooth-theme magit restclient impatient-mode evil-numbers evil-surround evil-leader evil smex ledger-mode robe enh-ruby-mode markdown-mode projectile coffee-mode tern-auto-complete tern pdf-tools yaml-mode sass-mode fixme-mode flycheck-flow ac-js2 js2-mode ac-cider exec-path-from-shell cider clj-refactor parinfer clojure-mode web-mode auto-complete flycheck ag))))
+    (js2-refactor graphviz-dot-mode js-comint intero haskell-mode comment-tags handlebars-mode json-mode mustache-mode seeing-is-believing evil-mc elfeed-goodies elfeed-org zenburn-theme writegood-mode writeroom-mode which-key darktooth-theme magit restclient impatient-mode evil-numbers evil-surround evil-leader evil smex ledger-mode robe enh-ruby-mode markdown-mode projectile coffee-mode tern-auto-complete tern pdf-tools yaml-mode sass-mode fixme-mode flycheck-flow ac-js2 js2-mode ac-cider exec-path-from-shell cider clj-refactor parinfer clojure-mode web-mode auto-complete flycheck ag))))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
