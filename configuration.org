@@ -755,15 +755,23 @@ Publish buffers by enabling the minor mode impatient-mode.
 And then point your browser to http://localhost:8080/imp/, select a
 buffer, and watch your changes appear as you type!
 
-*** Pretty print JSON
+*** Process JSON
 
-Pretty print JSON using a standard Python Library.
+[[https://stedolan.github.io/jq/][=jq=]] is a lightweight and flexible command-line JSON processor.
+
+Thanks to @branch14 for the function!
 
 #+BEGIN_SRC emacs-lisp
-(defun pretty-print-json(&optional b e)
-  (interactive "r")
-  (shell-command-on-region b e "python -m json.tool" t t))
+(defun jq-json ()
+  (interactive)
+  (save-excursion
+    (shell-command-on-region
+     (point-min)
+     (point-max)
+     (read-string "Command: " "jq -M .") t t)))
 #+END_SRC
+
+
 *** Emacs Configuration
 
 #+BEGIN_SRC emacs-lisp
