@@ -42,6 +42,7 @@ management system]]. To initially install packages, open
                         exec-path-from-shell
                         ac-cider
                         js2-mode
+                        js-comint
                         js2-refactor
                         ac-js2
                         flycheck-flow
@@ -683,6 +684,11 @@ A JavaScript refactoring library for Emacs.
 #+BEGIN_SRC emacs-lisp
 (add-hook 'js2-mode-hook #'js2-refactor-mode)
 (js2r-add-keybindings-with-prefix "C-c C-m")
+#+END_SRC
+*** =js-comint=
+Run a JavaScript interpreter in an inferior process window.
+#+BEGIN_SRC emacs-lisp
+(require 'js-comint)
 #+END_SRC
 *** =flow=
 https://github.com/flowtype/flow-for-emacs/
