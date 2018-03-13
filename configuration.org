@@ -45,6 +45,7 @@ management system]]. To initially install packages, open
                         js2-mode
                         js-comint
                         js2-refactor
+                        rainbow-mode
                         ac-js2
                         flycheck-flow
                         comment-tags
@@ -743,7 +744,13 @@ An emacs plugin for Flow, a static typechecker for JavaScript.
 #+END_SRC
 
 ** Web
+*** =rainbow-mode=
+rainbow-mode is a minor mode for Emacs which displays strings
+representing colors with the color they represent as background.
 
+#+BEGIN_SRC emacs-lisp
+(add-hook 'prog-mode-hook 'rainbow-mode)
+#+END_SRC
 *** Impatient Mode - Live Coding Emacs/Browser
 
 https://github.com/netguy204/imp.el
@@ -778,7 +785,6 @@ Thanks to @branch14 for the function!
      (point-max)
      (read-string "Command: " "jq -M '.'") t t)))
 #+END_SRC
-
 
 *** Emacs Configuration
 
