@@ -31,6 +31,7 @@ management system]]. To initially install packages, open
 
   (defvar my-packages '(ag
                         beacon
+                        clipmon browse-kill-ring
                         flycheck
                         auto-complete
                         web-mode
@@ -1717,6 +1718,24 @@ all further occurrences of the word you just saved as correct (without
 having to recheck the whole buffer).
 
 *** TODO Implement =ispell-pdict-save= with above requirement
+
+* On Trial
+** Kill Ring and Clipboard
+
+Monitors system clipboard and puts everything in the kill-ring.
+#+BEGIN_SRC emacs-lisp
+
+(add-to-list 'after-init-hook 'clipmon-mode-start)
+
+(require 'browse-kill-ring)
+(setq browse-kill-ring-highlight-inserted-item t
+      browse-kill-ring-highlight-current-entry nil
+      browse-kill-ring-show-preview t)
+(define-key browse-kill-ring-mode-map (kbd "j") 'browse-kill-ring-forward)
+(define-key browse-kill-ring-mode-map (kbd "k") 'browse-kill-ring-previous)
+
+#+END_SRC
+
 
 * Presentation / Beamer
 ** Set safe themes (to execute LISP code)
