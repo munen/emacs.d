@@ -30,6 +30,7 @@ management system]]. To initially install packages, open
 #+BEGIN_SRC emacs-lisp
 
   (defvar my-packages '(ag
+                        beacon
                         flycheck
                         auto-complete
                         web-mode
@@ -235,6 +236,13 @@ Basic Configuration
 
 #+BEGIN_SRC emacs-lisp
 (ac-config-default)
+#+END_SRC
+** =beacon-mode=
+https://github.com/Malabarba/beacon
+
+Whenever the window scrolls a light will shine on top of your cursor so you know where it is.
+#+BEGIN_SRC emacs-lisp
+(beacon-mode 1)
 #+END_SRC
 * Evil Mode
 ** Enable Evil
