@@ -31,7 +31,7 @@ management system]]. To initially install packages, open
 
   (defvar my-packages '(ag
                         beacon
-                        clipmon browse-kill-ring
+                        browse-kill-ring
                         flycheck
                         auto-complete
                         web-mode
@@ -246,6 +246,21 @@ Whenever the window scrolls a light will shine on top of your cursor so you know
 #+BEGIN_SRC emacs-lisp
 (beacon-mode 1)
 #+END_SRC
+** =browse-kill-ring=
+Ever wish you could just look through everything you've killed
+recently to find out if you killed that piece of text that you think
+you killed (or yanked), but you're not quite sure? If so, then
+browse-kill-ring is the Emacs extension for you.
+
+#+BEGIN_SRC emacs-lisp
+  (require 'browse-kill-ring)
+  (setq browse-kill-ring-highlight-inserted-item t
+        browse-kill-ring-highlight-current-entry nil
+        browse-kill-ring-show-preview t)
+  (define-key browse-kill-ring-mode-map (kbd "j") 'browse-kill-ring-forward)
+  (define-key browse-kill-ring-mode-map (kbd "k") 'browse-kill-ring-previous)
+#+END_SRC
+
 * Evil Mode
 ** Enable Evil
 #+BEGIN_SRC emacs-lisp
@@ -1719,22 +1734,23 @@ having to recheck the whole buffer).
 
 *** TODO Implement =ispell-pdict-save= with above requirement
 
-* On Trial
-** Kill Ring and Clipboard
+* Bad experience
+
+** clipmon
 
 Monitors system clipboard and puts everything in the kill-ring.
+
 #+BEGIN_SRC emacs-lisp
-
-(add-to-list 'after-init-hook 'clipmon-mode-start)
-
-(require 'browse-kill-ring)
-(setq browse-kill-ring-highlight-inserted-item t
-      browse-kill-ring-highlight-current-entry nil
-      browse-kill-ring-show-preview t)
-(define-key browse-kill-ring-mode-map (kbd "j") 'browse-kill-ring-forward)
-(define-key browse-kill-ring-mode-map (kbd "k") 'browse-kill-ring-previous)
-
+  ;; (add-to-list 'after-init-hook 'clipmon-mode-start)
 #+END_SRC
+
+*** Comment
+
+Theoretically this is really nice to have functionality. However, I
+couldn't run it for long. Emacs started freezing a lot on the day when
+I added this lib. I assume, because clipmon is blocking - and I always
+run multiple instances of Emacs in parallel. They might be in for a
+classic racing condition. Might be just another bug.
 
 
 * Presentation / Beamer
