@@ -876,6 +876,12 @@ Create shortcut for =magit=.
   (global-set-key (kbd "C-x g") 'magit-status)
 #+END_SRC
 
+Always sign commits with GPG
+
+#+BEGIN_SRC emacs-lisp
+ (setq magit-commit-arguments (quote ("--gpg-sign=alain@200ok.ch")))
+#+END_SRC
+
 ** Projectile
 
 Enable Projectile globally
