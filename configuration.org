@@ -261,6 +261,15 @@ browse-kill-ring is the Emacs extension for you.
   (define-key browse-kill-ring-mode-map (kbd "k") 'browse-kill-ring-previous)
 #+END_SRC
 
+** AngeFtp
+Try to use passive mode for FTP.
+
+Note: Some firewalls might not allow standard active mode. However:
+Some FTP Servers might not allow passive mode. So if there's problems
+when connecting to an FTP, try to revert to active mode.
+#+BEGIN_SRC emacs-lisp
+(setq ange-ftp-try-passive-mode t)
+#+END_SRC
 * Evil Mode
 ** Enable Evil
 #+BEGIN_SRC emacs-lisp
