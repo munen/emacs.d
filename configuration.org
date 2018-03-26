@@ -83,15 +83,10 @@ management system]]. To initially install packages, open
 
 ** Install packages
 
-Note: If there is an error on startup =error: Package ‘some-package-’
-is unavailable=, when the package list is not up to date. Run =M-x
-package-refresh-contents= and after that execute the code block below
-again with =C-x C-e=.
-
 #+BEGIN_SRC emacs-lisp
-
   (dolist (p my-packages)
     (unless (package-installed-p p)
+      (package-refresh-contents)
       (package-install p))
     (add-to-list 'package-selected-packages p))
 #+END_SRC
