@@ -212,6 +212,19 @@ default to not confuse beginners.
     (exec-path-from-shell-initialize)
 
 #+END_SRC
+** =windmove=
+
+Windmove is built into Emacs. It lets you move point from window to
+window using Shift and the arrow keys. This is easier to type than
+‘C-x o’ when there are multiple windows open.
+
+#+BEGIN_SRC emacs-lisp
+
+(when (fboundp 'windmove-default-keybindings)
+  (windmove-default-keybindings))
+
+#+END_SRC
+
 ** =winner-mode=
 
 Allows to 'undo' (and 'redo') changes in the window configuration with
