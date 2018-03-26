@@ -705,6 +705,25 @@ or
     {"libs": ["browser", "jquery"]}
 #+END_EXAMPLE
 
+If no project file is found, it’ll fall back to a default
+configuration. You can change this default configuration by putting a
+=.tern-config= file, with the same format as =.tern-project=, in your home
+directory.
+
+My =~/.tern-config= file looks like this:
+
+#+BEGIN_SRC
+{
+  "libs": [
+    "browser"
+  ],
+  "plugins": {
+    "es_modules": {},
+    "node": {}
+  }
+}
+#+END_SRC
+
 [[http://ternjs.net/doc/manual.html#configuration][Here]] is more documentation on how to configure a Tern project.
 
 Tern shortcuts:
