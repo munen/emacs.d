@@ -51,6 +51,7 @@ management system]]. To initially install packages, open
                         js-comint
                         js2-refactor
                         rainbow-mode
+                        ini-mode
                         ac-js2
                         flycheck-flow
                         comment-tags
