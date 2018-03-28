@@ -1645,7 +1645,7 @@ For starttls to work when sending mail, install gnutls:
             "/200ok/INBOX.Archive")
            ((string-match "^/zhaw.*"
                           (mu4e-message-field msg :maildir))
-            "/zhaw/INBOX.Archive")
+            "/zhaw/Archive")
            ;; everything else goes to /archive
            (t  "/archive"))))
 
