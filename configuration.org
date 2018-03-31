@@ -283,6 +283,11 @@ when connecting to an FTP, try to revert to active mode.
 #+BEGIN_SRC emacs-lisp
 (setq ange-ftp-try-passive-mode t)
 #+END_SRC
+** eww
+   When entering eww, use cursors to scroll without changing point.
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'eww-mode-hook 'scroll-lock-mode)
+#+END_SRC
 * Evil Mode
 ** Enable Evil
 #+BEGIN_SRC emacs-lisp
@@ -359,7 +364,7 @@ cursor forward use =C-t= or =grn= and backward =grp=. Finally use
 #+BEGIN_SRC emacs-lisp
 (mapc (lambda (mode)
         (evil-set-initial-state mode 'emacs))
-      '(elfeed-show-mode elfeed-search-mode dired-mode image-dired-mode image-dired-thumbnail-mode))
+      '(elfeed-show-mode elfeed-search-mode dired-mode image-dired-mode image-dired-thumbnail-mode eww-mode))
 #+END_SRC
 ** Unbind M-. and M- in =evil-mode=
 =M-.= and =M-,= are popular keybindings for "jump to definition" and
