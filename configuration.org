@@ -943,24 +943,24 @@ has too much (dynamic) content to be displayed properly in
 slide deck.
 
 #+BEGIN_SRC emacs-lisp
-
   (defun reload-chromium ()
-   "Finds the open chromium session and reloads the tab"
-   (when enable-browser-reloading
-     (shell-command-to-string "reload_chromium.sh")))
+    (when enable-browser-reloading
+      (shell-command-to-string "reload_chromium.sh")))
 
   (defun browser-reloading-mode ()
+    "Finds the open chromium session and reloads the tab"
     (interactive)
+    ;; When set, disable the local binding and therefore disable the mode
     (if enable-browser-reloading
-      (setq enable-browser-reloading nil)
+        (setq enable-browser-reloading nil)
+      ;; Otherwise create a local var and set it to True
       (progn
-          (make-local-variable 'enable-browser-reloading)
-          (setq enable-browser-reloading t))))
+        (make-local-variable 'enable-browser-reloading)
+        (setq enable-browser-reloading t))))
 
+  ;; By default, disable the guard against using `reload-chromium`
   (setq enable-browser-reloading nil)
   (add-hook 'after-save-hook #'reload-chromium)
-
-
 #+END_SRC
 
 ** yaml
