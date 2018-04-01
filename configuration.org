@@ -447,6 +447,7 @@ capable counterparts
 * Programming
 ** General
 *** Auto Complete
+https://github.com/auto-complete/auto-complete
 
 Basic Configuration
 #+BEGIN_SRC emacs-lisp
@@ -492,16 +493,22 @@ Use 2 spaces instead of tabs for programming languages.
 
 *** Syntax Checking
 
-Enable global syntax checking through flycheck
+http://www.flycheck.org/
+
+Enable global syntax checking through =flycheck=.
 
 #+BEGIN_SRC emacs-lisp
 
   (add-hook 'after-init-hook #'global-flycheck-mode)
 
 #+END_SRC
-*** Highlight and list comment tags such as 'TODO', 'FIXME', 'XXX'
+*** Manage TODO/FIXME/XXX comments
 
-Commands:
+https://github.com/vincekd/comment-tags
+
+=comment-tags= highlights and lists comment tags such as 'TODO', 'FIXME', 'XXX'.
+
+Commands (prefixed by =C-c t=):
 
     - =b= to list tags in current buffer (comment-tags-list-tags-buffer).
     - =a= to list tags in all buffers (comment-tags-list-tags-buffers).
@@ -535,7 +542,7 @@ Commands:
   (define-key global-map (kbd "RET") 'newline-and-indent)
 #+END_SRC
 
-*** Show matching paren
+*** Highlight matching parenthesis
 
 #+BEGIN_SRC emacs-lisp
   (show-paren-mode t)
@@ -543,7 +550,7 @@ Commands:
 
 *** Delete trailing whitespace
 
-Delete trailing whitespace in any mode, _except_ when editing
+Delete trailing whitespace in all modes. _Except_ when editing
 Markdown, because it uses [[http://daringfireball.net/projects/markdown/syntax#p][two trailing blanks]] as a signal to create a
 line break.
 
@@ -569,10 +576,17 @@ Enable code folding for programming modes.
 
 ** Ruby
 
-For syntax checking to work, also run the following commands:
+*** Standard linters
 
-- =$ gem install rubocop ruby-lint=
-- =npm install -g eslint=
+For syntax checking to work, installing the command-line linter tools
+[[https://gitlab.com/yorickpeterse/ruby-lint][ruby-lint]] and [[https://eslint.org/][eslint]] are a premise:
+
+#+BEGIN_SRC shell
+gem install rubocop ruby-lint
+npm install -g eslint
+#+END_SRC
+
+*** Configuration
 
 #+BEGIN_SRC emacs-lisp
   (setq ruby-indent-level 2)
@@ -581,14 +595,11 @@ For syntax checking to work, also run the following commands:
   (add-to-list 'auto-mode-alist '("\\.rb?\\'" . enh-ruby-mode))
   (add-to-list 'auto-mode-alist '("\\.rake?\\'" . enh-ruby-mode))
   (add-hook 'enh-ruby-mode-hook 'linum-mode)
-
-  ; From Phil
-  (add-hook 'ruby-mode-hook
-           (lambda ()
-             (add-to-list 'write-file-functions 'delete-trailing-whitespace)))
 #+END_SRC
 
 *** =robe-mode=
+
+https://github.com/dgutov/robe
 
 Code navigation, documentation lookup and completion for Ruby
 
@@ -614,24 +625,8 @@ Shortcuts:
 
 #+END_SRC
 
-** Lisp
-When working with Lisp, there's the option of handing parentheses
-manually or let them be dealt with by the magic that is [[http://shaunlebron.github.io/parinfer/][Parinfer]]. I'm
-using the wonderful [[https://github.com/DogLooksGood/parinfer-mode][parinfer-mode]].
-
-#+BEGIN_SRC emacs-lisp
-  ;; (add-hook 'clojure-mode-hook #'parinfer-mode)
-  ;; (add-hook 'emacs-lisp-mode-hook #'parinfer-mode)
-  (setq parinfer-extensions '(company pretty-parens evil))
-  (eval-after-load "parinfer"
-    '(progn
-       (define-key parinfer-mode-map (kbd "C-,") 'parinfer-toggle-mode)
-       (define-key parinfer-region-mode-map (kbd ">") 'parinfer-shift-right)
-       (define-key parinfer-region-mode-map (kbd "<") 'parinfer-shift-left)))
-#+END_SRC
-
 ** Clojure
-*** Notes on Cider
+*** Cider
 
 https://github.com/clojure-emacs/cider
 
@@ -657,7 +652,7 @@ Create a =~/.lein/profiles.clj= file with:
             :dependencies [[org.clojure/tools.nrepl "0.2.12"]]}}
 #+END_SRC
 
-*** Emacs configuration
+**** Emacs configuration
 
 Setup Cider with =auto-complete=.
 
@@ -675,7 +670,17 @@ Setup Cider with =auto-complete=.
 
 #+END_SRC
 
-Setup =clj-refactor=.
+When connecting to a repl, don't pop to the new repl buffer.
+
+#+BEGIN_SRC emacs-lisp
+(setq cider-repl-pop-to-buffer-on-connect nil)
+#+END_SRC
+
+*** =clj-refactor=.
+
+https://github.com/clojure-emacs/clj-refactor.el/
+
+A collection of Clojure refactoring functions for Emacs
 
 #+BEGIN_SRC emacs-lisp
   (require 'clj-refactor)
@@ -688,11 +693,8 @@ Setup =clj-refactor=.
               (cljr-add-keybindings-with-prefix "C-c C-m")))
 #+END_SRC
 
-When connecting to a repl, don't pop to the new repl buffer.
-
-#+BEGIN_SRC emacs-lisp
-(setq cider-repl-pop-to-buffer-on-connect nil)
-#+END_SRC
+=clj-refactor= enables refactorings like extracting functions (=C-c
+C-m ef=). Find the list of available refactorings [[https://github.com/clojure-emacs/clj-refactor.el/wiki][here]].
 
 ** JavaScript
 
@@ -1815,9 +1817,18 @@ having to recheck the whole buffer).
 
 * Bad experience
 
-** clipmon
+The following packages would be nice, in theory. In practice something
+is yet amiss, but it might be different in the future. That's why I'm
+keeping them around and will try them at another time.
 
-Monitors system clipboard and puts everything in the kill-ring.
+** clipmon
+https://github.com/bburns/clipmon
+
+Proposition: Monitors system clipboard and puts everything in the kill-ring.
+
+Caveat: In theory, I liked the package. However, it seemed to cause
+racing conditions and crashed Emacs multiple times a day. When this is
+re-implemented in a non-blocking mode, this would be nice.
 
 #+BEGIN_SRC emacs-lisp
   ;; (add-to-list 'after-init-hook 'clipmon-mode-start)
@@ -1830,6 +1841,28 @@ couldn't run it for long. Emacs started freezing a lot on the day when
 I added this lib. I assume, because clipmon is blocking - and I always
 run multiple instances of Emacs in parallel. They might be in for a
 classic racing condition. Might be just another bug.
+
+** =parinfer-mode=
+
+Proposition: When working with Lisp, there's the option of handing parentheses
+manually or let them be dealt with by the magic that is [[http://shaunlebron.github.io/parinfer/][Parinfer]]. I'm
+using the wonderful [[https://github.com/DogLooksGood/parinfer-mode][parinfer-mode]].
+
+Caveat: The original Parinfer curiously is written in JavaScript.
+=parinfer-mode= is a re-implementation in Elisp. When I tried it, it
+was still in it's early stages and quite buggy. However, the original
+Parinfer algorithm is quite nice. I'll try again at some point.
+
+#+BEGIN_SRC emacs-lisp
+  ;; (add-hook 'clojure-mode-hook #'parinfer-mode)
+  ;; (add-hook 'emacs-lisp-mode-hook #'parinfer-mode)
+  ;; (setq parinfer-extensions '(company pretty-parens evil))
+  ;; (eval-after-load "parinfer"
+  ;;   '(progn
+  ;;      (define-key parinfer-mode-map (kbd "C-,") 'parinfer-toggle-mode)
+  ;;      (define-key parinfer-region-mode-map (kbd ">") 'parinfer-shift-right)
+  ;;      (define-key parinfer-region-mode-map (kbd "<") 'parinfer-shift-left)))
+#+END_SRC
 
 * Presentation / Beamer
 ** Set safe themes (to execute LISP code)
