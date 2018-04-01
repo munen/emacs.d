@@ -1477,7 +1477,7 @@ Configure =xdg-open= to use Emacs in =.local/share/applications/mimeapps.list=:
     xdg-mime default emacs.desktop application/pdf
 #+END_EXAMPLE
 
-**** OS X
+**** Installation
 
 MU works on a local Maildir folder. For synchronization
 [[http://www.offlineimap.org/][offlineimap]] is used. Install:
@@ -1485,18 +1485,15 @@ MU works on a local Maildir folder. For synchronization
 - Debian: =apt-get install offlineimap=
 - macOS: =brew install offlineimap=
 
-
 For MU4E to work, install MU and MU4E:
 
 - Debian: =apt-get install mu4e=
 - macOS: =brew install mu --with-emacs=
 
 For starttls to work when sending mail, install gnutls:
-=brew install gnutls=
 
-**** Debian
-
-=apt-get install offlineimap mu4e gnutls-bin=
+- Debian: =apt-get install gnutls-bin=
+- macOS: =brew install gnutls=
 
 ** Emacs Configuration
 
@@ -1520,14 +1517,6 @@ For starttls to work when sending mail, install gnutls:
         mu4e-attachment-dir "~/switchdrive/org/files/inbox")
 
   (setq mu4e-maildir "~/Maildir/")
-
-  ;; HTML Mails
-  (require 'mu4e-contrib)
-  (setq mu4e-html2text-command 'mu4e-shr2text)
-  (add-to-list 'mu4e-view-actions '("ViewInBrowser" . mu4e-action-view-in-browser) t)
-
-  ;; Format=Flowed for those other mail clients
-  (setq mu4e-compose-format-flowed t)
 
   ;; show full addresses in view message (instead of just names)
   ;; toggle per name with M-RET
@@ -1624,16 +1613,6 @@ For starttls to work when sending mail, install gnutls:
   (add-hook 'mu4e-compose-mode-hook (lambda ()
                                      (ispell-change-dictionary "deutsch")))
 
-  ;; gpg
-  ;; C-c C-e s to sign
-  ;; C-c C-e e to encrypt
-  ;; C-c C-e v to verify the signature
-  ;; C-c C-e d to decrypt
-  (add-hook 'mu4e-compose-mode-hook 'epa-mail-mode)
-  (add-hook 'mu4e-view-mode-hook 'epa-mail-mode)
-
-  ;; Automatic line breaks when reading mail
-  (add-hook 'mu4e-view-mode-hook 'visual-line-mode)
 
   (setq mu4e-refile-folder
         (lambda (msg)
@@ -1709,12 +1688,54 @@ For starttls to work when sending mail, install gnutls:
   (add-hook 'message-send-hook 'my-message-check-attachment)
 
 
-  ;; Periodic updates - every 15 minutes
-  (setq mu4e-update-interval (* 15 60))
+#+END_SRC
 
-  ;; Updates happen in the background
-  (setq mu4e-index-update-in-background t)
+HTML Mails
 
+#+BEGIN_SRC emacs-lisp
+(require 'mu4e-contrib)
+(setq mu4e-html2text-command 'mu4e-shr2text)
+(add-to-list 'mu4e-view-actions '("ViewInBrowser" . mu4e-action-view-in-browser) t)
+
+#+END_SRC
+
+Setting =Format=Flowed= for non-text-based mail clients which don't
+respect actual formatting, but let the text "flow" as they please.
+
+#+BEGIN_SRC emacs-lisp
+(setq mu4e-compose-format-flowed t)
+#+END_SRC
+
+Updating mails:
+
+  - Periodic - every 15 minutes
+  - Happening in the background
+
+Note: There's no notifications, because that's only distracting.
+
+#+BEGIN_SRC emacs-lisp
+(setq mu4e-update-interval (* 15 60))
+(setq mu4e-index-update-in-background t)
+#+END_SRC
+
+GPG configuration:
+
+- =C-c C-e s= to sign
+- =C-c C-e e= to encrypt
+- =C-c C-e v= to verify the signature
+- =C-c C-e d= to decrypt
+
+#+BEGIN_SRC emacs-lisp
+
+(add-hook 'mu4e-compose-mode-hook 'epa-mail-mode)
+(add-hook 'mu4e-view-mode-hook 'epa-mail-mode)
+
+#+END_SRC
+
+Automatic line breaks when reading mail
+
+#+BEGIN_SRC emacs-lisp
+(add-hook 'mu4e-view-mode-hook 'visual-line-mode)
 #+END_SRC
 
 ** Do not reply to self
