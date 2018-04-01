@@ -1495,7 +1495,9 @@ For starttls to work when sending mail, install gnutls:
 - Debian: =apt-get install gnutls-bin=
 - macOS: =brew install gnutls=
 
-** Emacs Configuration
+** Configuration
+
+Accounts setup
 
 #+BEGIN_SRC emacs-lisp
 
@@ -1745,7 +1747,7 @@ Automatic line breaks when reading mail
 (add-hook 'mu4e-view-mode-hook 'visual-line-mode)
 #+END_SRC
 
-** Do not reply to self
+Do not reply to self
 
 #+BEGIN_SRC emacs-lisp
   (setq mu4e-compose-dont-reply-to-self t)
@@ -1755,8 +1757,8 @@ Automatic line breaks when reading mail
   (add-to-list 'mu4e-user-mail-address-list "lafo@zhaw.ch")
 #+END_SRC
 
-** TODO Use Quoted printable text for outgoing messages to enable automatic line breaks
-*** If this is successfull, send upstream PR to MU4E
+*** TODO Use Quoted printable text for outgoing messages to enable automatic line breaks
+**** If this is successfull, send upstream PR to MU4E
 https://mathiasbynens.be/notes/gmail-plain-text
 https://mothereff.in/quoted-printable
 https://www.gnu.org/software/emacs/manual/html_node/emacs-mime/qp.html
