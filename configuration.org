@@ -1396,7 +1396,7 @@ Unrelated to Emacs, in macOS, you can write Umlauts by using the combo
 This is actually faster than the default way of Emacs or that of VIM.
 The following code ports that functionality to Emacs.
 
-Thx [[https://github.com/jcfischer][@jcfischer]]!
+Thx [[https://github.com/jcfischer][@jcfischer]] for the function!
 
 #+BEGIN_SRC emacs-lisp
   (define-key key-translation-map [dead-diaeresis]
@@ -1420,7 +1420,7 @@ Thx [[https://github.com/jcfischer][@jcfischer]]!
 ** Generate passwords
    Through =pwgen=.
 
-   Thanks to @branch14 for the function!
+   Thanks to [[https://github.com/branch14/emacs.d][@branch14]] of 200ok fame for the function!
 #+BEGIN_SRC emacs-lisp
 
 (defun generate-password ()
@@ -1431,44 +1431,23 @@ Thx [[https://github.com/jcfischer][@jcfischer]]!
     (concat "pwgen -A " (read-string "Length: " "16") " 1"))))
 
 #+END_SRC
-* OS Specific
-** Linux
-
-"Fira Code Retina" as default font. Get it via the =fonts-firacode=
-Debian package.
-
-#+BEGIN_SRC emacs-lisp
-
-  (when (eq system-type 'gnu/linux)
-    (set-frame-font "Fira Code Retina 15")
-    ;; Default Browser
-    (setq browse-url-browser-function 'browse-url-generic
-          browse-url-generic-program "chromium")
-    (menu-bar-mode -1)
-    ;; enable pdf-tools
-    (pdf-tools-install))
-
-#+END_SRC
-
-** macOS
-
-#+BEGIN_SRC emacs-lisp
-
-  (when (eq system-type 'darwin)
-    (set-frame-font "Menlo 14")
-    ; Use Spotlight to search with M-x locate
-    (setq locate-command "mdfind")
-    ; exec-path-from-shell-initialize might make this line obsolete
-    ;(setq mu4e-mu-binary "/usr/local/bin/mu")
-    )
-
-#+END_SRC
-
 * Mail
+
+Writing and reading mail is inherently a text-based workflow. Yes,
+there's HTML mails and attachments, but at the core Email is probably
+/the place/ where many people write and consume the most text. To
+utilize the best text-processing program available, makes a lot of
+sense.
+
+When combined with other powerful features of Emacs (such as org-mode
+for organizing mails into projects and todos), processing mails within
+Emacs not only makes a lot of sense, but becomes a powerhouse.
 
 ** mu4e
 
-As MTA [[http://www.djcbsoftware.nl/code/mu/mu4e/][MU4E]] is used. As SMTP the Emacs =smtpmail= package.
+Emacs has many options for MTAs. I'm using [[http://www.djcbsoftware.nl/code/mu/mu4e/][MU4E]] which is a little
+similar to using [[http://www.mutt.org/][mutt]] with [[https://notmuchmail.org/][notmuch]]. As SMTP, I'm using the built-in
+=smtpmail= Emacs package.
 
 *** Installation
 
@@ -1492,7 +1471,7 @@ Tell Emacs where to find the encrypted =.authinfo= file.
 To open PDFs within Mu4e with Emacs, then there's one thing to
 configure. Mu4e uses =xdg-open= to chose the app to open any mime type.
 
-Configure =xdg-open= to use Emacs:
+Configure =xdg-open= to use Emacs in =.local/share/applications/mimeapps.list=:
 
 #+BEGIN_EXAMPLE
     xdg-mime default emacs.desktop application/pdf
@@ -1500,10 +1479,17 @@ Configure =xdg-open= to use Emacs:
 
 **** OS X
 
-MU works on a local Maildir folder, for synching that =offlineimap= is
-used. To install: =brew install offlineimap=
+MU works on a local Maildir folder. For synchronization
+[[http://www.offlineimap.org/][offlineimap]] is used. Install:
 
-For MU4E to work, install MU and MU4E: =brew install mu --with-emacs=
+- Debian: =apt-get install offlineimap=
+- macOS: =brew install offlineimap=
+
+
+For MU4E to work, install MU and MU4E:
+
+- Debian: =apt-get install mu4e=
+- macOS: =brew install mu --with-emacs=
 
 For starttls to work when sending mail, install gnutls:
 =brew install gnutls=
@@ -1798,6 +1784,34 @@ all further occurrences of the word you just saved as correct (without
 having to recheck the whole buffer).
 
 *** TODO Implement =ispell-pdict-save= with above requirement
+
+* OS Specific
+** Linux
+
+"Fira Code Retina" as default font. Get it via the =fonts-firacode=
+Debian package.
+
+#+BEGIN_SRC emacs-lisp
+
+  (when (eq system-type 'gnu/linux)
+    (set-frame-font "Fira Code Retina 15")
+    ;; Default Browser
+    (setq browse-url-browser-function 'browse-url-generic
+          browse-url-generic-program "chromium")
+    (menu-bar-mode -1)
+    ;; enable pdf-tools
+    (pdf-tools-install))
+
+#+END_SRC
+
+** macOS
+
+#+BEGIN_SRC emacs-lisp
+(when (eq system-type 'darwin)
+  (set-frame-font "Menlo 14")
+  ; Use Spotlight to search with M-x locate
+  (setq locate-command "mdfind"))
+#+END_SRC
 
 * Bad experience
 
