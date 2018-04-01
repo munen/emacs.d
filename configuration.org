@@ -1274,15 +1274,28 @@ exposed in an org-mode table.
 
 Demo: [[https://asciinema.org/a/hMTM9EDHE0cphaDRFr4JXr1iw][https://asciinema.org/a/hMTM9EDHE0cphaDRFr4JXr1iw.png]]
 
+*** Load dict.el
+
 #+BEGIN_SRC emacs-lisp
   (load "~/.emacs.d/dict")
 #+END_SRC
 ** Helper functions to clean up the gazillion buffers
+
+When switching projects in Emacs, it can be prudent to clean up every
+once in a while. Deleting all buffers except the current one is one of
+the things I often do (especially in the long-running =emacsclient=).
+
 #+BEGIN_SRC emacs-lisp
   (defun kill-other-buffers ()
     "Kill all other buffers."
     (interactive)
     (mapc 'kill-buffer (delq (current-buffer) (buffer-list))))
+#+END_SRC
+
+=dired= will create buffers for every visited folder. This is a helper
+to clear them out once you're done working with those folders.
+
+#+BEGIN_SRC emacs-lisp
 
   (defun kill-dired-buffers ()
     "Kill all open dired buffers."
@@ -1293,6 +1306,7 @@ Demo: [[https://asciinema.org/a/hMTM9EDHE0cphaDRFr4JXr1iw][https://asciinema.org
           (buffer-list)))
 #+END_SRC
 ** Encode HTML to HTML entities
+   Rudimentary function converting certain HTML syntax to HTML entities.
 #+BEGIN_SRC emacs-lisp
   (defun encode-html (start end)
     "Encodes HTML entities; works great in Visual Mode (START END)."
@@ -1305,12 +1319,18 @@ Demo: [[https://asciinema.org/a/hMTM9EDHE0cphaDRFr4JXr1iw][https://asciinema.org
         (goto-char (point-min))
         (replace-string "<" "&lt;")
         (goto-char (point-min))
-        (replace-string ">" "&gt;")
-        )))
+        (replace-string ">" "&gt;"))))
 #+END_SRC
 ** Convenience functions when working with PDF exports
+
+When working on markdown or org-mode files that will be converted to
+PDF, I use =pdf-tools= to preview the PDF and shortcuts to
+automatically save, compile and reload on demand.
+
 [[https://www.youtube.com/watch?v=Pd0JwOqh-gI][Here]] is a screencast showing how I edit Markdown or org-mode files in
-Emacs whilst having a PDF preview.
+Emacs whilst having a PDF preview:
+
+[[file:images/edit_markdown_with_preview.png]]
 
 #+BEGIN_SRC emacs-lisp
   (defun md-compile ()
