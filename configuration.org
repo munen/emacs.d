@@ -976,9 +976,13 @@ slide deck.
 
 #+END_SRC
 
-** Git
+** Magit
 
-Create shortcut for =magit=.
+Magit is an interface to the version control system Git.
+
+*** Configuration
+
+Create shortcut for =Magit=.
 
 #+BEGIN_SRC emacs-lisp
   (global-set-key (kbd "C-x g") 'magit-status)
@@ -992,12 +996,25 @@ Always sign commits with GPG
 
 ** Projectile
 
+https://github.com/bbatsov/projectile
+
+Projectile is a project interaction library. For instance -
+finding project files (=C-c p f=)  or jumping to a new project (=C-c p
+p=).
+
+*** Configuration
+
 Enable Projectile globally
+
 #+BEGIN_SRC emacs-lisp
   (projectile-global-mode)
 #+END_SRC
 
 * org-mode
+
+Outline-based notes management and organizer. It is an outline-mode
+for keeping track of everything.
+
 ** Plain Lists
 Allow ‘a.’, ‘A.’, ‘a)’ and ‘A) as list elements:
 
@@ -1006,35 +1023,8 @@ Allow ‘a.’, ‘A.’, ‘a)’ and ‘A) as list elements:
 (setq org-list-allow-alphabetical t)
 
 #+END_SRC
-** KOMA Script export
 
-#+BEGIN_SRC emacs-lisp
-(require 'ox-latex)
-(add-to-list 'org-latex-classes
-             '("scrartcl"
-               "\\documentclass{scrartcl}"
-               ("\\section{%s}" . "\\section*{%s}")))
-#+END_SRC
-** Tufte org-mode export
-
-#+BEGIN_SRC emacs-lisp
-
-(require 'ox-latex)
-(add-to-list 'org-latex-classes
-	     '("tuftehandout"
-	       "\\documentclass{tufte-handout}
-\\usepackage{color}
-\\usepackage{amssymb}
-\\usepackage{amsmath}
-\\usepackage{gensymb}
-\\usepackage{nicefrac}
-\\usepackage{units}"
-	       ("\\section{%s}" . "\\section*{%s}")
-	       ("\\subsection{%s}" . "\\subsection*{%s}")
-	       ("\\paragraph{%s}" . "\\paragraph*{%s}")
-	       ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
-
-#+END_SRC
+** General configuration
 
 #+BEGIN_SRC emacs-lisp
 
@@ -1092,6 +1082,36 @@ Allow ‘a.’, ‘A.’, ‘a)’ and ‘A) as list elements:
   (add-to-list 'org-latex-packages-alist '("" "minted"))
   (setq org-latex-listings 'minted)
 
+
+#+END_SRC
+
+** KOMA Script export
+
+#+BEGIN_SRC emacs-lisp
+(require 'ox-latex)
+(add-to-list 'org-latex-classes
+             '("scrartcl"
+               "\\documentclass{scrartcl}"
+               ("\\section{%s}" . "\\section*{%s}")))
+#+END_SRC
+** Tufte org-mode export
+
+#+BEGIN_SRC emacs-lisp
+
+(require 'ox-latex)
+(add-to-list 'org-latex-classes
+	     '("tuftehandout"
+	       "\\documentclass{tufte-handout}
+\\usepackage{color}
+\\usepackage{amssymb}
+\\usepackage{amsmath}
+\\usepackage{gensymb}
+\\usepackage{nicefrac}
+\\usepackage{units}"
+	       ("\\section{%s}" . "\\section*{%s}")
+	       ("\\subsection{%s}" . "\\subsection*{%s}")
+	       ("\\paragraph{%s}" . "\\paragraph*{%s}")
+	       ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
 
 #+END_SRC
 
@@ -1192,6 +1212,18 @@ This will render the same time as above as:
 
 * pdf-tools
 
+https://github.com/politza/pdf-tools
+
+PDF Tools is, among other things, a replacement of DocView for PDF
+files. The key difference is that pages are not pre-rendered by e.g.
+ghostscript and stored in the file-system, but rather created
+on-demand and stored in memory.
+
+PDF Tools for me is - hands down - the best PDF viewer! It's not an
+excuse to do even more within Emacs.
+
+** Configuration
+
 When using =evil-mode= and =pdf-tools= and looking at a zoomed PDF, it
 will blink, because the cursor blinks. This configuration disables
 this whilst retaining the blinking cursor in other modes.
@@ -1216,6 +1248,7 @@ Atom and RSS.
 
     (elfeed-goodies/setup)
 
+;; Have automatic word-wrap
 ;; This should work, but there seems to be a bug
 ;; https://github.com/joostkremers/visual-fill-column/issues/21
 ;; For the time being, use =M-x visual-fill-column-mode=
