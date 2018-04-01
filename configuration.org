@@ -495,7 +495,7 @@ Use 2 spaces instead of tabs for programming languages.
 
 http://www.flycheck.org/
 
-Enable global syntax checking through =flycheck=.
+Enable global on the fly syntax checking through =flycheck=.
 
 #+BEGIN_SRC emacs-lisp
 
@@ -630,6 +630,10 @@ Shortcuts:
 
 https://github.com/clojure-emacs/cider
 
+Cider is short for The "Clojure Interactive Development Environment
+that Rocks for Emacs". For good reasons, it is the [[http://blog.cognitect.com/blog/2017/1/31/clojure-2018-results][most popular IDE]]
+for developing Clojure.
+
 -  =M-x cider-jack-in= To start REPL
 -  =C-c C-k= Evaluate current buffer
 -  =C-c M-n= Change ns in cider-nrepl to current ns
@@ -637,12 +641,12 @@ https://github.com/clojure-emacs/cider
 -  =C-c C-d C-a= Apropos search for arbitrary text across function names
    and documentation
 
-_CIDER REPL Key Bindings_
+**** CIDER REPL Key Bindings
 
 - =C-↑, C-↓= Cycle through REPL history.
 - More Cider shortcuts [[https://github.com/clojure-emacs/cider#cider-mode][here]].
 
-_Dependencies_
+**** Dependencies
 
 Create a =~/.lein/profiles.clj= file with:
 
@@ -680,7 +684,7 @@ When connecting to a repl, don't pop to the new repl buffer.
 
 https://github.com/clojure-emacs/clj-refactor.el/
 
-A collection of Clojure refactoring functions for Emacs
+A collection of Clojure refactoring functions for Emacs.
 
 #+BEGIN_SRC emacs-lisp
   (require 'clj-refactor)
@@ -698,23 +702,6 @@ C-m ef=). Find the list of available refactorings [[https://github.com/clojure-e
 
 ** JavaScript
 
-*** =flycheck-flow=
-**** Type Inference
-Flow uses type inference to find bugs even without type annotations.
-It precisely tracks the types of variables as they flow through your
-program.
-
-**** Idiomatic JS
-Flow is designed for JavaScript programmers. It understands common
-JavaScript idioms and very dynamic code.
-
-**** Realtime Feedback
-Flow incrementally rechecks your changes as you work, preserving the
-fast feedback cycle of developing plain JavaScript.
-#+BEGIN_SRC elisp
-(require 'flycheck-flow)
-(add-hook 'javascript-mode-hook 'flycheck-mode)
-#+END_SRC
 *** =js2-mode= and =tern=
 
 JavaScript is improved with =js2-mode= as well as
@@ -722,17 +709,15 @@ JavaScript is improved with =js2-mode= as well as
 
 Tern is a stand-alone code-analysis engine for JavaScript used for:
 
-#+BEGIN_EXAMPLE
-    * Auto completion on variables and properties
-    * Function argument hints
-    * Querying the type of an expression
-    * Finding the definition of something
-    * Automatic refactoring
-#+END_EXAMPLE
+- Auto completion on variables and properties
+- Function argument hints
+- Querying the type of an expression
+- Finding the definition of something
+- Automatic refactoring
 
 Tern is installed as an NPM package: =npm install -g tern=.
 
-To enable Tern in emacs, also the =tern= and =tern-auto-complete=
+To enable Tern in emacs, the =tern= and =tern-auto-complete=
 packages are installed.
 
 For completion to work in a Node.js project, a =.tern-project= file like
@@ -771,14 +756,29 @@ My =~/.tern-config= file looks like this:
 
 Tern shortcuts:
 
--  =M-.= Jump to the definition of the thing under the cursor.
--  =M-,= Brings you back to last place you were when you pressed M-..
--  =C-c C-r= Rename the variable under the cursor.
--  =C-c C-c= Find the type of the thing under the cursor.
--  =C-c C-d= Find docs of the thing under the cursor. Press again to
-   open the associated URL (if any).
+- =M-.= Jump to the definition of the thing under the cursor.
+- =M-,= Brings you back to last place you were when you pressed M-..
+- =C-c C-r= Rename the variable under the cursor.
+- =C-c C-c= Find the type of the thing under the cursor.
+- =C-c C-d= Find docs of the thing under the cursor. Press again to
+  open the associated URL (if any).
+
+**** Configuration
+
+#+BEGIN_SRC emacs-lisp
+
+  (add-hook 'js-mode-hook (lambda () (tern-mode t)))
+  (eval-after-load 'tern
+     '(progn
+        (require 'tern-auto-complete)
+        (tern-ac-setup)))
+
+#+END_SRC
+
 
 *** =js2-refactor=
+https://github.com/magnars/js2-refactor.el
+
 A JavaScript refactoring library for Emacs.
 
 #+BEGIN_SRC emacs-lisp
@@ -786,6 +786,8 @@ A JavaScript refactoring library for Emacs.
 (js2r-add-keybindings-with-prefix "C-c C-m")
 #+END_SRC
 *** =js-comint=
+https://github.com/redguardtoo/js-comint
+
 Run a JavaScript interpreter in an inferior process window.
 **** Enable
 #+BEGIN_SRC emacs-lisp
@@ -812,7 +814,34 @@ An emacs plugin for Flow, a static typechecker for JavaScript.
 (load-file "~/.emacs.d/flow-for-emacs/flow.el")
 #+END_SRC
 
-*** Emacs configuration
+*** =flycheck-flow=
+
+[[https://flow.org/][Flow]] is a static type checker for JavaScript.
+
+**** Type Inference
+
+Flow uses type inference to find bugs even without type annotations.
+It precisely tracks the types of variables as they flow through your
+program.
+
+**** Idiomatic JS
+
+Flow is designed for JavaScript programmers. It understands common
+JavaScript idioms and very dynamic code.
+
+**** Realtime Feedback
+
+Flow incrementally rechecks your changes as you work, preserving the
+fast feedback cycle of developing plain JavaScript.
+
+**** Configuration
+
+#+BEGIN_SRC elisp
+(require 'flycheck-flow)
+(add-hook 'javascript-mode-hook 'flycheck-mode)
+#+END_SRC
+
+*** General JavaScript configuration
 
 #+BEGIN_SRC emacs-lisp
 
@@ -824,48 +853,37 @@ An emacs plugin for Flow, a static typechecker for JavaScript.
   ;; Semicolons are optional in JS, do not warn about them missing
   (setq js2-strict-missing-semi-warning nil)
 
-  ;; Tern
-  (add-hook 'js-mode-hook (lambda () (tern-mode t)))
-  (eval-after-load 'tern
-     '(progn
-        (require 'tern-auto-complete)
-        (tern-ac-setup)))
-
-
 #+END_SRC
 
 ** Web
-*** =rainbow-mode=
-rainbow-mode is a minor mode for Emacs which displays strings
+*** rainbow-mode
+=rainbow-mode= is a minor mode for Emacs which displays strings
 representing colors with the color they represent as background.
 
 #+BEGIN_SRC emacs-lisp
 (add-hook 'prog-mode-hook 'rainbow-mode)
 #+END_SRC
-*** Impatient Mode - Live Coding Emacs/Browser
+*** Impatient Mode
 
 https://github.com/netguy204/imp.el
 
-Enable the web server provided by simple-httpd:
+Live JavaScript Coding Emacs/Browser: See your changes in the browser as you type
 
-#+BEGIN_EXAMPLE
-    M-x httpd-start
-#+END_EXAMPLE
+**** Usage
 
-Publish buffers by enabling the minor mode impatient-mode.
+Enable the web server provided by simple-httpd: =M-x httpd-start=
 
-#+BEGIN_EXAMPLE
-    M-x impatient-mode
-#+END_EXAMPLE
+Publish buffers by enabling the minor mode impatient-mode: =M-x impatient-mode=
 
 And then point your browser to http://localhost:8080/imp/, select a
 buffer, and watch your changes appear as you type!
 
+
 *** Process JSON
 
-[[https://stedolan.github.io/jq/][=jq=]] is a lightweight and flexible command-line JSON processor.
+[[https://stedolan.github.io/jq/][jq]] is a lightweight and flexible command-line JSON processor.
 
-Thanks to @branch14 for the function!
+Thanks to [[https://github.com/branch14/emacs.d][@branch14]] of 200ok fame for the function!
 
 #+BEGIN_SRC emacs-lisp
 (defun jq-json ()
@@ -877,10 +895,13 @@ Thanks to @branch14 for the function!
      (read-string "Command: " "jq -M '.'") t t)))
 #+END_SRC
 
-*** Emacs Configuration
+*** web-mode
+
+http://web-mode.org/
+
+web-mode.el is an autonomous major-mode for editing web templates.
 
 #+BEGIN_SRC emacs-lisp
-  ;; web-mode
   (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
   ;; Ruby Templates
   (add-to-list 'auto-mode-alist '("\\.erb?\\'" . web-mode))
@@ -896,37 +917,49 @@ Thanks to @branch14 for the function!
 
 ** p_slides
 
-For [[https://github.com/munen/p_slides][p_slides]] presentations, run markdown-mode. This is a very
-primitive check.
+[[https://github.com/munen/p_slides][p_slides]] is a static files only, dead simple way, to create semantic
+slides. The slide content is markdown, embedded in a HTML file. When
+opening a =presentation.html= file, enable =markdown-mode=.
+
 #+BEGIN_SRC emacs-lisp
   (add-to-list 'auto-mode-alist '("presentation.html" . markdown-mode))
   (add-hook 'markdown-mode-hook 'flyspell-mode)
 #+END_SRC
 
-*** TODO Auto Reload
+** Auto Reload Web Sites
 
-#+BEGIN_SRC
+Introducing a custom =browser-reloading-mode=. It's a quick
+implementation and not a real derived mode.
 
-;;(defun sync-to-pi ()
-;;  "Sync org file to Raspberry Pi with external script."
-;;  (when (eq major-mode 'web-mode)
-;;    (shell-command-to-string "xdotool search --onlyvisible --class Chromium windowfocus key ctrl+r")))
-;;
-;;(add-hook 'after-save-hook #'sync-to-pi)
+When enabling =browser-reloading-mode= for a specific buffer, whenever
+this buffer is saved, a command-line utility =reload_chromium.sh= is
+called. This in turn is a wrapper around =xdotool= with which a
+reloading of the Chromium browser is triggered.
 
+This is handy when working in a web environment that doesn't natively
+support hot-reloading (static web pages, for instance) and the page
+has too much (dynamic) content to be displayed properly in
+=impatient-mode=. I'm using it for example when working on a [[https://github.com/munen/p_slides][p_slides]]
+slide deck.
 
-;;echo "$(date --rfc-3339=seconds) Refresh: $FILE"
-;;CUR_WID=$(xdotool getwindowfocus)
-;;
-;;#gets the first $BROWSER window, if you have more than one
-;;#$BROWSER window open, it might not refresh the right one,
-;;#as an alternative you can search by the window/html title
-;;WID=$(xdotool search --onlyvisible --class $BROWSER|head -1)
-;;#TITLE="window/html file title"
-;;#WID=$(xdotool search --title "$TITLE"|head -1)
-;;xdotool windowactivate $WID
-;;xdotool key 'ctrl+r'
-;;xdotool windowactivate $CUR_WID
+#+BEGIN_SRC emacs-lisp
+
+  (defun reload-chromium ()
+   "Finds the open chromium session and reloads the tab"
+   (when enable-browser-reloading
+     (shell-command-to-string "reload_chromium.sh")))
+
+  (defun browser-reloading-mode ()
+    (interactive)
+    (if enable-browser-reloading
+      (setq enable-browser-reloading nil)
+      (progn
+          (make-local-variable 'enable-browser-reloading)
+          (setq enable-browser-reloading t))))
+
+  (setq enable-browser-reloading nil)
+  (add-hook 'after-save-hook #'reload-chromium)
+
 
 #+END_SRC
 
