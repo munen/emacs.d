@@ -274,6 +274,8 @@ when connecting to an FTP, try to revert to active mode.
   (add-hook 'eww-mode-hook 'scroll-lock-mode)
 #+END_SRC
 * General
+This section contains settings for non-built-in Emacs features that
+are generally applicable to different kinds of modes.
 ** =beacon-mode=
 https://github.com/Malabarba/beacon
 
@@ -296,7 +298,12 @@ browse-kill-ring is the Emacs extension for you.
   (define-key browse-kill-ring-mode-map (kbd "k") 'browse-kill-ring-previous)
 #+END_SRC
 
-* Evil Mode
+* =evil-mode=
+Evil is an extensible Vim layer for Emacs.
+
+This combines the best of both worlds: VIM being a great text-editor
+with modal editing through semantic commands and Emacs being a LISP
+REPL.
 ** Enable Evil
 #+BEGIN_SRC emacs-lisp
   (evil-mode t)
@@ -326,7 +333,8 @@ browse-kill-ring is the Emacs extension for you.
 ** Multiple Cursors
 https://github.com/gabesoft/evil-mc
 
-evil-mc provides multiple cursors functionality for Emacs when used with evil-mode.
+=evil-mc= provides multiple cursors functionality for Emacs when used
+with =evil-mode=.
 
 =C-n / C-p= are used for creating cursors, and =M-n / M-p= are used
 for cycling through cursors. The commands that create cursors wrap
@@ -369,14 +377,24 @@ cursor forward use =C-t= or =grn= and backward =grp=. Finally use
 #+END_SRC
 
 ** Disable =evil-mode= for some modes
+   Since Emacs is a multi-purpose LISP REPL, there are many modes that
+   are not primarily (or not at all) centered about text-manipulation.
+   For those, it is reasonable to disable =evil-mode=, because it will
+   bring nothing to the table, but might just shadow some keyboard
+   shortcuts.
 #+BEGIN_SRC emacs-lisp
-(mapc (lambda (mode)
-        (evil-set-initial-state mode 'emacs))
-      '(elfeed-show-mode elfeed-search-mode dired-mode image-dired-mode image-dired-thumbnail-mode eww-mode))
+  (mapc (lambda (mode)
+          (evil-set-initial-state mode 'emacs)) '(elfeed-show-mode
+                                                  elfeed-search-mode
+                                                  dired-mode
+                                                  image-dired-mode
+                                                  image-dired-thumbnail-mode
+                                                  eww-mode))
 #+END_SRC
 ** Unbind M-. and M- in =evil-mode=
 =M-.= and =M-,= are popular keybindings for "jump to definition" and
-"back".
+"back". =evil-mode= by default binds those to rather rarely used
+functions =evil-repeat-pop-next= and =xref-pop-marker-stack=, for some reason.
 
 #+BEGIN_SRC emacs-lisp
   (define-key evil-normal-state-map (kbd "M-.") nil)
