@@ -1388,7 +1388,15 @@ In a screenshot, it looks like this:
   (eval-after-load 'markdown-mode
     '(define-key markdown-mode-map (kbd "C-c r") 'md-compile-and-update-other-buffer))
 #+END_SRC
-** Use left Cmd to create Umlauts (thx JCF)
+** Use left Cmd to create Umlauts
+
+Unrelated to Emacs, in macOS, you can write Umlauts by using the combo
+=M-u [KEY]=. For example =M-u u= will create the letter =ü=.
+
+This is actually faster than the default way of Emacs or that of VIM.
+The following code ports that functionality to Emacs.
+
+Thx [[https://github.com/jcfischer][@jcfischer]]!
 
 #+BEGIN_SRC emacs-lisp
   (define-key key-translation-map [dead-diaeresis]
