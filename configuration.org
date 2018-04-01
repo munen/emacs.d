@@ -1328,9 +1328,11 @@ PDF, I use =pdf-tools= to preview the PDF and shortcuts to
 automatically save, compile and reload on demand.
 
 [[https://www.youtube.com/watch?v=Pd0JwOqh-gI][Here]] is a screencast showing how I edit Markdown or org-mode files in
-Emacs whilst having a PDF preview:
+Emacs whilst having a PDF preview.
 
-[[file:images/edit_markdown_with_preview.png]]
+In a screenshot, it looks like this:
+
+[[file:images/edit_markup_with_preview.png]]
 
 #+BEGIN_SRC emacs-lisp
   (defun md-compile ()
