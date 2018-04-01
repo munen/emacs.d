@@ -8,14 +8,21 @@ documented in literate programming style.
 
 * Installation
 
-*General* =git clone git@github.com:munen/emacs.d.git ~/.emacs.d=
+*Initial*
 
-*Dependencies* Emacs dependencies/libraries are managed via the internal
-[[https://www.gnu.org/software/emacs/manual/html_node/emacs/Packages.html#Packages][package
+Emacs configuration is usually done in the home directory in the
+=.emacs.d= folder. This holds true for Unix and Linux systems. For
+Windows, look it up [[https://www.gnu.org/software/emacs/manual/html_node/efaq-w32/Location-of-init-file.html][here]].
+
+=git clone git@github.com:munen/emacs.d.git ~/.emacs.d=
+
+*Dependencies*
+
+Emacs dependencies/libraries are managed via the internal [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Packages.html#Packages][package
 management system]]. To initially install packages, open
-=~/.emacs.d/init.el=, refresh your package list with
-=M-x package-refresh-contents= and install everything using
-=M-x eval-buffer=.
+=~/.emacs.d/init.el=, refresh your package list with =M-x
+package-refresh-contents= and install everything using =M-x
+eval-buffer=.
 
 * Dependency management
 
@@ -30,6 +37,9 @@ management system]]. To initially install packages, open
 #+END_SRC
 
 ** Define packages that are to be installed
+
+List all used third-party packages. Most will be configured further
+down in this file, some are used with the default configuration.
 
 #+BEGIN_SRC emacs-lisp
 
@@ -94,6 +104,8 @@ management system]]. To initially install packages, open
 
 * Default Settings
 
+This section contains settings for built-in Emacs features.
+
 ** Gargabe Collection
 
 Allow 20MB of memory (instead of 0.76MB) before calling garbage
@@ -111,7 +123,7 @@ operations.
 
 ** Auto-Save in =/tmp=
 
-Store backups and auto-saved files in TEMPORARY-FILE-DIRECTORY (which
+Store backups and auto-saved files in =TEMPORARY-FILE-DIRECTORY= (which
 defaults to /tmp on Unix), instead of in the same directory as the
 file.
 
@@ -149,6 +161,7 @@ periods.
 #+END_SRC
 
 ** Ask =y/n= instead of =yes/no=
+   This is a favorable shorthand.
 #+BEGIN_SRC emacs-lisp
   (fset 'yes-or-no-p 'y-or-n-p)
 #+END_SRC
@@ -246,12 +259,21 @@ session is easy.
 #+BEGIN_SRC emacs-lisp
 (setq visible-bell t)
 #+END_SRC
-** =auto-complete=
-Basic Configuration
+** AngeFtp
+Try to use passive mode for FTP.
 
+Note: Some firewalls might not allow standard active mode. However:
+Some FTP Servers might not allow passive mode. So if there's problems
+when connecting to an FTP, try to revert to active mode.
 #+BEGIN_SRC emacs-lisp
-(ac-config-default)
+(setq ange-ftp-try-passive-mode t)
 #+END_SRC
+** eww
+   When entering eww, use cursors to scroll without changing point.
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'eww-mode-hook 'scroll-lock-mode)
+#+END_SRC
+* General
 ** =beacon-mode=
 https://github.com/Malabarba/beacon
 
@@ -274,20 +296,6 @@ browse-kill-ring is the Emacs extension for you.
   (define-key browse-kill-ring-mode-map (kbd "k") 'browse-kill-ring-previous)
 #+END_SRC
 
-** AngeFtp
-Try to use passive mode for FTP.
-
-Note: Some firewalls might not allow standard active mode. However:
-Some FTP Servers might not allow passive mode. So if there's problems
-when connecting to an FTP, try to revert to active mode.
-#+BEGIN_SRC emacs-lisp
-(setq ange-ftp-try-passive-mode t)
-#+END_SRC
-** eww
-   When entering eww, use cursors to scroll without changing point.
-#+BEGIN_SRC emacs-lisp
-  (add-hook 'eww-mode-hook 'scroll-lock-mode)
-#+END_SRC
 * Evil Mode
 ** Enable Evil
 #+BEGIN_SRC emacs-lisp
@@ -422,6 +430,7 @@ capable counterparts
 ** General
 *** Auto Complete
 
+Basic Configuration
 #+BEGIN_SRC emacs-lisp
   (ac-config-default)
 #+END_SRC
@@ -1803,7 +1812,6 @@ couldn't run it for long. Emacs started freezing a lot on the day when
 I added this lib. I assume, because clipmon is blocking - and I always
 run multiple instances of Emacs in parallel. They might be in for a
 classic racing condition. Might be just another bug.
-
 
 * Presentation / Beamer
 ** Set safe themes (to execute LISP code)
