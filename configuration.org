@@ -273,6 +273,11 @@ when connecting to an FTP, try to revert to active mode.
 #+BEGIN_SRC emacs-lisp
   (add-hook 'eww-mode-hook 'scroll-lock-mode)
 #+END_SRC
+** Custom-File
+#+BEGIN_SRC emacs-lisp
+(setq custom-file "~/.emacs.d/custom-settings.el")
+(load custom-file t)
+#+END_SRC
 * General
 This section contains settings for non-built-in Emacs features that
 are generally applicable to different kinds of modes.
