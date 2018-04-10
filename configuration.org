@@ -1520,7 +1520,10 @@ Accounts setup
 
   (setq smtpmail-debug-info t
         message-kill-buffer-on-exit t
-        mu4e-get-mail-command "offlineimap"
+        ;; Custom script to run offlineimap in parallel for multiple
+        ;; accounts as discussed here:
+        ;; http://www.offlineimap.org/configuration/2016/01/29/why-i-m-not-using-maxconnctions.html
+        mu4e-get-mail-command "offlineimap_parallel.sh"
         mu4e-attachment-dir "~/switchdrive/org/files/inbox")
 
   (setq mu4e-maildir "~/Maildir/")
