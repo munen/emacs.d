@@ -1436,6 +1436,24 @@ Thx [[https://github.com/jcfischer][@jcfischer]] for the function!
     (concat "pwgen -A " (read-string "Length: " "16") " 1"))))
 
 #+END_SRC
+** Running =M-x shell= with =zsh=
+   If you're a =zsh= user, you might have configured a custom prompt
+   and such. Also, you might be using a powerful =$TERM= for that.
+   When running =zsh= within =M-x shell=, you will have to set the
+   =$TERM= to =dumb=, though. Otherwise you'll get all kinds of escape
+   sequences instead of colored text.
+
+I'm using this within my =~/.zshrc=
+
+#+BEGIN_SRC shell
+# This allows running `shell` properly within Emacs
+if [ -n "$INSIDE_EMACS" ]; then
+  export TERM=dumb
+else
+  export TERM=xterm-256color
+fi
+#+END_SRC
+
 * Mail
 
 Writing and reading mail is inherently a text-based workflow. Yes,
