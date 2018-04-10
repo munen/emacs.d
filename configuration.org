@@ -1523,6 +1523,8 @@ Accounts setup
         ;; Custom script to run offlineimap in parallel for multiple
         ;; accounts as discussed here:
         ;; http://www.offlineimap.org/configuration/2016/01/29/why-i-m-not-using-maxconnctions.html
+        ;; This halves the time for checking mails for 4 accounts for me
+        ;; (when nothing has to be synched anyway)
         mu4e-get-mail-command "offlineimap_parallel.sh"
         mu4e-attachment-dir "~/switchdrive/org/files/inbox")
 
