@@ -1455,6 +1455,7 @@ fi
 #+END_SRC
 
 ** =server-shutdown=
+This is the converse function to the built-in =server-start=.
 #+BEGIN_SRC emacs-lisp
 (defun server-shutdown ()
   "Save buffers, Quit, and Shutdown (kill) server"
