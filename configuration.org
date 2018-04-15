@@ -1454,6 +1454,14 @@ else
 fi
 #+END_SRC
 
+** =server-shutdown=
+#+BEGIN_SRC emacs-lisp
+(defun server-shutdown ()
+  "Save buffers, Quit, and Shutdown (kill) server"
+  (interactive)
+  (save-some-buffers)
+  (kill-emacs))
+#+END_SRC
 * Mail
 
 Writing and reading mail is inherently a text-based workflow. Yes,
