@@ -103,7 +103,6 @@ down in this file, some are used with the default configuration.
 #+END_SRC
 
 * Default Settings
-
 This section contains settings for built-in Emacs features.
 
 ** Gargabe Collection
@@ -1678,7 +1677,7 @@ Accounts setup
 
   ;; Re-define all standard bookmarks to not include the spam folders
   ;; for searches
-  (defvar d-spam "NOT (maildir:/dispatched/INBOX.spambucket OR maildir:/zen-tempel/INBOX.spambucket OR maildir:/200ok/INBOX.spambucket OR maildir:/zhaw/INBOX.spambucket)")
+  (defvar d-spam "NOT (maildir:/dispatched/INBOX.spambucket OR maildir:/zen-tempel/INBOX.spambucket OR maildir:/200ok/INBOX.spambucket OR maildir:/zhaw/\"Junk E-Mail\")")
 
   (defvar draft-folders (string-join '("maildir:/dispatched/INBOX.Drafts"
                                        "maildir:/zhaw/INBOX.Drafts"
@@ -1801,6 +1800,29 @@ https://mathiasbynens.be/notes/gmail-plain-text
 https://mothereff.in/quoted-printable
 https://www.gnu.org/software/emacs/manual/html_node/emacs-mime/qp.html
 
+** Mail filtering
+   Add a header action "Block" which add the Senders Name and From
+   Address to a procmail blacklist.
+#+BEGIN_SRC emacs-lisp
+
+  (defun mu4e-blacklist-from (msg)
+    "Add the `from` of a message to the procmail blacklist"
+    (let* ((from (mu4e-message-field msg :from))
+           (from_name (car (car from))) 
+           (from_address (cdr (car from))))
+      
+      ;; Block the senders Name
+      (if from_name
+          (write-region (concat from_name "\n") nil "~/.procmail/blacklist_from.txt" 'append))
+      ;; Block the Email-Address
+      (write-region (concat from_address "\n") nil "~/.procmail/blacklist_from.txt" 'append)
+
+      (message "Blocking: %s" from)))
+
+  (add-to-list 'mu4e-headers-actions
+    '("Block 'From:'" . mu4e-blacklist-from) t) 
+
+#+END_SRC
 * Write Quality
 
 ** =writegood-mode=
