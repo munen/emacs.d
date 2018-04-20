@@ -560,9 +560,10 @@ Markdown, because it uses [[http://daringfireball.net/projects/markdown/syntax#p
 line break.
 
 #+BEGIN_SRC emacs-lisp
-  (add-hook 'before-save-hook '(lambda()
-                                (when (not (derived-mode-p 'markdown-mode))
-                                  (delete-trailing-whitespace))))
+    (add-hook 'before-save-hook '(lambda()
+                                  (when (not (or (derived-mode-p 'markdown-mode)
+                                                 (derived-mode-p 'org-mode))
+                                    (delete-trailing-whitespace)))))
 #+END_SRC
 
 *** Code Folding
