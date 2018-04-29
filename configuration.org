@@ -1436,6 +1436,13 @@ Thx [[https://github.com/jcfischer][@jcfischer]] for the function!
     (concat "pwgen -A " (read-string "Length: " "16") " 1"))))
 
 #+END_SRC
+** Open passwords file
+   #+BEGIN_SRC emacs-lisp
+     (defun passwords ()
+       "Open main 'passwords' file."
+       (interactive)
+       (find-file (concat org-directory "vault/primary.org.gpg"))) 
+   #+END_SRC
 ** Running =M-x shell= with =zsh=
    If you're a =zsh= user, you might have configured a custom prompt
    and such. Also, you might be using a powerful =$TERM= for that.
