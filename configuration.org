@@ -1002,7 +1002,7 @@ Always sign commits with GPG
 **** Start the commit buffer in evil insert mode
 
 #+BEGIN_SRC emacs-lisp
-(add-hook 'with-editor-mode-hook 'evil-insert-state)
+  (add-hook 'with-editor-mode-hook 'evil-normal-state)
 #+END_SRC
 
 ** Projectile
