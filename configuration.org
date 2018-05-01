@@ -999,7 +999,7 @@ Always sign commits with GPG
  (setq magit-commit-arguments (quote ("--gpg-sign=alain@200ok.ch")))
 #+END_SRC
 
-**** Start the commit buffer in evil insert mode
+**** Start the commit buffer in evil normal mode
 
 #+BEGIN_SRC emacs-lisp
   (add-hook 'with-editor-mode-hook 'evil-normal-state)
