@@ -44,6 +44,7 @@ down in this file, some are used with the default configuration.
 #+BEGIN_SRC emacs-lisp
 
   (defvar my-packages '(ag
+                        atomic-chrome
                         beacon
                         browse-kill-ring
                         flycheck
@@ -1273,6 +1274,36 @@ Atom and RSS.
 #+BEGIN_SRC emacs-lisp
 (load "~/.emacs.d/elfeed-feeds.el")
 #+END_SRC
+* Integration with browsers
+
+Editing text areas in browsers can be quite tedious for the lack of a
+good editor. Luckily, there's good extensions for both Chrome/Chromium
+and Firefox to have a live binding to an Emacs session.
+
+There is a good Emacs package called [[https://github.com/alpha22jp/atomic-chrome][Atomic Chrome]] which is similar to
+[[https://www.emacswiki.org/emacs/Edit_with_Emacs][Edit with Emacs]], but has some advantages as below with the help of
+websockets:
+
+- The input on Emacs is reflected to the browser instantly and
+  continuously.
+- You can use both the browser and Emacs at the same time. They are
+  updated to the same content bi-directionally.
+  
+The name "Atomic Chrome" is a bit misleading, because it actually
+supports the "GhostText" protocol which allows it to be used with
+Firefox, as well.
+
+On Firefox, I'm using the [[https://github.com/GhostText/GhostText][GhostText]] addon. On Chromium, I'm using
+the [[https://github.com/tuvistavie/atomic-chrome][AtomicChrome]] extension. GhostText is also available for Chrome,
+but it doesn't work for me which is a non-issue, because both plugins
+work just the same way: Enter a textarea, hit a button, Emacs opens
+up, type the text, end the session with =C-c C-c=.
+
+#+BEGIN_SRC emacs-lisp
+(require 'atomic-chrome)
+(atomic-chrome-start-server)
+#+END_SRC
+
 * Misc Custom Improvements
 
 Some helper functions and packages I wrote that are only accessible
