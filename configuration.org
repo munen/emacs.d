@@ -1303,10 +1303,9 @@ up, type the text, end the session with =C-c C-c=.
   (require 'atomic-chrome)
   ;; Handle if there is an Emacs instance running which has the server already
   ;; started
-  (condition-case nil
+  (ignore-errors
       ;; Start the server
-      (atomic-chrome-start-server)
-    (error nil))
+      (atomic-chrome-start-server))
 #+END_SRC
 
 Note: I opened a [[https://github.com/alpha22jp/atomic-chrome/pull/40][PR against AtomicChrome]] which will make the
