@@ -1300,8 +1300,13 @@ work just the same way: Enter a textarea, hit a button, Emacs opens
 up, type the text, end the session with =C-c C-c=.
 
 #+BEGIN_SRC emacs-lisp
-(require 'atomic-chrome)
-(atomic-chrome-start-server)
+  (require 'atomic-chrome)
+  ;; Handle if there is an Emacs instance running which has the server already
+  ;; started
+  (condition-case nil
+      ;; Start the server
+      (atomic-chrome-start-server)
+    (error nil))
 #+END_SRC
 
 * Misc Custom Improvements
