@@ -1309,6 +1309,9 @@ up, type the text, end the session with =C-c C-c=.
     (error nil))
 #+END_SRC
 
+Note: I opened a [[https://github.com/alpha22jp/atomic-chrome/pull/40][PR against AtomicChrome]] which will make the
+safe-guard obsolete.
+
 * Misc Custom Improvements
 
 Some helper functions and packages I wrote that are only accessible
