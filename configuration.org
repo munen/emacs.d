@@ -77,6 +77,7 @@ down in this file, some are used with the default configuration.
                         enh-ruby-mode
                         robe
                         evil-mc
+                        evil-escape
                         ledger-mode
                         smex
                         evil
@@ -405,6 +406,22 @@ functions =evil-repeat-pop-next= and =xref-pop-marker-stack=, for some reason.
   (define-key evil-normal-state-map (kbd "M-.") nil)
   (define-key evil-normal-state-map (kbd "M-,") nil)
 #+END_SRC
+** =evil-escape=
+https://github.com/syl20bnr/evil-escape
+
+Escape from insert state and everything else.
+
+#+BEGIN_SRC emacs-lisp
+(setq-default evil-escape-delay 0.2)
+(setq-default evil-escape-key-sequence "jk")
+#+END_SRC
+
+This results in the same feature-set like this vim keybinding:
+#+BEGIN_SRC vim
+"Remap ESC to jk
+:imap jk <esc>
+#+END_SRC
+
 * ido-mode
 
 =ido= means "Interactively Do Things"
