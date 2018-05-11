@@ -412,8 +412,9 @@ https://github.com/syl20bnr/evil-escape
 Escape from insert state and everything else.
 
 #+BEGIN_SRC emacs-lisp
-(setq-default evil-escape-delay 0.2)
-(setq-default evil-escape-key-sequence "jk")
+  (setq-default evil-escape-delay 0.2)
+  (setq-default evil-escape-key-sequence "jk")
+  (evil-escape-mode)
 #+END_SRC
 
 This results in the same feature-set like this vim keybinding:
