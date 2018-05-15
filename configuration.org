@@ -155,7 +155,17 @@ periods.
   (setq confirm-kill-emacs 'y-or-n-p)
 #+END_SRC
 
-** Human readable units in =dired-mode=
+** =dired-mode=
+
+Ability to use =a= to visit a new directory or file in =dired= instead
+of using =RET=. =RET= works just fine, but it will create a new buffer
+for /every/ interaction whereas =a= reuses the current buffer.
+
+#+BEGIN_SRC emacs-lisp
+  (put 'dired-find-alternate-file 'disabled nil)
+#+END_SRC
+
+Human readable units
 
 #+BEGIN_SRC emacs-lisp
   (setq-default dired-listing-switches "-alh")
