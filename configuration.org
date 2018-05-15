@@ -79,7 +79,6 @@ down in this file, some are used with the default configuration.
                         evil-mc
                         evil-escape
                         ledger-mode
-                        smex
                         evil
                         evil-leader
                         evil-surround
@@ -1977,6 +1976,17 @@ Before I used =smex= which is M-x combined with ido. Counsel makes this even nic
   
 #+BEGIN_SRC emacs-lisp
   (setq mu4e-completing-read-function 'ivy-completing-read) 
+#+END_SRC
+
+* Powerline
+
+https://github.com/milkypostman/powerline
+
+Emacs version of the Vim powerline.
+
+#+BEGIN_SRC emacs-lisp
+(require 'powerline)
+(powerline-center-evil-theme)
 #+END_SRC
 
 * Write Quality
