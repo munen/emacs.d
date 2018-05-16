@@ -69,6 +69,7 @@ down in this file, some are used with the default configuration.
                         sass-mode
                         yaml-mode
                         pdf-tools
+                        ivy counsel swiper
                         tern
                         tern-auto-complete
                         coffee-mode
@@ -430,23 +431,6 @@ This results in the same feature-set like this vim keybinding:
 #+BEGIN_SRC vim
 "Remap ESC to jk
 :imap jk <esc>
-#+END_SRC
-
-* ido-mode
-
-=ido= means "Interactively Do Things"
-
-=ido= has a completion engine that's sensible to use everywhere. It is
-built-in and nice and could change a lot of defaults like =find-file=
-and switching buffers. I'm enabling it globally as a fallback.
-
-It's only a fallback, because I'm using the third-party package =ivy=
-which is even nicer for generally searching things.
-
-#+BEGIN_SRC emacs-lisp
-  (ido-mode t)
-  (ido-everywhere t)
-  (setq ido-enable-flex-matching t)
 #+END_SRC
 
 * Search
@@ -1307,7 +1291,7 @@ websockets:
   continuously.
 - You can use both the browser and Emacs at the same time. They are
   updated to the same content bi-directionally.
-  
+
 The name "Atomic Chrome" is a bit misleading, because it actually
 supports the "GhostText" protocol which allows it to be used with
 Firefox, as well.
@@ -1504,7 +1488,7 @@ Thx [[https://github.com/jcfischer][@jcfischer]] for the function!
      (defun passwords ()
        "Open main 'passwords' file."
        (interactive)
-       (find-file (concat org-directory "vault/primary.org.gpg"))) 
+       (find-file (concat org-directory "vault/primary.org.gpg")))
    #+END_SRC
 ** Running =M-x shell= with =zsh=
    If you're a =zsh= user, you might have configured a custom prompt
@@ -1881,7 +1865,7 @@ https://www.gnu.org/software/emacs/manual/html_node/emacs-mime/qp.html
   (defun mu4e-blacklist-from (msg)
     "Add the `from` of a message to the procmail blacklist"
     (let* ((from (mu4e-message-field msg :from))
-           (from_name (car (car from))) 
+           (from_name (car (car from)))
            (from_address (cdr (car from))))
       ;; Block the senders Name
       (if from_name
@@ -1903,13 +1887,13 @@ https://www.gnu.org/software/emacs/manual/html_node/emacs-mime/qp.html
     '("F Block 'From:'" . mu4e-blacklist-from) t)
 
   (add-to-list 'mu4e-headers-actions
-    '("S Block 'Subject:'" . mu4e-blacklist-subject) t) 
+    '("S Block 'Subject:'" . mu4e-blacklist-subject) t)
 
 #+END_SRC
 * Ivy/Counsel/Swiper
-  
+
 https://github.com/abo-abo/swiper
-  
+
 *Ivy*, a generic completion mechanism for Emacs.
 
 *Counsel*, a collection of Ivy-enhanced versions of common Emacs commands.
@@ -1932,13 +1916,19 @@ through powerful regular expressions.
     (setq enable-recursive-minibuffers t)
     (global-set-key (kbd "<f6>") 'ivy-resume)
 #+END_SRC
-   
+
+Show total amount of matches and the index of the current match
+
+#+BEGIN_SRC emacs-lisp
+(setq ivy-count-format "(%d/%d) ")
+#+END_SRC
+
 Wrap to the first result when on the last result and vice versa.
 
 #+BEGIN_SRC emacs-lisp
 (setq ivy-wrap t)
 #+END_SRC
-   
+
 Enable =Swiper=
 
 #+BEGIN_SRC emacs-lisp
@@ -1959,23 +1949,42 @@ Configure =Counsel=
 #+END_SRC
 
 Before I used =smex= which is M-x combined with ido. Counsel makes this even nicer.
-    
+
 #+BEGIN_SRC emacs-lisp
     (global-set-key (kbd "M-x") 'counsel-M-x)
 #+END_SRC
 
 *** Improve other packages with ivy
-   
+
   Projectile completion (Default is =ido=)
-  
+
 #+BEGIN_SRC emacs-lisp
-  (setq projectile-completion-system 'ivy-completing-read) 
+  (setq projectile-completion-system 'ivy-completing-read)
 #+END_SRC
 
   Mu4e "folder" and "from" completion (Default is =ido=)
-  
+
 #+BEGIN_SRC emacs-lisp
-  (setq mu4e-completing-read-function 'ivy-completing-read) 
+  (setq mu4e-completing-read-function 'ivy-completing-read)
+#+END_SRC
+
+** Notes on =Ivy= vs =ido=
+
+I used to use =ido= amd =smex= instead of the Ivy/Counsel/Swiper
+suite. It worked well, but Ivy is a little more powerful. I'm leaving
+some notes on =ido= here for future reference and in case that the Ivy
+suite goes out of favor in the community.
+
+=ido= means "Interactively Do Things"
+
+=ido= has a completion engine that's sensible to use everywhere. It is
+built-in and nice and could change a lot of defaults like =find-file=
+and switching buffers.
+
+#+BEGIN_SRC emacs-lisp
+  ;;(ido-mode t)
+  ;;(ido-everywhere t)
+  ;;(setq ido-enable-flex-matching t)
 #+END_SRC
 
 * Powerline
@@ -2179,4 +2188,3 @@ Parinfer algorithm is quite nice. I'll try again at some point.
 #+BEGIN_SRC emacs-lisp
   (standard-mode)
 #+END_SRC
-
