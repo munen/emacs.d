@@ -1954,6 +1954,16 @@ Before I used =smex= which is M-x combined with ido. Counsel makes this even nic
     (global-set-key (kbd "M-x") 'counsel-M-x)
 #+END_SRC
 
+*** Disable Ivy where it is broken
+    
+Ivy cannot search in PDFs. It tries to search in the PDF source code.
+Therefore I fall back to using isearch within PDFs.
+
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'pdf-view-mode-hook '(lambda()
+                                   (define-key pdf-view-mode-map "\C-s" 'isearch-forward))) 
+#+END_SRC
+
 *** Improve other packages with ivy
 
   Projectile completion (Default is =ido=)
