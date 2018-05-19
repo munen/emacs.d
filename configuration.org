@@ -62,6 +62,7 @@ down in this file, some are used with the default configuration.
                         js-comint
                         js2-refactor
                         rainbow-mode
+                        synosaurus
                         ini-mode
                         ac-js2
                         flycheck-flow
@@ -1977,6 +1978,12 @@ Therefore I fall back to using isearch within PDFs.
 #+BEGIN_SRC emacs-lisp
   (setq mu4e-completing-read-function 'ivy-completing-read)
 #+END_SRC
+  
+  Synosaurus completion (Default is =ido=)
+
+#+BEGIN_SRC emacs-lisp
+  (setq synosaurus-choose-method 'ivy-read) 
+#+END_SRC
 
 ** Notes on =Ivy= vs =ido=
 
@@ -2017,6 +2024,17 @@ This is a minor mode to aid in finding common writing problems.
 
 It highlights text based on a set of weasel-words, passive-voice and
 duplicate words.
+
+** Theraurus
+https://github.com/hpdeifel/synosaurus/
+
+Synosaurus is a thesaurus front-end with pluggable back-end.
+
+Use the [[http://openthesaurus.de/][openthesaurus.de]] back-end. 
+
+#+BEGIN_SRC emacs-lisp
+  (setq synosaurus-backend 'synosaurus-backend-openthesaurus)  
+#+END_SRC
 
 ** Flyspell
 
