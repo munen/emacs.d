@@ -2232,7 +2232,7 @@ Usage:
 
 #+BEGIN_SRC org
 #+name: ok-timetable
-#+BEGIN_SRC elisp
+,#+BEGIN_SRC elisp
 (ok-export-org-timetable "2018-05-09")
 ,#+END_SRC
 #+END_SRC
