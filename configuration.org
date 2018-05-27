@@ -1734,6 +1734,12 @@ Accounts setup
   ;; for searches
   (defvar d-spam "NOT (maildir:/dispatched/INBOX.spambucket OR maildir:/zen-tempel/INBOX.spambucket OR maildir:/200ok/INBOX.spambucket OR maildir:/zhaw/\"Junk E-Mail\" OR maildir:/zhaw/\"Deleted Items\")")
 
+  (defvar inbox-folders (string-join '("maildir:/dispatched/INBOX"
+                                       "maildir:/zhaw/INBOX"
+                                       "maildir:/zen-tempel/INBOX"
+                                       "maildir:/200ok/INBOX")
+                                     " OR "))
+
   (defvar draft-folders (string-join '("maildir:/dispatched/INBOX.Drafts"
                                        "maildir:/zhaw/INBOX.Drafts"
                                        "maildir:/zen-tempel/INBOX.Drafts"
@@ -1756,6 +1762,8 @@ Accounts setup
                '(spam-folders "All spambuckets"     ?S))
   (add-to-list 'mu4e-bookmarks
                '(draft-folders "All drafts"     ?d))
+  (add-to-list 'mu4e-bookmarks
+               '(inbox-folders "All inbox mails"     ?i))
   (add-to-list 'mu4e-bookmarks
                '((concat d-spam " AND (flag:unread OR flag:flagged) AND NOT flag:trashed")
                  "Unread messages"      ?u))
