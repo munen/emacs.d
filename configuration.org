@@ -2224,3 +2224,71 @@ Parinfer algorithm is quite nice. I'll try again at some point.
 #+BEGIN_SRC emacs-lisp
   (standard-mode)
 #+END_SRC
+* Org Mode Time Export Table
+  
+Create a customized time table ready for CSV export.
+
+Usage:
+
+#+name: ok-timetable
+#+BEGIN_SRC elisp
+(ok-export-org-timetable "2018-05-09")
+#+END_SRC
+
+When evaluating the src-block above, it'll yield a table like:
+
+#+RESULTS: ok-timetable
+|       date |  hours | task                             |
+|------------+--------+----------------------------------|
+| 2018-05-09 |   0:02 | #support                         |
+| 2018-05-09 |   0:17 | #support                         |
+|------------+--------+----------------------------------|
+|            | total: | :=vsum(@2..@-1);T                |
+
+#+BEGIN_SRC emacs-lisp
+  (require 'seq)
+
+  (defun ok-filter-table-by-date (tbl from-date table-row)
+    "Filter a TBL by FROM-DATE which is found in TABLE-ROW."
+    ;; Sort by date
+    (seq-sort '(lambda (e1 e2)
+                 (string-lessp (nth table-row e1)
+                               (nth table-row e2)))
+              ;; Filter to start with FROM-DATE
+              (seq-filter (lambda (elem)
+                            (let ((date-elem (nth table-row elem)))
+                              ;; >=
+                              (when (or (string-greaterp date-elem from-date)
+                                        (string-equal date-elem from-date))
+                                elem)))
+                          tbl)))
+
+  (defun ok-generate-clock-table ()
+    "Generate a list of org elements of type 'clock."
+    (let* ((ast (org-element-parse-buffer 'element)))
+      ;; Map a function to all elements of TYPE 'clock which extracts
+      ;; the TITLE, DURATION and DATE of a TODO.
+      (org-element-map ast 'clock
+        (lambda (clock-elem)
+          (let* ((val (org-element-property :value clock-elem))
+                 (task (org-element-property :parent (org-element-property :parent clock-elem))))
+            `(,(let ((year (org-element-property :year-start val))
+                     (month (org-element-property :month-start val))
+                     (day (org-element-property :day-start val)))
+                 (format "%4d-%02d-%02d" year month day ))
+              ,(org-element-property :duration clock-elem)
+              ,(org-element-property :title task)))))))
+
+  (defun ok-export-org-timetable (from-date)
+    "Generate a list from 'org-mode' clock elements starting from FROM-DATE."
+    ;; Concatenate header, element data and footer into one list which
+    ;; will automatically be rendered by org-mode as a table.
+    (nconc
+     '(("date" "hours" "task"))
+     '(hline)
+     ;; Generate tree of all visible elements within buffer (narrowing
+     ;; works).
+     (ok-filter-table-by-date (ok-generate-clock-table) from-date 0)
+     '(hline)
+     '(("" "total:" ":=vsum(@2..@-1);T"))))  
+#+END_SRC
