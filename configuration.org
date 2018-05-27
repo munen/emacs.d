@@ -2234,7 +2234,7 @@ Usage:
 #+name: ok-timetable
 #+BEGIN_SRC elisp
 (ok-export-org-timetable "2018-05-09")
-#+END_SRC
+,#+END_SRC
 #+END_SRC
 
 
