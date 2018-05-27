@@ -2230,10 +2230,13 @@ Create a customized time table ready for CSV export.
 
 Usage:
 
+#+BEGIN_SRC org
 #+name: ok-timetable
 #+BEGIN_SRC elisp
 (ok-export-org-timetable "2018-05-09")
 #+END_SRC
+#+END_SRC
+
 
 When evaluating the src-block above, it'll yield a table like:
 
