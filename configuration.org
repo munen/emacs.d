@@ -1974,8 +1974,14 @@ Configure =Counsel=
 
 Before I used =smex= which is M-x combined with ido. Counsel makes this even nicer.
 
+By default, =counsel-M-x= starts with a =^=. More often than not, this
+will be in the way of me fuzzy matching a function. Therefore I'll
+start it with an empty string as argument.
+
 #+BEGIN_SRC emacs-lisp
-    (global-set-key (kbd "M-x") 'counsel-M-x)
+  (global-set-key (kbd "M-x") (lambda ()
+                                (interactive)
+                                (counsel-M-x "")))
 #+END_SRC
 
 *** Where =Ivy= doesn't work well
