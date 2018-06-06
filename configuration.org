@@ -1068,6 +1068,7 @@ Allow ‘a.’, ‘A.’, ‘a)’ and ‘A) as list elements:
                                  (concat "~/Dropbox/ZHAW/web3-unterlagen/README.org")
                                  (concat "~/Dropbox/ZHAW/weng-unterlagen/README.org")
                                  (concat "~/src/200ok/crowdfunding/TODO.org")
+                                 (concat "~/src/200ok/200ok-admin/PROJECTS.org")
                                  (concat org-directory "reference.org"))))
 
   (set-org-agenda-files)
@@ -1156,6 +1157,16 @@ Org Capture Templates are explained [[http://orgmode.org/manual/Capture-template
            (file+headline (concat org-directory "things.org") "Shopping")
            ;; Prompt for tag and language
            "* TODO %?\n  %U\n")
+
+
+          ("p" "password" entry (file "~/switchdrive/org/vault/secrets.org.gpg")
+           ;; Prompt for name
+           "* %^{name}
+   :PROPERTIES:
+   :username: %^{username}
+   :END:")
+
+
           ("m" "Media" entry
            (file+datetree (concat org-directory "media.org"))
            "* %?\nURL: \nEntered on %U\n")))
@@ -1899,7 +1910,23 @@ https://www.gnu.org/software/emacs/manual/html_node/emacs-mime/qp.html
     '("S Block 'Subject:'" . mu4e-blacklist-subject) t)
 
 #+END_SRC
-* Ivy/Counsel/Swiper
+* Search / Completion
+
+** =ido=
+   
+=ido= means "Interactively Do Things". =ido= has a completion engine
+that's sensible to use everywhere. It is built-in and nice and could
+change a lot of defaults like =find-file= and switching buffers.
+
+It works well while not breaking Emacs defaults.
+
+#+BEGIN_SRC emacs-lisp
+  (ido-mode t)
+  (ido-everywhere t)
+  (setq ido-enable-flex-matching t)
+#+END_SRC
+
+** Ivy/Counsel/Swiper
 
 https://github.com/abo-abo/swiper
 
@@ -1909,19 +1936,22 @@ https://github.com/abo-abo/swiper
 
 *Swiper*, an Ivy-enhanced alternative to isearch.
 
-=Ivy= is an interactive interface for completion in Emacs. Emacs uses
-completion mechanism in a variety of contexts: code, menus, commands,
-variables, functions, etc. Completion entails listing, sorting,
-filtering, previewing, and applying actions on selected items. When
-active, =ivy-mode= completes the selection process by narrowing
-available choices while previewing in the minibuffer. Selecting the
-final candidate is either through simple keyboard character inputs or
-through powerful regular expressions.
+=Ivy= is an interactive interface for completion in Emacs. Therefore
+it overlaps in functionality with =ido=. While =Ivy= is more powerful,
+it breaks certain standard functionality. So =ido= is enabled globally
+by default and for certain tasks, =Ivy= overrides =ido=.
 
-** Configuration
+Emacs uses completion mechanism in a variety of contexts: code, menus,
+commands, variables, functions, etc. Completion entails listing,
+sorting, filtering, previewing, and applying actions on selected
+items. When active, =ivy-mode= completes the selection process by
+narrowing available choices while previewing in the minibuffer.
+Selecting the final candidate is either through simple keyboard
+character inputs or through powerful regular expressions.
+
+*** Configuration
 
 #+BEGIN_SRC emacs-lisp
-    (ivy-mode 1)
     (setq enable-recursive-minibuffers t)
     (global-set-key (kbd "<f6>") 'ivy-resume)
 #+END_SRC
@@ -1947,11 +1977,7 @@ Enable =Swiper=
 Configure =Counsel=
 
 #+BEGIN_SRC emacs-lisp
-    (global-set-key (kbd "C-x C-f") 'counsel-find-file)
-    (global-set-key (kbd "<f1> f") 'counsel-describe-function)
-    (global-set-key (kbd "<f1> v") 'counsel-describe-variable)
-    (global-set-key (kbd "<f1> l") 'counsel-find-library)
-    (global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
+    (global-set-key (kbd "C-x b") 'counsel-ibuffer)
     (global-set-key (kbd "C-c k") 'counsel-ag)
     (global-set-key (kbd "C-x l") 'counsel-locate)
     (define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history)
@@ -1963,10 +1989,30 @@ Before I used =smex= which is M-x combined with ido. Counsel makes this even nic
     (global-set-key (kbd "M-x") 'counsel-M-x)
 #+END_SRC
 
-*** Disable Ivy where it is broken
+*** Where =Ivy= doesn't work well
     
-Ivy cannot search in PDFs. It tries to search in the PDF source code.
-Therefore I fall back to using isearch within PDFs.
+**** Overwriting standard Emacs functionality
+
+Some basic features are overwritten when "everything" becomes an =Ivy=
+search buffer. For example:
+
+- When two =dired= buffers are open and files should be copied from
+  one to the other, one can use the =up= and =down= keys to toggle the
+  destination. When this is a search buffer, it will auto complete for
+  all local folders, instead. Since copying files is something I do
+  often, this already means I have to disable =Ivy= globally.
+
+- =Tramp= auto-completion doesn't work for me. I'm using =sudo:=, =ssh:=
+  and the likes a lot in =dired= mode. Auto completion when within
+  =Tramp= is broken for me, so I always have to type out the whole
+  connection string when =Ivy= is enabled for =dired=. Since this
+  includes missing auto-completion on remote systems and such, it's
+  another valid reason to disable =Ivy= globally.
+
+**** Disable Swiper where it is broken
+    
+Ivy/Swiper cannot search in PDFs. It tries to search in the PDF source
+code. Therefore I fall back to using isearch within PDFs.
 
 #+BEGIN_SRC emacs-lisp
   (add-hook 'pdf-view-mode-hook '(lambda()
@@ -1993,24 +2039,6 @@ Therefore I fall back to using isearch within PDFs.
   (setq synosaurus-choose-method 'ivy-read) 
 #+END_SRC
 
-** Notes on =Ivy= vs =ido=
-
-I used to use =ido= amd =smex= instead of the Ivy/Counsel/Swiper
-suite. It worked well, but Ivy is a little more powerful. I'm leaving
-some notes on =ido= here for future reference and in case that the Ivy
-suite goes out of favor in the community.
-
-=ido= means "Interactively Do Things"
-
-=ido= has a completion engine that's sensible to use everywhere. It is
-built-in and nice and could change a lot of defaults like =find-file=
-and switching buffers.
-
-#+BEGIN_SRC emacs-lisp
-  ;;(ido-mode t)
-  ;;(ido-everywhere t)
-  ;;(setq ido-enable-flex-matching t)
-#+END_SRC
 
 * Powerline
 
