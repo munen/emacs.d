@@ -48,6 +48,7 @@ down in this file, some are used with the default configuration.
                         beacon
                         browse-kill-ring
                         flycheck
+                        erc-image
                         auto-complete
                         web-mode
                         clojure-mode
@@ -1804,6 +1805,7 @@ HTML Mails
 #+BEGIN_SRC emacs-lisp
 (require 'mu4e-contrib)
 (setq mu4e-html2text-command 'mu4e-shr2text)
+;;(setq mu4e-html2text-command "iconv -c -t utf-8 | pandoc -f html -t plain")
 (add-to-list 'mu4e-view-actions '("ViewInBrowser" . mu4e-action-view-in-browser) t)
 
 #+END_SRC
@@ -2046,6 +2048,32 @@ capable counterparts
   ;;(global-set-key (kbd "C-r") 'isearch-backward-regexp)
 #+END_SRC
 
+* IRC
+  For chat-based communication, I like to use IRC through Emacs. In my
+  =~/.authinfo.gpg= file, I have a line like:
+  
+#+BEGIN_EXAMPLE
+machine irc.freenode.net login "munen" password SECRET_PASSWORD
+#+END_EXAMPLE
+  
+  This file is automatically read when connecting to servers. It's the
+  same for SMTP servers, for example.
+
+  For connecting to IRC, I'm using the built-in package =erc=.
+  
+*Configure automatic join list*
+
+#+BEGIN_SRC emacs-lisp
+(setq erc-autojoin-channels-alist '(("freenode.net" "#200ok")))
+#+END_SRC
+
+*Automatically unfold images when links are shared*
+
+#+BEGIN_SRC emacs-lisp
+(require 'erc-image)
+(add-to-list 'erc-modules 'image)
+(erc-update-modules)
+#+END_SRC
 * Powerline
 
 https://github.com/milkypostman/powerline
