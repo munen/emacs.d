@@ -2049,7 +2049,7 @@ capable counterparts
 #+END_SRC
 
 * IRC
-  For chat-based communication, I like to use IRC through Emacs. In my
+  For chat-based communication, I like to use IRC. In my
   =~/.authinfo.gpg= file, I have a line like:
   
 #+BEGIN_EXAMPLE
@@ -2064,25 +2064,22 @@ machine irc.freenode.net login "munen" password SECRET_PASSWORD
 *Configure automatic join list*
 
 #+BEGIN_SRC emacs-lisp
-(setq erc-autojoin-channels-alist '(("freenode.net" "#200ok" "#erc")))
+  (setq erc-autojoin-channels-alist '(("freenode.net" "#200ok" "#erc")))
 #+END_SRC
 
 *Automatically unfold images when links are shared*
 
 #+BEGIN_SRC emacs-lisp
-(require 'erc-image)
-(add-to-list 'erc-modules 'image)
-(erc-update-modules)
+  (require 'erc-image)
+  (add-to-list 'erc-modules 'image)
+  (erc-update-modules)
 #+END_SRC
 
 *Logging*
 
 #+BEGIN_SRC emacs-lisp
   (setq erc-log-channels-directory "~/.erc/logs/")
-
   (add-hook 'erc-insert-post-hook 'erc-save-buffer-in-logs)
-
-  (setq erc-log-insert-log-on-open t)
 #+END_SRC
 
 * Powerline
