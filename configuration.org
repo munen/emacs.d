@@ -2082,6 +2082,14 @@ machine irc.freenode.net login "munen" password SECRET_PASSWORD
   (add-hook 'erc-insert-post-hook 'erc-save-buffer-in-logs)
 #+END_SRC
 
+*Notify when someone is addressing me*
+
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'erc-text-matched-hook '(lambda(match-type nickuserhost msg)
+                                      (message msg)
+                                      (shell-command-to-string (format "notify-send erc '%s'" msg)))) 
+#+END_SRC
+
 * Powerline
 
 https://github.com/milkypostman/powerline
