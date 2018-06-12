@@ -2181,6 +2181,13 @@ Debian package.
 
 #+END_SRC
 
+Display Emoji (requires the =fonts-symbola= Debian package)
+
+#+BEGIN_SRC emacs-lisp
+(set-fontset-font t nil "Symbola" nil 'prepend)
+#+END_SRC
+
+
 ** macOS
 
 #+BEGIN_SRC emacs-lisp
