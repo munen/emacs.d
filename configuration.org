@@ -1969,10 +1969,14 @@ Enable =Swiper=
 Configure =Counsel=
 
 #+BEGIN_SRC emacs-lisp
-    (global-set-key (kbd "C-x b") 'counsel-ibuffer)
-    (global-set-key (kbd "C-c k") 'counsel-ag)
-    (global-set-key (kbd "C-x l") 'counsel-locate)
-    (define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history)
+  (global-set-key (kbd "C-x b") 'counsel-ibuffer)
+  ;; Run `counsel-ag` against the current directory and not against the
+  ;; whole project
+  (global-set-key (kbd "C-c k") '(lambda()
+                                   (interactive)
+                                   (counsel-ag "" default-directory nil nil)))
+  (global-set-key (kbd "C-x l") 'counsel-locate)
+  (define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history)
 #+END_SRC
 
 Next to counsel, there's also =smex= which is =M-x= combined with
