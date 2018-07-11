@@ -592,6 +592,8 @@ npm install -g eslint
 #+BEGIN_SRC emacs-lisp
   (setq ruby-indent-level 2)
   (add-to-list 'auto-mode-alist '("\\.scss?\\'" . scss-mode))
+  ;; Don't compile scss on save
+  (setq scss-compile-at-save nil)
 
   (add-to-list 'auto-mode-alist '("\\.rb?\\'" . enh-ruby-mode))
   (add-to-list 'auto-mode-alist '("\\.rake?\\'" . enh-ruby-mode))
