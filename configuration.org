@@ -6,6 +6,15 @@
 This repository contains my Emacs configuration. It is written and
 documented in literate programming style.
 
+* Play Emacs like an instrument
+  
+Lean back and relax while enjoying a deep dive into the wonderful
+world of the Emacs editor. This is just a small teaser of what Emacs
+can do - and what kinds of features you'll find in this repository.
+
+[[<iframe width="560" height="315" src="https://www.youtube.com/embed/gfZDwYeBlO4" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>]]
+
+
 * Installation
 
 *Initial*
@@ -2318,7 +2327,9 @@ Parinfer algorithm is quite nice. I'll try again at some point.
 #+BEGIN_SRC emacs-lisp
   (standard-mode)
 #+END_SRC
-* Org Mode Time Export Table
+* Org Mode Exports
+
+** Time Export Table
   
 Create a customized time table ready for CSV export.
 
@@ -2395,4 +2406,8 @@ When evaluating the src-block above, it'll yield a table like:
      (ok-filter-table-by-date (ok-generate-clock-table) from-date 0)
      '(hline)
      '(("" "total:" ":=vsum(@2..@-1);T"))))  
+#+END_SRC
+** Export Org Mode TODO headers into estimation table
+#+BEGIN_SRC emacs-lisp
+(load-file "~/src/200ok/200ok-admin/src/export-org-estimations/ok-export-org-estimations.el")
 #+END_SRC
