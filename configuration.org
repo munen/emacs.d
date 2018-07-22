@@ -8,12 +8,11 @@ documented in literate programming style.
 
 * Play Emacs like an instrument
   
-Lean back and relax while enjoying a deep dive into the wonderful
-world of the Emacs editor. This is just a small teaser of what Emacs
-can do - and what kinds of features you'll find in this repository.
-
-[[<iframe width="560" height="315" src="https://www.youtube.com/embed/gfZDwYeBlO4" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>]]
-
+If you're new to Emacs and just want to have a look around: Lean back
+and relax while enjoying a deep dive into the wonderful world of the
+Emacs editor. I have a talk "Play Emacs like an instrument" which is a
+small teaser of what Emacs can do - and what kinds of features you'll
+find in this repository: https://www.youtube.com/watch?v=gfZDwYeBlO4
 
 * Installation
 
