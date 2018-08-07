@@ -86,6 +86,7 @@ down in this file, some are used with the default configuration.
                         coffee-mode
                         projectile
                         markdown-mode
+                        edit-indirect
                         enh-ruby-mode
                         robe
                         evil-mc
@@ -1069,6 +1070,7 @@ Allow ‘a.’, ‘A.’, ‘a)’ and ‘A) as list elements:
                                  (concat "~/Dropbox/ZHAW/weng-unterlagen/README.org")
                                  (concat "~/src/200ok/crowdfunding/TODO.org")
                                  (concat "~/src/200ok/200ok-admin/PROJECTS.org")
+                                 (concat "~/src/200ok/200ok-admin/kunden/li/projektmanagement/PROJECT.org")
                                  (concat org-directory "reference.org"))))
 
   (set-org-agenda-files)
@@ -1197,7 +1199,8 @@ manually be started without clocking in via =M-x pomodoro-start=.
 I use two workflow sets:
 
 - One for TODOs which can either be TODO or DONE
-- Another for tasks that I am WAITING for something to happen
+- Another for tasks that I am WAITING for something to happen or which
+  are in PROGRESS
 
 Additionally I sometimes use the keywords PROJECT and AGENDA to denote
 special bullets that I might tag (schedule/deadline) in the agenda.
@@ -1211,7 +1214,7 @@ prior should be shown in the same color.
   (setq org-todo-keywords
             '((sequence "TODO" "|" "DONE")
               (sequence "PROJECT" "AGENDA" "|" "MINUTES")
-              (sequence "WAITING" "|")))
+              (sequence "WAITING" "|" "PROGRESS")))
 #+END_SRC
 
 ** Clock Table
@@ -1767,6 +1770,8 @@ Accounts setup
                '((concat d-spam " AND date:today..now")                  "Today's messages"     ?t))
   (add-to-list 'mu4e-bookmarks
                '((concat d-spam " AND date:7d..now")                     "Last 7 days"          ?w))
+  (add-to-list 'mu4e-bookmarks
+               '((concat d-spam " AND flag:flagged")                     "Flagged"              ?f))
   (add-to-list 'mu4e-bookmarks
                '((concat d-spam " AND mime:image/*")                     "Messages with images" ?p))
   (add-to-list 'mu4e-bookmarks
