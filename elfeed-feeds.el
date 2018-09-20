@@ -2,6 +2,8 @@
     '(("http://nullprogram.com/feed/" emacs)
         ("https://www.booleanknot.com/blog/feed.xml" emacs important)
         ("https://labs.uswitch.com/rss/" programming)
+        ;; Carl
+        ("https://stackingthebricks.com/atom.xml" business)
         ("http://howardism.org/Technical/Emacs/index.xml" emacs)
         ("http://blog.fogus.me/feed/" clojure)
         ("http://blog.cognitect.com/blog?format=rss" clojure)
