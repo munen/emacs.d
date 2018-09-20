@@ -1161,11 +1161,14 @@ Org Capture Templates are explained [[http://orgmode.org/manual/Capture-template
            "* TODO %?\n  %U\n")
 
 
-          ("p" "password" entry (file "~/switchdrive/org/vault/secrets.org.gpg")
+          ("p" "password" entry (file+headline "~/switchdrive/org/vault/primary.org.gpg" "Passwords")
            ;; Prompt for name
            "* %^{name}
    :PROPERTIES:
    :username: %^{username}
+   :password: %(generate-password-non-interactive)
+   :url: %^{url}
+
    :END:")
 
 
@@ -1490,12 +1493,15 @@ Thx [[https://github.com/jcfischer][@jcfischer]] for the function!
    Thanks to [[https://github.com/branch14/emacs.d][@branch14]] of 200ok fame for the function!
 #+BEGIN_SRC emacs-lisp
 
+(defun generate-password-non-interactive ()
+   (string-trim (shell-command-to-string "pwgen -A 24")))
+
 (defun generate-password ()
   "Generates and inserts a new password"
   (interactive)
   (insert
    (shell-command-to-string
-    (concat "pwgen -A " (read-string "Length: " "16") " 1"))))
+    (concat "pwgen -A " (read-string "Length: " "24") " 1"))))
 
 #+END_SRC
 ** Open passwords file
