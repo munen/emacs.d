@@ -1645,7 +1645,7 @@ Accounts setup
   (defvar my-mu4e-account-alist
     '(("200ok"
        (user-full-name  "Alain M. Lafon")
-       (mu4e-compose-signature "200ok GmbH\nGeschäftsführer\n\nalain@200ok.ch\n+41 76 405 05 67\nhttps://200ok.ch/\n\nCheck out our newest incubator: https://quickshift.ch/")
+       (mu4e-compose-signature "200ok GmbH\nGeschäftsführer\n\nalain@200ok.ch\n+41 76 405 05 67\nhttps://200ok.ch/\n\nCheck out our newest spin-off: https://quickshift.ch/")
        (mu4e-compose-signature-auto-include t)
        (mu4e-sent-folder "/200ok/INBOX.Sent")
        (mu4e-drafts-folder "/200ok/INBOX.Drafts")
