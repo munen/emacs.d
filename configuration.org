@@ -1636,6 +1636,10 @@ Accounts setup
   ;; toggle per name with M-RET
   (setq mu4e-view-show-addresses t)
 
+  ;; Do not show related messages by default (toggle with =W= works
+  ;; anyway)
+  (setq mu4e-headers-include-related nil)
+
   ;; Alternatives are the following, however in first tests they
   ;; show inferior results
   ;; (setq mu4e-html2text-command "textutil -stdin -format html -convert txt -stdout")
