@@ -2391,6 +2391,15 @@ When evaluating the src-block above, it'll yield a table like:
                                         (string-equal date-elem from-date))
                                 elem)))
                           tbl)))
+  (defun ok-hm-to-hours (worktime)
+    "Casts HH:MM WORKTIME into a floating point number."
+    (condition-case worktime
+        (let* ((time (split-string worktime ":"))
+               (minutes (/ (string-to-number (second time))
+                           60.0))
+               (hours (string-to-number (first time))))
+          (format "%.3f" (+ hours minutes)))
+      (error 0)))
 
   (defun ok-generate-clock-table ()
     "Generate a list of org elements of type 'clock."
@@ -2405,7 +2414,7 @@ When evaluating the src-block above, it'll yield a table like:
                      (month (org-element-property :month-start val))
                      (day (org-element-property :day-start val)))
                  (format "%4d-%02d-%02d" year month day ))
-              ,(org-element-property :duration clock-elem)
+              ,(ok-hm-to-hours (org-element-property :duration clock-elem))
               ,(org-element-property :title task)))))))
 
   (defun ok-export-org-timetable (from-date)
@@ -2419,7 +2428,7 @@ When evaluating the src-block above, it'll yield a table like:
      ;; works).
      (ok-filter-table-by-date (ok-generate-clock-table) from-date 0)
      '(hline)
-     '(("" "total:" ":=vsum(@2..@-1);T"))))  
+     '(("" "total:" ":=vsum(@2..@-1)"))))
 #+END_SRC
 ** Export Org Mode TODO headers into estimation table
 #+BEGIN_SRC emacs-lisp
