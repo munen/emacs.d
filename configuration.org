@@ -1835,6 +1835,25 @@ HTML Mails
 
 #+END_SRC
 
+Disable "HTML over plain text" heuristic. This variable officially has
+this rationale: "Ratio between the length of the html and the plain
+text part below which mu4e will consider the plain text part to be
+'This messages requires html' text bodies. You can neutralize it
+(always show the text version) by using `most-positive-fixnum'."
+
+This heuristic overwrites the default setting (and configuration) that
+Plain text should be preferred over HTML!
+
+In my experience, HTML Emails are _WAY_ longer than only 5x the Plain
+text (Doodle, Airbnb, Meetup, etc), so this will yield me a lot of
+false positives whereas I have never seen a "This message requires
+HTML" body.
+
+
+#+BEGIN_SRC emacs-lisp
+(setq mu4e-view-html-plaintext-ratio-heuristic  most-positive-fixnum)
+#+END_SRC
+
 Setting =Format=Flowed= for non-text-based mail clients which don't
 respect actual formatting, but let the text "flow" as they please.
 
