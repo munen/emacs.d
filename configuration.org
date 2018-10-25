@@ -1849,6 +1849,8 @@ text (Doodle, Airbnb, Meetup, etc), so this will yield me a lot of
 false positives whereas I have never seen a "This message requires
 HTML" body.
 
+I wrote an accompanying blog post with further information:
+https://200ok.ch/posts/2018-10-25_disable_mu4e_html_over_plain_text_heuristic.html
 
 #+BEGIN_SRC emacs-lisp
 (setq mu4e-view-html-plaintext-ratio-heuristic  most-positive-fixnum)
