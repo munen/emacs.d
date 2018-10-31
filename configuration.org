@@ -2412,6 +2412,7 @@ When evaluating the src-block above, it'll yield a table like:
                                         (string-equal date-elem from-date))
                                 elem)))
                           tbl)))
+
   (defun ok-hm-to-hours (worktime)
     "Casts HH:MM WORKTIME into a floating point number."
     (condition-case worktime
@@ -2424,9 +2425,14 @@ When evaluating the src-block above, it'll yield a table like:
 
   (defun ok-split-hash-and-description (text)
     "Given a TEXT like '#tag1 #tag2 some description' and return tags and description as a list."
+    ;; The concat is a little hack, so that there's always a minimum
+    ;; description to be found
     (let ((text (concat text " ")))
           (if (string-match "\\(#[a-z]+ \\)+" text)
               (let* ((hashtags (match-string 0 text))
+                     ;; Couldn't figure out how to get the description
+                     ;; through an elisp regexp, so I'm just reading the
+                     ;; remainder of the text after all hashtags here
                      (description (substring text (length hashtags) (length text))))
                 (list
                  (string-trim hashtags)
@@ -2441,7 +2447,8 @@ When evaluating the src-block above, it'll yield a table like:
         (lambda (clock-elem)
           (let* ((val (org-element-property :value clock-elem))
                  (task (org-element-property :parent (org-element-property :parent clock-elem)))
-                 (hash-and-description (ok-split-hash-and-description (org-element-property :title task))))
+                 (hash-and-description (ok-split-hash-and-description
+                                        (org-element-property :title task))))
             `(,(let ((year (org-element-property :year-start val))
                      (month (org-element-property :month-start val))
                      (day (org-element-property :day-start val)))
@@ -2459,9 +2466,7 @@ When evaluating the src-block above, it'll yield a table like:
      '(hline)
      ;; Generate tree of all visible elements within buffer (narrowing
      ;; works).
-     (ok-filter-table-by-date (ok-generate-clock-table) from-date 0)
-     '(hline)
-     '(("" "total:" ":=vsum(@2..@-1)"))))
+     (ok-filter-table-by-date (ok-generate-clock-table) from-date 0)))
 #+END_SRC
 ** Export Org Mode TODO headers into estimation table
 #+BEGIN_SRC emacs-lisp
