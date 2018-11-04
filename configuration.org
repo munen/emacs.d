@@ -1015,9 +1015,8 @@ Always sign commits with GPG
 
 https://github.com/bbatsov/projectile
 
-Projectile is a project interaction library. For instance -
-finding project files (=C-c p f=)  or jumping to a new project (=C-c p
-p=).
+Projectile is a project interaction library. For instance - finding
+project files (=C-c p f=) or jumping to a new project (=C-c p p=).
 
 *** Configuration
 
