@@ -2389,7 +2389,6 @@ When evaluating the src-block above, it'll yield a table like:
 | 2018-05-09 |   0:02 | #support                         |
 | 2018-05-09 |   0:17 | #support                         |
 |------------+--------+----------------------------------|
-|            | total: | :=vsum(@2..@-1);T                |
 
 #+END_SRC
 
