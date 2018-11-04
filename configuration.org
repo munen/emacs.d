@@ -1051,7 +1051,7 @@ Allow ‘a.’, ‘A.’, ‘a)’ and ‘A) as list elements:
   (org-babel-do-load-languages
    'org-babel-load-languages
    '(
-     (sh . t)
+     (shell . t)
      (js . t)
      (ruby . t)
      ))
@@ -2116,7 +2116,7 @@ machine irc.freenode.net login "munen" password SECRET_PASSWORD
 *Configure automatic join list*
 
 #+BEGIN_SRC emacs-lisp
-  (setq erc-autojoin-channels-alist '(("freenode.net" "#200ok" "#erc")))
+  (setq erc-autojoin-channels-alist '(("freenode.net" "#200ok" "#erc" "#guix")))
 #+END_SRC
 
 *Automatically unfold images when links are shared*
