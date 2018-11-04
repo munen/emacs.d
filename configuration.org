@@ -1221,6 +1221,8 @@ prior should be shown in the same color.
 
 ** Clock Table
 
+*** Clocksum Format
+
 When using a clock table, org will by default sum up the time in
 perfectly human readable terms like this:
 
@@ -1241,6 +1243,15 @@ This will render the same time as above as:
 | Headline     | Time    |
 |--------------+---------|
 | *Total time* | *25:03* |
+
+*** Clock entries without LOGBOOK
+
+Do not wrap clock entries into a :LOGBOOK: (mainly for backwards
+compatability reasons with =ok-export-org-timetable=.
+
+#+BEGIN_SRC emacs-lisp
+(setq org-clock-into-drawer nil)
+#+END_SRC
 
 * pdf-tools
 
