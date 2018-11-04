@@ -1233,7 +1233,7 @@ not), I do prefer that the summation is done only in hours and
 minutes. Therefore, I over-wrote the =org-time-clocksum-format= function:
 
 #+BEGIN_SRC emacs-lisp
-(setq org-time-clocksum-format (quote (:hours "%d" :require-hours t :minutes ":%02d" :require-minutes t)))
+(setq org-duration-format 'h:mm) 
 #+END_SRC
 
 This will render the same time as above as:
