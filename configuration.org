@@ -1233,7 +1233,7 @@ not), I do prefer that the summation is done only in hours and
 minutes. Therefore, I over-wrote the =org-time-clocksum-format= function:
 
 #+BEGIN_SRC emacs-lisp
-(setq org-duration-format 'h:mm) 
+(setq org-duration-format 'h:mm)
 #+END_SRC
 
 This will render the same time as above as:
@@ -2460,7 +2460,7 @@ When evaluating the src-block above, it'll yield a table like:
     "Generate a list from 'org-mode' clock elements starting from FROM-DATE."
     ;; Concatenate header, element data and footer into one list which
     ;; will automatically be rendered by org-mode as a table.
-    (nconc
+    (append
      '(("date" "duration" "hashtags" "description"))
      '(hline)
      ;; Generate tree of all visible elements within buffer (narrowing
