@@ -1026,7 +1026,6 @@ Enable Projectile globally
   (projectile-mode +1)
   (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
   (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
-  (setq projectile-completion-system 'ivy)
 #+END_SRC
 
 * org-mode
@@ -2086,7 +2085,7 @@ code. Therefore I fall back to using isearch within PDFs.
   Projectile completion (Default is =ido=)
 
 #+BEGIN_SRC emacs-lisp
-  (setq projectile-completion-system 'ivy-completing-read)
+  (setq projectile-completion-system 'ivy)
 #+END_SRC
 
   Mu4e "folder" and "from" completion (Default is =ido=)
