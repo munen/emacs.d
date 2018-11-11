@@ -4,6 +4,7 @@
         ("https://labs.uswitch.com/rss/" programming)
         ;; Carl
         ("https://stackingthebricks.com/atom.xml" business)
+        ("https://weblog.rubyonrails.org/feed/atom.xml" rails)
         ("https://blog.ungleich.ch/en-us/cms/blog/feed/" ungleich)
         ("https://medium.com/feed/@gianluca.guarini/" javascript)
         ("http://howardism.org/index.xml" emacs)
