@@ -1047,6 +1047,12 @@ of the current buffer.
 (dumb-jump-mode)
 (setq dumb-jump-selector 'ivy)
 #+END_SRC
+
+*** Usage
+
+The one important shortcut is =C-M-g= which attempts to jump to the
+definition of the thing under point.
+
 * org-mode
 
 Outline-based notes management and organizer. It is an outline-mode
