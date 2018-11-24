@@ -1093,9 +1093,9 @@ Allow ‘a.’, ‘A.’, ‘a)’ and ‘A) as list elements:
   ;; Allow =pdflatex= to use shell-commands
   ;; This will allow it to use =pygments= as syntax highlighter for exports to PDF
   (setq org-latex-pdf-process
-        '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-          "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-          "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+        '("xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+          "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+          "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
 
   ;; Include =minted= package for LaTeX exports
   (add-to-list 'org-latex-packages-alist '("" "minted"))
