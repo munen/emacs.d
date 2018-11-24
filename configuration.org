@@ -51,58 +51,59 @@ down in this file, some are used with the default configuration.
 
 #+BEGIN_SRC emacs-lisp
 
-  (defvar my-packages '(ag
+  (defvar my-packages '(ac-cider
+                        ac-js2
+                        ag
                         atomic-chrome
+                        auto-complete
                         beacon
                         browse-kill-ring
-                        flycheck
-                        erc-image
-                        auto-complete
-                        web-mode
+                        cider
+                        clj-refactor
                         clojure-mode
-                        parinfer
+                        coffee-mode
+                        comment-tags
+                        darktooth-theme
+                        dumb-jump
+                        edit-indirect
                         elfeed
                         elfeed-goodies
-                        clj-refactor
-                        cider
+                        enh-ruby-mode
+                        erc-image
+                        evil
+                        evil-escape
+                        evil-leader
+                        evil-mc
+                        evil-numbers
+                        evil-surround
                         exec-path-from-shell
-                        ac-cider
-                        js2-mode
-                        js-comint
-                        js2-refactor
-                        rainbow-mode
-                        synosaurus
-                        ini-mode
-                        ac-js2
+                        flycheck
                         flycheck-flow
-                        comment-tags
-                        sass-mode
-                        yaml-mode
-                        pdf-tools
+                        impatient-mode
+                        ini-mode
                         ivy counsel swiper
+                        js2-mode
+                        js2-refactor
+                        js-comint
+                        ledger-mode
+                        magit
+                        markdown-mode
+                        parinfer
+                        pdf-tools
+                        projectile
+                        rainbow-mode
+                        restclient
+                        robe
+                        sass-mode
                         smex
+                        synosaurus
                         tern
                         tern-auto-complete
-                        coffee-mode
-                        projectile
-                        markdown-mode
-                        edit-indirect
-                        enh-ruby-mode
-                        robe
-                        evil-mc
-                        evil-escape
-                        ledger-mode
-                        evil
-                        evil-leader
-                        evil-surround
-                        evil-numbers
-                        impatient-mode
-                        restclient
-                        magit
-                        darktooth-theme
+                        web-mode
                         which-key
-                        writeroom-mode
                         writegood-mode
+                        writeroom-mode
+                        yaml-mode
                         zenburn-theme))
 #+END_SRC
 
@@ -1028,6 +1029,24 @@ Enable Projectile globally
   (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
 #+END_SRC
 
+** Dumb Jumb
+
+https://github.com/jacktasia/dumb-jump
+
+"Jump to definition" with support for multiple programming languages
+that favors "just working". This means minimal -- and ideally zero --
+configuration with absolutely no stored indexes (TAGS) or persistent
+background processes.
+
+Dumb Jump uses The Silver Searcher ag, ripgrep rg, or grep to find
+potential definitions of a function or variable under point. It uses a
+set of regular expressions based on the file extension, or major-mode,
+of the current buffer.
+
+#+BEGIN_SRC emacs-lisp
+(dumb-jump-mode)
+(setq dumb-jump-selector 'ivy)
+#+END_SRC
 * org-mode
 
 Outline-based notes management and organizer. It is an outline-mode
