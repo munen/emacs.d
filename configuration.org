@@ -2463,15 +2463,16 @@ When evaluating the src-block above, it'll yield a table like:
     ;; The concat is a little hack, so that there's always a minimum
     ;; description to be found
     (let ((text (concat text " ")))
-          (if (string-match "\\(#[a-z]+ \\)+" text)
-              (let* ((hashtags (match-string 0 text))
-                     ;; Couldn't figure out how to get the description
-                     ;; through an elisp regexp, so I'm just reading the
-                     ;; remainder of the text after all hashtags here
-                     (description (substring text (length hashtags) (length text))))
-                (list
-                 (string-trim hashtags)
-                 (string-trim description))))))
+      ;; A hashtag can have numbers, dashes and a-z
+      (if (string-match "\\(#[a-z-0-9]+ \\)+" text)
+          (let* ((hashtags (match-string 0 text))
+                 ;; Couldn't figure out how to get the description
+                 ;; through an elisp regexp, so I'm just reading the
+                 ;; remainder of the text after all hashtags here
+                 (description (substring text (length hashtags) (length text))))
+            (list
+             (string-trim hashtags)
+             (string-trim description))))))
 
   (defun ok-generate-clock-table ()
     "Generate a list of org elements of type 'clock."
