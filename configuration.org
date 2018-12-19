@@ -7,7 +7,7 @@ This repository contains my Emacs configuration. It is written and
 documented in literate programming style.
 
 * Play Emacs like an instrument
-  
+
 If you're new to Emacs and just want to have a look around: Lean back
 and relax while enjoying a deep dive into the wonderful world of the
 Emacs editor. I have a talk "Play Emacs like an instrument" which is a
@@ -1594,12 +1594,28 @@ similar to using [[http://www.mutt.org/][mutt]] with [[https://notmuchmail.org/]
 
 *** Installation
 
+MU works on a local Maildir folder. For synchronization
+[[http://www.offlineimap.org/][offlineimap]] is used. Install:
+
+- Debian: =apt-get install offlineimap=
+- macOS: =brew install offlineimap=
+
+For MU4E to work, install MU and MU4E:
+
+- Debian: =apt-get install mu4e=
+- macOS: =brew install mu --with-emacs=
+
+For starttls to work when sending mail, install gnutls:
+
+- Debian: =apt-get install gnutls-bin=
+- macOS: =brew install gnutls=
+
+
 *** General
 
 -  Configure =.offlineimaprc= file for IMAP
 -  Configure =.authinfo= file for SMTP
 -  https://www.emacswiki.org/emacs/GnusAuthinfo
-
 
 **** Authentication
 Tell Emacs where to find the encrypted =.authinfo= file.
@@ -1619,24 +1635,6 @@ Configure =xdg-open= to use Emacs in =.local/share/applications/mimeapps.list=:
 #+BEGIN_EXAMPLE
     xdg-mime default emacs.desktop application/pdf
 #+END_EXAMPLE
-
-**** Installation
-
-MU works on a local Maildir folder. For synchronization
-[[http://www.offlineimap.org/][offlineimap]] is used. Install:
-
-- Debian: =apt-get install offlineimap=
-- macOS: =brew install offlineimap=
-
-For MU4E to work, install MU and MU4E:
-
-- Debian: =apt-get install mu4e=
-- macOS: =brew install mu --with-emacs=
-
-For starttls to work when sending mail, install gnutls:
-
-- Debian: =apt-get install gnutls-bin=
-- macOS: =brew install gnutls=
 
 ** Configuration
 
@@ -1986,7 +1984,7 @@ https://www.gnu.org/software/emacs/manual/html_node/emacs-mime/qp.html
 * Search / Completion
 
 ** =ido=
-   
+
 =ido= means "Interactively Do Things". =ido= has a completion engine
 that's sensible to use everywhere. It is built-in and nice and could
 change a lot of defaults like =find-file= and switching buffers.
@@ -2076,7 +2074,7 @@ start it with an empty string as argument.
 #+END_SRC
 
 *** Where =Ivy= doesn't work well
-    
+
 **** Overwriting standard Emacs functionality
 
 Some basic features are overwritten when "everything" becomes an =Ivy=
@@ -2096,13 +2094,13 @@ search buffer. For example:
   another valid reason to disable =Ivy= globally.
 
 **** Disable Swiper where it is broken
-    
+
 Ivy/Swiper cannot search in PDFs. It tries to search in the PDF source
 code. Therefore I fall back to using isearch within PDFs.
 
 #+BEGIN_SRC emacs-lisp
   (add-hook 'pdf-view-mode-hook '(lambda()
-                                   (define-key pdf-view-mode-map "\C-s" 'isearch-forward))) 
+                                   (define-key pdf-view-mode-map "\C-s" 'isearch-forward)))
 #+END_SRC
 
 *** Improve other packages with ivy
@@ -2118,11 +2116,11 @@ code. Therefore I fall back to using isearch within PDFs.
 #+BEGIN_SRC emacs-lisp
   (setq mu4e-completing-read-function 'ivy-completing-read)
 #+END_SRC
-  
+
   Synosaurus completion (Default is =ido=)
 
 #+BEGIN_SRC emacs-lisp
-  (setq synosaurus-choose-method 'ivy-read) 
+  (setq synosaurus-choose-method 'ivy-read)
 #+END_SRC
 
 ** Obsolete alternatives
@@ -2140,16 +2138,16 @@ capable counterparts
 * IRC
   For chat-based communication, I like to use IRC. In my
   =~/.authinfo.gpg= file, I have a line like:
-  
+
 #+BEGIN_EXAMPLE
 machine irc.freenode.net login "munen" password SECRET_PASSWORD
 #+END_EXAMPLE
-  
+
   This file is automatically read when connecting to servers. It's the
   same for SMTP servers, for example.
 
   For connecting to IRC, I'm using the built-in package =erc=.
-  
+
 *Configure automatic join list*
 
 #+BEGIN_SRC emacs-lisp
@@ -2176,7 +2174,7 @@ machine irc.freenode.net login "munen" password SECRET_PASSWORD
 #+BEGIN_SRC emacs-lisp
   (add-hook 'erc-text-matched-hook '(lambda(match-type nickuserhost msg)
                                       (message msg)
-                                      (shell-command-to-string (format "notify-send erc '%s'" msg)))) 
+                                      (shell-command-to-string (format "notify-send erc '%s'" msg))))
 #+END_SRC
 
 * Powerline
@@ -2205,10 +2203,10 @@ https://github.com/hpdeifel/synosaurus/
 
 Synosaurus is a thesaurus front-end with pluggable back-end.
 
-Use the [[http://openthesaurus.de/][openthesaurus.de]] back-end. 
+Use the [[http://openthesaurus.de/][openthesaurus.de]] back-end.
 
 #+BEGIN_SRC emacs-lisp
-  (setq synosaurus-backend 'synosaurus-backend-openthesaurus)  
+  (setq synosaurus-backend 'synosaurus-backend-openthesaurus)
 #+END_SRC
 
 ** Flyspell
@@ -2401,7 +2399,7 @@ Parinfer algorithm is quite nice. I'll try again at some point.
 * Org Mode Exports
 
 ** Time Export Table
-  
+
 Create a customized time table ready for CSV export.
 
 Usage:
