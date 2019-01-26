@@ -566,8 +566,7 @@ line break.
 
 #+BEGIN_SRC emacs-lisp
     (add-hook 'before-save-hook '(lambda()
-                                  (when (not (or (derived-mode-p 'markdown-mode)
-                                                 (derived-mode-p 'org-mode))
+                                  (when (not (or (derived-mode-p 'markdown-mode))
                                     (delete-trailing-whitespace)))))
 #+END_SRC
 
@@ -1540,13 +1539,29 @@ Thx [[https://github.com/jcfischer][@jcfischer]] for the function!
     (concat "pwgen -A " (read-string "Length: " "24") " 1"))))
 
 #+END_SRC
-** Open passwords file
-   #+BEGIN_SRC emacs-lisp
-     (defun passwords ()
-       "Open main 'passwords' file."
-       (interactive)
-       (find-file (concat org-directory "vault/primary.org.gpg")))
-   #+END_SRC
+** Passwords file
+
+Open the GPG encrypted password file.
+
+#+BEGIN_SRC emacs-lisp
+  (defun passwords ()
+    "Open main 'passwords' file."
+    (interactive)
+    (find-file (concat org-directory "vault/primary.org.gpg")))
+#+END_SRC
+
+Within this file, I'll search for passwords with =counsel-imenu= which
+has nice auto-completion and means that the headers will always be
+folded, so that no other person can see the passwords.
+
+When the right header is found, I'll copy the password under the
+current header to the clipboard from where I can use it where I need
+it (for example a browser):
+
+#+BEGIN_SRC emacs-lisp
+(fset 'copy-password-to-clipboard
+   [?\C-s ?P ?a ?s ?s ?w ?o ?r ?d ?: return ?w ?v ?$ ?y C-up C-up C-up tab])
+#+END_SRC
 ** Running =M-x shell= with =zsh=
    If you're a =zsh= user, you might have configured a custom prompt
    and such. Also, you might be using a powerful =$TERM= for that.
