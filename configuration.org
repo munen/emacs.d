@@ -67,6 +67,7 @@ down in this file, some are used with the default configuration.
                         dired-narrow
                         dumb-jump
                         edit-indirect
+                        editorconfig
                         elfeed
                         elfeed-goodies
                         enh-ruby-mode
@@ -872,70 +873,6 @@ fast feedback cycle of developing plain JavaScript.
 (add-hook 'javascript-mode-hook 'flycheck-mode)
 #+END_SRC
 
-*** Autoformatting using prettier
-
-Automatically format JavaScript code while honoring eslint
-configuration. This is done using the [[https://github.com/prettier/prettier-eslint-cli][prettier-eslint-cli]] tool which
-can be installed as a lone dependency which is nice, because then this
-setup is completely local to the user and doesn't impose dependencies
-to other team members.
-
-This requires =prettier-eslint-cli= to be installed:
-
-#+BEGIN_EXAMPLE
-npm install -g prettier-eslint-cli=
-#+END_EXAMPLE
-
-#+BEGIN_SRC emacs-lisp
-  (defun prettier-eslint ()
-    "Automatically format current buffer"
-    (interactive)
-    (let ((p (point))
-          (s (window-start)))
-      ;; Remember the current position
-      (save-mark-and-excursion
-        ;; Call prettier-eslint binary with the contents of the current
-        ;; buffer
-        (shell-command-on-region
-         (point-min) (point-max)
-         (concat "prettier-eslint --eslint-config-path "
-                 ;; Hand over the path of the current projec
-                 (concat
-                  (projectile-project-root)
-                  ".eslintrc.json")
-                 " --parser babel --stdin")
-         ;; Write into a temporary buffer
-         (get-buffer-create "*Temp prettier buffer*")
-         ;; Replace the current buffer with the output of
-         ;; prettier-eslint
-         t))
-      ;; Return to the previous point and scrolling position (the point
-      ;; was lost, because the whole buffer got replaced.
-      (set-window-start (selected-window) s)
-      (goto-char p)))
-
-#+END_SRC
-
-*Shortcut*
-
-#+BEGIN_SRC emacs-lisp
-  (evil-leader/set-key-for-mode 'js2-mode "f" 'prettier-eslint)
-#+END_SRC
-
-
-*Call the function on every save*
-
-The overhead of prettier + eslint is about 1.3s on a maxed out X1
-Carbon 6th gen. That's too long in my book, that's why I'm not
-enabling completely automatic formatting but opt for calling it when
-needed (i.e. I see a linting error).
-
-#+BEGIN_SRC emacs-lisp
-  ;; (add-hook 'before-save-hook '(lambda()
-  ;;                                (when (derived-mode-p 'js2-mode)
-  ;;                                  (prettier-eslint))))
-#+END_SRC
-
 *** General JavaScript configuration
 
 #+BEGIN_SRC emacs-lisp
@@ -1135,6 +1072,86 @@ of the current buffer.
 The one important shortcut is =C-M-g= which attempts to jump to the
 definition of the thing under point.
 
+** Code Styleguides
+
+
+*** Autoformatting using prettier
+
+Automatically format JavaScript code while honoring eslint
+configuration. This is done using the [[https://github.com/prettier/prettier-eslint-cli][prettier-eslint-cli]] tool which
+can be installed as a lone dependency which is nice, because then this
+setup is completely local to the user and doesn't impose dependencies
+to other team members.
+
+This requires =prettier-eslint-cli= to be installed:
+
+#+BEGIN_EXAMPLE
+npm install -g prettier-eslint-cli=
+#+END_EXAMPLE
+
+#+BEGIN_SRC emacs-lisp
+  (defun prettier-eslint ()
+    "Automatically format current buffer"
+    (interactive)
+    (let ((p (point))
+          (s (window-start)))
+      ;; Remember the current position
+      (save-mark-and-excursion
+        ;; Call prettier-eslint binary with the contents of the current
+        ;; buffer
+        (shell-command-on-region
+         (point-min) (point-max)
+         (concat "prettier-eslint --eslint-config-path "
+                 ;; Hand over the path of the current projec
+                 (concat
+                  (projectile-project-root)
+                  ".eslintrc.json")
+                 " --parser babel --stdin")
+         ;; Write into a temporary buffer
+         (get-buffer-create "*Temp prettier buffer*")
+         ;; Replace the current buffer with the output of
+         ;; prettier-eslint
+         t))
+      ;; Return to the previous point and scrolling position (the point
+      ;; was lost, because the whole buffer got replaced.
+      (set-window-start (selected-window) s)
+      (goto-char p)))
+
+#+END_SRC
+
+*Shortcut*
+
+#+BEGIN_SRC emacs-lisp
+  (evil-leader/set-key-for-mode 'js2-mode "f" 'prettier-eslint)
+#+END_SRC
+
+
+*Call the function on every save*
+
+The overhead of prettier + eslint is about 1.3s on a maxed out X1
+Carbon 6th gen. That's too long in my book, that's why I'm not
+enabling completely automatic formatting but opt for calling it when
+needed (i.e. I see a linting error).
+
+#+BEGIN_SRC emacs-lisp
+  ;; (add-hook 'before-save-hook '(lambda()
+  ;;                                (when (derived-mode-p 'js2-mode)
+  ;;                                  (prettier-eslint))))
+#+END_SRC
+
+*** Editorconfig
+
+[[https://editorconfig.org/][EditorConfig]] helps maintain consistent coding styles for multiple
+developers working on the same project across various editors and
+IDEs. I'm an Emacs guy, however, when in an heterogeneous team, it
+does make sense to adhere to some commonly shared definitions.
+
+With this plugin, if there is an =.editorconfig= in a project, the
+settings in this file will trump my personal config.
+
+#+BEGIN_SRC emacs-lisp
+(editorconfig-mode 1)
+#+END_SRC
 * org-mode
 
 Outline-based notes management and organizer. It is an outline-mode
