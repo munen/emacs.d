@@ -890,7 +890,8 @@ npm install -g prettier-eslint-cli=
   (defun prettier-eslint ()
     "Automatically format current buffer"
     (interactive)
-    (let ((p (point)))
+    (let ((p (point))
+          (s (window-start)))
       ;; Remember the current position
       (save-mark-and-excursion
         ;; Call prettier-eslint binary with the contents of the current
@@ -908,8 +909,9 @@ npm install -g prettier-eslint-cli=
          ;; Replace the current buffer with the output of
          ;; prettier-eslint
          t))
-      ;; Return to the previous point (the point was lost, because the
-      ;; whole buffer got replaced.
+      ;; Return to the previous point and scrolling position (the point
+      ;; was lost, because the whole buffer got replaced.
+      (set-window-start (selected-window) s)
       (goto-char p)))
 
   ;; Call the function on every save
