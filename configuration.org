@@ -585,8 +585,8 @@ line break.
 
 #+BEGIN_SRC emacs-lisp
     (add-hook 'before-save-hook '(lambda()
-                                  (when (not (or (derived-mode-p 'markdown-mode))
-                                    (delete-trailing-whitespace)))))
+                                  (when (not (or (derived-mode-p 'markdown-mode)))
+                                    (delete-trailing-whitespace))))
 #+END_SRC
 
 *** Code Folding
@@ -872,6 +872,51 @@ fast feedback cycle of developing plain JavaScript.
 (add-hook 'javascript-mode-hook 'flycheck-mode)
 #+END_SRC
 
+*** Autoformatting using prettier
+
+Automatically format JavaScript code while honoring eslint
+configuration. This is done using the [[https://github.com/prettier/prettier-eslint-cli][prettier-eslint-cli]] tool which
+can be installed as a lone dependency which is nice, because then this
+setup is completely local to the user and doesn't impose dependencies
+to other team members.
+
+This requires =prettier-eslint-cli= to be installed:
+
+#+BEGIN_EXAMPLE
+npm install -g prettier-eslint-cli=
+#+END_EXAMPLE
+
+#+BEGIN_SRC emacs-lisp
+  (defun prettier-eslint ()
+    "Automatically format current buffer"
+    (interactive)
+    (let ((p (point)))
+      ;; Remember the current position
+      (save-mark-and-excursion
+        ;; Call prettier-eslint binary with the contents of the current
+        ;; buffer
+        (shell-command-on-region
+         (point-min) (point-max)
+         (concat "prettier-eslint --eslint-config-path "
+                 ;; Hand over the path of the current projec
+                 (concat
+                  (projectile-project-root)
+                  ".eslintrc.json")
+                 " --parser babel --stdin")
+         ;; Write into a temporary buffer
+         (get-buffer-create "*Temp prettier buffer*")
+         ;; Replace the current buffer with the output of
+         ;; prettier-eslint
+         t))
+      ;; Return to the previous point (the point was lost, because the
+      ;; whole buffer got replaced.
+      (goto-char p)))
+
+  ;; Call the function on every save
+  (add-hook 'before-save-hook '(lambda()
+                                 (when (derived-mode-p 'js2-mode)
+                                   (prettier-eslint))))
+#+END_SRC
 *** General JavaScript configuration
 
 #+BEGIN_SRC emacs-lisp
