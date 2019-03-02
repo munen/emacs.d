@@ -914,11 +914,28 @@ npm install -g prettier-eslint-cli=
       (set-window-start (selected-window) s)
       (goto-char p)))
 
-  ;; Call the function on every save
-  (add-hook 'before-save-hook '(lambda()
-                                 (when (derived-mode-p 'js2-mode)
-                                   (prettier-eslint))))
 #+END_SRC
+
+*Shortcut*
+
+#+BEGIN_SRC emacs-lisp
+  (evil-leader/set-key-for-mode 'js2-mode "p" 'prettier-eslint)
+#+END_SRC
+
+
+*Call the function on every save*
+
+The overhead of prettier + eslint is about 1.3s on a maxed out X1
+Carbon 6th gen. That's too long in my book, that's why I'm not
+enabling completely automatic formatting but opt for calling it when
+needed (i.e. I see a linting error).
+
+#+BEGIN_SRC emacs-lisp
+  ;; (add-hook 'before-save-hook '(lambda()
+  ;;                                (when (derived-mode-p 'js2-mode)
+  ;;                                  (prettier-eslint))))
+#+END_SRC
+
 *** General JavaScript configuration
 
 #+BEGIN_SRC emacs-lisp
@@ -1660,6 +1677,17 @@ This is the converse function to the built-in =server-start=.
   (save-some-buffers)
   (kill-emacs))
 #+END_SRC
+** Helper function to measure the running time of a function
+
+#+BEGIN_SRC emacs-lisp
+  (defmacro measure-time (&rest body)
+    "Measure the time it takes to evaluate BODY."
+    `(let ((time (current-time)))
+       ,@body
+       (message "%.06f" (float-time (time-since time)))))
+#+END_SRC
+
+For example =(measure-time (prettier-eslint)=.
 * Mail
 
 Writing and reading mail is inherently a text-based workflow. Yes,
