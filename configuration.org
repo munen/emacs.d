@@ -1074,25 +1074,43 @@ definition of the thing under point.
 
 ** Code Styleguides
 
+*** Auto-formatting
 
-*** Autoformatting using prettier
+Automatically format code for different languages and frameworks.
 
-Automatically format JavaScript code while honoring eslint
-configuration. This is done using the [[https://github.com/prettier/prettier-eslint-cli][prettier-eslint-cli]] tool which
-can be installed as a lone dependency which is nice, because then this
-setup is completely local to the user and doesn't impose dependencies
-to other team members.
+This implements the interactive function =autoformat= which is a thin
+wrapper around command-line based code autoformatters which it
+utilizes through a strategy pattern. At this moment, only [[https://prettier.io/][prettier]] and
+[[https://github.com/prettier/prettier-eslint-cli][prettier-eslint-cli]] are implemented. To add a new language/framework,
+the only required change is to add the respective command-line tool
+configuration into a separate strategy function. It is trivial to do
+if the new language/framework has a command-line tool which takes code
+into =stdin= and formats it to =stdout=.
 
-This requires =prettier-eslint-cli= to be installed:
+This setup is completely local and doesn't impose dependencies to
+other team members.
+
+This requires =prettier= and =prettier-eslint-cli= to be installed:
 
 #+BEGIN_EXAMPLE
-npm install -g prettier-eslint-cli=
+npm install -g prettier-eslint-cli prettier=
 #+END_EXAMPLE
 
 #+BEGIN_SRC emacs-lisp
-  (defun prettier-eslint ()
-    "Automatically format current buffer"
+  (defun autoformat ()
+    "Automatically format current buffer."
     (interactive)
+    (let ((eslint-path (concat (projectile-project-root)
+                               ".eslintrc.json")))
+      (autoformat-with
+       (cond
+        ;; JS projects with eslint config
+        ((file-exists-p eslint-path) 'eslint)
+        ;; JS projects without eslint config
+        ((derived-mode-p 'js2-mode) 'prettier)))))
+
+  (defun autoformat-with (strategy)
+    "Automatically format current buffer using STRATEGY."
     (let ((p (point))
           (s (window-start)))
       ;; Remember the current position
@@ -1101,12 +1119,8 @@ npm install -g prettier-eslint-cli=
         ;; buffer
         (shell-command-on-region
          (point-min) (point-max)
-         (concat "prettier-eslint --eslint-config-path "
-                 ;; Hand over the path of the current projec
-                 (concat
-                  (projectile-project-root)
-                  ".eslintrc.json")
-                 " --parser babel --stdin")
+         (cond ((eq strategy 'eslint) (autoformat-prettier-eslint-command))
+               ((eq strategy 'prettier) (autoformat-prettier-command)))
          ;; Write into a temporary buffer
          (get-buffer-create "*Temp prettier buffer*")
          ;; Replace the current buffer with the output of
@@ -1117,12 +1131,24 @@ npm install -g prettier-eslint-cli=
       (set-window-start (selected-window) s)
       (goto-char p)))
 
+  (defun autoformat-prettier-command ()
+    "CLI tool to format Javascript."
+    "prettier --stdin --parser babel")
+
+  (defun autoformat-prettier-eslint-command ()
+    "CLI tool to format Javascript with .eslintrc.json configuration."
+    (concat "prettier-eslint --eslint-config-path "
+            ;; Hand over the path of the current projec
+            (concat
+             (projectile-project-root)
+             ".eslintrc.json")
+            " --parser babel --stdin"))
 #+END_SRC
 
 *Shortcut*
 
 #+BEGIN_SRC emacs-lisp
-  (evil-leader/set-key-for-mode 'js2-mode "f" 'prettier-eslint)
+  (evil-leader/set-key-for-mode 'js2-mode "f" 'autoformat)
 #+END_SRC
 
 
@@ -1136,7 +1162,7 @@ needed (i.e. I see a linting error).
 #+BEGIN_SRC emacs-lisp
   ;; (add-hook 'before-save-hook '(lambda()
   ;;                                (when (derived-mode-p 'js2-mode)
-  ;;                                  (prettier-eslint))))
+  ;;                                  (autoformat))))
 #+END_SRC
 
 *** Editorconfig
