@@ -919,7 +919,7 @@ npm install -g prettier-eslint-cli=
 *Shortcut*
 
 #+BEGIN_SRC emacs-lisp
-  (evil-leader/set-key-for-mode 'js2-mode "p" 'prettier-eslint)
+  (evil-leader/set-key-for-mode 'js2-mode "f" 'prettier-eslint)
 #+END_SRC
 
 
@@ -2615,6 +2615,17 @@ When evaluating the src-block above, it'll yield a table like:
      ;; Generate tree of all visible elements within buffer (narrowing
      ;; works).
      (ok-filter-table-by-date (ok-generate-clock-table) from-date 0)))
+
+
+  (defun ok-export-next-table-to (target-path)
+    "Exports the contents of the next org table to a CSV file at TARGET-PATH."
+    (let ((p (point)))
+      (search-forward "RESULTS")
+      (evil-next-visual-line)
+      (org-table-export target-path "orgtbl-to-csv")
+      (goto-char p)
+      (message "Table export completed")))
+
 #+END_SRC
 ** Export Org Mode TODO headers into estimation table
 #+BEGIN_SRC emacs-lisp
