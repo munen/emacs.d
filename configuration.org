@@ -64,6 +64,7 @@ down in this file, some are used with the default configuration.
                         coffee-mode
                         comment-tags
                         darktooth-theme
+                        dired-narrow
                         dumb-jump
                         edit-indirect
                         elfeed
@@ -184,6 +185,23 @@ Human readable units
 #+BEGIN_SRC emacs-lisp
   (setq-default dired-listing-switches "-alh")
 #+END_SRC
+
+*** =dired-narrow=
+
+=dired-narrow= of the [[https://github.com/Fuco1/dired-hacks][dired-hacks]] repository allows to dynamically
+narrow a dired buffer down to contents of interest. A demo can be seen
+[[http://pragmaticemacs.com/emacs/dynamically-filter-directory-listing-with-dired-narrow/][on this blog post]].
+
+#+BEGIN_SRC emacs-lisp
+  (require 'dired)
+  (define-key dired-mode-map (kbd "/") 'dired-narrow-fuzzy)
+#+END_SRC
+
+Commands:
+
+  - =/= starts fuzzy matching
+  - Use the dired buffer as usual
+  - =g= to go back to the complete file listing
 
 ** Ask =y/n= instead of =yes/no=
    This is a favorable shorthand.
@@ -1557,7 +1575,7 @@ it (for example a browser):
  #+BEGIN_SRC emacs-lisp
  (fset 'copy-password-to-clipboard
     [?\C-s ?P ?a ?s ?s ?w ?o ?r ?d ?: return ?w ?v ?$ ?y C-up C-up C-up tab])
- #+END_SRC  
+ #+END_SRC
 
 *** Open passwords file
 
