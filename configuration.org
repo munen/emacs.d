@@ -84,6 +84,7 @@ down in this file, some are used with the default configuration.
                         impatient-mode
                         ini-mode
                         ivy counsel swiper
+                        json-mode
                         js2-mode
                         js2-refactor
                         js-comint
@@ -1080,12 +1081,13 @@ Automatically format code for different languages and frameworks.
 
 This implements the interactive function =autoformat= which is a thin
 wrapper around command-line based code autoformatters which it
-utilizes through a strategy pattern. At this moment, only [[https://prettier.io/][prettier]] and
-[[https://github.com/prettier/prettier-eslint-cli][prettier-eslint-cli]] are implemented. To add a new language/framework,
-the only required change is to add the respective command-line tool
-configuration into a separate strategy function. It is trivial to do
-if the new language/framework has a command-line tool which takes code
-into =stdin= and formats it to =stdout=.
+utilizes through a strategy pattern.
+
+To add a new language/framework, the only required change is to add
+the respective command-line tool configuration into a separate
+strategy function. It is trivial to do if the new language/framework
+has a command-line tool which takes code into =stdin= and formats it
+to =stdout=.
 
 This setup is completely local and doesn't impose dependencies to
 other team members.
@@ -1104,10 +1106,16 @@ npm install -g prettier-eslint-cli prettier=
                                ".eslintrc.json")))
       (autoformat-with
        (cond
+        ((derived-mode-p 'web-mode) 'html)
+        ((derived-mode-p 'css-mode) 'css)
+        ((derived-mode-p 'json-mode) 'json)
+        ((derived-mode-p 'sass-mode) 'sass)
+        ((derived-mode-p 'yaml-mode) 'yaml)
         ;; JS projects with eslint config
-        ((file-exists-p eslint-path) 'eslint)
-        ;; JS projects without eslint config
-        ((derived-mode-p 'js2-mode) 'prettier)))))
+        ((and (file-exists-p eslint-path)
+              (derived-mode-p 'js2-mode))
+         'eslint)
+        ((derived-mode-p 'js2-mode) 'javascript)))))
 
   (defun autoformat-with (strategy)
     "Automatically format current buffer using STRATEGY."
@@ -1120,7 +1128,11 @@ npm install -g prettier-eslint-cli prettier=
         (shell-command-on-region
          (point-min) (point-max)
          (cond ((eq strategy 'eslint) (autoformat-prettier-eslint-command))
-               ((eq strategy 'prettier) (autoformat-prettier-command)))
+               ((eq strategy 'html) (autoformat-html-command))
+               ((eq strategy 'css) (autoformat-css-command))
+               ((eq strategy 'sass) (autoformat-sass-command))
+               ((eq strategy 'json) (autoformat-json-command))
+               ((eq strategy 'javascript) (autoformat-javascript-command)))
          ;; Write into a temporary buffer
          (get-buffer-create "*Temp prettier buffer*")
          ;; Replace the current buffer with the output of
@@ -1131,9 +1143,25 @@ npm install -g prettier-eslint-cli prettier=
       (set-window-start (selected-window) s)
       (goto-char p)))
 
-  (defun autoformat-prettier-command ()
+  (defun autoformat-javascript-command ()
     "CLI tool to format Javascript."
     "prettier --stdin --parser babel")
+
+  (defun autoformat-html-command ()
+    "CLI tool to format HTML."
+    "prettier --stdin --parser html")
+
+  (defun autoformat-css-command ()
+    "CLI tool to format CSS."
+    "prettier --stdin --parser css")
+
+  (defun autoformat-sass-command ()
+    "CLI tool to format SASS."
+    "prettier --stdin --parser sass")
+
+  (defun autoformat-json-command ()
+    "CLI tool to format JSON."
+    "prettier --stdin --parser json")
 
   (defun autoformat-prettier-eslint-command ()
     "CLI tool to format Javascript with .eslintrc.json configuration."
@@ -1148,8 +1176,20 @@ npm install -g prettier-eslint-cli prettier=
 *Shortcut*
 
 #+BEGIN_SRC emacs-lisp
-  (evil-leader/set-key-for-mode 'js2-mode "f" 'autoformat)
+  (setq ok-autoformat-modes (list 'web-mode
+                  'css-mode
+                  'json-mode
+                  'sass-mode
+                  'yaml-mode
+                  'js2-mode))
+
+  (dolist (mode ok-autoformat-modes)
+    (evil-leader/set-key-for-mode mode "f" 'autoformat))
 #+END_SRC
+
+*Demo*
+
+[[file:images/demo-ok-autoformat.gif][file:images/demo-ok-autoformat.gif]]
 
 
 *Call the function on every save*
@@ -1157,11 +1197,19 @@ npm install -g prettier-eslint-cli prettier=
 The overhead of prettier + eslint is about 1.3s on a maxed out X1
 Carbon 6th gen. That's too long in my book, that's why I'm not
 enabling completely automatic formatting but opt for calling it when
-needed (i.e. I see a linting error).
+needed (i.e. I see a linting error). Just using prettier is really
+fast, however I want to enable the same workflow for all those
+languages, so I'm not enabling formatting on save for those either.
 
 #+BEGIN_SRC emacs-lisp
   ;; (add-hook 'before-save-hook '(lambda()
-  ;;                                (when (derived-mode-p 'js2-mode)
+  ;;                                (when (or
+  ;;                                       (derived-mode-p 'js2-mode)
+  ;;                                       (derived-mode-p 'web-mode)
+  ;;                                       (derived-mode-p 'css-mode)
+  ;;                                       (derived-mode-p 'json-mode)
+  ;;                                       (derived-mode-p 'sass-mode)
+  ;;                                       (derived-mode-p 'yaml-mode))
   ;;                                  (autoformat))))
 #+END_SRC
 
