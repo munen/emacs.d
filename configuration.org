@@ -1105,17 +1105,16 @@ npm install -g prettier-eslint-cli prettier=
     (let ((eslint-path (concat (projectile-project-root)
                                ".eslintrc.json")))
       (autoformat-with
-       (cond
-        ((derived-mode-p 'web-mode) 'html)
-        ((derived-mode-p 'css-mode) 'css)
-        ((derived-mode-p 'json-mode) 'json)
-        ((derived-mode-p 'sass-mode) 'sass)
-        ((derived-mode-p 'yaml-mode) 'yaml)
-        ;; JS projects with eslint config
-        ((and (file-exists-p eslint-path)
-              (derived-mode-p 'js2-mode))
-         'eslint)
-        ((derived-mode-p 'js2-mode) 'javascript)))))
+       (cond ((derived-mode-p 'web-mode) 'autoformat-html-command)
+             ((derived-mode-p 'css-mode) 'autoformat-css-command)
+             ((derived-mode-p 'json-mode) 'autoformat-json-command)
+             ((derived-mode-p 'sass-mode) 'autoformat-sass-command)
+             ((derived-mode-p 'yaml-mode) 'autoformat-yaml-command)
+             ;; JS projects with eslint config
+             ((and (file-exists-p eslint-path)
+                   (derived-mode-p 'js2-mode))
+              'autoformat-prettier-eslint-command)
+             ((derived-mode-p 'js2-mode) 'autoformat-javascript-command)))))
 
   (defun autoformat-with (strategy)
     "Automatically format current buffer using STRATEGY."
@@ -1127,12 +1126,7 @@ npm install -g prettier-eslint-cli prettier=
         ;; buffer
         (shell-command-on-region
          (point-min) (point-max)
-         (cond ((eq strategy 'eslint) (autoformat-prettier-eslint-command))
-               ((eq strategy 'html) (autoformat-html-command))
-               ((eq strategy 'css) (autoformat-css-command))
-               ((eq strategy 'sass) (autoformat-sass-command))
-               ((eq strategy 'json) (autoformat-json-command))
-               ((eq strategy 'javascript) (autoformat-javascript-command)))
+         (funcall strategy)
          ;; Write into a temporary buffer
          (get-buffer-create "*Temp prettier buffer*")
          ;; Replace the current buffer with the output of
@@ -1162,6 +1156,10 @@ npm install -g prettier-eslint-cli prettier=
   (defun autoformat-json-command ()
     "CLI tool to format JSON."
     "prettier --stdin --parser json")
+
+  (defun autoformat-yaml-command ()
+    "CLI tool to format YAML."
+    "prettier --stdin --parser yaml")
 
   (defun autoformat-prettier-eslint-command ()
     "CLI tool to format Javascript with .eslintrc.json configuration."
@@ -1540,6 +1538,12 @@ up, type the text, end the session with =C-c C-c=.
 
 Note: I opened a [[https://github.com/alpha22jp/atomic-chrome/pull/40][PR against AtomicChrome]] which will make the
 safe-guard obsolete.
+
+*Default mode*
+
+#+BEGIN_SRC emacs-lisp
+(setq atomic-chrome-default-major-mode 'markdown-mode)
+#+END_SRC
 
 * Misc Custom Improvements
 
