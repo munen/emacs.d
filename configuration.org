@@ -2363,6 +2363,13 @@ machine irc.freenode.net login "munen" password SECRET_PASSWORD
   (setq erc-autojoin-channels-alist '(("freenode.net" "#200ok" "#erc" "#guix")))
 #+END_SRC
 
+*Configure 
+
+#+BEGIN_SRC emacs-lisp
+  (setq erc-channel-hide-list '(("#erc" "JOIN" "PART" "QUIT")
+                               ("#emacs" "JOIN" "PART" "QUIT")))
+#+END_SRC
+
 *Automatically unfold images when links are shared*
 
 #+BEGIN_SRC emacs-lisp
@@ -2381,8 +2388,8 @@ machine irc.freenode.net login "munen" password SECRET_PASSWORD
 *Notify when someone is addressing me*
 
 #+BEGIN_SRC emacs-lisp
+  (setq erc-pals '("phi|" "branch14")) 
   (add-hook 'erc-text-matched-hook '(lambda(match-type nickuserhost msg)
-                                      (message msg)
                                       (shell-command-to-string (format "notify-send erc '%s'" msg))))
 #+END_SRC
 
