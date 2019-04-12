@@ -475,6 +475,13 @@ This results in the same feature-set like this vim keybinding:
   (add-hook 'cider-mode-hook 'which-key-mode)
 #+END_SRC
 
+Use =which-key= to show VIM shortcuts, too.
+
+#+BEGIN_SRC emacs-lisp
+(setq which-key-allow-evil-operators t)
+(setq which-key-show-operator-state-maps t)
+#+END_SRC
+
 * Programming
 ** General
 *** Auto Complete
