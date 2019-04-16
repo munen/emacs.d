@@ -740,6 +740,59 @@ A collection of Clojure refactoring functions for Emacs.
 =clj-refactor= enables refactorings like extracting functions (=C-c
 C-m ef=). Find the list of available refactorings [[https://github.com/clojure-emacs/clj-refactor.el/wiki][here]].
 
+
+
+*** Customizations
+
+**** Integrant based applications
+
+[[https://github.com/weavejester/integrant][Integrant]] configures, starts and manages a =system= and exposes a
+lifecycle for it.
+
+For REPL-driven development this adds one layer of indirection: When
+starting a service through =lein run= (or bundled in a Docker
+container), the =system= will already be started by Integrant. Without
+having a ref to this =system=, we cannot stop it, we can only start
+new systems. This means that reloading the code will only start new
+systems, but not be able to halt the old one. The internal code from
+Integrant relies on spawning a thread after initializing a system
+through =lein run= and will not return until the process is done.
+Therefore we cannot retrieve the system when running =lein run=.
+
+When Emacs has a connection to a REPL for an Integrant based
+application, this snippet actually enables reloading of front and
+back-ends. The code doesn't use cider internal functions for
+interacting with the REPL, because not all buffers might be connected
+(for example the CLJS buffers might not have a dedicated REPL
+themselves). Instead, it uses common Elisp.
+
+#+BEGIN_SRC emacs-lisp
+  (defun ok-cider-reload-integrant ()
+    (interactive)
+    (require 'seq)
+    (save-buffer)
+    (let ((cider-buffer (first (seq-filter '(lambda (buf)
+                           (string-match "cider-repl" buf))
+                                           (mapcar 'buffer-name (buffer-list))))))
+      (if cider-buffer
+          (progn
+            (switch-to-buffer cider-buffer)
+            (insert "(in-ns 'dev)(integrant.repl/reset)")
+            (cider-repl-return)
+            (switch-to-buffer (other-buffer)))
+        (message "No Cider buffer!"))))
+
+  (define-key
+    clojure-mode-map
+    (kbd "C-c r")
+    'ok-cider-reload-integrant)
+#+END_SRC
+
+*Usage*
+
+When you want to reload the =system=, use =C-c r=. It will save your
+current buffer and reload the =system=.
+
 ** JavaScript
 
 *** =js2-mode= and =tern=
