@@ -2423,7 +2423,7 @@ machine irc.freenode.net login "munen" password SECRET_PASSWORD
   (setq erc-autojoin-channels-alist '(("freenode.net" "#200ok" "#erc" "#guix")))
 #+END_SRC
 
-*Configure 
+*Configure
 
 #+BEGIN_SRC emacs-lisp
   (setq erc-channel-hide-list '(("#erc" "JOIN" "PART" "QUIT")
@@ -2448,7 +2448,7 @@ machine irc.freenode.net login "munen" password SECRET_PASSWORD
 *Notify when someone is addressing me*
 
 #+BEGIN_SRC emacs-lisp
-  (setq erc-pals '("phi|" "branch14")) 
+  (setq erc-pals '("phi|" "branch14"))
   (add-hook 'erc-text-matched-hook '(lambda(match-type nickuserhost msg)
                                       (shell-command-to-string (format "notify-send erc '%s'" msg))))
 #+END_SRC
@@ -2793,3 +2793,7 @@ When evaluating the src-block above, it'll yield a table like:
 #+BEGIN_SRC emacs-lisp
 (load-file "~/src/200ok/200ok-admin/src/export-org-estimations/ok-export-org-estimations.el")
 #+END_SRC
+
+* Other good Emacs configurations
+
+- A business partners (Sir Pascal) configuration: https://github.com/SirPscl/emacs.d
