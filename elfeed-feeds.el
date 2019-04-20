@@ -13,6 +13,7 @@
         ("http://blog.cognitect.com/cognicast-transcripts?format=RSS" clojure)
         ("https://blog.panter.ch/feed.xml" rails)
         ("http://planet.emacsen.org/atom.xml" emacs)
+        ("https://purelyfunctional.tv/feed/normal-feed" clojure)
         ("http://irreal.org/blog/?feed=rss2" emacs)
         ("https://emacsair.me/feed.xml" emacs)
         ("http://200ok.ch/atom.xml" 200ok)))
