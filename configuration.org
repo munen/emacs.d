@@ -1412,22 +1412,31 @@ Org Capture Templates are explained [[http://orgmode.org/manual/Capture-template
   (defun get-domainname (address)
     "Extract TLD (without country) from ADDRESS.
   Example: Return '200ok' from 'alain@200ok.ch'."
+    (replace-regexp-in-string
+     "\-" "_"
+     (nth 0
+          (split-string (nth 1 (split-string address "@"))
+                        "\\."))))
+
+  (defun from-name (fromname fromaddress from)
+    "Return the first non-empty match for FROMNAME FROMADDRESS and FROM."
     (nth 0
-         (split-string (nth 1 (split-string address "@"))
-                       "\\.")))
+         (seq-filter '(lambda (s)
+                        (not (string-empty-p s)))
+                     (list fromname fromaddress from))))
 
   (setq org-capture-templates
         '(("t" "Todo" entry (file+headline inbox-file "Tasks")
            "* TODO %?\n  %U\n  %i\n  %a")
           ("m" "Mail" entry (file+olp inbox-file "Mails")
-           ;; Creates "* TODO <2019-05-01 Wed> [[mu4e:msgid:uuid][MessageSubject]] :200ok:
+           ;; Creates "* TODO <2019-05-01 Wed> FromName [[mu4e:msgid:uuid][MessageSubject]] :200ok:
            ;; Therefore Emails can be properly:
            ;;   - Used as tasks
            ;;   - Attributed tags
            ;;   - Ordered by priority
            ;;   - Scheduled
            ;;   - etc
-           "* TODO %(org-insert-time-stamp (org-read-date nil t \"+0d\")) %a \t :%(get-domainname \"%:toaddress\"):")
+           "* TODO %(org-insert-time-stamp (org-read-date nil t \"+0d\")) %(from-name \"%:fromname\" \"%:fromaddress\" \"%:from\") %a \t :%(get-domainname \"%:toaddress\"):")
           ("s" "Code Snippet" entry (file+headline "~/src/200ok/knowledge/README.org" "Snippets")
            ;; Prompt for tag and language
            "* %?\t%^g\n#+BEGIN_SRC %^{language}\n%i\n#+END_SRC")
