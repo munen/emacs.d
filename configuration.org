@@ -2085,6 +2085,9 @@ Configure =xdg-open= to use Emacs in =.local/share/applications/mimeapps.list=:
    ;; for searches
    (defvar d-spam "NOT (maildir:/dispatched/INBOX.spambucket OR maildir:/zen-tempel/INBOX.spambucket OR maildir:/200ok/INBOX.spambucket OR maildir:/zhaw/\"Junk E-Mail\" OR maildir:/zhaw/\"Deleted Items\")")
 
+   ;; All archived folders
+   (defvar d-archive "NOT (maildir:/dispatched/INBOX.Archive OR maildir:/zen-tempel/INBOX.Archive OR maildir:/200ok/INBOX.Archive OR maildir:/zhaw/Archive)")
+
    (defvar inbox-folders (string-join '("maildir:/dispatched/INBOX"
                                         "maildir:/zhaw/INBOX"
                                         "maildir:/zen-tempel/INBOX"
@@ -2118,7 +2121,7 @@ Configure =xdg-open= to use Emacs in =.local/share/applications/mimeapps.list=:
    (add-to-list 'mu4e-bookmarks
                 '(inbox-folders "All inbox mails"     ?i))
    (add-to-list 'mu4e-bookmarks
-                '((concat d-spam " AND (flag:unread OR flag:flagged) AND NOT flag:trashed")
+                '((concat d-spam d-archive " AND (flag:unread OR flag:flagged) AND NOT flag:trashed")
                   "Unread messages"      ?u))
 
 
