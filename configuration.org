@@ -1405,9 +1405,29 @@ Org Capture Templates are explained [[http://orgmode.org/manual/Capture-template
   (setq org-default-notes-file (concat org-directory "inbox.org"))
   (define-key global-map "\C-cc" 'org-capture)
 
+  ;; This var needs to be defined before setting up the
+  ;; org-capture-template since Emacs 26.1 - tbh I don't know why.
+  (setq inbox-file (expand-file-name "inbox.org" org-directory))
+
+  (defun get-domainname (address)
+    "Extract TLD (without country) from ADDRESS.
+  Example: Return '200ok' from 'alain@200ok.ch'."
+    (nth 0
+         (split-string (nth 1 (split-string address "@"))
+                       "\\.")))
+
   (setq org-capture-templates
-        '(("t" "Todo" entry (file+headline (concat org-directory "inbox.org") "Tasks")
+        '(("t" "Todo" entry (file+headline inbox-file "Tasks")
            "* TODO %?\n  %U\n  %i\n  %a")
+          ("m" "Mail" entry (file+olp inbox-file "Mails")
+           ;; Creates "* TODO <2019-05-01 Wed> [[mu4e:msgid:uuid][MessageSubject]] :200ok:
+           ;; Therefore Emails can be properly:
+           ;;   - Used as tasks
+           ;;   - Attributed tags
+           ;;   - Ordered by priority
+           ;;   - Scheduled
+           ;;   - etc
+           "* TODO %(org-insert-time-stamp (org-read-date nil t \"+0d\")) %a \t :%(get-domainname \"%:toaddress\"):")
           ("s" "Code Snippet" entry (file+headline "~/src/200ok/knowledge/README.org" "Snippets")
            ;; Prompt for tag and language
            "* %?\t%^g\n#+BEGIN_SRC %^{language}\n%i\n#+END_SRC")
@@ -1415,8 +1435,6 @@ Org Capture Templates are explained [[http://orgmode.org/manual/Capture-template
            (file+headline (concat org-directory "things.org") "Shopping")
            ;; Prompt for tag and language
            "* TODO %?\n  %U\n")
-
-
           ("p" "password" entry (file+headline "~/switchdrive/org/vault/primary.org.gpg" "Passwords")
            ;; Prompt for name
            "* %^{name}
@@ -1426,12 +1444,9 @@ Org Capture Templates are explained [[http://orgmode.org/manual/Capture-template
    :url: %^{url}
 
    :END:")
-
-
-          ("m" "Media" entry
+          ("u" "URL" entry
            (file+datetree (concat org-directory "media.org"))
            "* %?\nURL: \nEntered on %U\n")))
-
 #+END_SRC
 
 ** Pomodoro
@@ -1905,351 +1920,357 @@ Configure =xdg-open= to use Emacs in =.local/share/applications/mimeapps.list=:
     xdg-mime default emacs.desktop application/pdf
 #+END_EXAMPLE
 
-** Configuration
+*** Configuration
 
-Accounts setup
+ Accounts setup
 
-#+BEGIN_SRC emacs-lisp
+ #+BEGIN_SRC emacs-lisp
 
-  (require 'mu4e)
+   (require 'mu4e)
 
-  (require 'org-mu4e)
+   (require 'org-mu4e)
 
-  (setq send-mail-function 'smtpmail-send-it)
+   (setq send-mail-function 'smtpmail-send-it)
 
-  ;; Default account on startup
-  (setq user-full-name  "Alain M. Lafon"
-        mu4e-sent-folder "/200ok/INBOX.Sent"
-        mu4e-drafts-folder "/200ok/INBOX.Drafts"
-        mu4e-trash-folder "/200ok/INBOX.Trash")
+   ;; Default account on startup
+   (setq user-full-name  "Alain M. Lafon"
+         mu4e-sent-folder "/200ok/INBOX.Sent"
+         mu4e-drafts-folder "/200ok/INBOX.Drafts"
+         mu4e-trash-folder "/200ok/INBOX.Trash")
 
-  (setq smtpmail-debug-info t
-        message-kill-buffer-on-exit t
-        ;; Custom script to run offlineimap in parallel for multiple
-        ;; accounts as discussed here:
-        ;; http://www.offlineimap.org/configuration/2016/01/29/why-i-m-not-using-maxconnctions.html
-        ;; This halves the time for checking mails for 4 accounts for me
-        ;; (when nothing has to be synched anyway)
-        mu4e-get-mail-command "offlineimap_parallel.sh"
-        mu4e-attachment-dir "~/switchdrive/org/files/inbox")
+   (setq smtpmail-debug-info t
+         message-kill-buffer-on-exit t
+         ;; Custom script to run offlineimap in parallel for multiple
+         ;; accounts as discussed here:
+         ;; http://www.offlineimap.org/configuration/2016/01/29/why-i-m-not-using-maxconnctions.html
+         ;; This halves the time for checking mails for 4 accounts for me
+         ;; (when nothing has to be synched anyway)
+         mu4e-get-mail-command "offlineimap_parallel.sh"
+         mu4e-attachment-dir "~/switchdrive/org/files/inbox")
 
-  (setq mu4e-maildir "~/Maildir/")
+   (setq mu4e-maildir "~/Maildir/")
 
-  ;; show full addresses in view message (instead of just names)
-  ;; toggle per name with M-RET
-  (setq mu4e-view-show-addresses t)
+   ;; show full addresses in view message (instead of just names)
+   ;; toggle per name with M-RET
+   (setq mu4e-view-show-addresses t)
 
-  ;; Do not show related messages by default (toggle with =W= works
-  ;; anyway)
-  (setq mu4e-headers-include-related nil)
+   ;; Do not show related messages by default (toggle with =W= works
+   ;; anyway)
+   (setq mu4e-headers-include-related nil)
 
-  ;; Alternatives are the following, however in first tests they
-  ;; show inferior results
-  ;; (setq mu4e-html2text-command "textutil -stdin -format html -convert txt -stdout")
-  ;; (setq mu4e-html2text-command "html2text -utf8 -width 72")
-  ;; (setq mu4e-html2text-command "w3m -dump -T text/html")
+   ;; Alternatives are the following, however in first tests they
+   ;; show inferior results
+   ;; (setq mu4e-html2text-command "textutil -stdin -format html -convert txt -stdout")
+   ;; (setq mu4e-html2text-command "html2text -utf8 -width 72")
+   ;; (setq mu4e-html2text-command "w3m -dump -T text/html")
 
-  (defvar my-mu4e-account-alist
-    '(("200ok"
-       (user-full-name  "Alain M. Lafon")
-       (mu4e-compose-signature "200ok GmbH\nGeschäftsführer\n\nalain@200ok.ch\n+41 76 405 05 67\nhttps://200ok.ch/\n\nCheck out our newest spin-off: https://quickshift.ch/")
-       (mu4e-compose-signature-auto-include t)
-       (mu4e-sent-folder "/200ok/INBOX.Sent")
-       (mu4e-drafts-folder "/200ok/INBOX.Drafts")
-       (mu4e-trash-folder "/200ok/INBOX.Trash")
-       (user-mail-address "alain@200ok.ch")
-       (smtpmail-default-smtp-server "mail.your-server.de")
-       (smtpmail-local-domain "200ok.ch")
-       (smtpmail-smtp-user "munen@200ok.ch")
-       (smtpmail-smtp-server "mail.your-server.de")
-       (smtpmail-stream-type starttls)
-       (smtpmail-smtp-service 25))
-      ("zhaw"
-       (mu4e-compose-signature-auto-include nil)
-       (user-full-name  "Alain M. Lafon")
-       (mu4e-sent-folder "/zhaw/Sent Items")
-       (mu4e-drafts-folder "/zhaw/Drafts")
-       (mu4e-trash-folder "/zhaw/Deleted Items")
-       (user-mail-address "lafo@zhaw.ch")
-       (smtpmail-default-smtp-server "smtps.zhaw.ch")
-       (smtpmail-smtp-server "smtps.zhaw.ch")
-       (smtpmail-local-domain "zhaw.ch")
-       (smtpmail-smtp-user "lafo@zhaw.ch")
-       (smtpmail-stream-type starttls)
-       (smtpmail-smtp-service 587))
-      ("zen-tempel"
-       (user-full-name  "Zen Mönch Alain M. Lafon")
-       (mu4e-compose-signature "Insopor Zen Akademie\nZen Mönch\n\nalain@zen-tempel.ch\n+41 76 405 05 67\n\nhttps://zen-temple.net/")
-       (mu4e-compose-signature-auto-include t)
-       (mu4e-sent-folder "/zen-tempel/INBOX.Sent")
-       (mu4e-drafts-folder "/zen-tempel/INBOX.Drafts")
-       (mu4e-trash-folder "/zen-tempel/INBOX.Trash")
-       (user-mail-address "alain@zen-tempel.ch")
-       (smtpmail-default-smtp-server "mail.your-server.de")
-       (smtpmail-local-domain "zen-tempel.ch")
-       (smtpmail-smtp-user "alain@zen-tempel.ch")
-       (smtpmail-smtp-server "mail.your-server.de")
-       (smtpmail-stream-type starttls)
-       (smtpmail-smtp-service 25))
-      ("dispatched"
-       (user-full-name  "Alain M. Lafon")
-       (mu4e-compose-signature-auto-include nil)
-       (mu4e-sent-folder "/dispatched/INBOX.Sent")
-       (mu4e-drafts-folder "/dispatched/INBOX.Drafts")
-       (mu4e-trash-folder "/dispatched/INBOX.Trash")
-       (user-mail-address "alain.lafon@dispatched.ch")
-       (smtpmail-default-smtp-server "mail.your-server.de")
-       (smtpmail-local-domain "dispatched.ch")
-       (smtpmail-smtp-user "munen@dispatched.ch")
-       (smtpmail-smtp-server "mail.your-server.de")
-       (smtpmail-stream-type starttls)
-       (smtpmail-smtp-service 25))))
+   (defvar my-mu4e-account-alist
+     '(("200ok"
+        (user-full-name  "Alain M. Lafon")
+        (mu4e-compose-signature "200ok GmbH\nGeschäftsführer\n\nalain@200ok.ch\n+41 76 405 05 67\nhttps://200ok.ch/\n\nCheck out our newest spin-off: https://quickshift.ch/")
+        (mu4e-compose-signature-auto-include t)
+        (mu4e-sent-folder "/200ok/INBOX.Sent")
+        (mu4e-drafts-folder "/200ok/INBOX.Drafts")
+        (mu4e-trash-folder "/200ok/INBOX.Trash")
+        (user-mail-address "alain@200ok.ch")
+        (smtpmail-default-smtp-server "mail.your-server.de")
+        (smtpmail-local-domain "200ok.ch")
+        (smtpmail-smtp-user "munen@200ok.ch")
+        (smtpmail-smtp-server "mail.your-server.de")
+        (smtpmail-stream-type starttls)
+        (smtpmail-smtp-service 25))
+       ("zhaw"
+        (mu4e-compose-signature-auto-include nil)
+        (user-full-name  "Alain M. Lafon")
+        (mu4e-sent-folder "/zhaw/Sent Items")
+        (mu4e-drafts-folder "/zhaw/Drafts")
+        (mu4e-trash-folder "/zhaw/Deleted Items")
+        (user-mail-address "lafo@zhaw.ch")
+        (smtpmail-default-smtp-server "smtps.zhaw.ch")
+        (smtpmail-smtp-server "smtps.zhaw.ch")
+        (smtpmail-local-domain "zhaw.ch")
+        (smtpmail-smtp-user "lafo@zhaw.ch")
+        (smtpmail-stream-type starttls)
+        (smtpmail-smtp-service 587))
+       ("zen-tempel"
+        (user-full-name  "Zen Mönch Alain M. Lafon")
+        (mu4e-compose-signature "Insopor Zen Akademie\nZen Mönch\n\nalain@zen-tempel.ch\n+41 76 405 05 67\n\nhttps://zen-temple.net/")
+        (mu4e-compose-signature-auto-include t)
+        (mu4e-sent-folder "/zen-tempel/INBOX.Sent")
+        (mu4e-drafts-folder "/zen-tempel/INBOX.Drafts")
+        (mu4e-trash-folder "/zen-tempel/INBOX.Trash")
+        (user-mail-address "alain@zen-tempel.ch")
+        (smtpmail-default-smtp-server "mail.your-server.de")
+        (smtpmail-local-domain "zen-tempel.ch")
+        (smtpmail-smtp-user "alain@zen-tempel.ch")
+        (smtpmail-smtp-server "mail.your-server.de")
+        (smtpmail-stream-type starttls)
+        (smtpmail-smtp-service 25))
+       ("dispatched"
+        (user-full-name  "Alain M. Lafon")
+        (mu4e-compose-signature-auto-include nil)
+        (mu4e-sent-folder "/dispatched/INBOX.Sent")
+        (mu4e-drafts-folder "/dispatched/INBOX.Drafts")
+        (mu4e-trash-folder "/dispatched/INBOX.Trash")
+        (user-mail-address "alain.lafon@dispatched.ch")
+        (smtpmail-default-smtp-server "mail.your-server.de")
+        (smtpmail-local-domain "dispatched.ch")
+        (smtpmail-smtp-user "munen@dispatched.ch")
+        (smtpmail-smtp-server "mail.your-server.de")
+        (smtpmail-stream-type starttls)
+        (smtpmail-smtp-service 25))))
 
-  ;; Whenever a new mail is to be composed, change all relevant
-  ;; configuration variables to the respective account. This method is
-  ;; taken from the MU4E documentation:
-  ;; http://www.djcbsoftware.nl/code/mu/mu4e/Multiple-accounts.html#Multiple-accounts
-  (defun my-mu4e-set-account ()
-    "Set the account for composing a message."
-    (let* ((account
-            (if mu4e-compose-parent-message
-                (let ((maildir (mu4e-message-field mu4e-compose-parent-message :maildir)))
-                  (string-match "/\\(.*?\\)/" maildir)
-                  (match-string 1 maildir))
-              (completing-read (format "Compose with account: (%s) "
-                                       (mapconcat #'(lambda (var) (car var))
-                                                  my-mu4e-account-alist "/"))
-                               (mapcar #'(lambda (var) (car var)) my-mu4e-account-alist)
-                               nil t nil nil (caar my-mu4e-account-alist))))
-           (account-vars (cdr (assoc account my-mu4e-account-alist))))
-      (if account-vars
-          (mapc #'(lambda (var)
-                    (set (car var) (cadr var)))
-                account-vars)
-        (error "No email account found"))))
-
-
-  (add-hook 'mu4e-compose-pre-hook 'my-mu4e-set-account)
-  (add-hook 'mu4e-compose-mode-hook 'flyspell-mode)
-  (add-hook 'mu4e-compose-mode-hook (lambda ()
-                                     (ispell-change-dictionary "deutsch")))
+   ;; Whenever a new mail is to be composed, change all relevant
+   ;; configuration variables to the respective account. This method is
+   ;; taken from the MU4E documentation:
+   ;; http://www.djcbsoftware.nl/code/mu/mu4e/Multiple-accounts.html#Multiple-accounts
+   (defun my-mu4e-set-account ()
+     "Set the account for composing a message."
+     (let* ((account
+             (if mu4e-compose-parent-message
+                 (let ((maildir (mu4e-message-field mu4e-compose-parent-message :maildir)))
+                   (string-match "/\\(.*?\\)/" maildir)
+                   (match-string 1 maildir))
+               (completing-read (format "Compose with account: (%s) "
+                                        (mapconcat #'(lambda (var) (car var))
+                                                   my-mu4e-account-alist "/"))
+                                (mapcar #'(lambda (var) (car var)) my-mu4e-account-alist)
+                                nil t nil nil (caar my-mu4e-account-alist))))
+            (account-vars (cdr (assoc account my-mu4e-account-alist))))
+       (if account-vars
+           (mapc #'(lambda (var)
+                     (set (car var) (cadr var)))
+                 account-vars)
+         (error "No email account found"))))
 
 
-  (setq mu4e-refile-folder
-        (lambda (msg)
-          (cond
-           ((string-match "^/dispatched.*"
-                          (mu4e-message-field msg :maildir))
-            "/dispatched/INBOX.Archive")
-           ((string-match "^/zen-tempel.*"
-                          (mu4e-message-field msg :maildir))
-            "/zen-tempel/INBOX.Archive")
-           ((string-match "^/200ok.*"
-                          (mu4e-message-field msg :maildir))
-            "/200ok/INBOX.Archive")
-           ((string-match "^/zhaw.*"
-                          (mu4e-message-field msg :maildir))
-            "/zhaw/Archive")
-           ;; everything else goes to /archive
-           (t  "/archive"))))
+   (add-hook 'mu4e-compose-pre-hook 'my-mu4e-set-account)
+   (add-hook 'mu4e-compose-mode-hook 'flyspell-mode)
+   (add-hook 'mu4e-compose-mode-hook (lambda ()
+                                      (ispell-change-dictionary "deutsch")))
 
 
-  ;; Empty the initial bookmark list
-  (setq mu4e-bookmarks '())
+   (setq mu4e-refile-folder
+         (lambda (msg)
+           (cond
+            ((string-match "^/dispatched.*"
+                           (mu4e-message-field msg :maildir))
+             "/dispatched/INBOX.Archive")
+            ((string-match "^/zen-tempel.*"
+                           (mu4e-message-field msg :maildir))
+             "/zen-tempel/INBOX.Archive")
+            ((string-match "^/200ok.*"
+                           (mu4e-message-field msg :maildir))
+             "/200ok/INBOX.Archive")
+            ((string-match "^/zhaw.*"
+                           (mu4e-message-field msg :maildir))
+             "/zhaw/Archive")
+            ;; everything else goes to /archive
+            (t  "/archive"))))
 
-  ;; Re-define all standard bookmarks to not include the spam folders
-  ;; for searches
-  (defvar d-spam "NOT (maildir:/dispatched/INBOX.spambucket OR maildir:/zen-tempel/INBOX.spambucket OR maildir:/200ok/INBOX.spambucket OR maildir:/zhaw/\"Junk E-Mail\" OR maildir:/zhaw/\"Deleted Items\")")
 
-  (defvar inbox-folders (string-join '("maildir:/dispatched/INBOX"
-                                       "maildir:/zhaw/INBOX"
-                                       "maildir:/zen-tempel/INBOX"
-                                       "maildir:/200ok/INBOX")
+   ;; Empty the initial bookmark list
+   (setq mu4e-bookmarks '())
+
+   ;; Re-define all standard bookmarks to not include the spam folders
+   ;; for searches
+   (defvar d-spam "NOT (maildir:/dispatched/INBOX.spambucket OR maildir:/zen-tempel/INBOX.spambucket OR maildir:/200ok/INBOX.spambucket OR maildir:/zhaw/\"Junk E-Mail\" OR maildir:/zhaw/\"Deleted Items\")")
+
+   (defvar inbox-folders (string-join '("maildir:/dispatched/INBOX"
+                                        "maildir:/zhaw/INBOX"
+                                        "maildir:/zen-tempel/INBOX"
+                                        "maildir:/200ok/INBOX")
+                                      " OR "))
+
+   (defvar draft-folders (string-join '("maildir:/dispatched/INBOX.Drafts"
+                                        "maildir:/zhaw/INBOX.Drafts"
+                                        "maildir:/zen-tempel/INBOX.Drafts"
+                                        "maildir:/200ok/INBOX.Drafts")
+                                      " OR "))
+
+   (defvar spam-folders (string-join '("maildir:/dispatched/INBOX.spambucket"
+                                        "maildir:/zhaw/INBOX.spambucket"
+                                        "maildir:/zen-tempel/INBOX.spambucket"
+                                        "maildir:/200ok/INBOX.spambucket")
                                      " OR "))
 
-  (defvar draft-folders (string-join '("maildir:/dispatched/INBOX.Drafts"
-                                       "maildir:/zhaw/INBOX.Drafts"
-                                       "maildir:/zen-tempel/INBOX.Drafts"
-                                       "maildir:/200ok/INBOX.Drafts")
-                                     " OR "))
-
-  (defvar spam-folders (string-join '("maildir:/dispatched/INBOX.spambucket"
-                                       "maildir:/zhaw/INBOX.spambucket"
-                                       "maildir:/zen-tempel/INBOX.spambucket"
-                                       "maildir:/200ok/INBOX.spambucket")
-                                    " OR "))
-
-  (add-to-list 'mu4e-bookmarks
-               '((concat d-spam " AND date:today..now")                  "Today's messages"     ?t))
-  (add-to-list 'mu4e-bookmarks
-               '((concat d-spam " AND date:7d..now")                     "Last 7 days"          ?w))
-  (add-to-list 'mu4e-bookmarks
-               '((concat d-spam " AND flag:flagged")                     "Flagged"              ?f))
-  (add-to-list 'mu4e-bookmarks
-               '((concat d-spam " AND mime:image/*")                     "Messages with images" ?p))
-  (add-to-list 'mu4e-bookmarks
-               '(spam-folders "All spambuckets"     ?S))
-  (add-to-list 'mu4e-bookmarks
-               '(draft-folders "All drafts"     ?d))
-  (add-to-list 'mu4e-bookmarks
-               '(inbox-folders "All inbox mails"     ?i))
-  (add-to-list 'mu4e-bookmarks
-               '((concat d-spam " AND (flag:unread OR flag:flagged) AND NOT flag:trashed")
-                 "Unread messages"      ?u))
+   (add-to-list 'mu4e-bookmarks
+                '((concat d-spam " AND date:today..now")                  "Today's messages"     ?t))
+   (add-to-list 'mu4e-bookmarks
+                '((concat d-spam " AND date:7d..now")                     "Last 7 days"          ?w))
+   (add-to-list 'mu4e-bookmarks
+                '((concat d-spam " AND flag:flagged")                     "Flagged"              ?f))
+   (add-to-list 'mu4e-bookmarks
+                '((concat d-spam " AND mime:image/*")                     "Messages with images" ?p))
+   (add-to-list 'mu4e-bookmarks
+                '(spam-folders "All spambuckets"     ?S))
+   (add-to-list 'mu4e-bookmarks
+                '(draft-folders "All drafts"     ?d))
+   (add-to-list 'mu4e-bookmarks
+                '(inbox-folders "All inbox mails"     ?i))
+   (add-to-list 'mu4e-bookmarks
+                '((concat d-spam " AND (flag:unread OR flag:flagged) AND NOT flag:trashed")
+                  "Unread messages"      ?u))
 
 
-#+END_SRC
+ #+END_SRC
 
-Check for supposed attachments prior to sending them
+ Check for supposed attachments prior to sending them
 
-#+BEGIN_SRC emacs-lisp
-(defvar my-message-attachment-regexp "\\([Ww]e send\\|[Ii] send\\|attach\\|angehängt\\|[aA]nhang\\|angehaengt\\|haenge\\|hänge\\)")
-(defun my-message-check-attachment nil
-  "Check if there is an attachment in the message if I claim it."
-  (save-excursion
-    (message-goto-body)
-    (when (search-forward-regexp my-message-attachment-regexp nil t nil)
-      (message-goto-body)
-      (unless (or (search-forward "<#part" nil t nil)
-                  (message-y-or-n-p
-                   "No attachment. Send the message ?" nil nil))
-        (error "No message sent")))))
-(add-hook 'message-send-hook 'my-message-check-attachment)
-#+END_SRC
+ #+BEGIN_SRC emacs-lisp
+ (defvar my-message-attachment-regexp "\\([Ww]e send\\|[Ii] send\\|attach\\|angehängt\\|[aA]nhang\\|angehaengt\\|haenge\\|hänge\\)")
+ (defun my-message-check-attachment nil
+   "Check if there is an attachment in the message if I claim it."
+   (save-excursion
+     (message-goto-body)
+     (when (search-forward-regexp my-message-attachment-regexp nil t nil)
+       (message-goto-body)
+       (unless (or (search-forward "<#part" nil t nil)
+                   (message-y-or-n-p
+                    "No attachment. Send the message ?" nil nil))
+         (error "No message sent")))))
+ (add-hook 'message-send-hook 'my-message-check-attachment)
+ #+END_SRC
 
-For mail completion, only consider emails that have been seen in the
-last 6 months. This gets rid of legacy mail addresses of people.
+ For mail completion, only consider emails that have been seen in the
+ last 6 months. This gets rid of legacy mail addresses of people.
 
-#+BEGIN_SRC emacs-lisp
-  (setq mu4e-compose-complete-only-after (format-time-string
-                                          "%Y-%m-%d"
-                                          (time-subtract (current-time) (days-to-time 150))))
+ #+BEGIN_SRC emacs-lisp
+   (setq mu4e-compose-complete-only-after (format-time-string
+                                           "%Y-%m-%d"
+                                           (time-subtract (current-time) (days-to-time 150))))
 
 
-#+END_SRC
+ #+END_SRC
 
-HTML Mails
+ HTML Mails
 
-#+BEGIN_SRC emacs-lisp
-(require 'mu4e-contrib)
-(setq mu4e-html2text-command 'mu4e-shr2text)
-;;(setq mu4e-html2text-command "iconv -c -t utf-8 | pandoc -f html -t plain")
-(add-to-list 'mu4e-view-actions '("ViewInBrowser" . mu4e-action-view-in-browser) t)
+ #+BEGIN_SRC emacs-lisp
+ (require 'mu4e-contrib)
+ (setq mu4e-html2text-command 'mu4e-shr2text)
+ ;;(setq mu4e-html2text-command "iconv -c -t utf-8 | pandoc -f html -t plain")
+ (add-to-list 'mu4e-view-actions '("ViewInBrowser" . mu4e-action-view-in-browser) t)
 
-#+END_SRC
+ #+END_SRC
 
-Disable "HTML over plain text" heuristic. This variable officially has
-this rationale: "Ratio between the length of the html and the plain
-text part below which mu4e will consider the plain text part to be
-'This messages requires html' text bodies. You can neutralize it
-(always show the text version) by using `most-positive-fixnum'."
+ Disable "HTML over plain text" heuristic. This variable officially has
+ this rationale: "Ratio between the length of the html and the plain
+ text part below which mu4e will consider the plain text part to be
+ 'This messages requires html' text bodies. You can neutralize it
+ (always show the text version) by using `most-positive-fixnum'."
 
-This heuristic overwrites the default setting (and configuration) that
-Plain text should be preferred over HTML!
+ This heuristic overwrites the default setting (and configuration) that
+ Plain text should be preferred over HTML!
 
-In my experience, HTML Emails are _WAY_ longer than only 5x the Plain
-text (Doodle, Airbnb, Meetup, etc), so this will yield me a lot of
-false positives whereas I have never seen a "This message requires
-HTML" body.
+ In my experience, HTML Emails are _WAY_ longer than only 5x the Plain
+ text (Doodle, Airbnb, Meetup, etc), so this will yield me a lot of
+ false positives whereas I have never seen a "This message requires
+ HTML" body.
 
-I wrote an accompanying blog post with further information:
-https://200ok.ch/posts/2018-10-25_disable_mu4e_html_over_plain_text_heuristic.html
+ I wrote an accompanying blog post with further information:
+ https://200ok.ch/posts/2018-10-25_disable_mu4e_html_over_plain_text_heuristic.html
 
-#+BEGIN_SRC emacs-lisp
-(setq mu4e-view-html-plaintext-ratio-heuristic  most-positive-fixnum)
-#+END_SRC
+ #+BEGIN_SRC emacs-lisp
+ (setq mu4e-view-html-plaintext-ratio-heuristic  most-positive-fixnum)
+ #+END_SRC
 
-Setting =Format=Flowed= for non-text-based mail clients which don't
-respect actual formatting, but let the text "flow" as they please.
+ Setting =Format=Flowed= for non-text-based mail clients which don't
+ respect actual formatting, but let the text "flow" as they please.
 
-#+BEGIN_SRC emacs-lisp
-(setq mu4e-compose-format-flowed t)
-#+END_SRC
+ #+BEGIN_SRC emacs-lisp
+ (setq mu4e-compose-format-flowed t)
+ #+END_SRC
 
-Updating mails:
+ Updating mails:
 
-  - Periodic - every 15 minutes
-  - Happening in the background
+   - Periodic - every 15 minutes
+   - Happening in the background
 
-Note: There's no notifications, because that's only distracting.
+ Note: There's no notifications, because that's only distracting.
 
-#+BEGIN_SRC emacs-lisp
-(setq mu4e-update-interval (* 15 60))
-(setq mu4e-index-update-in-background t)
-#+END_SRC
+ #+BEGIN_SRC emacs-lisp
+ (setq mu4e-update-interval (* 15 60))
+ (setq mu4e-index-update-in-background t)
+ #+END_SRC
 
-GPG configuration:
+ GPG configuration:
 
-- =C-c C-e s= to sign
-- =C-c C-e e= to encrypt
-- =C-c C-e v= to verify the signature
-- =C-c C-e d= to decrypt
+ - =C-c C-e s= to sign
+ - =C-c C-e e= to encrypt
+ - =C-c C-e v= to verify the signature
+ - =C-c C-e d= to decrypt
 
-#+BEGIN_SRC emacs-lisp
+ #+BEGIN_SRC emacs-lisp
 
-(add-hook 'mu4e-compose-mode-hook 'epa-mail-mode)
-(add-hook 'mu4e-view-mode-hook 'epa-mail-mode)
+ (add-hook 'mu4e-compose-mode-hook 'epa-mail-mode)
+ (add-hook 'mu4e-view-mode-hook 'epa-mail-mode)
 
-#+END_SRC
+ #+END_SRC
 
-Automatic line breaks when reading mail
+ Automatic line breaks when reading mail
 
-#+BEGIN_SRC emacs-lisp
-(add-hook 'mu4e-view-mode-hook 'visual-line-mode)
-#+END_SRC
+ #+BEGIN_SRC emacs-lisp
+ (add-hook 'mu4e-view-mode-hook 'visual-line-mode)
+ #+END_SRC
 
-Do not reply to self
+ Do not reply to self
 
-#+BEGIN_SRC emacs-lisp
-  (setq mu4e-compose-dont-reply-to-self t)
+ #+BEGIN_SRC emacs-lisp
+   (setq mu4e-compose-dont-reply-to-self t)
 
-  (add-to-list 'mu4e-user-mail-address-list "alain@200ok.ch")
-  (add-to-list 'mu4e-user-mail-address-list "alain.lafon@dispatched.ch")
-  (add-to-list 'mu4e-user-mail-address-list "lafo@zhaw.ch")
-#+END_SRC
+   (add-to-list 'mu4e-user-mail-address-list "alain@200ok.ch")
+   (add-to-list 'mu4e-user-mail-address-list "alain.lafon@dispatched.ch")
+   (add-to-list 'mu4e-user-mail-address-list "lafo@zhaw.ch")
+ #+END_SRC
 
-*** TODO Use Quoted printable text for outgoing messages to enable automatic line breaks
-**** If this is successfull, send upstream PR to MU4E
-https://mathiasbynens.be/notes/gmail-plain-text
-https://mothereff.in/quoted-printable
-https://www.gnu.org/software/emacs/manual/html_node/emacs-mime/qp.html
+ Store link to message if in header view, not to header query.
 
-** Mail filtering
-   Add a header action "Block" which add the Senders Name and From
-   Address to a procmail blacklist.
-#+BEGIN_SRC emacs-lisp
-  (defun append-line-to-file (line path)
-    "Append a `line` to a file behind `path`"
-    (write-region (concat line "\n") nil path 'append))
+ #+BEGIN_SRC emacs-lisp
+   (setq org-mu4e-link-query-in-headers-mode nil)
+ #+END_SRC
 
-  (defun mu4e-blacklist-from (msg)
-    "Add the `from` of a message to the procmail blacklist"
-    (let* ((from (mu4e-message-field msg :from))
-           (from_name (car (car from)))
-           (from_address (cdr (car from))))
-      ;; Block the senders Name
-      (if from_name
-          (append-line-to-file from_name "~/.procmail/blacklist_from.txt"))
-      ;; Block the Email-Address
-      (append-line-to-file from_address "~/.procmail/blacklist_from.txt")
+**** TODO Use Quoted printable text for outgoing messages to enable automatic line breaks
+***** If this is successfull, send upstream PR to MU4E
+ https://mathiasbynens.be/notes/gmail-plain-text
+ https://mothereff.in/quoted-printable
+ https://www.gnu.org/software/emacs/manual/html_node/emacs-mime/qp.html
 
-      (message "Blocking: %s" from)))
+*** Mail filtering
+    Add a header action "Block" which add the Senders Name and From
+    Address to a procmail blacklist.
+ #+BEGIN_SRC emacs-lisp
+   (defun append-line-to-file (line path)
+     "Append a `line` to a file behind `path`"
+     (write-region (concat line "\n") nil path 'append))
 
-  (defun mu4e-blacklist-subject (msg)
-    "Add the `subject` of a message to the procmail blacklist"
-    (let* ((subject (mu4e-message-field msg :subject)))
-      (if subject
-          (append-line-to-file subject "~/.procmail/blacklist_subject.txt"))
+   (defun mu4e-blacklist-from (msg)
+     "Add the `from` of a message to the procmail blacklist"
+     (let* ((from (mu4e-message-field msg :from))
+            (from_name (car (car from)))
+            (from_address (cdr (car from))))
+       ;; Block the senders Name
+       (if from_name
+           (append-line-to-file from_name "~/.procmail/blacklist_from.txt"))
+       ;; Block the Email-Address
+       (append-line-to-file from_address "~/.procmail/blacklist_from.txt")
 
-      (message "Blocking: %s" subject)))
+       (message "Blocking: %s" from)))
 
-  (add-to-list 'mu4e-headers-actions
-    '("F Block 'From:'" . mu4e-blacklist-from) t)
+   (defun mu4e-blacklist-subject (msg)
+     "Add the `subject` of a message to the procmail blacklist"
+     (let* ((subject (mu4e-message-field msg :subject)))
+       (if subject
+           (append-line-to-file subject "~/.procmail/blacklist_subject.txt"))
 
-  (add-to-list 'mu4e-headers-actions
-    '("S Block 'Subject:'" . mu4e-blacklist-subject) t)
+       (message "Blocking: %s" subject)))
 
-#+END_SRC
+   (add-to-list 'mu4e-headers-actions
+     '("F Block 'From:'" . mu4e-blacklist-from) t)
+
+   (add-to-list 'mu4e-headers-actions
+     '("S Block 'Subject:'" . mu4e-blacklist-subject) t)
+
+ #+END_SRC
 * Search / Completion
 
 ** =ido=
