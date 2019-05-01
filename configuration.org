@@ -1436,7 +1436,7 @@ Org Capture Templates are explained [[http://orgmode.org/manual/Capture-template
            ;;   - Ordered by priority
            ;;   - Scheduled
            ;;   - etc
-           "* TODO %(org-insert-time-stamp (org-read-date nil t \"+0d\")) %(from-name \"%:fromname\" \"%:fromaddress\" \"%:from\") %a \t :%(get-domainname \"%:toaddress\"):")
+           "* TODO %(org-insert-time-stamp (org-read-date nil t \"%:date\")) %(from-name \"%:fromname\" \"%:fromaddress\" \"%:from\") %a \t :%(get-domainname \"%:toaddress\"):")
           ("s" "Code Snippet" entry (file+headline "~/src/200ok/knowledge/README.org" "Snippets")
            ;; Prompt for tag and language
            "* %?\t%^g\n#+BEGIN_SRC %^{language}\n%i\n#+END_SRC")
