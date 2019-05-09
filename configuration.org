@@ -1307,7 +1307,7 @@ Allow ‘a.’, ‘A.’, ‘a)’ and ‘A) as list elements:
   (org-babel-do-load-languages
    'org-babel-load-languages
    '(
-     (sh . t)
+     (shell . t)
      (js . t)
      (ruby . t)
      ))
