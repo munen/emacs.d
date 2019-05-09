@@ -1105,7 +1105,6 @@ Enable Projectile globally
 
 #+BEGIN_SRC emacs-lisp
   (projectile-mode +1)
-  (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
   (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
 #+END_SRC
 
@@ -1155,7 +1154,7 @@ other team members.
 This requires =prettier= and =prettier-eslint-cli= to be installed:
 
 #+BEGIN_EXAMPLE
-npm install -g prettier-eslint-cli prettier=
+npm install -g prettier-eslint-cli prettier
 #+END_EXAMPLE
 
 #+BEGIN_SRC emacs-lisp
@@ -1308,7 +1307,7 @@ Allow ‘a.’, ‘A.’, ‘a)’ and ‘A) as list elements:
   (org-babel-do-load-languages
    'org-babel-load-languages
    '(
-     (shell . t)
+     (sh . t)
      (js . t)
      (ruby . t)
      ))
