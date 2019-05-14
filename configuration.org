@@ -1151,10 +1151,11 @@ to =stdout=.
 This setup is completely local and doesn't impose dependencies to
 other team members.
 
-This requires =prettier= and =prettier-eslint-cli= to be installed:
+This requires =prettier=, =@prettier/plugin-ruby= and
+=prettier-eslint-cli= to be installed:
 
 #+BEGIN_EXAMPLE
-npm install -g prettier-eslint-cli prettier
+npm install -g prettier-eslint-cli prettier @prettier/plugin-ruby=
 #+END_EXAMPLE
 
 #+BEGIN_SRC emacs-lisp
@@ -1169,6 +1170,7 @@ npm install -g prettier-eslint-cli prettier
              ((derived-mode-p 'json-mode) 'autoformat-json-command)
              ((derived-mode-p 'sass-mode) 'autoformat-sass-command)
              ((derived-mode-p 'yaml-mode) 'autoformat-yaml-command)
+             ((derived-mode-p 'enh-ruby-mode) 'autoformat-ruby-command)
              ;; JS projects with eslint config
              ((and (file-exists-p eslint-path)
                    (derived-mode-p 'js2-mode))
@@ -1195,6 +1197,10 @@ npm install -g prettier-eslint-cli prettier
       ;; was lost, because the whole buffer got replaced.
       (set-window-start (selected-window) s)
       (goto-char p)))
+
+  (defun autoformat-ruby-command ()
+    "CLI tool to format Ruby."
+    "prettier --stdin --parser ruby")
 
   (defun autoformat-javascript-command ()
     "CLI tool to format Javascript."
@@ -1237,6 +1243,7 @@ npm install -g prettier-eslint-cli prettier
                   'css-mode
                   'json-mode
                   'sass-mode
+                  'enh-ruby-mode
                   'yaml-mode
                   'js2-mode))
 
