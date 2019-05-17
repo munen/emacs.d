@@ -1189,9 +1189,14 @@ npm install -g prettier-eslint-cli prettier @prettier/plugin-ruby=
          (point-min) (point-max)
          (funcall strategy)
          ;; Write into a temporary buffer
-         (get-buffer-create "*Temp prettier buffer*")
+         (get-buffer-create "*Temp autoformat buffer*")
          ;; Replace the current buffer with the output of
-         ;; prettier-eslint
+         ;; the =autoformat strategy= output
+         t
+         ;; If the =autoformat strategy= returns an error, show it in a
+         ;; separate error buffer
+         (get-buffer-create "*replace-errors*")
+         ;; Automatically show error buffer
          t))
       ;; Return to the previous point and scrolling position (the point
       ;; was lost, because the whole buffer got replaced.
