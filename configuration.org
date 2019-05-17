@@ -1873,6 +1873,40 @@ This is the converse function to the built-in =server-start=.
 #+END_SRC
 
 For example =(measure-time (prettier-eslint)=.
+** Sudo Save
+
+If the current buffer is not writable, ask if it should be saved with
+=sudo=.
+
+Happily taken from Pascals configuration: https://github.com/SirPscl/emacs.d#sudo-save
+
+#+BEGIN_SRC emacs-lisp
+  (defun ph/sudo-file-name (filename)
+    "Prepend '/sudo:root@localhost:' to FILENAME if appropriate.
+  This is, when it doesn't already have a sudo-prefix."
+    (if (not (or (string-prefix-p "/sudo:root@localhost:"
+                                  filename)
+                 (string-prefix-p (format "/sudo:root@%s:" system-name)
+                                  filename)))
+        (format "/sudo:root@localhost:%s" filename)
+      filename))
+
+  (defun ph/sudo-save-buffer ()
+    "Save FILENAME with sudo if the user approves."
+    (interactive)
+    (when buffer-file-name
+      (let ((file (ph/sudo-file-name buffer-file-name)))
+        (if (yes-or-no-p (format "Save file as %s ? " file))
+            (write-file file)))))
+
+  (advice-add 'save-buffer :around
+              '(lambda (fn &rest args)
+                 (when (or (not (buffer-file-name))
+                           (not (buffer-modified-p))
+                           (file-writable-p (buffer-file-name))
+                           (not (ph/sudo-save-buffer)))
+                   (call-interactively fn args))))
+#+END_SRC
 * Mail
 
 Writing and reading mail is inherently a text-based workflow. Yes,
