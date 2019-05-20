@@ -114,11 +114,14 @@ down in this file, some are used with the default configuration.
 ** Install packages
 
 #+BEGIN_SRC emacs-lisp
-  (dolist (p my-packages)
-    (unless (package-installed-p p)
-      (package-refresh-contents)
-      (package-install p))
-    (add-to-list 'package-selected-packages p))
+  (let ((package-list-refreshed-p nil))
+    (dolist (p my-packages)
+      (unless (package-installed-p p)
+        (unless package-list-refreshed-p
+          (package-refresh-contents)
+          (setq packge-list-refreshed-p t))
+        (package-install p))
+      (add-to-list 'package-selected-packages p)))
 #+END_SRC
 
 * Default Settings
