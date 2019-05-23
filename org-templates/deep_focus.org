@@ -1,0 +1,6 @@
+** PROJECT [#A] Deep focus
+  SCHEDULED: %(org-insert-time-stamp (current-time))
+
+  - [ ] %?
+  - [ ]
+  - [ ]

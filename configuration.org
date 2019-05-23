@@ -1416,9 +1416,8 @@ Org Capture Templates are explained [[http://orgmode.org/manual/Capture-template
   (setq org-default-notes-file (concat org-directory "inbox.org"))
   (define-key global-map "\C-cc" 'org-capture)
 
-  ;; This var needs to be defined before setting up the
-  ;; org-capture-template since Emacs 26.1 - tbh I don't know why.
   (setq inbox-file (expand-file-name "inbox.org" org-directory))
+  (setq things-file (expand-file-name "things.org" org-directory))
 
   (defun get-domainname (address)
     "Extract TLD (without country) from ADDRESS.
@@ -1448,13 +1447,11 @@ Org Capture Templates are explained [[http://orgmode.org/manual/Capture-template
            ;;   - Scheduled
            ;;   - etc
            "* TODO %(org-insert-time-stamp (org-read-date nil t \"%:date\")) %(from-name \"%:fromname\" \"%:fromaddress\" \"%:from\") %a \t :%(get-domainname \"%:toaddress\"):")
+          ("z" "Deep focus (Zen to Done [daily])" plain (file+olp things-file "NEXT")
+           (file "~/.emacs.d/org-templates/deep_focus.org"))
           ("s" "Code Snippet" entry (file+headline "~/src/200ok/knowledge/README.org" "Snippets")
            ;; Prompt for tag and language
            "* %?\t%^g\n#+BEGIN_SRC %^{language}\n%i\n#+END_SRC")
-          ("S" "Shopping Item" entry
-           (file+headline (concat org-directory "things.org") "Shopping")
-           ;; Prompt for tag and language
-           "* TODO %?\n  %U\n")
           ("p" "password" entry (file+headline "~/switchdrive/org/vault/primary.org.gpg" "Passwords")
            ;; Prompt for name
            "* %^{name}
