@@ -2871,4 +2871,15 @@ When evaluating the src-block above, it'll yield a table like:
 
 * Other good Emacs configurations
 
-- A business partners (Sir Pascal) configuration: https://github.com/SirPscl/emacs.d
+- A business partners configuration:
+  https://github.com/SirPscl/emacs.d
+
+* Modes to check out
+
+Modes I probably could use, but haven't tried out, yet.
+
+** =rspec-mode=
+
+Kudos SirPscl
+
+https://github.com/pezra/rspec-mode#usage
