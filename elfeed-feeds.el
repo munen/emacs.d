@@ -16,4 +16,6 @@
         ("https://purelyfunctional.tv/feed/normal-feed" clojure)
         ("http://irreal.org/blog/?feed=rss2" emacs)
         ("https://emacsair.me/feed.xml" emacs)
-        ("http://200ok.ch/atom.xml" 200ok)))
+        ("http://200ok.ch/atom.xml" 200ok)
+        ;; Art
+        ("https://katrinphyllis.tumblr.com/rss" katrin)))
