@@ -1361,9 +1361,9 @@ Allow ‘a.’, ‘A.’, ‘a)’ and ‘A) as list elements:
   ;; Allow =pdflatex= to use shell-commands
   ;; This will allow it to use =pygments= as syntax highlighter for exports to PDF
   (setq org-latex-pdf-process
-        '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-          "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-          "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+        '("xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+          "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+          "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
 
   ;; Include =minted= package for LaTeX exports
   (add-to-list 'org-latex-packages-alist '("" "minted"))
@@ -1552,7 +1552,7 @@ an inbox). Orgmode makes this easy with the refile command =C-c C-w=.
 
 Define where the refiling can happen (the default is to the local buffer):
 #+BEGIN_SRC emacs-lisp
-  (setq org-refile-targets (quote ((org-agenda-files :maxlevel . 3)))
+  (setq org-refile-targets (quote ((org-agenda-files :maxlevel . 3))))
 #+END_SRC
 * pdf-tools
 
@@ -2895,3 +2895,7 @@ Modes I probably could use, but haven't tried out, yet.
 Kudos SirPscl
 
 https://github.com/pezra/rspec-mode#usage
+
+** Increase selected region by semantic units
+
+ https://github.com/magnars/expand-region.el
