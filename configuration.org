@@ -1334,6 +1334,7 @@ Allow ‘a.’, ‘A.’, ‘a)’ and ‘A) as list elements:
     (setq org-agenda-files (list (concat org-directory "things.org")
                                  (concat org-directory "refile-beorg.org")
                                  (concat org-directory "inbox.org")
+                                 (concat org-directory "someday.org")
                                  (concat org-directory "reference.org")
                                  (concat "~/Dropbox/ZHAW/web3-unterlagen/README.org")
                                  (concat "~/Dropbox/ZHAW/weng-unterlagen/README.org")
@@ -1542,6 +1543,17 @@ compatability reasons with =ok-export-org-timetable=.
 (setq org-clock-into-drawer nil)
 #+END_SRC
 
+
+** Refile Targets
+
+For a proficient GTD workflow, it is important to be able to refile
+one item from one list easily to another (for example when processing
+an inbox). Orgmode makes this easy with the refile command =C-c C-w=.
+
+Define where the refiling can happen (the default is to the local buffer):
+#+BEGIN_SRC emacs-lisp
+  (setq org-refile-targets (quote ((org-agenda-files :maxlevel . 3)))
+#+END_SRC
 * pdf-tools
 
 https://github.com/politza/pdf-tools
