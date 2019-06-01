@@ -14,6 +14,7 @@
         ("https://blog.panter.ch/feed.xml" rails)
         ("http://planet.emacsen.org/atom.xml" emacs)
         ("https://purelyfunctional.tv/feed/normal-feed" clojure)
+        ("https://lambdaisland.com/feeds/blog.atom" clojure)
         ("http://irreal.org/blog/?feed=rss2" emacs)
         ("https://emacsair.me/feed.xml" emacs)
         ("http://200ok.ch/atom.xml" 200ok)
