@@ -1543,7 +1543,6 @@ compatability reasons with =ok-export-org-timetable=.
 (setq org-clock-into-drawer nil)
 #+END_SRC
 
-
 ** Refile Targets
 
 For a proficient GTD workflow, it is important to be able to refile
@@ -1553,6 +1552,23 @@ an inbox). Orgmode makes this easy with the refile command =C-c C-w=.
 Define where the refiling can happen (the default is to the local buffer):
 #+BEGIN_SRC emacs-lisp
   (setq org-refile-targets (quote ((org-agenda-files :maxlevel . 3))))
+#+END_SRC
+** Show "calendar week" in calendar
+
+#+BEGIN_SRC emacs-lisp
+  (setq calendar-week-start-day 1)
+
+  (setq calendar-intermonth-text
+        '(propertize
+          (format "%2d"
+                  (car
+                   (calendar-iso-from-absolute
+                    (calendar-absolute-from-gregorian (list month day year)))))
+          'font-lock-face 'font-lock-warning-face))
+
+  (setq calendar-intermonth-header
+        (propertize "CW"
+                    'font-lock-face 'font-lock-keyword-face))
 #+END_SRC
 * pdf-tools
 
