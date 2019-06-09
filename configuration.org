@@ -1336,6 +1336,7 @@ Allow ‘a.’, ‘A.’, ‘a)’ and ‘A) as list elements:
                                  (concat org-directory "inbox.org")
                                  (concat org-directory "someday.org")
                                  (concat org-directory "reference.org")
+                                 (concat org-directory "media.org")
                                  (concat "~/Dropbox/ZHAW/web3-unterlagen/README.org")
                                  (concat "~/Dropbox/ZHAW/weng-unterlagen/README.org")
                                  (concat "~/src/200ok/crowdfunding/TODO.org")
@@ -1419,6 +1420,7 @@ Org Capture Templates are explained [[http://orgmode.org/manual/Capture-template
 
   (setq inbox-file (expand-file-name "inbox.org" org-directory))
   (setq things-file (expand-file-name "things.org" org-directory))
+  (setq media-file (expand-file-name "media.org" org-directory))
 
   (defun get-domainname (address)
     "Extract TLD (without country) from ADDRESS.
@@ -1463,7 +1465,7 @@ Org Capture Templates are explained [[http://orgmode.org/manual/Capture-template
 
    :END:")
           ("u" "URL" entry
-           (file+datetree (concat org-directory "media.org"))
+           (file+datetree media-file)
            "* %?\nURL: \nEntered on %U\n")))
 #+END_SRC
 
