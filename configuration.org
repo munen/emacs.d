@@ -81,6 +81,7 @@ down in this file, some are used with the default configuration.
                         exec-path-from-shell
                         flycheck
                         flycheck-flow
+                        hide-mode-line
                         impatient-mode
                         ini-mode
                         ivy counsel swiper
@@ -2558,7 +2559,8 @@ machine irc.freenode.net login "munen" password SECRET_PASSWORD
                                       (shell-command-to-string (format "notify-send erc '%s'" msg))))
 #+END_SRC
 
-* Powerline
+* Modeline
+** Powerline
 
 https://github.com/milkypostman/powerline
 
@@ -2568,6 +2570,21 @@ Emacs version of the Vim powerline.
 (require 'powerline)
 (powerline-center-evil-theme)
 #+END_SRC
+
+** =hide-mode-line=
+
+https://github.com/hlissner/emacs-hide-mode-line
+
+ A minor mode that hides (or masks) the mode-line in your current
+ buffer. It can be used to toggle an alternative mode-line, toggle its
+ visibility, or simply disable the mode-line in buffers where it isn't
+ very useful otherwise.
+
+ #+BEGIN_SRC emacs-lisp
+   (require 'hide-mode-line)
+
+   (add-hook 'pdf-view-mode-hook #'hide-mode-line-mode)
+ #+END_SRC
 
 * Write Quality
 
