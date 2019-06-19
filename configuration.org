@@ -101,8 +101,7 @@ down in this file, some are used with the default configuration.
                         sass-mode
                         smex
                         synosaurus
-                        tern
-                        tern-auto-complete
+                        tide
                         visual-fill-column
                         web-mode
                         which-key
@@ -796,89 +795,66 @@ current buffer and reload the =system=.
 
 ** JavaScript
 
-*** =js2-mode= and =tern=
+*** =tide-mode=
 
-JavaScript is improved with =js2-mode= as well as
-[[http://ternjs.net/][Tern]].
+https://github.com/ananthakumaran/tide
 
-Tern is a stand-alone code-analysis engine for JavaScript used for:
+Claim: TypeScript Interactive Development Environment for Emacs.
+However, also JavaScript development gets big improvements with
+=tide-mode=.
 
-- Auto completion on variables and properties
-- Function argument hints
-- Querying the type of an expression
-- Finding the definition of something
-- Automatic refactoring
+Tide is an alternative to [[http://ternjs.net/][Tern]] which also has great Emacs integration
+and which I have happily been using for years. However, tide works
+even better (in my experience).
 
-Tern is installed as an NPM package: =npm install -g tern=.
+For completion to work in a Node.js project, a =jsconfig.json= file
+like this is required:
 
-To enable Tern in emacs, the =tern= and =tern-auto-complete=
-packages are installed.
-
-For completion to work in a Node.js project, a =.tern-project= file like
-this is required:
-
-#+BEGIN_EXAMPLE
-    {"plugins": {"node": {}}}
-#+END_EXAMPLE
-
-or
-
-#+BEGIN_EXAMPLE
-    {"libs": ["browser", "jquery"]}
-#+END_EXAMPLE
-
-If no project file is found, it’ll fall back to a default
-configuration. You can change this default configuration by putting a
-=.tern-config= file, with the same format as =.tern-project=, in your home
-directory.
-
-My =~/.tern-config= file looks like this:
-
-#+BEGIN_SRC
+#+BEGIN_SRC json
 {
-  "libs": [
-    "browser"
-  ],
-  "plugins": {
-    "es_modules": {},
-    "node": {}
-  }
+    "compilerOptions": {
+        "target": "es6"
+    },
+    "exclude": [
+        "node_modules"
+    ]
 }
 #+END_SRC
 
-[[http://ternjs.net/doc/manual.html#configuration][Here]] is more documentation on how to configure a Tern project.
+If no project file is found, it’ll fall back to an inferred
+configuration.
 
-Tern shortcuts:
+Tide default shortcuts:
 
 - =M-.= Jump to the definition of the thing under the cursor.
 - =M-,= Brings you back to last place you were when you pressed M-..
-- =C-c C-r= Rename the variable under the cursor.
-- =C-c C-c= Find the type of the thing under the cursor.
-- =C-c C-d= Find docs of the thing under the cursor. Press again to
-  open the associated URL (if any).
 
-**** Configuration
+**** Custom shortcuts
 
 #+BEGIN_SRC emacs-lisp
-
-  (add-hook 'js-mode-hook (lambda () (tern-mode t)))
-  (eval-after-load 'tern
-     '(progn
-        (require 'tern-auto-complete)
-        (tern-ac-setup)))
-
+  (require 'js2-mode)
+  (define-key js2-mode-map (kbd "C-c C-r") 'tide-rename-symbol)
+  (define-key js2-mode-map (kbd "C-c C-d") 'tide-documentation-at-point)
 #+END_SRC
 
-
-*** =js2-refactor=
-https://github.com/magnars/js2-refactor.el
-
-A JavaScript refactoring library for Emacs.
+**** Setup
 
 #+BEGIN_SRC emacs-lisp
-(add-hook 'js2-mode-hook #'js2-refactor-mode)
-(js2r-add-keybindings-with-prefix "C-c C-m")
+  (defun setup-tide-mode ()
+    (interactive)
+    ;; For bigger JS projects and intense tasks like =tide=references=
+    ;; the default of 2s will time out
+    (setq tide-sync-request-timeout 10)
+    (tide-setup)
+    ;; Increase sync request timeout for bigger projects
+    (flycheck-mode +1)
+    (setq flycheck-check-syntax-automatically '(save mode-enabled))
+    (eldoc-mode +1)
+    (tide-hl-identifier-mode +1))
+
+  (add-hook 'js2-mode-hook #'setup-tide-mode)
 #+END_SRC
+
 *** =js-comint=
 https://github.com/redguardtoo/js-comint
 
