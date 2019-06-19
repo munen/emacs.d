@@ -1300,7 +1300,10 @@ settings in this file will trump my personal config.
 
 Outline-based notes management and organizer. It is an outline-mode
 for keeping track of everything.
-
+** General config
+#+BEGIN_SRC emacs-lisp
+  (setq org-directory "~/switchdrive/org/")
+#+END_SRC
 ** Plain Lists
 Allow ‘a.’, ‘A.’, ‘a)’ and ‘A) as list elements:
 
@@ -1519,8 +1522,6 @@ compatability reasons with =ok-export-org-timetable=.
 
 ** GTD
 #+BEGIN_SRC emacs-lisp
-  (setq org-directory "~/switchdrive/org/")
-
   (defun set-org-agenda-files ()
     "Set different org-files to be used in `org-agenda`."
     (setq org-agenda-files (list (concat org-directory "things.org")
