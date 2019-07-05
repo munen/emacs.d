@@ -1508,7 +1508,7 @@ compatability reasons with =ok-export-org-timetable=.
                                  (concat org-directory "media.org")
                                  "~/Dropbox/ZHAW/web3-unterlagen/README.org"
                                  "~/Dropbox/ZHAW/weng-unterlagen/README.org"
-                                 "~/src/200ok/crowdfunding/TODO.org"
+                                 "~/src/200ok/swiss-crowdfunder/TODO.org"
                                  "~/src/200ok/200ok-admin/THINGS.org")))
 
   (set-org-agenda-files)
@@ -2265,6 +2265,12 @@ Configure =xdg-open= to use Emacs in =.local/share/applications/mimeapps.list=:
  - =C-c C-e e= to encrypt
  - =C-c C-e v= to verify the signature
  - =C-c C-e d= to decrypt
+
+ Always sign outgoing emails:
+
+ #+BEGIN_SRC emacs-lisp
+(add-hook 'message-send-hook 'mml-secure-message-sign-pgpmime)
+ #+END_SRC
 
  #+BEGIN_SRC emacs-lisp
 
