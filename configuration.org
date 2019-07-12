@@ -2302,6 +2302,13 @@ Configure =xdg-open= to use Emacs in =.local/share/applications/mimeapps.list=:
    (setq org-mu4e-link-query-in-headers-mode nil)
  #+END_SRC
 
+ Customize header fields to show in =mu4e-view=.
+ This only adds =:bcc=.
+
+#+BEGIN_SRC emacs-lisp
+  (setq mu4e-view-fields '(:from :to :cc :bcc :subject :flags :date :maildir :mailing-list :tags :attachments :signature :decryption))
+#+END_SRC
+
 **** TODO Use Quoted printable text for outgoing messages to enable automatic line breaks
 ***** If this is successfull, send upstream PR to MU4E
  https://mathiasbynens.be/notes/gmail-plain-text
