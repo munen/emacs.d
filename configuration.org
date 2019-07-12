@@ -99,6 +99,7 @@ down in this file, some are used with the default configuration.
                         restclient
                         robe
                         sass-mode
+                        spacemacs-theme
                         smex
                         synosaurus
                         tide
@@ -2746,18 +2747,20 @@ Parinfer algorithm is quite nice. I'll try again at some point.
        "85c59044bd46f4a0deedc8315ffe23aa46d2a967a81750360fb8600b53519b8a"
        default)))
 #+END_SRC
-** Configure default theme and font size
+** Configure dark-mode theme and font size
 #+BEGIN_SRC emacs-lisp
-  (defun standard-mode ()
+  (defun dark-mode ()
     "Default theme and font size.  Pendant: (presentation-mode)."
     (interactive)
 
     (set-face-attribute 'default nil :height 150)
     ;; Themes
     ;; (set-frame-parameter nil 'background-mode 'dark)
-    ;; Dark, High Contrast
-    (load-theme 'wombat)
-    (setq frame-background-mode (quote dark))
+
+    ;; Dark, High Contrast <- favorite
+    ;; (load-theme 'wombat)
+    ;; (setq frame-background-mode (quote dark))
+
     ;; Dark, Low contrast
     ;; (load-theme 'darktooth)
     ;; Dark, Lowest contrast
@@ -2766,20 +2769,28 @@ Parinfer algorithm is quite nice. I'll try again at some point.
 
 #+END_SRC
 
-** Configure presentation theme and font size
+** Configure light-mode theme and font size
+
+#+BEGIN_SRC emacs-lisp
+  (defun light-mode ()
+    "Enables a light theme."
+    (interactive)
+    (set-face-attribute 'default nil :height 150)
+    (load-theme 'spacemacs-light t))
+#+END_SRC
 
 #+BEGIN_SRC emacs-lisp
   (defun presentation-mode ()
-    "Presentation friendly theme and font size.  Pendant: (standard-mode)."
+    "Presentation friendly theme and font size."
     (interactive)
     (load-theme 'leuven t)
-    (set-face-attribute 'default nil :height 140))
+    (set-face-attribute 'default nil :height 150))
 #+END_SRC
 
 ** Enable default theme and font
 
 #+BEGIN_SRC emacs-lisp
-  (standard-mode)
+  (light-mode)
 #+END_SRC
 * Org Mode Exports
 
