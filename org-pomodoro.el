@@ -19,7 +19,7 @@
       (shell-command "say 'Time to take a break'")
     nil)
   (message-box "Time to take a break"))
-  
+
 
 (defun pomodoro-break ()
   "."
@@ -27,6 +27,11 @@
   (remove-hook 'org-timer-done-hook 'set-start-timer)
   (add-hook 'org-timer-done-hook 'set-break-timer)
   (org-timer-set-timer 5))
+
+(defun pomodoro-cancel ()
+  "Cancel the current pomodoro timer."
+  (interactive)
+  (org-timer-stop))
 
 (defun pomodoro-start ()
   "."
