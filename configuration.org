@@ -2689,11 +2689,11 @@ Debian package.
     (set-frame-font "Fira Code Retina 15")
     ;; Default Browser
     (setq browse-url-browser-function 'browse-url-generic
-          browse-url-generic-program "chromium")
+          browse-url-generic-program "firefox"
+          browse-url-new-window-flag t)
     (menu-bar-mode -1)
     ;; enable pdf-tools
     (pdf-tools-install))
-
 #+END_SRC
 
 Display Emoji (requires the =fonts-symbola= Debian package)
