@@ -1323,6 +1323,9 @@ Allow ‘a.’, ‘A.’, ‘a)’ and ‘A) as list elements:
   (add-to-list 'org-latex-packages-alist '("" "minted"))
   (setq org-latex-listings 'minted)
 
+  ;; Don’t ask every time when executing a code block.
+  (setq org-confirm-babel-evaluate nil)
+
 
 #+END_SRC
 
