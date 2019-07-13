@@ -439,6 +439,7 @@ cursor forward use =C-t= or =grn= and backward =grp=. Finally use
           (evil-set-initial-state mode 'emacs)) '(elfeed-show-mode
                                                   elfeed-search-mode
                                                   dired-mode
+                                                  tide-references-mode
                                                   image-dired-mode
                                                   image-dired-thumbnail-mode
                                                   eww-mode))
