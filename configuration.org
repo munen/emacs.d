@@ -1650,6 +1650,25 @@ safe-guard obsolete.
 (setq atomic-chrome-default-major-mode 'markdown-mode)
 #+END_SRC
 
+*Copy to clipboard*
+
+Some websites have aggressive JS which triggers when text is entered
+to a textarea which can lead to bugs in combination with AtomicChrome.
+There's some websites where I regularly lose the text that's entered.
+While I'm editing, the textarea is updating, but on =C-c C-c=, Emacs
+closes and the textarea is empty. For such cases, I'm using this
+simple workaround: Copy the contents to clipboard just before closing
+Emacs. So if the contents are lost, I can just paste the text into the
+textarea. Not a perfect solution, but this happens seldomly enough,
+that it's good enough for me.
+
+#+BEGIN_SRC emacs-lisp
+  (advice-add 'atomic-chrome-close-current-buffer
+              :before
+              '(lambda()
+                 (clipboard-kill-ring-save (point-min) (point-max))))
+#+END_SRC
+
 * Misc Custom Improvements
 
 Some helper functions and packages I wrote that are only accessible
@@ -2150,7 +2169,7 @@ Configure =xdg-open= to use Emacs in =.local/share/applications/mimeapps.list=:
                                       " OR "))
 
    (defvar draft-folders (string-join '("maildir:/dispatched/INBOX.Drafts"
-                                        "maildir:/zhaw/INBOX.Drafts"
+                                        "maildir:/zhaw/Drafts"
                                         "maildir:/zen-tempel/INBOX.Drafts"
                                         "maildir:/200ok/INBOX.Drafts")
                                       " OR "))
@@ -2760,13 +2779,14 @@ Parinfer algorithm is quite nice. I'll try again at some point.
     "Default theme and font size.  Pendant: (presentation-mode)."
     (interactive)
 
+    (mapcar 'disable-theme custom-enabled-themes)
     (set-face-attribute 'default nil :height 150)
     ;; Themes
     ;; (set-frame-parameter nil 'background-mode 'dark)
 
     ;; Dark, High Contrast <- favorite
-    ;; (load-theme 'wombat)
-    ;; (setq frame-background-mode (quote dark))
+    (load-theme 'wombat)
+    (setq frame-background-mode (quote dark))
 
     ;; Dark, Low contrast
     ;; (load-theme 'darktooth)
@@ -2783,6 +2803,7 @@ Parinfer algorithm is quite nice. I'll try again at some point.
     "Enables a light theme."
     (interactive)
     (set-face-attribute 'default nil :height 150)
+    (mapcar 'disable-theme custom-enabled-themes)
     (load-theme 'spacemacs-light t))
 #+END_SRC
 
@@ -2791,6 +2812,7 @@ Parinfer algorithm is quite nice. I'll try again at some point.
     "Presentation friendly theme and font size."
     (interactive)
     (load-theme 'leuven t)
+    (mapcar 'disable-theme custom-enabled-themes)
     (set-face-attribute 'default nil :height 150))
 #+END_SRC
 
