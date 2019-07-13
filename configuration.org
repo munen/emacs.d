@@ -2207,18 +2207,27 @@ Configure =xdg-open= to use Emacs in =.local/share/applications/mimeapps.list=:
  Check for supposed attachments prior to sending them
 
  #+BEGIN_SRC emacs-lisp
- (defvar my-message-attachment-regexp "\\([Ww]e send\\|[Ii] send\\|attach\\|angehängt\\|[aA]nhang\\|angehaengt\\|haenge\\|hänge\\)")
- (defun my-message-check-attachment nil
-   "Check if there is an attachment in the message if I claim it."
-   (save-excursion
-     (message-goto-body)
-     (when (search-forward-regexp my-message-attachment-regexp nil t nil)
+   (defvar my-message-attachment-regexp "\\(
+                                         [Ww]e send\\|
+                                         [Ii] send\\|
+                                         attach\\|
+                                         [aA]ngehängt\\|
+                                         [aA]nhang\\|
+                                         [sS]chicke\\|
+                                         angehaengt\\|
+                                         haenge\\|
+                                         hänge\\)")
+   (defun my-message-check-attachment nil
+     "Check if there is an attachment in the message if I claim it."
+     (save-excursion
        (message-goto-body)
-       (unless (or (search-forward "<#part" nil t nil)
-                   (message-y-or-n-p
-                    "No attachment. Send the message ?" nil nil))
-         (error "No message sent")))))
- (add-hook 'message-send-hook 'my-message-check-attachment)
+       (when (search-forward-regexp my-message-attachment-regexp nil t nil)
+         (message-goto-body)
+         (unless (or (search-forward "<#part" nil t nil)
+                     (message-y-or-n-p
+                      "No attachment. Send the message ?" nil nil))
+           (error "No message sent")))))
+   (add-hook 'message-send-hook 'my-message-check-attachment)
  #+END_SRC
 
  For mail completion, only consider emails that have been seen in the
