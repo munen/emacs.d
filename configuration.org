@@ -436,8 +436,7 @@ cursor forward use =C-t= or =grn= and backward =grp=. Finally use
    shortcuts.
 #+BEGIN_SRC emacs-lisp
   (mapc (lambda (mode)
-          (evil-set-initial-state mode 'emacs)) '(elfeed-show-mode
-                                                  elfeed-search-mode
+          (evil-set-initial-state mode 'emacs)) '(elfeed-search-mode
                                                   dired-mode
                                                   tide-references-mode
                                                   image-dired-mode
@@ -2294,22 +2293,20 @@ Configure =xdg-open= to use Emacs in =.local/share/applications/mimeapps.list=:
 
  GPG configuration:
 
- - =C-c C-e s= to sign
- - =C-c C-e e= to encrypt
+ - =C-c RET s o= to sign
+ - =C-c RET C-c= to encrypt
  - =C-c C-e v= to verify the signature
  - =C-c C-e d= to decrypt
 
  Always sign outgoing emails:
 
  #+BEGIN_SRC emacs-lisp
-(add-hook 'message-send-hook 'mml-secure-message-sign-pgpmime)
+(setq mu4e-compose-crypto-reply-plain-policy 'sign)
  #+END_SRC
 
  #+BEGIN_SRC emacs-lisp
-
  (add-hook 'mu4e-compose-mode-hook 'epa-mail-mode)
  (add-hook 'mu4e-view-mode-hook 'epa-mail-mode)
-
  #+END_SRC
 
  Automatic line breaks when reading mail
@@ -2390,6 +2387,7 @@ Configure =xdg-open= to use Emacs in =.local/share/applications/mimeapps.list=:
      '("S Block 'Subject:'" . mu4e-blacklist-subject) t)
 
  #+END_SRC
+
 * Search / Completion
 
 ** =ido=

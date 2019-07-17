@@ -43,7 +43,9 @@
       (shell-command "say 'Ready, set, go!'")
     nil))
 
-(defvar pomodoro-auto-clock-in nil
+;; TODO: Make a `defvar` to check if the popup should happen. The pomodoro-start can always happen.
+
+(defvar pomodoro-auto-clock-in t
   "When set to non-nil, a pomodoro will automatically be started when clocking in on any task in 'org-mode'.")
 
 ;; Modify the org-clock-in so that a pomodoro timer is started except
@@ -51,5 +53,5 @@
 (if pomodoro-auto-clock-in
     (add-hook 'org-clock-in-hook (lambda ()
                                    (remove-hook 'org-timer-done-hook 'set-break-timer)
-                                   (if (not org-timer-current-timer)
+                                   (if (not org-timer-countdown-timer)
                                        (pomodoro-start)))))

@@ -13,6 +13,7 @@
     ((OpenPGP
       (sign)
       (encrypt
+       ("alain@zen-tempel.ch" "D465337B218A0216ECDC368E137099B38E1FC0E9")
        ("tpo@sourcepole.ch" "549A598550F2C6DB416F287C9EF854EDFC992520")))
      (CMS
       (sign)
