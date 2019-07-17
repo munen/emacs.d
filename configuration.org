@@ -1828,6 +1828,13 @@ Thx [[https://github.com/jcfischer][@jcfischer]] for the function!
     (visual-fill-column-mode))
 
 #+END_SRC
+
+Use this automatically for =writeroom-mode=:
+
+#+BEGIN_SRC emacs-lisp
+  (advice-add 'writeroom-mode :after
+              'visual-clean)
+#+END_SRC
 ** Generate passwords
    Through =pwgen=.
 
