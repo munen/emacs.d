@@ -1597,15 +1597,12 @@ Atom and RSS.
 (require 'elfeed-goodies)
 
 (elfeed-goodies/setup)
+#+END_SRC
 
-;; Have automatic word-wrap
-;; This should work, but there seems to be a bug
-;; https://github.com/joostkremers/visual-fill-column/issues/21
-;; For the time being, use =M-x visual-fill-column-mode=
-;;    (add-hook 'elfeed-show-mode-hook '(lambda()
-;;                                        (if (string-equal "*elfeed-entry*" (buffer-name))
-;;                                            (visual-fill-column-mode))))
+Automatic word-wrap for elfeed entries:
 
+#+BEGIN_SRC emacs-lisp
+(add-hook 'elfeed-show-mode-hook 'visual-clean)
 #+END_SRC
 
 Use VIM style scrolling in elfeed entries:
