@@ -1560,6 +1560,11 @@ Define where the refiling can happen (the default is to the local buffer):
         (propertize "CW"
                     'font-lock-face 'font-lock-keyword-face))
 #+END_SRC
+** Hide empty lines between sub-headers in collapsed view
+
+#+BEGIN_SRC emacs-lisp
+(setq org-cycle-separator-lines 0)
+#+END_SRC
 * pdf-tools
 
 https://github.com/politza/pdf-tools
