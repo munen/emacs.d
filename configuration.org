@@ -436,7 +436,8 @@ cursor forward use =C-t= or =grn= and backward =grp=. Finally use
    shortcuts.
 #+BEGIN_SRC emacs-lisp
   (mapc (lambda (mode)
-          (evil-set-initial-state mode 'emacs)) '(elfeed-search-mode
+          (evil-set-initial-state mode 'emacs)) '(elfeed-show-mode
+                                                  elfeed-search-mode
                                                   dired-mode
                                                   tide-references-mode
                                                   image-dired-mode
@@ -1605,6 +1606,13 @@ Atom and RSS.
 ;;                                        (if (string-equal "*elfeed-entry*" (buffer-name))
 ;;                                            (visual-fill-column-mode))))
 
+#+END_SRC
+
+Use VIM style scrolling in elfeed entries:
+
+#+BEGIN_SRC emacs-lisp
+  (define-key elfeed-show-mode-map (kbd "C-e") 'evil-scroll-line-down)
+  (define-key elfeed-show-mode-map (kbd "C-y") 'evil-scroll-line-up)
 #+END_SRC
 
 ** Define elfeed feeds
