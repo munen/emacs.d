@@ -1063,7 +1063,7 @@ Create shortcut for =Magit=.
 Always sign commits with GPG
 
 #+BEGIN_SRC emacs-lisp
- (setq magit-commit-arguments (quote ("--gpg-sign=alain@200ok.ch")))
+ (setq magit-commit-arguments (quote ("--gpg-sign=137099B38E1FC0E9")))
 #+END_SRC
 
 **** Start the commit buffer in evil normal mode
@@ -2326,6 +2326,7 @@ Configure =xdg-open= to use Emacs in =.local/share/applications/mimeapps.list=:
    (add-to-list 'mu4e-user-mail-address-list "alain@200ok.ch")
    (add-to-list 'mu4e-user-mail-address-list "alain.lafon@dispatched.ch")
    (add-to-list 'mu4e-user-mail-address-list "lafo@zhaw.ch")
+   (add-to-list 'mu4e-user-mail-address-list "alain@zen-tempel.ch")
  #+END_SRC
 
  Store link to message if in header view, not to header query.
