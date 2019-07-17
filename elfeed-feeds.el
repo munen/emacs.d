@@ -6,6 +6,8 @@
         ("https://stackingthebricks.com/atom.xml" business)
         ;; SirPscls great Emacs configuration
         ("https://github.com/SirPscl/emacs.d/commits/master.atom" emacs)
+        ;; *tpo
+        ("http://tpo.sourcepole.ch/atom.xml" tomas)
         ("https://weblog.rubyonrails.org/feed/atom.xml" rails)
         ("https://blog.ungleich.ch/en-us/cms/blog/feed/" ungleich)
         ("https://medium.com/feed/@gianluca.guarini/" javascript)
