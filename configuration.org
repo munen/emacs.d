@@ -65,6 +65,7 @@ down in this file, some are used with the default configuration.
                         comment-tags
                         darktooth-theme
                         dired-narrow
+                        diminish
                         dumb-jump
                         edit-indirect
                         editorconfig
@@ -101,6 +102,7 @@ down in this file, some are used with the default configuration.
                         robe
                         sass-mode
                         spacemacs-theme
+                        spaceline
                         smex
                         synosaurus
                         tide
@@ -1598,10 +1600,10 @@ Atom and RSS.
 ** Configuration
 
 #+BEGIN_SRC emacs-lisp
-(require 'elfeed)
-(require 'elfeed-goodies)
+  (require 'elfeed)
+  (require 'elfeed-goodies)
 
-(elfeed-goodies/setup)
+  (elfeed-goodies/setup)
 #+END_SRC
 
 Automatic word-wrap for elfeed entries:
@@ -2621,17 +2623,240 @@ machine irc.freenode.net login "munen" password SECRET_PASSWORD
 #+END_SRC
 
 * Modeline
-** Powerline
+** Spaceline
+https://github.com/TheBB/spaceline
 
-https://github.com/milkypostman/powerline
+This part of the configuration was kindly provided by [[https://github.com/SirPscl/emacs.d#spaceline][SirPscl]].
 
-Emacs version of the Vim powerline.
+ #+BEGIN_SRC emacs-lisp
+ (require 'spaceline)
+ #+END_SRC
 
-#+BEGIN_SRC emacs-lisp
-(require 'powerline)
-(powerline-center-evil-theme)
-#+END_SRC
+*** Segments
+**** Flycheck
 
+ Slightly simplified flycheck segments for =info=, =warning= and =error=.
+
+ #+BEGIN_SRC emacs-lisp
+ (spaceline-define-segment ph/flycheck-warning-segment
+   (if (flycheck-has-current-errors-p)
+       (let ((c (cdr (assq 'warning (flycheck-count-errors
+                                     flycheck-current-errors)))))
+         (powerline-raw
+          (if c (format "%s" c))))))
+
+ (spaceline-define-segment ph/flycheck-error-segment
+   (if (flycheck-has-current-errors-p)
+       (let ((c (cdr (assq 'error (flycheck-count-errors
+                                     flycheck-current-errors)))))
+         (powerline-raw
+          (if c (format "%s" c))))))
+
+ (spaceline-define-segment ph/flycheck-info-segment
+   (if (flycheck-has-current-errors-p)
+       (let ((c (cdr (assq 'info (flycheck-count-errors
+                                     flycheck-current-errors)))))
+         (powerline-raw
+          (if c (format "%s" c))))))
+ #+END_SRC
+
+ Default faces for the flycheck segments.
+
+ #+BEGIN_SRC emacs-lisp
+ (defface ph/spaceline-flycheck-error-face
+   '((t :inherit 'mode-line
+        :weight bold
+        :foreground "white"
+        :background "dark red"))
+   "Flycheck Error Face"
+   :group 'spaceline)
+
+ (defface ph/spaceline-flycheck-warning-face
+   '((t :inherit 'mode-line
+        :weight bold
+        :foreground "white"
+        :background "DarkOrange3"))
+   "Flycheck Warning Face"
+   :group 'spaceline)
+
+ (defface ph/spaceline-flycheck-info-face
+   '((t :inherit 'mode-line
+        :weight bold
+        :foreground "white"
+        :background "dark green"))
+   "Flycheck Info Face"
+   :group 'spaceline)
+ #+END_SRC
+
+**** Evil State
+
+ Setting the face according to =evil-state=.
+
+ #+BEGIN_SRC emacs-lisp
+ (defun ph/spaceline-highlight-face-evil-state ()
+   "Set the highlight face depending on the evil state."
+   (if (bound-and-true-p evil-local-mode)
+       (let* ((face (assq evil-state spaceline-evil-state-faces)))
+         (if face (cdr face) (spaceline-highlight-face-default)))
+     (spaceline-highlight-face-default)))
+
+ (setq-default spaceline-highlight-face-func
+               'ph/spaceline-highlight-face-evil-state)
+ #+END_SRC
+
+ Set the evil-state segment colors for =operator-state=.
+
+ #+BEGIN_SRC emacs-lisp
+ (defface ph/spaceline-evil-operator-face
+   '((t (:background "cornflower blue"
+         :inherit 'spaceline-evil-normal)))
+   "Spaceline Evil Operator State"
+   :group 'spaceline)
+
+ (add-to-list 'spaceline-evil-state-faces
+              '(operator . ph/spaceline-evil-operator-face))
+ #+END_SRC
+
+**** Git Branch
+
+ #+BEGIN_SRC emacs-lisp
+ (defun ph/git-branch-name ()
+   (replace-regexp-in-string "^ Git[:-]" "" vc-mode))
+
+ (spaceline-define-segment ph/version-control
+   "Version control information."
+   (when vc-mode
+     (s-trim (concat (ph/git-branch-name)))))
+ #+END_SRC
+
+**** Tramp
+
+ Tramp offers the following file name syntax to refer to files on other machines.
+
+ #+BEGIN_SRC text
+ /method:host:filename
+ /method:user@host:filename
+ /method:user@host#port:filename
+ #+END_SRC
+
+ The following segemnts display the current buffer's =method= and =user@host=.
+
+ #+BEGIN_SRC emacs-lisp
+ (spaceline-define-segment ph/remote-method
+   (when (and default-directory
+              (file-remote-p default-directory 'method))
+     (file-remote-p default-directory 'method)))
+
+ (spaceline-define-segment ph/remote-user-and-host
+   (when (and default-directory
+              (or
+               (file-remote-p default-directory 'user)
+               (file-remote-p default-directory 'host)))
+     (concat
+      (file-remote-p default-directory 'user) "@"
+      (file-remote-p default-directory 'host))))
+ #+END_SRC
+
+ Default faces for the tramp segments.
+
+ #+BEGIN_SRC emacs-lisp
+ (defface ph/spaceline-tramp-user-host-face
+   '((t :inherit 'mode-line
+        :foreground "black"
+        :background "#fce94f"))
+   "Tramp User@Host Face"
+   :group 'spaceline)
+
+ (defface ph/spaceline-tramp-method-face
+   '((t :inherit 'mode-line
+        :foreground "black"
+        :background "#ff5d17"))
+   "Tramp Method Face"
+   :group 'spaceline)
+ #+END_SRC
+
+**** Mu4e Context
+
+I'm not using Mu4e contexts, yet, because my configuration started
+before they were introduced. I'm leaving the segment configuration for
+the future.
+
+ #+BEGIN_SRC emacs-lisp
+   ;; (spaceline-define-segment ph/mu4e-context-segment
+   ;;   (let ((context (mu4e-context-current)))
+   ;;     (when (and context
+   ;;                (string-prefix-p "mu4e" (symbol-name major-mode)))
+   ;;       (mu4e-context-name context))))
+ #+END_SRC
+
+ Face for =mu4e= segemnt.
+
+ #+BEGIN_SRC emacs-lisp
+   ;; (defface ph/spaceline-mu4e-context-face
+   ;;   '((t :inherit 'mode-line
+   ;;        :weight bold))
+   ;;   "mu4e face"
+   ;;   :group 'spaceline)
+ #+END_SRC
+
+*** Setup
+
+ Setting up the mode-line and order of segements. Compile the modeline with =M-x
+ spaceline-compile=.
+
+ #+BEGIN_SRC emacs-lisp
+   (require 'spaceline-config)
+   (spaceline-emacs-theme)
+   (spaceline-install
+     'main
+     '((evil-state :face highlight-face)
+       (buffer-id)
+       ;; (ph/mu4e-context-segment :face 'ph/spaceline-mu4e-context-face)
+       (ph/remote-method :face 'ph/spaceline-tramp-method-face)
+       (ph/remote-user-and-host :face 'ph/spaceline-tramp-user-host-face)
+       (buffer-modified))
+     '((minor-modes :when active)
+       (projectile-root)
+       (ph/version-control)
+       ;(line-column :when active)
+       ;(buffer-position :when active)
+       (ph/flycheck-info-segment :face 'ph/spaceline-flycheck-info-face :when active)
+       (ph/flycheck-warning-segment :face 'ph/spaceline-flycheck-warning-face :when active)
+       (ph/flycheck-error-segment :face 'ph/spaceline-flycheck-error-face :when active)
+       (major-mode)))
+ #+END_SRC
+
+ Set mode-line always active (don't hide segments when focus is on a different
+ window).
+
+ #+BEGIN_SRC emacs-lisp
+ (defun powerline-selected-window-active () t)
+ #+END_SRC
+
+
+*** Diminish
+
+ Diminish implements hiding or abbreviation of the mode line displays (lighters)
+ of minor-modes.
+
+ #+BEGIN_SRC emacs-lisp
+   (eval-after-load "auto-revert"
+     '(diminish 'auto-revert-mode))
+   (eval-after-load "beacon"
+     '(diminish 'beacon-mode))
+   (eval-after-load "ivy"
+     '(diminish 'ivy-mode))
+   (eval-after-load "projectile"
+     '(diminish 'projectile-mode))
+   (eval-after-load "projectile-rails"
+     '(diminish 'projectile-rails-mode))
+   (eval-after-load "rainbow-mode"
+     '(diminish 'rainbow-mode))
+   (eval-after-load "undo-tree"
+     '(diminish 'undo-tree-mode))
+   (eval-after-load "which-key"
+     '(diminish 'which-key-mode))
+ #+END_SRC
 ** =hide-mode-line=
 
 https://github.com/hlissner/emacs-hide-mode-line

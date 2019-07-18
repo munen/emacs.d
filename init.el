@@ -5,8 +5,8 @@
 
 (package-initialize)
 
-;; This loads the actual configuration in literate org-mode elisp
 (defun load-config()
+  "Load the actual configuration in literate 'org-mode' elisp."
   (interactive)
   (org-babel-load-file "~/.emacs.d/configuration.org"))
 
