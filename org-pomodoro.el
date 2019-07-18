@@ -2,6 +2,7 @@
 ;;; technique built on top of org-mode
 ;;; Commentary:
 ;;; Code:
+
 (add-to-list 'org-modules 'org-timer)
 
 (defun set-break-timer ()
@@ -43,15 +44,16 @@
       (shell-command "say 'Ready, set, go!'")
     nil))
 
-;; TODO: Make a `defvar` to check if the popup should happen. The pomodoro-start can always happen.
-
 (defvar pomodoro-auto-clock-in t
   "When set to non-nil, a pomodoro will automatically be started when clocking in on any task in 'org-mode'.")
 
 ;; Modify the org-clock-in so that a pomodoro timer is started except
 ;; if a timer is already started already.
-(if pomodoro-auto-clock-in
-    (add-hook 'org-clock-in-hook (lambda ()
-                                   (remove-hook 'org-timer-done-hook 'set-break-timer)
-                                   (if (not org-timer-countdown-timer)
-                                       (pomodoro-start)))))
+(add-hook 'org-clock-in-hook (lambda ()
+                               (remove-hook 'org-timer-done-hook 'set-break-timer)
+                               ;; If configured and currently no timer is running
+                               (if (and pomodoro-auto-clock-in
+                                        (not org-timer-countdown-timer))
+                                   (pomodoro-start))))
+
+;;; org-pomodoro.el ends here

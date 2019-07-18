@@ -2810,6 +2810,22 @@ the future.
    ;;   :group 'spaceline)
  #+END_SRC
 
+**** Org Timer
+
+I like to set timers, for example through [[file:org-pomodoro.el][org-pomodoro.el]]
+
+#+BEGIN_SRC emacs-lisp
+  (spaceline-define-segment org-timer-left-time
+    "Show the time left in the current org-timer (i.e. a pomodoro)."
+    (when (boundp 'org-timer-countdown-timer)
+      (if org-timer-countdown-timer
+        (let* ((rtime (decode-time
+                       (time-subtract (timer--time org-timer-countdown-timer)
+                                      (current-time))))
+               (rsecs (nth 0 rtime))
+               (rmins (nth 1 rtime)))
+          (format "%s:%s" rmins rsecs)))))
+#+END_SRC
 *** Setup
 
  Setting up the mode-line and order of segements. Compile the modeline with =M-x
@@ -2822,6 +2838,7 @@ the future.
      'main
      '((evil-state :face highlight-face)
        (buffer-id)
+       (org-timer-left-time)
        ;; (ph/mu4e-context-segment :face 'ph/spaceline-mu4e-context-face)
        (ph/remote-method :face 'ph/spaceline-tramp-method-face)
        (ph/remote-user-and-host :face 'ph/spaceline-tramp-user-host-face)
