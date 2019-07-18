@@ -327,6 +327,16 @@ when connecting to an FTP, try to revert to active mode.
 (setq custom-file "~/.emacs.d/custom-settings.el")
 (load custom-file t)
 #+END_SRC
+** Add guix packages to load-path
+
+I'm running Debian and for some things I use [[https://www.gnu.org/software/guix/][GNU Guix]] for package
+management. For example mu4e is installed through guix, so that I can
+always have a recent version. This adds the installed packages to the
+standard Emacs load path, so that =require= just works.
+
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'load-path "/home/munen/.guix-profile/share/emacs/site-lisp/")
+#+END_SRC
 * General
 This section contains settings for non-built-in Emacs features that
 are generally applicable to different kinds of modes.
@@ -1993,6 +2003,7 @@ MU works on a local Maildir folder. For synchronization
 For MU4E to work, install MU and MU4E:
 
 - Debian: =apt-get install mu4e=
+- Guix: =guix package -i mu=
 - macOS: =brew install mu --with-emacs=
 
 For starttls to work when sending mail, install gnutls:
