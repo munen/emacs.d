@@ -1949,13 +1949,13 @@ Happily taken from Pascals configuration: https://github.com/SirPscl/emacs.d#sud
 
 #+BEGIN_SRC emacs-lisp
   (defun ph/sudo-file-name (filename)
-    "Prepend '/sudo:root@localhost:' to FILENAME if appropriate.
+    "Prepend '/sudo:root@`system-name`:' to FILENAME if appropriate.
   This is, when it doesn't already have a sudo-prefix."
     (if (not (or (string-prefix-p "/sudo:root@localhost:"
                                   filename)
                  (string-prefix-p (format "/sudo:root@%s:" system-name)
                                   filename)))
-        (format "/sudo:root@localhost:%s" filename)
+        (format "/sudo:root@%s:%s" system-name filename)
       filename))
 
   (defun ph/sudo-save-buffer ()
