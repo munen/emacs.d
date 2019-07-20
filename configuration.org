@@ -337,6 +337,285 @@ standard Emacs load path, so that =require= just works.
 #+BEGIN_SRC emacs-lisp
 (add-to-list 'load-path "/home/munen/.guix-profile/share/emacs/site-lisp/")
 #+END_SRC
+* Misc Custom Improvements
+
+Some helper functions and packages I wrote that are only accessible
+within this Git repository and not published to a package repository.
+
+** Translations
+
+Elisp wrapper around the dict.cc translation service. Translations are
+exposed in an org-mode table.
+
+Demo: [[https://asciinema.org/a/hMTM9EDHE0cphaDRFr4JXr1iw][https://asciinema.org/a/hMTM9EDHE0cphaDRFr4JXr1iw.png]]
+
+*** Load dict.el
+
+#+BEGIN_SRC emacs-lisp
+  (load "~/.emacs.d/dict")
+#+END_SRC
+** Helper functions to clean up the gazillion buffers
+
+When switching projects in Emacs, it can be prudent to clean up every
+once in a while. Deleting all buffers except the current one is one of
+the things I often do (especially in the long-running =emacsclient=).
+
+#+BEGIN_SRC emacs-lisp
+  (defun kill-other-buffers ()
+    "Kill all other buffers."
+    (interactive)
+    (mapc 'kill-buffer (delq (current-buffer) (buffer-list))))
+#+END_SRC
+
+=dired= will create buffers for every visited folder. This is a helper
+to clear them out once you're done working with those folders.
+
+#+BEGIN_SRC emacs-lisp
+
+  (defun kill-dired-buffers ()
+    "Kill all open dired buffers."
+    (interactive)
+    (mapc (lambda (buffer)
+            (when (eq 'dired-mode (buffer-local-value 'major-mode buffer))
+              (kill-buffer buffer)))
+          (buffer-list)))
+#+END_SRC
+** Encode HTML to HTML entities
+   Rudimentary function converting certain HTML syntax to HTML entities.
+#+BEGIN_SRC emacs-lisp
+  (defun encode-html (start end)
+    "Encodes HTML entities; works great in Visual Mode (START END)."
+    (interactive "r")
+    (save-excursion
+      (save-restriction
+        (narrow-to-region start end)
+        (goto-char (point-min))
+        (replace-string "&" "&amp;")
+        (goto-char (point-min))
+        (replace-string "<" "&lt;")
+        (goto-char (point-min))
+        (replace-string ">" "&gt;"))))
+#+END_SRC
+** Convenience functions when working with PDF exports
+
+When working on markdown or org-mode files that will be converted to
+PDF, I use =pdf-tools= to preview the PDF and shortcuts to
+automatically save, compile and reload on demand.
+
+[[https://www.youtube.com/watch?v=Pd0JwOqh-gI][Here]] is a screencast showing how I edit Markdown or org-mode files in
+Emacs whilst having a PDF preview.
+
+In a screenshot, it looks like this:
+
+[[file:images/edit_markup_with_preview.png]]
+
+#+BEGIN_SRC emacs-lisp
+  (defun md-compile ()
+    "Compiles the currently loaded markdown file using pandoc into a PDF"
+    (interactive)
+    (save-buffer)
+    (shell-command (concat "pandoc " (buffer-file-name) " -o "
+                           (replace-regexp-in-string "md" "pdf" (buffer-file-name)))))
+
+  (defun update-other-buffer ()
+    (interactive)
+    (other-window 1)
+    (revert-buffer nil t)
+    (other-window -1))
+
+  (defun md-compile-and-update-other-buffer ()
+    "Has as a premise that it's run from a markdown-mode buffer and the
+     other buffer already has the PDF open"
+    (interactive)
+    (md-compile)
+    (update-other-buffer))
+
+  (defun latex-compile-and-update-other-buffer ()
+    "Has as a premise that it's run from a latex-mode buffer and the
+     other buffer already has the PDF open"
+    (interactive)
+    (save-buffer)
+    (shell-command (concat "pdflatex " (buffer-file-name)))
+    (switch-to-buffer (other-buffer))
+    (kill-buffer)
+    (update-other-buffer))
+
+  (defun org-compile-beamer-and-update-other-buffer ()
+    "Has as a premise that it's run from an org-mode buffer and the
+     other buffer already has the PDF open"
+    (interactive)
+    (org-beamer-export-to-pdf)
+    (update-other-buffer))
+
+  (defun org-compile-latex-and-update-other-buffer ()
+    "Has as a premise that it's run from an org-mode buffer and the
+     other buffer already has the PDF open"
+    (interactive)
+    (org-latex-export-to-pdf)
+    (update-other-buffer))
+
+  (eval-after-load 'latex-mode
+    '(define-key latex-mode-map (kbd "C-c r") 'latex-compile-and-update-other-buffer))
+
+  (define-key org-mode-map (kbd "C-c lr") 'org-compile-latex-and-update-other-buffer)
+  (define-key org-mode-map (kbd "C-c br") 'org-compile-beamer-and-update-other-buffer)
+
+  (eval-after-load 'markdown-mode
+    '(define-key markdown-mode-map (kbd "C-c r") 'md-compile-and-update-other-buffer))
+#+END_SRC
+** Use left Cmd to create Umlauts
+
+Unrelated to Emacs, in macOS, you can write Umlauts by using the combo
+=M-u [KEY]=. For example =M-u u= will create the letter =ü=.
+
+This is actually faster than the default way of Emacs or that of VIM.
+The following code ports that functionality to Emacs.
+
+Thx [[https://github.com/jcfischer][@jcfischer]] for the function!
+
+#+BEGIN_SRC emacs-lisp
+  (define-key key-translation-map [dead-diaeresis]
+    (lookup-key key-translation-map "\C-x8\""))
+  (define-key isearch-mode-map [dead-diaeresis] nil)
+  (global-set-key (kbd "M-u")
+                  (lookup-key key-translation-map "\C-x8\""))
+
+#+END_SRC
+
+** Clean up messy buffers (i.e. web wikis or elfeed-show)
+#+BEGIN_SRC emacs-lisp
+
+  (defun visual-clean ()
+    "Clean up messy buffers (i.e. web wikis or elfeed-show)"
+    (interactive)
+    (visual-line-mode)
+    (visual-fill-column-mode))
+
+#+END_SRC
+
+Use this automatically for =writeroom-mode=:
+
+#+BEGIN_SRC emacs-lisp
+  (advice-add 'writeroom-mode :after
+              'visual-clean)
+#+END_SRC
+** Generate passwords
+   Through =pwgen=.
+
+   Thanks to [[https://github.com/branch14/emacs.d][@branch14]] of 200ok fame for the function!
+#+BEGIN_SRC emacs-lisp
+
+(defun generate-password-non-interactive ()
+   (string-trim (shell-command-to-string "pwgen -A 24")))
+
+(defun generate-password ()
+  "Generates and inserts a new password"
+  (interactive)
+  (insert
+   (shell-command-to-string
+    (concat "pwgen -A " (read-string "Length: " "24") " 1"))))
+
+#+END_SRC
+** Passwords file
+
+Open the GPG encrypted password file.
+
+Within this file, I'll search for passwords with =counsel-imenu= which
+has nice auto-completion and means that the headers will always be
+folded, so that no other person can see the passwords.
+
+When the right header is found, I'll copy the password under the
+current header to the clipboard from where I can use it where I need
+it (for example a browser):
+
+*** Copy password to clipboard
+
+ #+BEGIN_SRC emacs-lisp
+ (fset 'copy-password-to-clipboard
+    [?\C-s ?P ?a ?s ?s ?w ?o ?r ?d ?: return ?w ?v ?$ ?y C-up C-up C-up tab])
+ #+END_SRC
+
+*** Open passwords file
+
+#+BEGIN_SRC emacs-lisp
+  (defun passwords ()
+    "Open main 'passwords' file."
+    (interactive)
+    (find-file (concat org-directory "vault/primary.org.gpg")))
+#+END_SRC
+
+** Running =M-x shell= with =zsh=
+   If you're a =zsh= user, you might have configured a custom prompt
+   and such. Also, you might be using a powerful =$TERM= for that.
+   When running =zsh= within =M-x shell=, you will have to set the
+   =$TERM= to =dumb=, though. Otherwise you'll get all kinds of escape
+   sequences instead of colored text.
+
+I'm using this within my =~/.zshrc=
+
+#+BEGIN_SRC shell
+# This allows running `shell` properly within Emacs
+if [ -n "$INSIDE_EMACS" ]; then
+  export TERM=dumb
+else
+  export TERM=xterm-256color
+fi
+#+END_SRC
+
+** =server-shutdown=
+This is the converse function to the built-in =server-start=.
+#+BEGIN_SRC emacs-lisp
+(defun server-shutdown ()
+  "Save buffers, Quit, and Shutdown (kill) server"
+  (interactive)
+  (save-some-buffers)
+  (kill-emacs))
+#+END_SRC
+** Helper function to measure the running time of a function
+
+#+BEGIN_SRC emacs-lisp
+  (defmacro measure-time (&rest body)
+    "Measure the time it takes to evaluate BODY."
+    `(let ((time (current-time)))
+       ,@body
+       (message "%.06f" (float-time (time-since time)))))
+#+END_SRC
+
+For example =(measure-time (prettier-eslint)=.
+** Sudo Save
+
+If the current buffer is not writable, ask if it should be saved with
+=sudo=.
+
+Happily taken from Pascals configuration: https://github.com/SirPscl/emacs.d#sudo-save
+
+#+BEGIN_SRC emacs-lisp
+  (defun ph/sudo-file-name (filename)
+    "Prepend '/sudo:root@`system-name`:' to FILENAME if appropriate.
+  This is, when it doesn't already have a sudo-prefix."
+    (if (not (or (string-prefix-p "/sudo:root@localhost:"
+                                  filename)
+                 (string-prefix-p (format "/sudo:root@%s:" system-name)
+                                  filename)))
+        (format "/sudo:root@%s:%s" system-name filename)
+      filename))
+
+  (defun ph/sudo-save-buffer ()
+    "Save FILENAME with sudo if the user approves."
+    (interactive)
+    (when buffer-file-name
+      (let ((file (ph/sudo-file-name buffer-file-name)))
+        (if (yes-or-no-p (format "Save file as %s ? " file))
+            (write-file file)))))
+
+  (advice-add 'save-buffer :around
+              '(lambda (fn &rest args)
+                 (when (or (not (buffer-file-name))
+                           (not (buffer-modified-p))
+                           (file-writable-p (buffer-file-name))
+                           (not (ph/sudo-save-buffer)))
+                   (call-interactively fn args))))
+#+END_SRC
 * General
 This section contains settings for non-built-in Emacs features that
 are generally applicable to different kinds of modes.
@@ -1007,7 +1286,6 @@ opening a =presentation.html= file, enable =markdown-mode=.
 
 #+BEGIN_SRC emacs-lisp
   (add-to-list 'auto-mode-alist '("presentation.html" . markdown-mode))
-  (add-hook 'markdown-mode-hook 'flyspell-mode)
 #+END_SRC
 
 ** Auto Reload Web Sites
@@ -1055,9 +1333,18 @@ slide deck.
 #+END_SRC
 
 ** Markdown
-#+BEGIN_SRC emacs-lisp
-  (add-hook 'markdown-mode-hook 'auto-fill-mode)
 
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'markdown-mode-hook 'flyspell-mode)
+#+END_SRC
+
+Unfortunately line breaks are semantic in some versions of markdown
+(for example Github). So doing automatic line breaks would be harmful.
+However, this leads to super long lines in many documents which is
+unreadable. Therefore, always use =visual-clean=.
+
+#+BEGIN_SRC emacs-lisp
+    (add-hook 'markdown-mode-hook 'visual-clean)
 #+END_SRC
 
 ** Magit
@@ -1695,285 +1982,6 @@ that it's good enough for me.
                  (clipboard-kill-ring-save (point-min) (point-max))))
 #+END_SRC
 
-* Misc Custom Improvements
-
-Some helper functions and packages I wrote that are only accessible
-within this Git repository and not published to a package repository.
-
-** Translations
-
-Elisp wrapper around the dict.cc translation service. Translations are
-exposed in an org-mode table.
-
-Demo: [[https://asciinema.org/a/hMTM9EDHE0cphaDRFr4JXr1iw][https://asciinema.org/a/hMTM9EDHE0cphaDRFr4JXr1iw.png]]
-
-*** Load dict.el
-
-#+BEGIN_SRC emacs-lisp
-  (load "~/.emacs.d/dict")
-#+END_SRC
-** Helper functions to clean up the gazillion buffers
-
-When switching projects in Emacs, it can be prudent to clean up every
-once in a while. Deleting all buffers except the current one is one of
-the things I often do (especially in the long-running =emacsclient=).
-
-#+BEGIN_SRC emacs-lisp
-  (defun kill-other-buffers ()
-    "Kill all other buffers."
-    (interactive)
-    (mapc 'kill-buffer (delq (current-buffer) (buffer-list))))
-#+END_SRC
-
-=dired= will create buffers for every visited folder. This is a helper
-to clear them out once you're done working with those folders.
-
-#+BEGIN_SRC emacs-lisp
-
-  (defun kill-dired-buffers ()
-    "Kill all open dired buffers."
-    (interactive)
-    (mapc (lambda (buffer)
-            (when (eq 'dired-mode (buffer-local-value 'major-mode buffer))
-              (kill-buffer buffer)))
-          (buffer-list)))
-#+END_SRC
-** Encode HTML to HTML entities
-   Rudimentary function converting certain HTML syntax to HTML entities.
-#+BEGIN_SRC emacs-lisp
-  (defun encode-html (start end)
-    "Encodes HTML entities; works great in Visual Mode (START END)."
-    (interactive "r")
-    (save-excursion
-      (save-restriction
-        (narrow-to-region start end)
-        (goto-char (point-min))
-        (replace-string "&" "&amp;")
-        (goto-char (point-min))
-        (replace-string "<" "&lt;")
-        (goto-char (point-min))
-        (replace-string ">" "&gt;"))))
-#+END_SRC
-** Convenience functions when working with PDF exports
-
-When working on markdown or org-mode files that will be converted to
-PDF, I use =pdf-tools= to preview the PDF and shortcuts to
-automatically save, compile and reload on demand.
-
-[[https://www.youtube.com/watch?v=Pd0JwOqh-gI][Here]] is a screencast showing how I edit Markdown or org-mode files in
-Emacs whilst having a PDF preview.
-
-In a screenshot, it looks like this:
-
-[[file:images/edit_markup_with_preview.png]]
-
-#+BEGIN_SRC emacs-lisp
-  (defun md-compile ()
-    "Compiles the currently loaded markdown file using pandoc into a PDF"
-    (interactive)
-    (save-buffer)
-    (shell-command (concat "pandoc " (buffer-file-name) " -o "
-                           (replace-regexp-in-string "md" "pdf" (buffer-file-name)))))
-
-  (defun update-other-buffer ()
-    (interactive)
-    (other-window 1)
-    (revert-buffer nil t)
-    (other-window -1))
-
-  (defun md-compile-and-update-other-buffer ()
-    "Has as a premise that it's run from a markdown-mode buffer and the
-     other buffer already has the PDF open"
-    (interactive)
-    (md-compile)
-    (update-other-buffer))
-
-  (defun latex-compile-and-update-other-buffer ()
-    "Has as a premise that it's run from a latex-mode buffer and the
-     other buffer already has the PDF open"
-    (interactive)
-    (save-buffer)
-    (shell-command (concat "pdflatex " (buffer-file-name)))
-    (switch-to-buffer (other-buffer))
-    (kill-buffer)
-    (update-other-buffer))
-
-  (defun org-compile-beamer-and-update-other-buffer ()
-    "Has as a premise that it's run from an org-mode buffer and the
-     other buffer already has the PDF open"
-    (interactive)
-    (org-beamer-export-to-pdf)
-    (update-other-buffer))
-
-  (defun org-compile-latex-and-update-other-buffer ()
-    "Has as a premise that it's run from an org-mode buffer and the
-     other buffer already has the PDF open"
-    (interactive)
-    (org-latex-export-to-pdf)
-    (update-other-buffer))
-
-  (eval-after-load 'latex-mode
-    '(define-key latex-mode-map (kbd "C-c r") 'latex-compile-and-update-other-buffer))
-
-  (define-key org-mode-map (kbd "C-c lr") 'org-compile-latex-and-update-other-buffer)
-  (define-key org-mode-map (kbd "C-c br") 'org-compile-beamer-and-update-other-buffer)
-
-  (eval-after-load 'markdown-mode
-    '(define-key markdown-mode-map (kbd "C-c r") 'md-compile-and-update-other-buffer))
-#+END_SRC
-** Use left Cmd to create Umlauts
-
-Unrelated to Emacs, in macOS, you can write Umlauts by using the combo
-=M-u [KEY]=. For example =M-u u= will create the letter =ü=.
-
-This is actually faster than the default way of Emacs or that of VIM.
-The following code ports that functionality to Emacs.
-
-Thx [[https://github.com/jcfischer][@jcfischer]] for the function!
-
-#+BEGIN_SRC emacs-lisp
-  (define-key key-translation-map [dead-diaeresis]
-    (lookup-key key-translation-map "\C-x8\""))
-  (define-key isearch-mode-map [dead-diaeresis] nil)
-  (global-set-key (kbd "M-u")
-                  (lookup-key key-translation-map "\C-x8\""))
-
-#+END_SRC
-
-** Clean up messy buffers (i.e. web wikis or elfeed-show)
-#+BEGIN_SRC emacs-lisp
-
-  (defun visual-clean ()
-    "Clean up messy buffers (i.e. web wikis or elfeed-show)"
-    (interactive)
-    (visual-line-mode)
-    (visual-fill-column-mode))
-
-#+END_SRC
-
-Use this automatically for =writeroom-mode=:
-
-#+BEGIN_SRC emacs-lisp
-  (advice-add 'writeroom-mode :after
-              'visual-clean)
-#+END_SRC
-** Generate passwords
-   Through =pwgen=.
-
-   Thanks to [[https://github.com/branch14/emacs.d][@branch14]] of 200ok fame for the function!
-#+BEGIN_SRC emacs-lisp
-
-(defun generate-password-non-interactive ()
-   (string-trim (shell-command-to-string "pwgen -A 24")))
-
-(defun generate-password ()
-  "Generates and inserts a new password"
-  (interactive)
-  (insert
-   (shell-command-to-string
-    (concat "pwgen -A " (read-string "Length: " "24") " 1"))))
-
-#+END_SRC
-** Passwords file
-
-Open the GPG encrypted password file.
-
-Within this file, I'll search for passwords with =counsel-imenu= which
-has nice auto-completion and means that the headers will always be
-folded, so that no other person can see the passwords.
-
-When the right header is found, I'll copy the password under the
-current header to the clipboard from where I can use it where I need
-it (for example a browser):
-
-*** Copy password to clipboard
-
- #+BEGIN_SRC emacs-lisp
- (fset 'copy-password-to-clipboard
-    [?\C-s ?P ?a ?s ?s ?w ?o ?r ?d ?: return ?w ?v ?$ ?y C-up C-up C-up tab])
- #+END_SRC
-
-*** Open passwords file
-
-#+BEGIN_SRC emacs-lisp
-  (defun passwords ()
-    "Open main 'passwords' file."
-    (interactive)
-    (find-file (concat org-directory "vault/primary.org.gpg")))
-#+END_SRC
-
-** Running =M-x shell= with =zsh=
-   If you're a =zsh= user, you might have configured a custom prompt
-   and such. Also, you might be using a powerful =$TERM= for that.
-   When running =zsh= within =M-x shell=, you will have to set the
-   =$TERM= to =dumb=, though. Otherwise you'll get all kinds of escape
-   sequences instead of colored text.
-
-I'm using this within my =~/.zshrc=
-
-#+BEGIN_SRC shell
-# This allows running `shell` properly within Emacs
-if [ -n "$INSIDE_EMACS" ]; then
-  export TERM=dumb
-else
-  export TERM=xterm-256color
-fi
-#+END_SRC
-
-** =server-shutdown=
-This is the converse function to the built-in =server-start=.
-#+BEGIN_SRC emacs-lisp
-(defun server-shutdown ()
-  "Save buffers, Quit, and Shutdown (kill) server"
-  (interactive)
-  (save-some-buffers)
-  (kill-emacs))
-#+END_SRC
-** Helper function to measure the running time of a function
-
-#+BEGIN_SRC emacs-lisp
-  (defmacro measure-time (&rest body)
-    "Measure the time it takes to evaluate BODY."
-    `(let ((time (current-time)))
-       ,@body
-       (message "%.06f" (float-time (time-since time)))))
-#+END_SRC
-
-For example =(measure-time (prettier-eslint)=.
-** Sudo Save
-
-If the current buffer is not writable, ask if it should be saved with
-=sudo=.
-
-Happily taken from Pascals configuration: https://github.com/SirPscl/emacs.d#sudo-save
-
-#+BEGIN_SRC emacs-lisp
-  (defun ph/sudo-file-name (filename)
-    "Prepend '/sudo:root@`system-name`:' to FILENAME if appropriate.
-  This is, when it doesn't already have a sudo-prefix."
-    (if (not (or (string-prefix-p "/sudo:root@localhost:"
-                                  filename)
-                 (string-prefix-p (format "/sudo:root@%s:" system-name)
-                                  filename)))
-        (format "/sudo:root@%s:%s" system-name filename)
-      filename))
-
-  (defun ph/sudo-save-buffer ()
-    "Save FILENAME with sudo if the user approves."
-    (interactive)
-    (when buffer-file-name
-      (let ((file (ph/sudo-file-name buffer-file-name)))
-        (if (yes-or-no-p (format "Save file as %s ? " file))
-            (write-file file)))))
-
-  (advice-add 'save-buffer :around
-              '(lambda (fn &rest args)
-                 (when (or (not (buffer-file-name))
-                           (not (buffer-modified-p))
-                           (file-writable-p (buffer-file-name))
-                           (not (ph/sudo-save-buffer)))
-                   (call-interactively fn args))))
-#+END_SRC
 * Mail
 
 Writing and reading mail is inherently a text-based workflow. Yes,
