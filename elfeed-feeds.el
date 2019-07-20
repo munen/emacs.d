@@ -19,6 +19,8 @@
         ("http://planet.emacsen.org/atom.xml" emacs)
         ("https://purelyfunctional.tv/feed/normal-feed" clojure)
         ("https://lambdaisland.com/feeds/blog.atom" clojure)
+        ;; Bozhidar Batsov
+        ("https://metaredux.com/feed.xml" clojure ruby)
         ("http://irreal.org/blog/?feed=rss2" emacs)
         ("https://emacsair.me/feed.xml" emacs)
         ;; Follow replies to my comments on HN
