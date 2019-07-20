@@ -245,8 +245,15 @@ buffer containing that file so they can't get out of sync.
 #+END_SRC
 
 ** Automatic Line Breaks
+
+Do not enable automatic line breaks for all text-mode based hooks,
+because several text-modes (markdown, mails) enjoy the pain of long
+lines. So here, I only add whitelisted modes sparingly. The other
+modes have a =visual-clean= configuration which makes the text look
+nice locally, at least.
+
 #+BEGIN_SRC emacs-lisp
-  (add-hook 'text-mode-hook 'auto-fill-mode)
+  (add-hook 'org-mode-hook 'auto-fill-mode)
 #+END_SRC
 
 ** Enable Narrow To Region
@@ -2169,7 +2176,6 @@ Configure =xdg-open= to use Emacs in =.local/share/applications/mimeapps.list=:
 
 
    (add-hook 'mu4e-compose-pre-hook 'my-mu4e-set-account)
-   (add-hook 'mu4e-compose-mode-hook 'flyspell-mode)
    (add-hook 'mu4e-compose-mode-hook (lambda ()
                                       (ispell-change-dictionary "deutsch")))
 
@@ -2242,6 +2248,7 @@ Configure =xdg-open= to use Emacs in =.local/share/applications/mimeapps.list=:
 
  #+END_SRC
 
+
  Check for supposed attachments prior to sending them
 
  #+BEGIN_SRC emacs-lisp
@@ -2310,12 +2317,25 @@ Configure =xdg-open= to use Emacs in =.local/share/applications/mimeapps.list=:
  (setq mu4e-view-html-plaintext-ratio-heuristic  most-positive-fixnum)
  #+END_SRC
 
- Setting =Format=Flowed= for non-text-based mail clients which don't
+ Setting =Format-Flowed= for non-text-based mail clients which don't
  respect actual formatting, but let the text "flow" as they please.
 
  #+BEGIN_SRC emacs-lisp
  (setq mu4e-compose-format-flowed t)
  #+END_SRC
+
+ Do not auto-wrap lines in favor of =Format-Flowed=, but still display
+ them nicely wrapped in my editor, because everything else is insane!
+
+#+BEGIN_SRC emacs-lisp
+   (add-hook 'mu4e-compose-mode-hook 'visual-clean)
+#+END_SRC
+
+
+#+BEGIN_SRC emacs-lisp
+   (add-hook 'mu4e-compose-mode-hook 'flyspell-mode)
+#+END_SRC
+
 
  Updating mails:
 
