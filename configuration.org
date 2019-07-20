@@ -1293,7 +1293,7 @@ Outline-based notes management and organizer. It is an outline-mode
 for keeping track of everything.
 ** General config
 #+BEGIN_SRC emacs-lisp
-  (setq org-directory "~/switchdrive/org/")
+  (setq org-directory "~/Dropbox/org/")
 #+END_SRC
 ** Plain Lists
 Allow ‘a.’, ‘A.’, ‘a)’ and ‘A) as list elements:
@@ -1424,7 +1424,7 @@ Org Capture Templates are explained [[http://orgmode.org/manual/Capture-template
           ("s" "Code Snippet" entry (file+headline "~/src/200ok/knowledge/README.org" "Snippets")
            ;; Prompt for tag and language
            "* %?\t%^g\n#+BEGIN_SRC %^{language}\n%i\n#+END_SRC")
-          ("p" "password" entry (file+headline "~/switchdrive/org/vault/primary.org.gpg" "Passwords")
+          ("p" "password" entry (file+headline "~/Dropbox/org/vault/primary.org.gpg" "Passwords")
            ;; Prompt for name
            "* %^{name}
    :PROPERTIES:
@@ -2062,7 +2062,7 @@ Configure =xdg-open= to use Emacs in =.local/share/applications/mimeapps.list=:
          ;; This halves the time for checking mails for 4 accounts for me
          ;; (when nothing has to be synched anyway)
          mu4e-get-mail-command "offlineimap_parallel.sh"
-         mu4e-attachment-dir "~/switchdrive/org/files/inbox")
+         mu4e-attachment-dir "~/Dropbox/org/files/inbox")
 
    (setq mu4e-maildir "~/Maildir/")
 
@@ -2840,26 +2840,27 @@ I like to set timers, for example through [[file:org-pomodoro.el][org-pomodoro.e
  spaceline-compile=.
 
  #+BEGIN_SRC emacs-lisp
-   (require 'spaceline-config)
-   (spaceline-emacs-theme)
-   (spaceline-install
-     'main
-     '((evil-state :face highlight-face)
-       (buffer-id)
-       (org-timer-left-time)
-       ;; (ph/mu4e-context-segment :face 'ph/spaceline-mu4e-context-face)
-       (ph/remote-method :face 'ph/spaceline-tramp-method-face)
-       (ph/remote-user-and-host :face 'ph/spaceline-tramp-user-host-face)
-       (buffer-modified))
-     '((minor-modes :when active)
-       (projectile-root)
-       (ph/version-control)
-       ;(line-column :when active)
-       ;(buffer-position :when active)
-       (ph/flycheck-info-segment :face 'ph/spaceline-flycheck-info-face :when active)
-       (ph/flycheck-warning-segment :face 'ph/spaceline-flycheck-warning-face :when active)
-       (ph/flycheck-error-segment :face 'ph/spaceline-flycheck-error-face :when active)
-       (major-mode)))
+      (require 'spaceline-config)
+      (spaceline-emacs-theme)
+      (spaceline-install
+        'main
+        '((evil-state :face highlight-face)
+          (buffer-id)
+          (org-timer-left-time)
+          ;; (ph/mu4e-context-segment :face 'ph/spaceline-mu4e-context-face)
+          (ph/remote-method :face 'ph/spaceline-tramp-method-face)
+          (ph/remote-user-and-host :face 'ph/spaceline-tramp-user-host-face)
+          (buffer-modified))
+        '(;;(minor-modes :when active)
+          (projectile-root)
+          (ph/version-control)
+          ;(line-column :when active)
+          ;(buffer-position :when active)
+          (ph/flycheck-info-segment :face 'ph/spaceline-flycheck-info-face :when active)
+          (ph/flycheck-warning-segment :face 'ph/spaceline-flycheck-warning-face :when active)
+          (ph/flycheck-error-segment :face 'ph/spaceline-flycheck-error-face :when active)
+          (line-column)
+          (major-mode)))
  #+END_SRC
 
  Set mode-line always active (don't hide segments when focus is on a different

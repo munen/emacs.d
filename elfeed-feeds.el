@@ -25,8 +25,8 @@
         ("https://hnrss.org/replies?id=preek" hackernews)
         ;; Everything on HN above 100 points
         ("https://hnrss.org/newest?points=100" hackernews)
-        ;; All clojure/lisp/ruby news above 25 points
-        ("https://hnrss.org/newest?q=clojure+OR+lisp+OR+ruby&points=25" hackernews)
+        ;; All clojure/lisp/ruby/org/emacs news above 25 points
+        ("https://hnrss.org/newest?q=clojure+OR+lisp+OR+ruby+OR+org+OR+emacs&points=25" hackernews)
         ("http://200ok.ch/atom.xml" 200ok)
         ;; Art
         ("https://katrinphyllis.tumblr.com/rss" katrin)))

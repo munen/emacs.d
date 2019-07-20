@@ -53,7 +53,9 @@
                                (remove-hook 'org-timer-done-hook 'set-break-timer)
                                ;; If configured and currently no timer is running
                                (if (and pomodoro-auto-clock-in
-                                        (not org-timer-countdown-timer))
+                                        (or
+                                         (fboundp 'org-timer-countdown-timer)
+                                         (not org-timer-countdown-timer)))
                                    (pomodoro-start))))
 
 ;;; org-pomodoro.el ends here
