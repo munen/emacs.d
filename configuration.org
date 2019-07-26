@@ -80,6 +80,7 @@ down in this file, some are used with the default configuration.
                         evil-numbers
                         evil-surround
                         exec-path-from-shell
+                        forge
                         flycheck
                         flycheck-flow
                         hide-mode-line
@@ -736,6 +737,8 @@ cursor forward use =C-t= or =grn= and backward =grp=. Finally use
   (mapc (lambda (mode)
           (evil-set-initial-state mode 'emacs)) '(elfeed-show-mode
                                                   elfeed-search-mode
+                                                  forge-pullreq-list-mode
+                                                  forge-topic-list-mode
                                                   dired-mode
                                                   tide-references-mode
                                                   image-dired-mode
@@ -1355,6 +1358,9 @@ unreadable. Therefore, always use =visual-clean=.
 #+END_SRC
 
 ** Magit
+   <<magit>>
+
+https://github.com/magit/magit
 
 Magit is an interface to the version control system Git.
 
@@ -1376,6 +1382,16 @@ Always sign commits with GPG
 
 #+BEGIN_SRC emacs-lisp
   (add-hook 'with-editor-mode-hook 'evil-normal-state)
+#+END_SRC
+
+** Forge
+https://github.com/magit/forge/
+
+Work with Git forges from the comfort of [[magit][Magit]].
+
+#+BEGIN_SRC emacs-lisp
+(with-eval-after-load 'magit
+  (require 'forge))
 #+END_SRC
 
 ** Projectile

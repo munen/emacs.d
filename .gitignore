@@ -23,3 +23,5 @@ games
 /projectile.cache
 /eww-bookmarks
 /recentf
+/forge-database.sqlite
+/transient
