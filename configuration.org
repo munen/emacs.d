@@ -1394,6 +1394,17 @@ Work with Git forges from the comfort of [[magit][Magit]].
   (require 'forge))
 #+END_SRC
 
+Add 200ok gitlab instance to list of known forges
+
+#+BEGIN_SRC emacs-lisp
+(with-eval-after-load 'forge
+  (add-to-list 'forge-alist
+               '("gitlab.200ok.ch"
+                 "gitlab.200ok.ch/api/v4"
+                 "gitlab.200ok.ch"
+                 forge-gitlab-repository)))
+#+END_SRC
+
 ** Projectile
 
 https://github.com/bbatsov/projectile
