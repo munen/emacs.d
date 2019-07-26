@@ -3,7 +3,8 @@
         ("https://www.booleanknot.com/blog/feed.xml" emacs important)
         ("https://labs.uswitch.com/rss/" programming)
         ;; Carl
-        ("https://stackingthebricks.com/atom.xml" business)
+        ("https://stackingthebricks.com/atom.xml" carl business)
+        ("https://beratung.duevel.online/blog/index.xml" carl programming)
         ;; SirPscls great Emacs configuration
         ("https://github.com/SirPscl/emacs.d/commits/master.atom" emacs)
         ;; *tpo
