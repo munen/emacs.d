@@ -1696,7 +1696,7 @@ Allow ‘a.’, ‘A.’, ‘a)’ and ‘A) as list elements:
 ** Capture Templates
 Set up capture templates for:
 
-- Todos which land in =inbox.org=
+- Todos which land in =Inbox=
 - Code Snippets which land in =snippets.org=
 - Shopping Items which get appended to the Shopping List in =things.org=
 - Media Entries (watch/read later items) that land in =media.org=
@@ -1708,7 +1708,6 @@ Org Capture Templates are explained [[http://orgmode.org/manual/Capture-template
   (setq org-default-notes-file (concat org-directory "inbox.org"))
   (define-key global-map "\C-cc" 'org-capture)
 
-  (setq inbox-file (expand-file-name "inbox.org" org-directory))
   (setq things-file (expand-file-name "things.org" org-directory))
   (setq media-file (expand-file-name "media.org" org-directory))
 
@@ -1729,9 +1728,9 @@ Org Capture Templates are explained [[http://orgmode.org/manual/Capture-template
                      (list fromname fromaddress from))))
 
   (setq org-capture-templates
-        '(("t" "Todo" entry (file+headline inbox-file "Tasks")
+        '(("t" "Todo" entry (file+olp things-file "Inbox" "Tasks")
            "* TODO %?\n  %U\n  %i\n  %a")
-          ("m" "Mail" entry (file+olp inbox-file "Mails")
+          ("m" "Mail" entry (file+olp things-file "Inbox" "Mails")
            ;; Creates "* TODO <2019-05-01 Wed> FromName [[mu4e:msgid:uuid][MessageSubject]] :200ok:
            ;; Therefore Emails can be properly:
            ;;   - Used as tasks
@@ -1841,8 +1840,6 @@ compatability reasons with =ok-export-org-timetable=.
     "Set different org-files to be used in `org-agenda`."
     (setq org-agenda-files (list (concat org-directory "things.org")
                                  (concat org-directory "refile-beorg.org")
-                                 (concat org-directory "inbox.org")
-                                 (concat org-directory "someday.org")
                                  (concat org-directory "reference.org")
                                  (concat org-directory "media.org")
                                  "~/Dropbox/ZHAW/web3-unterlagen/README.org"
