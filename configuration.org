@@ -224,8 +224,20 @@ buffer containing that file so they can't get out of sync.
 #+END_SRC
 ** Shortcut for changing font-size
 #+BEGIN_SRC emacs-lisp
-  (define-key global-map (kbd "C-1") 'text-scale-increase)
-  (define-key global-map (kbd "C-0") 'text-scale-decrease)
+  (defun zoom-in ()
+    (interactive)
+    (let ((x (+ (face-attribute 'default :height)
+                10)))
+      (set-face-attribute 'default nil :height x)))
+
+  (defun zoom-out ()
+    (interactive)
+    (let ((x (- (face-attribute 'default :height)
+                10)))
+      (set-face-attribute 'default nil :height x)))
+
+  (define-key global-map (kbd "C-1") 'zoom-in)
+  (define-key global-map (kbd "C-0") 'zoom-out)
 #+END_SRC
 ** Disable startup message
 
