@@ -99,6 +99,7 @@ down in this file, some are used with the default configuration.
                         pdf-tools
                         projectile
                         rainbow-mode
+                        ob-restclient
                         restclient
                         robe
                         sass-mode
@@ -1907,6 +1908,24 @@ Define where the refiling can happen (the default is to the local buffer):
 #+BEGIN_SRC emacs-lisp
 (setq org-cycle-separator-lines 0)
 #+END_SRC
+** Restclient mode
+
+https://github.com/pashky/restclient.el
+
+HTTP REST client tool for emacs
+
+*** Integration into Org mode
+
+https://github.com/alf/ob-restclient.el
+
+An extension to restclient.el for emacs that provides org-babel support.
+
+#+BEGIN_SRC emacs-lisp
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((restclient . t)))
+#+END_SRC
+
 * pdf-tools
 
 https://github.com/politza/pdf-tools
