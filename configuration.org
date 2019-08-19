@@ -1418,6 +1418,14 @@ Add 200ok gitlab instance to list of known forges
                  forge-gitlab-repository)))
 #+END_SRC
 
+Show assigned issues and PRs directly in the status buffer:
+
+#+BEGIN_SRC emacs-lisp
+(with-eval-after-load 'magit
+  (magit-add-section-hook 'magit-status-sections-hook 'forge-insert-assigned-issues   nil t)
+  (magit-add-section-hook 'magit-status-sections-hook 'forge-insert-assigned-pullreqs   nil t))
+#+END_SRC
+
 ** Projectile
 
 https://github.com/bbatsov/projectile
