@@ -23,6 +23,7 @@
         ;; Bozhidar Batsov
         ("https://metaredux.com/feed.xml" clojure ruby)
         ("http://irreal.org/blog/?feed=rss2" emacs)
+        ;; Jonas Bernoulli (Magit, Forge)
         ("https://emacsair.me/feed.xml" emacs)
         ;; Follow replies to my comments on HN
         ("https://hnrss.org/replies?id=preek" hackernews)
@@ -32,4 +33,6 @@
         ("https://hnrss.org/newest?q=clojure+OR+lisp+OR+ruby+OR+org+OR+emacs+OR+elisp&points=25" hackernews)
         ("http://200ok.ch/atom.xml" 200ok)
         ;; Art
-        ("https://katrinphyllis.tumblr.com/rss" katrin)))
+        ("https://katrinphyllis.tumblr.com/rss" katrin)
+        ;; Insopor Zen Academy
+        ("https://zen-temple.net/feed" zen)))
