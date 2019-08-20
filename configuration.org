@@ -505,37 +505,27 @@ Thx [[https://github.com/jcfischer][@jcfischer]] for the function!
 
 ** Clean up messy buffers (i.e. web wikis or elfeed-show)
 #+BEGIN_SRC emacs-lisp
-
   (defun visual-clean ()
     "Clean up messy buffers (i.e. web wikis or elfeed-show)"
     (interactive)
     (visual-line-mode)
     (visual-fill-column-mode))
-
 #+END_SRC
 
-Use this automatically for =writeroom-mode=:
-
-#+BEGIN_SRC emacs-lisp
-  (advice-add 'writeroom-mode :after
-              'visual-clean)
-#+END_SRC
 ** Generate passwords
    Through =pwgen=.
 
    Thanks to [[https://github.com/branch14/emacs.d][@branch14]] of 200ok fame for the function!
 #+BEGIN_SRC emacs-lisp
+  (defun generate-password-non-interactive ()
+     (string-trim (shell-command-to-string "pwgen -A 24")))
 
-(defun generate-password-non-interactive ()
-   (string-trim (shell-command-to-string "pwgen -A 24")))
-
-(defun generate-password ()
-  "Generates and inserts a new password"
-  (interactive)
-  (insert
-   (shell-command-to-string
-    (concat "pwgen -A " (read-string "Length: " "24") " 1"))))
-
+  (defun generate-password ()
+    "Generates and inserts a new password"
+    (interactive)
+    (insert
+     (shell-command-to-string
+      (concat "pwgen -A " (read-string "Length: " "24") " 1"))))
 #+END_SRC
 ** Passwords file
 
