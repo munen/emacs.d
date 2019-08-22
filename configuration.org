@@ -1583,27 +1583,60 @@ npm install -g prettier-eslint-cli prettier @prettier/plugin-ruby=
 
 [[file:images/demo-ok-autoformat.gif][file:images/demo-ok-autoformat.gif]]
 
+**** Call autoformat on every save - for certain projects
 
-*Call the function on every save*
+I don't want to =autoformat= for every project, because I might not be
+the primary owner of the code (that accounts for consulting projects).
+However, there are projects where I actually do want to run
+=autoformat= every time. That is on projects with strict formatting
+requirements.
 
-The overhead of prettier + eslint is about 1.3s on a maxed out X1
-Carbon 6th gen. That's too long in my book, that's why I'm not
-enabling completely automatic formatting but opt for calling it when
-needed (i.e. I see a linting error). Just using prettier is really
-fast, however I want to enable the same workflow for all those
-languages, so I'm not enabling formatting on save for those either.
+NB: The overhead of prettier + eslint is about 1.3s on a maxed out X1
+Carbon 6th gen.
 
 #+BEGIN_SRC emacs-lisp
-  ;; (add-hook 'before-save-hook '(lambda()
-  ;;                                (when (or
-  ;;                                       (derived-mode-p 'js2-mode)
-  ;;                                       (derived-mode-p 'web-mode)
-  ;;                                       (derived-mode-p 'css-mode)
-  ;;                                       (derived-mode-p 'json-mode)
-  ;;                                       (derived-mode-p 'sass-mode)
-  ;;                                       (derived-mode-p 'yaml-mode))
-  ;;                                  (autoformat))))
+  ;; Define list of projects to autoformat
+  (setq ok-autoformat-projects (list "src/org-web"))
+
+  (add-hook 'before-save-hook
+            '(lambda()
+               ;; Check if the current directory matches the list of
+               ;; projects that are to be autoformatted.
+               (if (seq-some '(lambda (e)
+                                (numberp e))
+                             (mapcar '(lambda (dir)
+                                        (string-match dir (projectile-project-root)))
+                                     ok-autoformat-projects) )
+                   (when (or
+                          (derived-mode-p 'js2-mode)
+                          (derived-mode-p 'web-mode)
+                          (derived-mode-p 'css-mode)
+                          (derived-mode-p 'json-mode)
+                          (derived-mode-p 'sass-mode)
+                          (derived-mode-p 'yaml-mode))
+                     (autoformat)))))
 #+END_SRC
+
+***** Alternative implementation
+
+NB: This could be a good alternative solution. However, scoping to the
+local directory doesn't work like this. Maybe I'm doing it wrong,
+maybe dir-locals just shouldn't be used outside of setting variables.
+
+*Call autoformat on every save for specific projects*
+
+those projects, you can enable =autoformat= by creating a
+=.dir-locals.el= file in your home directory.
+
+#+BEGIN_EXAMPLE emacs-lisp
+(("src"
+  (nil .
+       ((eval add-hook 'before-save-hook '(lambda()
+                                              (autoformat)))))))
+#+END_EXAMPLE
+
+The first node "src/" is the directory, while the second node is the
+mode-name, or "nil" to apply to every mode.
 
 *** Editorconfig
 
