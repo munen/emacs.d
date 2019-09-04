@@ -99,6 +99,7 @@ down in this file, some are used with the default configuration.
                         pdf-tools
                         projectile
                         rainbow-mode
+                        rjsx-mode
                         ob-restclient
                         restclient
                         robe
@@ -1217,6 +1218,18 @@ fast feedback cycle of developing plain JavaScript.
 (add-hook 'javascript-mode-hook 'flycheck-mode)
 #+END_SRC
 
+*** =rjsx-mode=
+
+https://github.com/felipeochoa/rjsx-mode
+
+This mode derives from js2-mode, extending its parser to support JSX
+syntax according to the official spec. This means you get all of the
+js2 features plus proper syntax checking and highlighting of JSX code
+blocks.
+
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'auto-mode-alist '("components\\/.*\\.js\\'" . rjsx-mode))
+#+END_SRC
 *** General JavaScript configuration
 
 #+BEGIN_SRC emacs-lisp
@@ -1596,7 +1609,7 @@ Carbon 6th gen.
 
 #+BEGIN_SRC emacs-lisp
   ;; Define list of projects to autoformat
-  (setq ok-autoformat-projects (list "src/org-web"))
+  (setq ok-autoformat-projects (list "src/200ok/organice"))
 
   (add-hook 'before-save-hook
             '(lambda()
@@ -2742,6 +2755,7 @@ machine irc.freenode.net login "munen" password SECRET_PASSWORD
 
 #+BEGIN_SRC emacs-lisp
   (setq erc-pals '("phi|" "branch14"))
+  ;; The quotes around %s are super important to prevent shell injection
   (add-hook 'erc-text-matched-hook '(lambda(match-type nickuserhost msg)
                                       (shell-command-to-string (format "notify-send erc '%s'" msg))))
 #+END_SRC
