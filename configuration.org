@@ -866,14 +866,18 @@ Commands (prefixed by =C-c t=):
   (setq comment-tags-keymap-prefix (kbd "C-c t"))
   (with-eval-after-load "comment-tags"
     (setq comment-tags-keyword-faces
-          `(("TODO" . ,(list :weight 'bold :foreground "#DF5427"))
+          `(;; A concrete TODO with actionable steps
+            ("TODO" . ,(list :weight 'bold :foreground "#DF5427"))
+            ;; A non-concrete TODO. We only know something is broken/amiss.
             ("FIXME" . ,(list :weight 'bold :foreground "#DF5427"))
-            ("BUG" . ,(list :weight 'bold :foreground "#DF5427"))
+            ;; Works, but is a code smell (quick fix). Might break down the line.
             ("HACK" . ,(list :weight 'bold :foreground "#DF5427"))
-            ("KLUDGE" . ,(list :weight 'bold :foreground "#DF5427"))
-            ("XXX" . ,(list :weight 'bold :foreground "#DF5427"))
-            ("INFO" . ,(list :weight 'bold :foreground "#1FDA9A"))
-            ("DONE" . ,(list :weight 'bold :foreground "#1FDA9A"))))
+            ;; Assumption that needs to be verified.
+            ("CHECK" . ,(list :weight 'bold :foreground "#CC6437"))
+            ;; Use to highlight a regular, but especially important, comment.
+            ("NOTE" . ,(list :weight 'bold :foreground "#1FDA9A"))
+            ;; Use to highlight a regular, but especially important, comment.
+            ("INFO" . ,(list :weight 'bold :foreground "#1FDA9A"))))
     (setq comment-tags-comment-start-only t
           comment-tags-require-colon t
           comment-tags-case-sensitive t
