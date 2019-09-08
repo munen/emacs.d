@@ -3368,14 +3368,18 @@ When evaluating the src-block above, it'll yield a table like:
      (ok-filter-table-by-date (ok-generate-clock-table) from-date 0)))
 
 
-  (defun ok-export-next-table-to (target-path)
-    "Exports the contents of the next org table to a CSV file at TARGET-PATH."
-    (let ((p (point)))
-      (search-forward "RESULTS")
-      (evil-next-visual-line)
-      (org-table-export target-path "orgtbl-to-csv")
-      (goto-char p)
-      (message "Table export completed")))
+  (defun ok-export-table-to (table-name target-path)
+    "Exports the contents of a table called TABLE-NAME to a CSV file at TARGET-PATH."
+    (progn
+      (save-excursion
+        (goto-char (point-min))
+        (search-forward (concat "RESULTS: " table-name))
+        (org-cycle)
+        (evil-next-line)
+        (org-table-export target-path "orgtbl-to-csv")
+        (evil-previous-line))
+        (org-cycle))
+      (message "Table export completed"))
 
 #+END_SRC
 ** Export Org Mode TODO headers into estimation table
