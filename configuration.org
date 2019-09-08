@@ -919,11 +919,16 @@ Enable code folding for programming modes.
 - =zR=: Unfold everything
 
 #+BEGIN_SRC emacs-lisp
-
 (add-hook 'prog-mode-hook #'hs-minor-mode)
-
 #+END_SRC
+*** =linum-mode=
 
+Enable =linum-mode= for programming modes:
+
+#+BEGIN_SRC emacs-lisp
+(add-hook 'prog-mode-hook '(lambda ()
+                             (linum-mode)))
+#+END_SRC
 ** Ruby
 
 *** Standard linters
@@ -945,7 +950,6 @@ npm install -g eslint
 
   (add-to-list 'auto-mode-alist '("\\.rb?\\'" . enh-ruby-mode))
   (add-to-list 'auto-mode-alist '("\\.rake?\\'" . enh-ruby-mode))
-  (add-hook 'enh-ruby-mode-hook 'linum-mode)
 #+END_SRC
 
 *** =robe-mode=
