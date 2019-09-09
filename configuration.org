@@ -1802,7 +1802,7 @@ Org Capture Templates are explained [[http://orgmode.org/manual/Capture-template
            ;;   - Ordered by priority
            ;;   - Scheduled
            ;;   - etc
-           "* TODO %(org-insert-time-stamp (org-read-date nil t \"%:date\")) %(from-name \"%:fromname\" \"%:fromaddress\" \"%:from\") %a \t :%(get-domainname \"%:toaddress\"):")
+           "* TODO %(org-insert-time-stamp (org-read-date nil t \"%:date\") nil t) %(from-name \"%:fromname\" \"%:fromaddress\" \"%:from\") %a \t :%(get-domainname \"%:toaddress\"):")
           ("d" "Daily focus" plain (file+olp things-file "NEXT" "Daily")
            (file "~/.emacs.d/org-templates/daily_focus.org"))
           ("s" "Code Snippet" entry (file+headline "~/src/200ok/knowledge/README.org" "Snippets")
