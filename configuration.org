@@ -1803,8 +1803,8 @@ Org Capture Templates are explained [[http://orgmode.org/manual/Capture-template
            ;;   - Scheduled
            ;;   - etc
            "* TODO %(org-insert-time-stamp (org-read-date nil t \"%:date\")) %(from-name \"%:fromname\" \"%:fromaddress\" \"%:from\") %a \t :%(get-domainname \"%:toaddress\"):")
-          ("z" "Deep focus (Zen to Done [daily])" plain (file+olp things-file "NEXT")
-           (file "~/.emacs.d/org-templates/deep_focus.org"))
+          ("d" "Daily focus" plain (file+olp things-file "NEXT" "Daily")
+           (file "~/.emacs.d/org-templates/daily_focus.org"))
           ("s" "Code Snippet" entry (file+headline "~/src/200ok/knowledge/README.org" "Snippets")
            ;; Prompt for tag and language
            "* %?\t%^g\n#+BEGIN_SRC %^{language}\n%i\n#+END_SRC")
