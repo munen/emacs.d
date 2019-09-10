@@ -1700,6 +1700,7 @@ Allow ‘a.’, ‘A.’, ‘a)’ and ‘A) as list elements:
    'org-babel-load-languages
    '(
      (shell . t)
+     (dot . t)
      (js . t)
      (ruby . t)
      ))
