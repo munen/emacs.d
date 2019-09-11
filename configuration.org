@@ -131,6 +131,15 @@ down in this file, some are used with the default configuration.
 * Default Settings
 This section contains settings for built-in Emacs features.
 
+** Gnu Elpa TLS Fix
+
+Emacs 26.1 (which I'm running on Debian stable) requests the GNU Elpa
+repo with the wrong TLS version and would fail. This configuration can
+be removed once upgraded to 26.3+.
+
+#+BEGIN_SRC emacs-lisp
+(setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
+#+END_SRC
 ** Gargabe Collection
 
 Allow 20MB of memory (instead of 0.76MB) before calling garbage
