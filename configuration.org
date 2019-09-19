@@ -2744,14 +2744,13 @@ machine irc.freenode.net login "munen" password SECRET_PASSWORD
 *Configure automatic join list*
 
 #+BEGIN_SRC emacs-lisp
-  (setq erc-autojoin-channels-alist '(("freenode.net" "#200ok" "#erc" "#guix")))
+  (setq erc-autojoin-channels-alist '(("freenode.net" "#200ok" "#emacsconf")))
 #+END_SRC
 
-*Configure
+*Do not show join/quit info for lurkers*
 
 #+BEGIN_SRC emacs-lisp
-  (setq erc-channel-hide-list '(("#erc" "JOIN" "PART" "QUIT")
-                               ("#emacs" "JOIN" "PART" "QUIT")))
+  (setq erc-lurker-hide-list '("JOIN" "PART" "QUIT"))
 #+END_SRC
 
 *Automatically unfold images when links are shared*
