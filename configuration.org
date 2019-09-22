@@ -1639,9 +1639,7 @@ Carbon 6th gen.
                                      ok-autoformat-projects) )
                    (when (or
                           (derived-mode-p 'js2-mode)
-                          (derived-mode-p 'web-mode)
                           (derived-mode-p 'css-mode)
-                          (derived-mode-p 'json-mode)
                           (derived-mode-p 'sass-mode)
                           (derived-mode-p 'yaml-mode))
                      (autoformat)))))
@@ -2214,7 +2212,7 @@ Configure =xdg-open= to use Emacs in =.local/share/applications/mimeapps.list=:
    (defvar my-mu4e-account-alist
      '(("200ok"
         (user-full-name  "Alain M. Lafon")
-        (mu4e-compose-signature "200ok GmbH\nGeschäftsführer\n\nalain@200ok.ch\n+41 76 405 05 67\nhttps://200ok.ch/\n\nCheck out our newest spin-off: https://quickshift.ch/")
+        (mu4e-compose-signature "200ok GmbH\nCEO\n\nalain@200ok.ch\n+41 76 405 05 67\nhttps://200ok.ch/\n\nCheck out our newest product: https://alephdam.200ok.ch/")
         (mu4e-compose-signature-auto-include t)
         (mu4e-sent-folder "/200ok/INBOX.Sent")
         (mu4e-drafts-folder "/200ok/INBOX.Drafts")
