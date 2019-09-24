@@ -204,6 +204,12 @@ Human readable units
   (setq-default dired-listing-switches "-alh")
 #+END_SRC
 
+On =C=, recursively copy by default:
+
+#+BEGIN_SRC emacs-lisp
+(setq dired-recursive-copies 'always)
+#+END_SRC
+
 *** =dired-narrow=
 
 =dired-narrow= of the [[https://github.com/Fuco1/dired-hacks][dired-hacks]] repository allows to dynamically
@@ -2742,7 +2748,7 @@ machine irc.freenode.net login "munen" password SECRET_PASSWORD
 *Configure automatic join list*
 
 #+BEGIN_SRC emacs-lisp
-  (setq erc-autojoin-channels-alist '(("freenode.net" "#200ok" "#emacsconf")))
+  (setq erc-autojoin-channels-alist '(("freenode.net" "#200ok" "#emacsconf" "#lobsters")))
 #+END_SRC
 
 *Do not show join/quit info for lurkers*
