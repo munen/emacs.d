@@ -204,7 +204,7 @@ Human readable units
   (setq-default dired-listing-switches "-alh")
 #+END_SRC
 
-On =C=, recursively copy by default:
+On =C=, recursively copy by default
 
 #+BEGIN_SRC emacs-lisp
 (setq dired-recursive-copies 'always)
@@ -1435,12 +1435,17 @@ Work with Git forges from the comfort of [[magit][Magit]].
 Add 200ok gitlab instance to list of known forges
 
 #+BEGIN_SRC emacs-lisp
-(with-eval-after-load 'forge
-  (add-to-list 'forge-alist
-               '("gitlab.200ok.ch"
-                 "gitlab.200ok.ch/api/v4"
-                 "gitlab.200ok.ch"
-                 forge-gitlab-repository)))
+  (with-eval-after-load 'forge
+    (add-to-list 'forge-alist
+                 '("gitlab.200ok.ch"
+                   "gitlab.200ok.ch/api/v4"
+                   "gitlab.200ok.ch"
+                   forge-gitlab-repository))
+    (add-to-list 'forge-alist
+                 '("gitlab.switch.ch"
+                   "gitlab.switch.ch/api/v4"
+                   "gitlab.switch.ch"
+                   forge-gitlab-repository)))
 #+END_SRC
 
 Show assigned issues and PRs directly in the status buffer:
