@@ -940,13 +940,16 @@ Enable code folding for programming modes.
 #+BEGIN_SRC emacs-lisp
 (add-hook 'prog-mode-hook #'hs-minor-mode)
 #+END_SRC
-*** =linum-mode=
+*** Line numbers
 
-Enable =linum-mode= for programming modes:
+Enable =linum-mode= for programming modes. For newer versions of
+Emacs, use =display-line-numbers-mode=, because it's _much_ faster.
 
 #+BEGIN_SRC emacs-lisp
-(add-hook 'prog-mode-hook '(lambda ()
-                             (linum-mode)))
+  (add-hook 'prog-mode-hook '(lambda ()
+                               (if (version<= emacs-version "26.0.50")
+                                   (linum-mode)
+                                 (display-line-numbers-mode))))
 #+END_SRC
 ** Ruby
 
