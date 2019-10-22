@@ -133,12 +133,15 @@ This section contains settings for built-in Emacs features.
 
 ** Gnu Elpa TLS Fix
 
-Emacs 26.1 (which I'm running on Debian stable) requests the GNU Elpa
-repo with the wrong TLS version and would fail. This configuration can
-be removed once upgraded to 26.3+.
+Emacs 26.1 (for example in Debian Buster) requests the GNU Elpa repo
+with the wrong TLS version - which makes the request fail. This is a
+manual patch for older versions of Emacs. It's fixed from 26.3 and
+above upstream.
 
 #+BEGIN_SRC emacs-lisp
-(setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
+  (if (string< emacs-version
+           "26.3")
+        (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3"))
 #+END_SRC
 ** Gargabe Collection
 
