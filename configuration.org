@@ -375,7 +375,8 @@ always have a recent version. This adds the installed packages to the
 standard Emacs load path, so that =require= just works.
 
 #+BEGIN_SRC emacs-lisp
-(add-to-list 'load-path "/home/munen/.guix-profile/share/emacs/site-lisp/")
+  (add-to-list 'load-path "/home/munen/.guix-profile/share/emacs/site-lisp/")
+  (add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e")
 #+END_SRC
 * Misc Custom Improvements
 
