@@ -1299,18 +1299,17 @@ buffer, and watch your changes appear as you type!
 
 *** Process JSON
 
-[[https://stedolan.github.io/jq/][jq]] is a lightweight and flexible command-line JSON processor.
+https://github.com/200ok-ch/counsel-jq
 
-Thanks to [[https://github.com/branch14/emacs.d][@branch14]] of 200ok fame for the function!
+[[https://stedolan.github.io/jq/][jq]] is a lightweight and flexible command-line JSON processor. This
+loads a counsel wrapper to quickly test queries and traverse a complex
+JSON structure whilst having live feedback.
+
+Thanks to [[https://github.com/branch14/emacs.d][@branch14]] of 200ok fame for starting with the initial
+function!
 
 #+BEGIN_SRC emacs-lisp
-(defun jq-json ()
-  (interactive)
-  (save-excursion
-    (shell-command-on-region
-     (point-min)
-     (point-max)
-     (read-string "Command: " "jq -M '.'") t t)))
+  (load "~/src/200ok/counsel-jq/counsel-jq.el")
 #+END_SRC
 
 *** web-mode
