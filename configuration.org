@@ -95,6 +95,7 @@ down in this file, some are used with the default configuration.
                         ledger-mode
                         magit
                         markdown-mode
+                        package-lint
                         parinfer
                         pdf-tools
                         projectile
