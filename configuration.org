@@ -1526,7 +1526,7 @@ This requires =prettier=, =@prettier/plugin-ruby= and
 =prettier-eslint-cli= to be installed:
 
 #+BEGIN_EXAMPLE
-npm install -g prettier-eslint-cli prettier @prettier/plugin-ruby=
+npm install -g prettier-eslint-cli prettier @prettier/plugin-ruby
 #+END_EXAMPLE
 
 #+BEGIN_SRC emacs-lisp
@@ -2493,13 +2493,24 @@ Configure =xdg-open= to use Emacs in =.local/share/applications/mimeapps.list=:
  Always sign outgoing emails:
 
  #+BEGIN_SRC emacs-lisp
-(setq mu4e-compose-crypto-reply-plain-policy 'sign)
+   (setq mu4e-compose-crypto-reply-plain-policy 'sign)
  #+END_SRC
 
+ Use gnus article view. This is an *experimental* feature of mu4e.
+
  #+BEGIN_SRC emacs-lisp
- (add-hook 'mu4e-compose-mode-hook 'epa-mail-mode)
- (add-hook 'mu4e-view-mode-hook 'epa-mail-mode)
+   (setq mu4e-view-use-gnus t)
  #+END_SRC
+
+ With upgrading to Emacs 27, this broke
+ =mu4e-compose-crypto-reply-plain-policy= set to ='sign=. It always
+ wanted to sign with s/mime whereas I want to sign with gpg. I think
+ this option is obsolete. I'm leaving it here for a moment until I'm
+ sure it will not be needed anymore.
+#+BEGIN_SRC emacs-lisp
+   ;; (add-hook 'mu4e-compose-mode-hook 'epa-mail-mode)
+   ;; (add-hook 'mu4e-view-mode-hook 'epa-mail-mode)
+#+END_SRC
 
  Automatic line breaks when reading mail
 
@@ -2535,6 +2546,12 @@ Configure =xdg-open= to use Emacs in =.local/share/applications/mimeapps.list=:
 
 #+BEGIN_SRC emacs-lisp
   (setq mu4e-confirm-quit nil)
+#+END_SRC
+
+**** Configure manually installed mu paths
+
+#+BEGIN_SRC emacs-lisp
+  (setq mu4e-msg2pdf "/usr/local/bin/msg2pdf")
 #+END_SRC
 
 **** TODO Use Quoted printable text for outgoing messages to enable automatic line breaks
