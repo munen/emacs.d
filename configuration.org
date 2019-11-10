@@ -1934,6 +1934,7 @@ compatability reasons with =ok-export-org-timetable=.
                                  (concat org-directory "refile-beorg.org")
                                  (concat org-directory "reference.org")
                                  (concat org-directory "media.org")
+                                 (concat org-directory "shared_with_monika/shared_alain_and_monika.org")
                                  "~/Dropbox/ZHAW/web3-unterlagen/README.org"
                                  "~/Dropbox/ZHAW/weng-unterlagen/README.org"
                                  "~/src/200ok/swiss-crowdfunder/TODO.org"
@@ -2495,6 +2496,14 @@ Configure =xdg-open= to use Emacs in =.local/share/applications/mimeapps.list=:
  #+BEGIN_SRC emacs-lisp
    (setq mu4e-compose-crypto-reply-plain-policy 'sign)
  #+END_SRC
+
+ When sending encrypted messages, also encrypt to self so that I can
+ read the mail in the sent folder:
+
+#+BEGIN_SRC emacs-lisp
+  (setq mml-secure-openpgp-encrypt-to-self t)
+  (setq mml-secure-openpgp-sign-with-sender  t)
+#+END_SRC
 
  Use gnus article view. This is an *experimental* feature of mu4e.
 
