@@ -2779,7 +2779,18 @@ machine irc.freenode.net login "munen" password SECRET_PASSWORD
 *Configure automatic join list*
 
 #+BEGIN_SRC emacs-lisp
-  (setq erc-autojoin-channels-alist '(("freenode.net" "#200ok" "#emacsconf" "#lobsters")))
+  (setq erc-autojoin-channels-alist '(("freenode.net" "#200ok" "#emacsconf" "#emacsconf-org" "#lobsters")
+                                      ;; This does not work, yet. The
+                                      ;; channels cannot be joined on
+                                      ;; connecting to bitlbee. bitlbee
+                                      ;; needs to first connect to the
+                                      ;; configured accounts (i.e.
+                                      ;; slack). This could happen in a
+                                      ;; timeout, or better event
+                                      ;; oriented on a message that
+                                      ;; bitlbee sends when connected to
+                                      ;; the account.
+                                      '(("localhost" "#internal" "#general"))))
 #+END_SRC
 
 *Do not show join/quit info for lurkers*
