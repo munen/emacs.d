@@ -1931,7 +1931,6 @@ compatability reasons with =ok-export-org-timetable=.
   (defun set-org-agenda-files ()
     "Set different org-files to be used in `org-agenda`."
     (setq org-agenda-files (list (concat org-directory "things.org")
-                                 (concat org-directory "refile-beorg.org")
                                  (concat org-directory "reference.org")
                                  (concat org-directory "media.org")
                                  (concat org-directory "shared_with_monika/shared_alain_and_monika.org")
@@ -3194,7 +3193,7 @@ Debian package.
 #+BEGIN_SRC emacs-lisp
 
   (when (eq system-type 'gnu/linux)
-    (set-frame-font "Fira Code Retina 15")
+    (set-frame-font "Fira Code Retina 19")
     ;; Default Browser
     (setq browse-url-browser-function 'browse-url-generic
           browse-url-generic-program "firefox"
