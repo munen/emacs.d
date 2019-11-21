@@ -3405,6 +3405,13 @@ When evaluating the src-block above, it'll yield a table like:
              (string-trim hashtags)
              (string-trim description))))))
 
+  (defun ok-find-parent-of-type (elem-type elem)
+    "For a child ELEM, find the closes parent element of type ELEM-TYPE."
+    (let ((parent-elem (org-element-property :parent elem)))
+      (if (eq elem-type (car parent-elem))
+          parent-elem
+        (ok-find-parent-of-type elem-type parent-elem))))
+
   (defun ok-generate-clock-table ()
     "Generate a list of org elements of type 'clock."
     (let* ((ast (org-element-parse-buffer 'element)))
@@ -3413,7 +3420,7 @@ When evaluating the src-block above, it'll yield a table like:
       (org-element-map ast 'clock
         (lambda (clock-elem)
           (let* ((val (org-element-property :value clock-elem))
-                 (task (org-element-property :parent (org-element-property :parent clock-elem)))
+                 (task (ok-find-parent-of-type 'headline clock-elem))
                  (hash-and-description (ok-split-hash-and-description
                                         (org-element-property :title task))))
             `(,(let ((year (org-element-property :year-start val))
