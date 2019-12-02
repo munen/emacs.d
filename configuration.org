@@ -62,6 +62,7 @@ down in this file, some are used with the default configuration.
                         clj-refactor
                         clojure-mode
                         coffee-mode
+                        counsel-jq
                         comment-tags
                         darktooth-theme
                         dired-narrow
@@ -1306,10 +1307,6 @@ JSON structure whilst having live feedback.
 
 Thanks to [[https://github.com/branch14/emacs.d][@branch14]] of 200ok fame for starting with the initial
 function!
-
-#+BEGIN_SRC emacs-lisp
-  (load "~/src/200ok/counsel-jq/counsel-jq.el")
-#+END_SRC
 
 *** web-mode
 
