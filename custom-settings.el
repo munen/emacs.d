@@ -9,15 +9,19 @@
    '("d91ef4e714f05fff2070da7ca452980999f5361209e679ee988e3c432df24347" "df3e05e16180d77732ceab47a43f2fcdb099714c1c47e91e8089d2fcf5882ea3" "d09467d742f713443c7699a546c0300db1a75fed347e09e3f178ab2f3aa2c617" "8db4b03b9ae654d4a57804286eb3e332725c84d7cdab38463cb6b97d5762ad26" "85c59044bd46f4a0deedc8315ffe23aa46d2a967a81750360fb8600b53519b8a" default))
  '(mml-secure-key-preferences
    '((OpenPGP
-      (sign)
+      (sign
+       ("alain.lafon@dispatched.ch" "D465337B218A0216ECDC368E137099B38E1FC0E9")
+       ("lafo@zhaw.ch" "D465337B218A0216ECDC368E137099B38E1FC0E9")
+       ("alain@200ok.ch" "D465337B218A0216ECDC368E137099B38E1FC0E9"))
       (encrypt
+       ("alain@200ok.ch" "D465337B218A0216ECDC368E137099B38E1FC0E9")
        ("alain@zen-tempel.ch" "D465337B218A0216ECDC368E137099B38E1FC0E9")
        ("tpo@sourcepole.ch" "549A598550F2C6DB416F287C9EF854EDFC992520")))
      (CMS
       (sign)
       (encrypt))))
  '(org-agenda-files
-   '("~/switchdrive/org/things.org" "~/switchdrive/org/inbox.org" "~/Dropbox/ZHAW/web3-unterlagen/README.org" "~/Dropbox/ZHAW/weng-unterlagen/README.org" "~/switchdrive/org/reference.org"))
+   '("~/Dropbox/org/things.org" "~/Dropbox/org/reference.org" "~/Dropbox/org/media.org" "~/Dropbox/org/shared_with_monika/shared_alain_and_monika.org" "~/Dropbox/ZHAW/web3-unterlagen/README.org" "~/Dropbox/ZHAW/weng-unterlagen/README.org" "~/src/200ok/swiss-crowdfunder/TODO.org" "~/src/200ok/200ok-admin/THINGS.org"))
  '(org-latex-text-markup-alist
    '((bold . "\\textbf{%s}")
      (code . protectedtexttt)
@@ -26,7 +30,7 @@
      (underline . "\\uline{%s}")
      (verbatim . "%s")))
  '(package-selected-packages
-   '(rjsx-mode evil-escape erc-image edit-indirect atomic-chrome ob-restclient diminish elfeed spaceline ido-vertical-mode spacemacs-theme solarized-theme editorconfig dired-narrow evil-mc forge edit-server dumb-jump ggtags browse-kill-ring clipmon rainbow-mode beacon js2-refactor graphviz-dot-mode js-comint intero haskell-mode comment-tags handlebars-mode json-mode mustache-mode seeing-is-believing elfeed-goodies elfeed-org zenburn-theme writegood-mode writeroom-mode which-key darktooth-theme magit restclient impatient-mode evil-numbers evil-surround evil-leader evil smex ledger-mode robe enh-ruby-mode markdown-mode projectile coffee-mode tern-auto-complete tern pdf-tools yaml-mode sass-mode fixme-mode flycheck-flow ac-js2 js2-mode ac-cider exec-path-from-shell cider clj-refactor parinfer clojure-mode web-mode auto-complete flycheck ag))
+   '(tide flycheck-package rjsx-mode evil-escape erc-image edit-indirect atomic-chrome ob-restclient diminish elfeed spaceline ido-vertical-mode spacemacs-theme solarized-theme editorconfig dired-narrow evil-mc forge edit-server dumb-jump ggtags browse-kill-ring clipmon rainbow-mode beacon js2-refactor graphviz-dot-mode js-comint intero haskell-mode comment-tags handlebars-mode json-mode mustache-mode seeing-is-believing elfeed-goodies elfeed-org zenburn-theme writegood-mode writeroom-mode which-key darktooth-theme magit restclient impatient-mode evil-numbers evil-surround evil-leader evil smex ledger-mode robe enh-ruby-mode markdown-mode projectile coffee-mode tern-auto-complete tern pdf-tools yaml-mode sass-mode fixme-mode flycheck-flow ac-js2 js2-mode ac-cider exec-path-from-shell cider clj-refactor parinfer clojure-mode web-mode auto-complete flycheck ag))
  '(safe-local-variable-values
    '((eval progn
            (custom-set-variables
