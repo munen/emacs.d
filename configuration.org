@@ -2508,7 +2508,12 @@ Configure =xdg-open= to use Emacs in =.local/share/applications/mimeapps.list=:
   (setq mml-secure-openpgp-sign-with-sender  t)
 #+END_SRC
 
- Use gnus article view. This is an *experimental* feature of mu4e.
+ Don't use gnus article view. Using it is an experimental feature of
+ mu4e. Generally, the gnus article view is nice. But downloading
+ attachments whilst having Swiper is not a good experience, because
+ you'd have to type out the name of the saved file for every
+ attachment. In the mu4e view, you can download each or all
+ attachments without this additional step.
 
  #+BEGIN_SRC emacs-lisp
    (setq mu4e-view-use-gnus nil)
