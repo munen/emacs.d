@@ -1528,20 +1528,23 @@ npm install -g prettier-eslint-cli prettier @prettier/plugin-ruby
   (defun autoformat ()
     "Automatically format current buffer."
     (interactive)
-    (let ((eslint-path (concat (projectile-project-root)
-                               ".eslintrc.json")))
-      (autoformat-with
-       (cond ((derived-mode-p 'web-mode) 'autoformat-html-command)
-             ((derived-mode-p 'css-mode) 'autoformat-css-command)
-             ((derived-mode-p 'json-mode) 'autoformat-json-command)
-             ((derived-mode-p 'sass-mode) 'autoformat-sass-command)
-             ((derived-mode-p 'yaml-mode) 'autoformat-yaml-command)
-             ((derived-mode-p 'enh-ruby-mode) 'autoformat-ruby-command)
-             ;; JS projects with eslint config
-             ((and (file-exists-p eslint-path)
-                   (derived-mode-p 'js2-mode))
-              'autoformat-prettier-eslint-command)
-             ((derived-mode-p 'js2-mode) 'autoformat-javascript-command)))))
+
+    (if (derived-mode-p 'clojure-mode)
+        (autoformat-clojure-function)
+      (let ((eslint-path (concat (projectile-project-root)
+                                 ".eslintrc.json")))
+        (autoformat-with
+         (cond ((derived-mode-p 'web-mode) 'autoformat-html-command)
+               ((derived-mode-p 'css-mode) 'autoformat-css-command)
+               ((derived-mode-p 'json-mode) 'autoformat-json-command)
+               ((derived-mode-p 'sass-mode) 'autoformat-sass-command)
+               ((derived-mode-p 'yaml-mode) 'autoformat-yaml-command)
+               ((derived-mode-p 'enh-ruby-mode) 'autoformat-ruby-command)
+               ;; JS projects with eslint config
+               ((and (file-exists-p eslint-path)
+                     (derived-mode-p 'js2-mode))
+                'autoformat-prettier-eslint-command)
+               ((derived-mode-p 'js2-mode) 'autoformat-javascript-command))))))
 
   (defun autoformat-with (strategy)
     "Automatically format current buffer using STRATEGY."
@@ -1568,6 +1571,10 @@ npm install -g prettier-eslint-cli prettier @prettier/plugin-ruby
       ;; was lost, because the whole buffer got replaced.
       (set-window-start (selected-window) s)
       (goto-char p)))
+
+  (defun autoformat-clojure-function ()
+    "Cider function to format Clojure buffer."
+    (cider-format-buffer))
 
   (defun autoformat-ruby-command ()
     "CLI tool to format Ruby."
@@ -1613,6 +1620,7 @@ npm install -g prettier-eslint-cli prettier @prettier/plugin-ruby
   (setq ok-autoformat-modes (list 'web-mode
                   'css-mode
                   'json-mode
+                  'clojure-mode
                   'sass-mode
                   'enh-ruby-mode
                   'yaml-mode
@@ -2503,7 +2511,7 @@ Configure =xdg-open= to use Emacs in =.local/share/applications/mimeapps.list=:
  Use gnus article view. This is an *experimental* feature of mu4e.
 
  #+BEGIN_SRC emacs-lisp
-   (setq mu4e-view-use-gnus t)
+   (setq mu4e-view-use-gnus nil)
  #+END_SRC
 
  With upgrading to Emacs 27, this broke
