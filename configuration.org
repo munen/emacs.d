@@ -1921,15 +1921,6 @@ This will render the same time as above as:
 |--------------+---------|
 | *Total time* | *25:03* |
 
-*** Clock entries without LOGBOOK
-
-Do not wrap clock entries into a :LOGBOOK: (mainly for backwards
-compatability reasons with =ok-export-org-timetable=.
-
-#+BEGIN_SRC emacs-lisp
-(setq org-clock-into-drawer nil)
-#+END_SRC
-
 ** GTD
 #+BEGIN_SRC emacs-lisp
   (defun set-org-agenda-files ()
