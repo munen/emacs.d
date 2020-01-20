@@ -1717,6 +1717,16 @@ Allow ‘a.’, ‘A.’, ‘a)’ and ‘A) as list elements:
 (setq org-list-allow-alphabetical t)
 
 #+END_SRC
+** Warn about an approaching deadline
+
+   The default is 14 days ahead. That's way too much for me. If a
+   task needs a lot of work ahead of the deadline, I'll set a custom
+   reminder date or an additional schedule.
+
+#+BEGIN_SRC emacs-lisp
+(setq org-deadline-warning-days 3)
+#+END_SRC
+
 
 ** General configuration
 
