@@ -905,6 +905,7 @@ Commands (prefixed by =C-c t=):
           comment-tags-show-faces t
           comment-tags-lighter nil))
   (add-hook 'prog-mode-hook 'comment-tags-mode)
+  (add-hook 'conf-mode-hook 'comment-tags-mode)
 #+END_SRC
 
 *** Auto-indent with the Return key
