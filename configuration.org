@@ -1841,7 +1841,7 @@ Org Capture Templates are explained [[http://orgmode.org/manual/Capture-template
            ;; Creates an expense line for the date of the mail, prompts
            ;; for the amount and currency
            ("e" "Expense" table-line (file+olp things-file "Inbox" "Expenses")
-            "|%(org-insert-time-stamp (org-read-date nil t \"%:date\") nil t) | %(from-name \"%:fromname\" \"%:fromaddress\" \"%:from\")| [[%%l][Mail]] | %^{amount} | %^{currency|usd|chf} | |")
+            "|%(org-insert-time-stamp (org-read-date nil t \"%:date\") nil t) | %(from-name \"%:fromname\" \"%:fromaddress\" \"%:from\")| [[%%l][Mail]] | %^{amount} | %^{currency|usd|chf|eur} | |")
           ("m" "Mail" entry (file+olp things-file "Inbox" "Mails")
            ;; Creates "* TODO <2019-05-01 Wed> FromName [[mu4e:msgid:uuid][MessageSubject]] :200ok:
            ;; Therefore Emails can be properly:
