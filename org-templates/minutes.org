@@ -1,0 +1,15 @@
+* MINUTES %(org-insert-time-stamp (current-time)) %?
+  - Date/Time/Location:
+  - Goal:
+  - Attendees:
+** Intro
+   - [ ] Ask if recording to Collecture is OK
+** Follow-ups
+*** TODO Foo                                                    :responsible:
+** Decisions
+*** Decision1
+** Closure
+   Summary and Takeaways:
+** TODO [0%] Postprocess meeting
+   - [ ] Distribute Meeting Minutes to the team
+   - [ ] Todos and Projects completed, processed or delegated

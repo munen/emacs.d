@@ -1751,12 +1751,12 @@ Allow ‘a.’, ‘A.’, ‘a)’ and ‘A) as list elements:
   (evil-leader/set-key
     "a" 'org-archive-subtree-default)
 
-  ;; Allow =pdflatex= to use shell-commands
+  ;; Allow =pdflatex= to use shell-commands. Alternatively use =xetex=
   ;; This will allow it to use =pygments= as syntax highlighter for exports to PDF
   (setq org-latex-pdf-process
-        '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-          "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-          "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+        '("xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+          "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+          "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
 
   ;; Include =minted= package for LaTeX exports
   (add-to-list 'org-latex-packages-alist '("" "minted"))
@@ -1810,64 +1810,66 @@ Set up capture templates for:
 Org Capture Templates are explained [[http://orgmode.org/manual/Capture-templates.html][here]], Org Template expansion [[http://orgmode.org/manual/Template-expansion.html#Template-expansion][here.]]
 
 #+BEGIN_SRC emacs-lisp
-  ;; Set org-capture inbox
-  (setq org-default-notes-file (concat org-directory "inbox.org"))
-  (define-key global-map "\C-cc" 'org-capture)
+    ;; Set org-capture inbox
+    (setq org-default-notes-file (concat org-directory "inbox.org"))
+    (define-key global-map "\C-cc" 'org-capture)
 
-  (setq things-file (expand-file-name "things.org" org-directory))
-  (setq media-file (expand-file-name "media.org" org-directory))
+    (setq things-file (expand-file-name "things.org" org-directory))
+    (setq media-file (expand-file-name "media.org" org-directory))
 
-  (defun get-domainname (address)
-    "Extract TLD (without country) from ADDRESS.
-  Example: Return '200ok' from 'alain@200ok.ch'."
-    (replace-regexp-in-string
-     "\-" "_"
-     (nth 0
-          (split-string (nth 1 (split-string address "@"))
-                        "\\."))))
+    (defun get-domainname (address)
+      "Extract TLD (without country) from ADDRESS.
+    Example: Return '200ok' from 'alain@200ok.ch'."
+      (replace-regexp-in-string
+       "\-" "_"
+       (nth 0
+            (split-string (nth 1 (split-string address "@"))
+                          "\\."))))
 
-  (defun from-name (fromname fromaddress from)
-    "Return the first non-empty match for FROMNAME FROMADDRESS and FROM."
-    (nth 0
-         (seq-filter '(lambda (s)
-                        (not (string-empty-p s)))
-                     (list fromname fromaddress from))))
+    (defun from-name (fromname fromaddress from)
+      "Return the first non-empty match for FROMNAME FROMADDRESS and FROM."
+      (nth 0
+           (seq-filter '(lambda (s)
+                          (not (string-empty-p s)))
+                       (list fromname fromaddress from))))
 
-  (setq org-capture-templates
-        '(("t" "Todo" entry (file+olp things-file "Inbox" "Tasks")
-           "* TODO %?\n  %U\n  %i\n  %a")
-           ("w" "Waiting" entry (file+olp things-file "Waiting")
-           "* WAITING %?\n  %U\n  %i\n  %a")
-           ;; Creates an expense line for the date of the mail, prompts
-           ;; for the amount and currency
-           ("e" "Expense" table-line (file+olp things-file "Inbox" "Expenses")
-            "|%(org-insert-time-stamp (org-read-date nil t \"%:date\") nil t) | %(from-name \"%:fromname\" \"%:fromaddress\" \"%:from\")| [[%l][Mail]] | %^{amount} | %^{currency|usd|chf|eur} | |")
-          ("m" "Mail" entry (file+olp things-file "Inbox" "Mails")
-           ;; Creates "* TODO <2019-05-01 Wed> FromName [[mu4e:msgid:uuid][MessageSubject]] :200ok:
-           ;; Therefore Emails can be properly:
-           ;;   - Used as tasks
-           ;;   - Attributed tags
-           ;;   - Ordered by priority
-           ;;   - Scheduled
-           ;;   - etc
-           "* TODO %(org-insert-time-stamp (org-read-date nil t \"%:date\") nil t) %(from-name \"%:fromname\" \"%:fromaddress\" \"%:from\") %a \t :%(get-domainname \"%:toaddress\"):")
-          ("d" "Daily focus" plain (file+olp things-file "NEXT" "Daily")
-           (file "~/.emacs.d/org-templates/daily_focus.org"))
-          ("s" "Code Snippet" entry (file+headline "~/src/200ok/knowledge/README.org" "Snippets")
-           ;; Prompt for tag and language
-           "* %?\t%^g\n#+BEGIN_SRC %^{language}\n%i\n#+END_SRC")
-          ("p" "password" entry (file+headline "~/Dropbox/org/vault/primary.org.gpg" "Passwords")
-           ;; Prompt for name
-           "* %^{name}
-   :PROPERTIES:
-   :username: %^{username}
-   :password: %(generate-password-non-interactive)
-   :url: %^{url}
+    (setq org-capture-templates
+          '(("t" "Todo" entry (file+olp things-file "Inbox" "Tasks")
+             "* TODO %?\n  %U\n  %i\n  %a")
+             ("w" "Waiting" entry (file+olp things-file "Waiting")
+             "* WAITING %?\n  %U\n  %i\n  %a")
+             ;; Creates an expense line for the date of the mail, prompts
+             ;; for the amount and currency
+             ("e" "Expense" table-line (file+olp things-file "Inbox" "Expenses")
+              "|%(org-insert-time-stamp (org-read-date nil t \"%:date\") nil t) | %(from-name \"%:fromname\" \"%:fromaddress\" \"%:from\")| [[%l][Mail]] | %^{amount} | %^{currency|usd|chf|eur} | |")
+            ("m" "Mail" entry (file+olp things-file "Inbox" "Mails")
+             ;; Creates "* TODO <2019-05-01 Wed> FromName [[mu4e:msgid:uuid][MessageSubject]] :200ok:
+             ;; Therefore Emails can be properly:
+             ;;   - Used as tasks
+             ;;   - Attributed tags
+             ;;   - Ordered by priority
+             ;;   - Scheduled
+             ;;   - etc
+             "* TODO %(org-insert-time-stamp (org-read-date nil t \"%:date\") nil t) %(from-name \"%:fromname\" \"%:fromaddress\" \"%:from\") %a \t :%(get-domainname \"%:toaddress\"):")
+            ("d" "Daily focus" plain (file+olp things-file "NEXT" "Daily")
+             (file "~/.emacs.d/org-templates/daily_focus.org"))
+            ("M" "Meeting minutes" plain (file+olp things-file "Inbox" "Tasks")
+             (file "~/.emacs.d/org-templates/minutes.org"))
+            ("s" "Code Snippet" entry (file+headline "~/src/200ok/knowledge/README.org" "Snippets")
+             ;; Prompt for tag and language
+             "* %?\t%^g\n#+BEGIN_SRC %^{language}\n%i\n#+END_SRC")
+            ("p" "password" entry (file+headline "~/Dropbox/org/vault/primary.org.gpg" "Passwords")
+             ;; Prompt for name
+             "* %^{name}
+     :PROPERTIES:
+     :username: %^{username}
+     :password: %(generate-password-non-interactive)
+     :url: %^{url}
 
-   :END:")
-          ("u" "URL" entry
-           (file+datetree media-file)
-           "* %?\nURL: \nEntered on %U\n")))
+     :END:")
+            ("u" "URL" entry
+             (file+datetree media-file)
+             "* %?\nURL: \nEntered on %U\n")))
 #+END_SRC
 
 ** Pomodoro
