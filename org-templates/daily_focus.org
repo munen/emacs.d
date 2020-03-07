@@ -19,6 +19,7 @@
     - [ ] Always: When it's not clear what the current task is, _pick_
       one task and start a pomodoro to remind yourself which task
       you're working on
+       - [[https://www.joelonsoftware.com/2001/02/12/human-task-switches-considered-harmful][Human Task switches considered harmful]]
 
 **** Journal
 
