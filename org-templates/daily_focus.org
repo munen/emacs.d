@@ -2,18 +2,20 @@
 
 **** Process
 
+    - [ ] Stop messengers
+    - [ ] Go into DND mode
     - [ ] Start by setting one Pomodoro just to get the day organized
     - [ ] Set a timetable for today
-      - Set a timer to enforce free time and get rid of the five more
+      - [ ] Set a timer to enforce free time and get rid of the five more
         minutes syndrome
     - [ ] First, think: Is there an obvious TODO on my mind?
-    - Otherwise, start by looking at the calendar
+      - Otherwise, start by looking at the calendar
     - [ ] Then look at the daily agenda in org
     - If nothing sticks out, look at the 'next action' for the current
       context
     - [ ] After some quality work has been done, start mu4e
-      - Capture all emails, adhere to the 2min rule
-    - Start Slack
+      - [ ] Capture all emails, adhere to the 2min rule
+    - [ ] Start messengers
     - [ ] Always: When it's not clear what the current task is, _pick_
       one task and start a pomodoro to remind yourself which task
       you're working on
