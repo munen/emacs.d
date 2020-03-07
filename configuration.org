@@ -145,7 +145,7 @@ above upstream.
            "26.3")
         (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3"))
 #+END_SRC
-** Gargabe Collection
+** Garbage Collection
 
 Allow 20MB of memory (instead of 0.76MB) before calling garbage
 collection. This means GC runs less often, which speeds up some
