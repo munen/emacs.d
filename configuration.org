@@ -1000,9 +1000,15 @@ Shortcuts:
 **** =auto-complete= for =robe-mode=
 
 #+BEGIN_SRC emacs-lisp
-
 (add-hook 'enh-ruby-mode-hook 'auto-complete-mode)
+#+END_SRC
 
+**** REPL
+
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'enh-ruby-mode-hook
+            (lambda ()
+              (local-set-key (kbd "C-x C-e") 'ruby-send-line)))
 #+END_SRC
 
 ** Clojure
