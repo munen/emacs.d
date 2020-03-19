@@ -14,6 +14,7 @@
        ("lafo@zhaw.ch" "D465337B218A0216ECDC368E137099B38E1FC0E9")
        ("alain@200ok.ch" "D465337B218A0216ECDC368E137099B38E1FC0E9"))
       (encrypt
+       ("lafo@zhaw.ch" "D465337B218A0216ECDC368E137099B38E1FC0E9")
        ("alain@200ok.ch" "D465337B218A0216ECDC368E137099B38E1FC0E9")
        ("alain@zen-tempel.ch" "D465337B218A0216ECDC368E137099B38E1FC0E9")
        ("tpo@sourcepole.ch" "549A598550F2C6DB416F287C9EF854EDFC992520")))
@@ -33,6 +34,53 @@
    '(counsel-jq package-lint tide flycheck-package rjsx-mode evil-escape erc-image edit-indirect atomic-chrome ob-restclient diminish elfeed spaceline ido-vertical-mode spacemacs-theme solarized-theme editorconfig dired-narrow evil-mc forge edit-server dumb-jump ggtags browse-kill-ring clipmon rainbow-mode beacon js2-refactor graphviz-dot-mode js-comint intero haskell-mode comment-tags handlebars-mode json-mode mustache-mode seeing-is-believing elfeed-goodies elfeed-org zenburn-theme writegood-mode writeroom-mode which-key darktooth-theme magit restclient impatient-mode evil-numbers evil-surround evil-leader evil smex ledger-mode robe enh-ruby-mode markdown-mode projectile coffee-mode tern-auto-complete tern pdf-tools yaml-mode sass-mode fixme-mode flycheck-flow ac-js2 js2-mode ac-cider exec-path-from-shell cider clj-refactor parinfer clojure-mode web-mode auto-complete flycheck ag))
  '(safe-local-variable-values
    '((eval progn
+           (custom-set-variables
+            '(org-latex-text-markup-alist
+              '((bold . "\\textbf{%s}")
+                (code . protectedtexttt)
+                (italic . "\\emph{%s}")
+                (strike-through . "\\sout{%s}")
+                (underline . "\\uline{%s}")
+                (verbatim . "%s"))))
+           (defun ok-add-number-grouping
+               (number &optional separator)
+             "Add commas to NUMBER and return it as a string. Optional
+         SEPARATOR is the string to use to separate groups. It
+         defaults to a apostrophe."
+             (let
+                 ((num
+                   (if
+                       (floatp number)
+                       (format "%0.2f" number)
+                     (number-to-string number)))
+                  (op
+                   (or separator "'")))
+               (while
+                   (string-match "\\(.*[0-9]\\)\\([0-9][0-9][0-9].*\\)" num)
+                 (setq num
+                       (concat
+                        (match-string 1 num)
+                        op
+                        (match-string 2 num))))
+               num))
+           (defmacro ok-org-get-var
+               (name)
+             "Retrieves an org-variable NAME and casts it into a number."
+             `(string-to-number
+               (org-sbe ,name)))
+           (defun ok-number-as-chf
+               (number)
+             "Take a NUMBER, format and return it like 'CHF 12'345.-' If the NUMBER is a float, then the precision is ."
+             (concat "CHF "
+                     (ok-add-number-grouping
+                      (if
+                          (stringp number)
+                          (string-to-number number)
+                        number))
+                     (if
+                         (floatp number)
+                         "" ".-"))))
+     (eval progn
            (custom-set-variables
             '(org-latex-text-markup-alist
               '((bold . "\\textbf{%s}")
