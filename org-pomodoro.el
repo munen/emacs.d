@@ -43,7 +43,7 @@
       (switch-to-buffer ok-pomodoro-buffer))
     (remove-hook 'org-timer-done-hook 'set-start-timer)
     (add-hook 'org-timer-done-hook 'set-break-timer)
-    (org-timer-set-timer "00:00:05")
+    (org-timer-set-timer 5)
     (when switchp
       (switch-to-buffer (other-buffer)))))
 
