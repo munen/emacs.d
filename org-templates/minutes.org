@@ -3,7 +3,7 @@
     - Goal:
     - Attendees:
 **** Intro
-     - [ ] Ask if recording to Collecture is OK
+     - [ ] Ask if recording is OK
 **** Follow-ups
 ***** TODO Foo                                                  :responsible:
 **** Decisions
