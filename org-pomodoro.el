@@ -3,23 +3,29 @@
 ;;; Commentary:
 ;;; Code:
 
-(add-to-list 'org-modules 'org-timer)
+(require 'org)
+(require 'org-timer)
 
 (defvar ok-pomodoro-buffer)
-
+(defvar ok-pomodoro-completed 0)
+(defvar ok-pomodoro-cancelled 0)
 (defvar ok-pomodoro-auto-clock-in t
   "When set to non-nil, a pomodoro will automatically be started when clocking in on any task in 'org-mode'.")
 
 (defun set-break-timer ()
   "When the timer is over, go back to work."
-
-  (shell-command "say 'Break is over'")
-  (message-box "Break is over"))
+  (shell-command "notify-send -u critical 'Break is over.'")
+  (shell-command "say 'Break is over.'")
+  ;; Overwrite the result from `shell-command`.
+  (message "Break is over."))
 
 (defun set-start-timer ()
   "When the timer is over, let the user take a break!"
-  (shell-command "say 'Time to take a break'")
-  (message-box "Time to take a break"))
+  (setq ok-pomodoro-completed (+ 1 ok-pomodoro-completed))
+  (shell-command "notify-send 'Time to take a break.'")
+  (shell-command "say 'Time to take a break.'")
+  ;; Overwrite the result from `shell-command`.
+  (message-box "Time to take a break."))
 
 (defun should-switch-buffer ()
   "Check if the current buffer is the primary pomodoro buffer."
@@ -37,13 +43,14 @@
       (switch-to-buffer ok-pomodoro-buffer))
     (remove-hook 'org-timer-done-hook 'set-start-timer)
     (add-hook 'org-timer-done-hook 'set-break-timer)
-    (org-timer-set-timer 5)
+    (org-timer-set-timer "00:00:05")
     (when switchp
       (switch-to-buffer (other-buffer)))))
 
 (defun pomodoro-cancel ()
   "Cancel the current pomodoro timer."
   (interactive)
+  (setq ok-pomodoro-cancelled (+ 1 ok-pomodoro-cancelled))
   (org-timer-stop))
 
 (defun pomodoro-start ()
