@@ -1897,6 +1897,9 @@ A break can be started with =M-x pomodoro-break=. A pomodoro can also
 manually be started without clocking in via =M-x pomodoro-start=.
 
 #+BEGIN_SRC emacs-lisp
+  ;; Configure primary org pomodoro buffer to which the timers will get
+  ;; attached to.
+  (setq ok-pomodoro-buffer "things.org")
   (load "~/.emacs.d/org-pomodoro")
 #+END_SRC
 ** Keyword sets
