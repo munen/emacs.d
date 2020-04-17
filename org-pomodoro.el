@@ -35,8 +35,7 @@
   (interactive)
   (remove-hook 'org-timer-done-hook 'set-break-timer)
   (add-hook 'org-timer-done-hook 'set-start-timer)
-  (org-timer-set-timer 25)
-  (shell-command "say 'Ready, set, go!'"))
+  (org-timer-set-timer 25))
 
 (defvar pomodoro-auto-clock-in t
   "When set to non-nil, a pomodoro will automatically be started when clocking in on any task in 'org-mode'.")
