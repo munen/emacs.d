@@ -2582,6 +2582,19 @@ Configure =xdg-open= to use Emacs in =.local/share/applications/mimeapps.list=:
   (setq mu4e-confirm-quit nil)
 #+END_SRC
 
+  Reminder to keep to three sentences.
+
+  Rationale: E-mail takes too long to respond to, resulting in
+  continuous inbox overflow for those who receive a lot of it.
+
+  http://three.sentenc.es/
+
+#+BEGIN_SRC emacs-lisp
+(add-hook 'mu4e-compose-mode-hook
+  (defun ok-mu4e-keep-to-three-sentences ()
+    (message-box "Keep to three sentences.")))
+#+END_SRC
+
 **** Configure manually installed mu paths
 
 #+BEGIN_SRC emacs-lisp
