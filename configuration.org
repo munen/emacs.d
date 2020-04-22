@@ -2595,7 +2595,8 @@ Configure =xdg-open= to use Emacs in =.local/share/applications/mimeapps.list=:
 #+BEGIN_SRC emacs-lisp
 (add-hook 'mu4e-compose-mode-hook
   (defun ok-mu4e-keep-to-three-sentences ()
-    (message-box "Keep to three sentences.")))
+    (shell-command "notify-send -u critical 'Keep to three sentences.'")
+    (message "Keep to three sentences.")))
 #+END_SRC
 
 **** Configure manually installed mu paths
