@@ -81,6 +81,6 @@
                                         (or
                                          (fboundp 'org-timer-countdown-timer)
                                          (not org-timer-countdown-timer)))
-                                   (pomodoro-start))))
+                                   (ok-pomodoro-start))))
 
 ;;; org-pomodoro.el ends here
