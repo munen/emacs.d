@@ -1585,31 +1585,31 @@ npm install -g prettier-eslint-cli prettier @prettier/plugin-ruby
 
   (defun autoformat-ruby-command ()
     "CLI tool to format Ruby."
-    "prettier --stdin --parser ruby")
+    "prettier --parser ruby")
 
   (defun autoformat-javascript-command ()
     "CLI tool to format Javascript."
-    "prettier --stdin --parser babel")
+    "prettier --parser babel")
 
   (defun autoformat-html-command ()
     "CLI tool to format HTML."
-    "prettier --stdin --parser html")
+    "prettier --parser html")
 
   (defun autoformat-css-command ()
     "CLI tool to format CSS."
-    "prettier --stdin --parser css")
+    "prettier --parser css")
 
   (defun autoformat-sass-command ()
     "CLI tool to format SASS."
-    "prettier --stdin --parser sass")
+    "prettier --parser sass")
 
   (defun autoformat-json-command ()
     "CLI tool to format JSON."
-    "prettier --stdin --parser json")
+    "prettier --parser json")
 
   (defun autoformat-yaml-command ()
     "CLI tool to format YAML."
-    "prettier --stdin --parser yaml")
+    "prettier --parser yaml")
 
   (defun autoformat-prettier-eslint-command ()
     "CLI tool to format Javascript with .eslintrc.json configuration."
@@ -1618,7 +1618,7 @@ npm install -g prettier-eslint-cli prettier @prettier/plugin-ruby
             (concat
              (projectile-project-root)
              ".eslintrc.json")
-            " --parser babel --stdin"))
+            " --parser babel"))
 #+END_SRC
 
 *Shortcut*
