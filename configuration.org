@@ -3269,56 +3269,6 @@ Display Emoji (requires the =fonts-symbola= Debian package)
   ; Use Spotlight to search with M-x locate
   (setq locate-command "mdfind"))
 #+END_SRC
-
-* Bad experience
-
-The following packages would be nice, in theory. In practice something
-is yet amiss, but it might be different in the future. That's why I'm
-keeping them around and will try them at another time.
-
-** clipmon
-https://github.com/bburns/clipmon
-
-Proposition: Monitors system clipboard and puts everything in the kill-ring.
-
-Caveat: In theory, I liked the package. However, it seemed to cause
-racing conditions and crashed Emacs multiple times a day. When this is
-re-implemented in a non-blocking mode, this would be nice.
-
-#+BEGIN_SRC emacs-lisp
-  ;; (add-to-list 'after-init-hook 'clipmon-mode-start)
-#+END_SRC
-
-*** Comment
-
-Theoretically this is really nice to have functionality. However, I
-couldn't run it for long. Emacs started freezing a lot on the day when
-I added this lib. I assume, because clipmon is blocking - and I always
-run multiple instances of Emacs in parallel. They might be in for a
-classic racing condition. Might be just another bug.
-
-** =parinfer-mode=
-
-Proposition: When working with Lisp, there's the option of handing parentheses
-manually or let them be dealt with by the magic that is [[http://shaunlebron.github.io/parinfer/][Parinfer]]. I'm
-using the wonderful [[https://github.com/DogLooksGood/parinfer-mode][parinfer-mode]].
-
-Caveat: The original Parinfer curiously is written in JavaScript.
-=parinfer-mode= is a re-implementation in Elisp. When I tried it, it
-was still in it's early stages and quite buggy. However, the original
-Parinfer algorithm is quite nice. I'll try again at some point.
-
-#+BEGIN_SRC emacs-lisp
-  ;; (add-hook 'clojure-mode-hook #'parinfer-mode)
-  ;; (add-hook 'emacs-lisp-mode-hook #'parinfer-mode)
-  ;; (setq parinfer-extensions '(company pretty-parens evil))
-  ;; (eval-after-load "parinfer"
-  ;;   '(progn
-  ;;      (define-key parinfer-mode-map (kbd "C-,") 'parinfer-toggle-mode)
-  ;;      (define-key parinfer-region-mode-map (kbd ">") 'parinfer-shift-right)
-  ;;      (define-key parinfer-region-mode-map (kbd "<") 'parinfer-shift-left)))
-#+END_SRC
-
 * Presentation / Beamer
 ** Set safe themes (to execute LISP code)
 
@@ -3510,6 +3460,54 @@ When evaluating the src-block above, it'll yield a table like:
 ** Export Org Mode TODO headers into estimation table
 #+BEGIN_SRC emacs-lisp
 (load-file "~/src/200ok/200ok-admin/src/export-org-estimations/ok-export-org-estimations.el")
+#+END_SRC
+* Bad experience
+
+The following packages would be nice, in theory. In practice something
+is yet amiss, but it might be different in the future. That's why I'm
+keeping them around and will try them at another time.
+
+** clipmon
+https://github.com/bburns/clipmon
+
+Proposition: Monitors system clipboard and puts everything in the kill-ring.
+
+Caveat: In theory, I liked the package. However, it seemed to cause
+racing conditions and crashed Emacs multiple times a day. When this is
+re-implemented in a non-blocking mode, this would be nice.
+
+#+BEGIN_SRC emacs-lisp
+  ;; (add-to-list 'after-init-hook 'clipmon-mode-start)
+#+END_SRC
+
+*** Comment
+
+Theoretically this is really nice to have functionality. However, I
+couldn't run it for long. Emacs started freezing a lot on the day when
+I added this lib. I assume, because clipmon is blocking - and I always
+run multiple instances of Emacs in parallel. They might be in for a
+classic racing condition. Might be just another bug.
+
+** =parinfer-mode=
+
+Proposition: When working with Lisp, there's the option of handing parentheses
+manually or let them be dealt with by the magic that is [[http://shaunlebron.github.io/parinfer/][Parinfer]]. I'm
+using the wonderful [[https://github.com/DogLooksGood/parinfer-mode][parinfer-mode]].
+
+Caveat: The original Parinfer curiously is written in JavaScript.
+=parinfer-mode= is a re-implementation in Elisp. When I tried it, it
+was still in it's early stages and quite buggy. However, the original
+Parinfer algorithm is quite nice. I'll try again at some point.
+
+#+BEGIN_SRC emacs-lisp
+  ;; (add-hook 'clojure-mode-hook #'parinfer-mode)
+  ;; (add-hook 'emacs-lisp-mode-hook #'parinfer-mode)
+  ;; (setq parinfer-extensions '(company pretty-parens evil))
+  ;; (eval-after-load "parinfer"
+  ;;   '(progn
+  ;;      (define-key parinfer-mode-map (kbd "C-,") 'parinfer-toggle-mode)
+  ;;      (define-key parinfer-region-mode-map (kbd ">") 'parinfer-shift-right)
+  ;;      (define-key parinfer-region-mode-map (kbd "<") 'parinfer-shift-left)))
 #+END_SRC
 
 * Other good Emacs configurations
