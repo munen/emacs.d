@@ -649,6 +649,34 @@ Happily taken from Pascals configuration: https://github.com/SirPscl/emacs.d#sud
                            (not (ph/sudo-save-buffer)))
                    (call-interactively fn args))))
 #+END_SRC
+** Open file with emacsclient using =filename:line= path
+   This configuration is originally from the great [[https://github.com/bbatsov/prelude/commit/8c55c6f4bb8fab04040e178b97a9e68006525403][bbatsov's prelude]].
+
+
+```bash
+emacsclient somefile:1234
+```
+
+This will open file 'somefile' and set cursor on line 1234.
+
+#+BEGIN_SRC emacs-lisp
+(defadvice server-visit-files (before parse-numbers-in-lines (files proc &optional nowait) activate)
+  "Open file with emacsclient with cursors positioned on requested line.
+Most of console-based utilities prints filename in format
+'filename:linenumber'.  So you may wish to open filename in that format.
+Just call:
+  emacsclient filename:linenumber
+and file 'filename' will be opened and cursor set on line 'linenumber'"
+  (ad-set-arg 0
+              (mapcar (lambda (fn)
+                        (let ((name (car fn)))
+                          (if (string-match "^\\(.*?\\):\\([0-9]+\\)\\(?::\\([0-9]+\\)\\)?$" name)
+                              (cons
+                               (match-string 1 name)
+                               (cons (string-to-number (match-string 2 name))
+                                     (string-to-number (or (match-string 3 name) ""))))
+                            fn))) files)))
+#+END_SRC
 * General
 This section contains settings for non-built-in Emacs features that
 are generally applicable to different kinds of modes.
