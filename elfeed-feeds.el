@@ -40,3 +40,5 @@
         ("https://katrinphyllis.tumblr.com/rss" katrin)
         ;; Insopor Zen Academy
         ("https://zen-temple.net/feed" zen)))
+
+(load "~/.emacs.d/private_feeds")

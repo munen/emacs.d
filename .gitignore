@@ -25,3 +25,4 @@ games
 /recentf
 /forge-database.sqlite
 /transient
+/private_feeds.el
