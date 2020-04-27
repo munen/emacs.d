@@ -3270,9 +3270,11 @@ having to recheck the whole buffer).
 Debian package.
 
 #+BEGIN_SRC emacs-lisp
-
   (when (eq system-type 'gnu/linux)
-    (set-frame-font "Fira Code Retina 19")
+        (add-to-list 'default-frame-alist
+                     '(font . "Fira Code Retina 9"))
+        ;; Manually setting the font
+        ;; (set-frame-font "Fira Code Retina 9")
     ;; Default Browser
     (setq browse-url-browser-function 'browse-url-generic
           browse-url-generic-program "firefox"
@@ -3338,7 +3340,7 @@ Display Emoji (requires the =fonts-symbola= Debian package)
   (defun light-mode ()
     "Enables a light theme."
     (interactive)
-    (set-face-attribute 'default nil :height 150)
+    (set-face-attribute 'default nil :height 100)
     (mapcar 'disable-theme custom-enabled-themes)
     (load-theme 'spacemacs-light t))
 #+END_SRC
