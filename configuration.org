@@ -313,9 +313,9 @@ default to not confuse beginners.
 ** Set $MANPATH, $PATH and exec-path from shell even when started from GUI helpers like =dmenu= or =Spotlight=
 
 #+BEGIN_SRC emacs-lisp
-
-    (exec-path-from-shell-initialize)
-
+;; Safeguard, so this only runs on Linux (or MacOS)
+(when (memq window-system '(mac ns x))
+  (exec-path-from-shell-initialize))
 #+END_SRC
 ** =windmove=
 
