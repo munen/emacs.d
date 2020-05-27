@@ -982,6 +982,13 @@ Emacs, use =display-line-numbers-mode=, because it's _much_ faster.
                                    (linum-mode)
                                  (display-line-numbers-mode))))
 #+END_SRC
+*** Indenting a buffer
+#+BEGIN_SRC emacs-lisp
+(defun indent-buffer ()
+  (interactive)
+  (save-excursion
+    (indent-region (point-min) (point-max) nil)))
+#+END_SRC
 ** Ruby
 
 *** Standard linters
@@ -1609,7 +1616,7 @@ npm install -g prettier-eslint-cli prettier @prettier/plugin-ruby
 
   (defun autoformat-clojure-function ()
     "Cider function to format Clojure buffer."
-    (cider-format-buffer))
+    (indent-buffer))
 
   (defun autoformat-ruby-command ()
     "CLI tool to format Ruby."
