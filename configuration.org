@@ -2187,10 +2187,10 @@ that it's good enough for me.
 Writing and reading mail is inherently a text-based workflow. Yes,
 there's HTML mails and attachments, but at the core Email is probably
 /the place/ where many people write and consume the most text. To
-utilize the best text-processing program available, makes a lot of
+utilize the best text-processing program available makes a lot of
 sense.
 
-When combined with other powerful features of Emacs (such as org-mode
+When combined with other powerful features of Emacs (such as Org mode
 for organizing mails into projects and todos), processing mails within
 Emacs not only makes a lot of sense, but becomes a powerhouse.
 
