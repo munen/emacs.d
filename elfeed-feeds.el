@@ -33,8 +33,6 @@
         ("https://hnrss.org/newest?q=clojure+OR+lisp+OR+ruby+OR+org+OR+emacs+OR+elisp&points=25" hackernews)
         ;; Subscribe to Clojure/Emacs/Lisp/Ruby News on https://lobste.rs
         ("https://lobste.rs/t/clojure,emacs,lisp,ruby.rss" lobsters)
-        ;; Clojureverse
-        ("https://clojureverse.org/posts.rss" clojure)
         ("http://200ok.ch/atom.xml" 200ok)
         ;; Art
         ("https://katrinphyllis.tumblr.com/rss" katrin)
