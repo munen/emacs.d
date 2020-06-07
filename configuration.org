@@ -1892,7 +1892,7 @@ Org Capture Templates are explained [[http://orgmode.org/manual/Capture-template
            ;;   - Scheduled
            ;;   - etc
            "* TODO %(org-insert-time-stamp (org-read-date nil t \"%:date\") nil t) %(from-name \"%:fromname\" \"%:fromaddress\" \"%:from\") %a \t :%(get-domainname \"%:toaddress\"):")
-          ("d" "Daily focus" plain (file+olp things-file "NEXT" "Daily")
+          ("d" "Daily focus" plain (file+olp things-file "Inbox" "Daily")
            (file "~/.emacs.d/org-templates/daily_focus.org"))
           ("M" "Meeting minutes" plain (file+olp things-file "Inbox" "Tasks")
            (file "~/.emacs.d/org-templates/minutes.org"))
@@ -2510,19 +2510,6 @@ Configure =xdg-open= to use Emacs in =.local/share/applications/mimeapps.list=:
  (setq mu4e-view-html-plaintext-ratio-heuristic  most-positive-fixnum)
  #+END_SRC
 
- Setting =Format-Flowed= for non-text-based mail clients which don't
- respect actual formatting, but let the text "flow" as they please.
-
- #+BEGIN_SRC emacs-lisp
- (setq mu4e-compose-format-flowed t)
- #+END_SRC
-
- Do not auto-wrap lines in favor of =Format-Flowed=, but still display
- them nicely wrapped in my editor, because everything else is insane!
-
-#+BEGIN_SRC emacs-lisp
-   (add-hook 'mu4e-compose-mode-hook 'visual-clean)
-#+END_SRC
 
 
 #+BEGIN_SRC emacs-lisp
@@ -2634,6 +2621,35 @@ Configure =xdg-open= to use Emacs in =.local/share/applications/mimeapps.list=:
     (message "Keep to three sentences.")))
 #+END_SRC
 
+**** ~format=flowed~
+
+ Setting ~format=flowed~ for non-text-based mail clients which don't
+ respect actual formatting, but let the text "flow" as they please.
+
+   - mu4e sets up visual-line-mode and also fill (=M-q=) to do the
+     right thing.
+   - each paragraph is a single long line; at sending, emacs will add
+     the special line continuation characters.
+
+ #+BEGIN_SRC emacs-lisp
+   (setq mu4e-compose-format-flowed t)
+ #+END_SRC
+
+ Some email clients ignore ~format=flowed~ (i.e. Outlook). Therefore,
+ we send very long lines, so that they auto-flow. 998 chars are the
+ actual maximum from the relevant RFC: https://www.ietf.org/rfc/rfc2822.txt
+
+ #+BEGIN_SRC emacs-lisp
+   (setq fill-flowed-encode-column 998)
+ #+END_SRC
+
+ Do not auto-wrap lines in favor of ~format=flowed~, but still display
+ them nicely wrapped in Emacs.
+
+#+BEGIN_SRC emacs-lisp
+   (add-hook 'mu4e-compose-mode-hook 'visual-clean)
+#+END_SRC
+
 **** Configure manually installed mu paths
 
 #+BEGIN_SRC emacs-lisp
@@ -2645,7 +2661,6 @@ Configure =xdg-open= to use Emacs in =.local/share/applications/mimeapps.list=:
  https://mathiasbynens.be/notes/gmail-plain-text
  https://mothereff.in/quoted-printable
  https://www.gnu.org/software/emacs/manual/html_node/emacs-mime/qp.html
-
 *** Mail filtering
     Add a header action "Block" which add the Senders Name and From
     Address to a procmail blacklist.
