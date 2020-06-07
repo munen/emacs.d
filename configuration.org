@@ -2625,11 +2625,21 @@ Configure =xdg-open= to use Emacs in =.local/share/applications/mimeapps.list=:
 
  Setting ~format=flowed~ for non-text-based mail clients which don't
  respect actual formatting, but let the text "flow" as they please.
+ Relevant RFC: https://tools.ietf.org/html/rfc3676
 
-   - mu4e sets up visual-line-mode and also fill (=M-q=) to do the
-     right thing.
-   - each paragraph is a single long line; at sending, emacs will add
-     the special line continuation characters.
+ #+BEGIN_QUOTE
+   What is required is a format which is in all significant ways
+   Text/Plain, and therefore is quite suitable for display as
+   Text/Plain, and yet allows the sender to express to the receiver
+   which lines are quoted and which lines are considered a logical
+   paragraph, and thus eligible to be flowed (wrapped and joined) as
+   appropriate.
+ #+END_QUOTE
+
+ - mu4e sets up visual-line-mode and also fill (=M-q=) to do the
+   right thing.
+ - each paragraph is a single long line; at sending, emacs will add
+   the special line continuation characters.
 
  #+BEGIN_SRC emacs-lisp
    (setq mu4e-compose-format-flowed t)
