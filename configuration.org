@@ -1440,7 +1440,9 @@ unreadable. Therefore, always use =visual-clean=.
 #+END_SRC
 
 ** Magit
-   <<magit>>
+   :PROPERTIES:
+   :CUSTOM_ID: magit
+   :END:
 
 https://github.com/magit/magit
 
@@ -1469,7 +1471,7 @@ Always sign commits with GPG
 ** Forge
 https://github.com/magit/forge/
 
-Work with Git forges from the comfort of [[magit][Magit]].
+Work with Git forges from the comfort of [[#magit][Magit]].
 
 #+BEGIN_SRC emacs-lisp
 (with-eval-after-load 'magit
@@ -1840,6 +1842,8 @@ Allow ‘a.’, ‘A.’, ‘a)’ and ‘A) as list elements:
 #+END_SRC
 
 ** Capture Templates
+   :PROPERTIES:
+   :END:
 Set up capture templates for:
 
 - Todos which land in =Inbox=
