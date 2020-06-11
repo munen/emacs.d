@@ -886,7 +886,10 @@ Use 2 spaces instead of tabs for programming languages.
   (setq web-mode-markup-indent-offset 2)
 #+END_SRC
 
-*** Syntax Checking
+*** Syntax Checking (flycheck)
+    :PROPERTIES:
+    :CUSTOM_ID: flycheck
+    :END:
 
 http://www.flycheck.org/
 
@@ -1558,15 +1561,25 @@ strategy function. It is trivial to do if the new language/framework
 has a command-line tool which takes code into =stdin= and formats it
 to =stdout=.
 
-This setup is completely local and doesn't impose dependencies to
-other team members.
+It's possible to install the dependencies locally, so that the setup
+doesn't impose dependencies on team members - or they can be installed
+through the respective packages managers (npm/yarn) to enforce code
+guidelines.
 
 This requires =prettier=, =@prettier/plugin-ruby= and
 =prettier-eslint-cli= to be installed:
 
-#+BEGIN_EXAMPLE
+#+BEGIN_SRC shell
 npm install -g prettier-eslint-cli prettier @prettier/plugin-ruby
-#+END_EXAMPLE
+#+END_SRC
+
+Linting JavaScript with [[https://eslint.org/][eslint]] happens automatically through [[#flycheck][flycheck]].
+eslint just needs to be installed.
+
+#+BEGIN_SRC shell
+npm install -g eslint
+#+END_SRC
+
 
 #+BEGIN_SRC emacs-lisp
   (defun autoformat ()
@@ -1576,7 +1589,7 @@ npm install -g prettier-eslint-cli prettier @prettier/plugin-ruby
     (if (derived-mode-p 'clojure-mode)
         (autoformat-clojure-function)
       (let ((eslint-path (concat (projectile-project-root)
-                                 ".eslintrc.json")))
+                                 ".eslintrc.yml"))) ; could be .json or .yml
         (autoformat-with
          (cond ((derived-mode-p 'web-mode) 'autoformat-html-command)
                ((derived-mode-p 'css-mode) 'autoformat-css-command)
@@ -1650,11 +1663,11 @@ npm install -g prettier-eslint-cli prettier @prettier/plugin-ruby
 
   (defun autoformat-prettier-eslint-command ()
     "CLI tool to format Javascript with .eslintrc.json configuration."
-    (concat "prettier-eslint --eslint-config-path "
+    (concat "npx prettier-eslint --stdin true --eslint-config-path "
             ;; Hand over the path of the current projec
             (concat
              (projectile-project-root)
-             ".eslintrc.json")
+             ".eslintrc.yml")
             " --parser babel"))
 #+END_SRC
 
