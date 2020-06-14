@@ -1663,11 +1663,13 @@ npm install -g eslint
 
   (defun autoformat-prettier-eslint-command ()
     "CLI tool to format Javascript with .eslintrc.json configuration."
-    (concat "npx prettier-eslint --stdin true --eslint-config-path "
+    (concat "npx prettier-eslint  --stdin --eslint-config-path="
             ;; Hand over the path of the current projec
             (concat
              (projectile-project-root)
              ".eslintrc.yml")
+             " --stdin-filepath="
+             (buffer-name)
             " --parser babel"))
 #+END_SRC
 
