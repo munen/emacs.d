@@ -2103,6 +2103,14 @@ An extension to restclient.el for emacs that provides org-babel support.
 
  This is a work-in-progress, but already working.
 
+ Important commands are:
+
+   - =M-x appt-check=: At any point, re-display current appointment reminders
+   - =M-x apt-delete=: Delete obsolete appointment reminders
+     - Through Org, they only get added, but not deleted. Hence, when
+       changing the reminder time, there will be two appointments in
+       the queue.
+
  https://orgmode.org/worg/org-faq.html#automatic-reminders
 
  https://emacs.stackexchange.com/questions/3844/good-methods-for-setting-up-alarms-audio-visual-triggered-by-org-mode-events
