@@ -2109,9 +2109,12 @@ An extension to restclient.el for emacs that provides org-babel support.
 
  https://orgmode.org/list/13222.1201471868@gamaville.dokosmarshall.org/
  #+BEGIN_SRC emacs-lisp
-   (setq appt-message-warning-time (* 60 4)) ; Show notification 4h before event
-   (setq appt-display-interval 60) ; Hourly reminder
-   (setq appt-display-mode-line t)
+   ;; Show first notification 2h before event
+   (setq appt-message-warning-time (* 60 2))
+   ;; Then, have a reminder every 30min
+   (setq appt-display-interval 30)
+   ;; Don't display the 'time to appointment in minutes' in the modeline
+   (setq appt-display-mode-line nil)
  #+END_SRC
 
  Option 1
