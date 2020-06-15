@@ -1771,10 +1771,15 @@ settings in this file will trump my personal config.
 #+BEGIN_SRC emacs-lisp
 (editorconfig-mode 1)
 #+END_SRC
-* org-mode
+* Org mode
 
 Outline-based notes management and organizer. It is an outline-mode
 for keeping track of everything.
+
+Next to Emacs Org mode, I use organice
+(https://github.com/200ok-ch/organice/) to manage my Org files on the
+go and to collaborate with non-Emacs users.
+
 ** General config
 #+BEGIN_SRC emacs-lisp
   (setq org-directory "~/Dropbox/org/")
@@ -1956,7 +1961,7 @@ notification is shown.
 The timer is not automatically stopped on clocking out, because clocking
 in should still work on new tasks without resetting the Pomodoro.
 
-The timer can manyally be stopped with =M-x org-timer-stop=.
+The timer can manually be stopped with =M-x org-timer-stop=.
 
 A break can be started with =M-x pomodoro-break=. A pomodoro can also
 manually be started without clocking in via =M-x pomodoro-start=.
@@ -2093,6 +2098,83 @@ An extension to restclient.el for emacs that provides org-babel support.
    'org-babel-load-languages
    '((restclient . t)))
 #+END_SRC
+
+** WIP Notifications / appointment reminders
+
+ This is a work-in-progress, but already working.
+
+ https://orgmode.org/worg/org-faq.html#automatic-reminders
+
+ https://emacs.stackexchange.com/questions/3844/good-methods-for-setting-up-alarms-audio-visual-triggered-by-org-mode-events
+
+ https://orgmode.org/list/13222.1201471868@gamaville.dokosmarshall.org/
+ #+BEGIN_SRC emacs-lisp
+   (setq appt-message-warning-time (* 60 4)) ; Show notification 4h before event
+   (setq appt-display-interval 60) ; Hourly reminder
+   (setq appt-display-mode-line t)
+ #+END_SRC
+
+ Option 1
+
+ #+BEGIN_SRC emacs-lisp
+   ;; ; Use appointment data from org-mode
+   ;; (defun my-org-agenda-to-appt ()
+   ;;   (interactive)
+   ;;   (setq appt-time-msg-list nil)
+   ;;   (org-agenda-to-appt))
+
+
+   ;; ; Update alarms when...
+   ;; ; (1) ... Starting Emacs
+   ;; (my-org-agenda-to-appt)
+
+   ;; ; (2) ... Everyday at 12:05am (useful in case you keep Emacs always on)
+   ;; (run-at-time "12:05am" (* 24 3600) 'my-org-agenda-to-appt)
+
+   ;; ; (3) ... When TODO.txt is saved
+   ;; (add-hook 'after-save-hook
+   ;;           '(lambda ()
+   ;;              (if (string= (buffer-file-name) (concat (getenv "HOME") "/Dropbox/org/things.org"))
+   ;;                  (my-org-agenda-to-appt))))
+
+   ;; ; Display appointments as a window manager notification
+   ;; (setq appt-disp-window-function 'my-appt-display)
+   ;; (setq appt-delete-window-function (lambda () t))
+
+   ;; (setq my-appt-notification-app (concat (getenv "HOME") "/bin/appt-notification"))
+
+   ;; (defun my-appt-display (min-to-app new-time msg)
+   ;;   (if (atom min-to-app)
+   ;;     (start-process "my-appt-notification-app" nil my-appt-notification-app min-to-app msg)
+   ;;   (dolist (i (number-sequence 0 (1- (length min-to-app))))
+   ;;     (start-process "my-appt-notification-app" nil my-appt-notification-app (nth i min-to-app) (nth i msg)))))
+
+
+ #+END_SRC
+
+ Alternative:
+
+ #+BEGIN_SRC emacs-lisp
+   (defadvice  org-agenda-redo (after org-agenda-redo-add-appts)
+     "Pressing `r' on the agenda will also add appointments."
+     (progn
+       (setq appt-time-msg-list nil)
+       (org-agenda-to-appt)))
+
+   (ad-activate 'org-agenda-redo)
+
+   (progn
+     (appt-activate 1)
+     (setq appt-display-format 'window)
+     (setq appt-disp-window-function (function my-appt-disp-window))
+     (defun my-appt-disp-window (min-to-app new-time msg)
+       (call-process (concat (getenv "HOME") "/bin/appt-notification") nil 0 nil min-to-app msg new-time)))
+
+   (add-hook 'after-save-hook
+             '(lambda ()
+                (when (seq-contains org-agenda-files (s-replace "/home/munen" "~" (buffer-file-name)))
+                    (org-agenda-to-appt))))
+ #+END_SRC
 
 * pdf-tools
 
