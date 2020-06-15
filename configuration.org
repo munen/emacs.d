@@ -798,6 +798,17 @@ cursor forward use =C-t= or =grn= and backward =grp=. Finally use
                                                   image-dired-thumbnail-mode
                                                   eww-mode))
 #+END_SRC
+
+Turning off evil when working in =cider--debug= minor mode:
+
+#+BEGIN_SRC emacs-lisp
+  (defadvice cider--debug-mode (after toggle-evil activate)
+    "Turn off `evil-local-mode' when enabling
+  `cider--debug-mode', and turn it back on when disabling
+  `cider--debug-mode'."
+    (evil-local-mode (if cider--debug-mode -1 1)))
+#+END_SRC
+
 ** Unbind M-. and M- in =evil-mode=
 =M-.= and =M-,= are popular keybindings for "jump to definition" and
 "back". =evil-mode= by default binds those to rather rarely used
