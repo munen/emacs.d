@@ -11,5 +11,6 @@
 **** Closure
      Summary and Takeaways:
 **** TODO [0%] Postprocess meeting
+     SCHEDULED: %(org-insert-time-stamp (current-time))
      - [ ] Distribute Meeting Minutes to the team
      - [ ] Todos and Projects completed, processed or delegated
