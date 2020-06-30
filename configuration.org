@@ -2369,6 +2369,15 @@ Configure =xdg-open= to use Emacs in =.local/share/applications/mimeapps.list=:
 
 *** Configuration
 
+ =mu= setup (Initializing the message store):
+
+https://www.djcbsoftware.nl/code/mu/mu4e/Initializing-the-message-store.html
+
+#+BEGIN_SRC shell
+mu init --my-address=alain.lafon@dispatched.ch --my-address=alain@200ok.ch --my-address=lafo@zhaw.ch --my-address=alain@zen-tempel.ch
+#+END_SRC
+
+
  Accounts setup
 
  #+BEGIN_SRC emacs-lisp
@@ -2704,11 +2713,6 @@ Configure =xdg-open= to use Emacs in =.local/share/applications/mimeapps.list=:
 
  #+BEGIN_SRC emacs-lisp
    (setq mu4e-compose-dont-reply-to-self t)
-
-   (add-to-list 'mu4e-user-mail-address-list "alain@200ok.ch")
-   (add-to-list 'mu4e-user-mail-address-list "alain.lafon@dispatched.ch")
-   (add-to-list 'mu4e-user-mail-address-list "lafo@zhaw.ch")
-   (add-to-list 'mu4e-user-mail-address-list "alain@zen-tempel.ch")
  #+END_SRC
 
  Store link to message if in header view, not to header query.
