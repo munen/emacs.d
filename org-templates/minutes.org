@@ -13,4 +13,5 @@
 **** TODO [0%] Postprocess meeting
      SCHEDULED: %(org-insert-time-stamp (current-time))
      - [ ] Distribute Meeting Minutes to the team
+     - [ ] If applicable: Send invite for the follow up meeting
      - [ ] Todos and Projects completed, processed or delegated
