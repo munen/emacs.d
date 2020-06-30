@@ -2843,7 +2843,20 @@ mu init --my-address=alain.lafon@dispatched.ch --my-address=alain@200ok.ch --my-
      '("S Block 'Subject:'" . mu4e-blacklist-subject) t)
 
  #+END_SRC
+*** Rewrite contact information
 
+#+BEGIN_SRC emacs-lisp
+  (defun munen-contact-processor (contact)
+    (cond
+     ((string-match "phil@200ok.ch" contact) ; Phil sometimes dosn't add his name to the reply-to.
+      "Phil Hofmann <phil@200ok.ch>")
+     ((string-match "wiffbubbles@icloud.com" contact) ; Monika writes her name in all caps and I don't want to forward it like that.
+     "Monika Bieri <wiffbubbles@icloud.com>"
+      )
+     (t contact)))
+
+  (setq mu4e-contact-process-function 'munen-contact-processor)
+#+END_SRC
 * Search / Completion
 
 ** =ido=
