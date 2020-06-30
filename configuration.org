@@ -1825,12 +1825,17 @@ Allow ‘a.’, ‘A.’, ‘a)’ and ‘A) as list elements:
   (evil-leader/set-key
     "a" 'org-archive-subtree-default)
 
-  ;; Allow =pdflatex= to use shell-commands. Alternatively use =xetex=
-  ;; This will allow it to use =pygments= as syntax highlighter for exports to PDF
-  (setq org-latex-pdf-process
-        '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-          "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-          "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+  ;; Allow =pdflatex= to use shell-commands. This will allow it to use
+  ;; =pygments= as syntax highlighter for exports to PDF.
+   (setq org-latex-pdf-process
+         '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+           "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+           "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+  ;;  Alternatively use =xetex=. Required for documents where I want to use ttf fonts.
+  ;; (setq org-latex-pdf-process
+  ;;       '("xetex -shell-escape -interaction nonstopmode -output-directory %o %f"
+  ;;         "xetex -shell-escape -interaction nonstopmode -output-directory %o %f"
+  ;;         "xetex -shell-escape -interaction nonstopmode -output-directory %o %f"))
 
   ;; Include =minted= package for LaTeX exports
   (add-to-list 'org-latex-packages-alist '("" "minted"))
