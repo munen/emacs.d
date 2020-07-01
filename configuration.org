@@ -2379,9 +2379,8 @@ Configure =xdg-open= to use Emacs in =.local/share/applications/mimeapps.list=:
 https://www.djcbsoftware.nl/code/mu/mu4e/Initializing-the-message-store.html
 
 #+BEGIN_SRC shell
-mu init --my-address=alain.lafon@dispatched.ch --my-address=alain@200ok.ch --my-address=lafo@zhaw.ch --my-address=alain@zen-tempel.ch
+mu init --my-address=alain.lafon@dispatched.ch --my-address=alain@200ok.ch --my-address=lafo@zhaw.ch --my-address=alain@zen-tempel.ch --my-address=preek@dispatched.ch
 #+END_SRC
-
 
  Accounts setup
 
