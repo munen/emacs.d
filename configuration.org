@@ -2784,18 +2784,11 @@ mu init --my-address=alain.lafon@dispatched.ch --my-address=alain@200ok.ch --my-
    (setq fill-flowed-encode-column 998)
  #+END_SRC
 
- Do not auto-wrap lines in favor of ~format=flowed~, but still display
- them nicely wrapped in Emacs.
-
-#+BEGIN_SRC emacs-lisp
-   (add-hook 'mu4e-compose-mode-hook 'visual-clean)
-#+END_SRC
-
  When looking at emails, show them nicely wrapped. That's very
  helpful when people send mails with very long lines
 
 #+BEGIN_SRC emacs-lisp
-   (add-hook 'mu4e-view-mode-hook 'visual-clean)
+  (add-hook 'mu4e-view-mode-hook 'visual-clean)
 #+END_SRC
 
 
