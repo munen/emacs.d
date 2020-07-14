@@ -818,6 +818,18 @@ functions =evil-repeat-pop-next= and =xref-pop-marker-stack=, for some reason.
   (define-key evil-normal-state-map (kbd "M-.") nil)
   (define-key evil-normal-state-map (kbd "M-,") nil)
 #+END_SRC
+** Call =ex= by default on visual selection
+
+#+BEGIN_SRC emacs-lisp
+(setq evil-ex-visual-char-range t)
+#+END_SRC
+
+Example:
+
+When visually selecting "foo" out of the string "foo foobar", and then
+calling =:s/o/i/g=, the result would be "fii fiibar" without this
+setting. With this setting, it will be "fii foobar".
+
 ** =evil-escape=
 https://github.com/syl20bnr/evil-escape
 
@@ -1827,15 +1839,15 @@ Allow ‘a.’, ‘A.’, ‘a)’ and ‘A) as list elements:
 
   ;; Allow =pdflatex= to use shell-commands. This will allow it to use
   ;; =pygments= as syntax highlighter for exports to PDF.
-   (setq org-latex-pdf-process
-         '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-           "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-           "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
-  ;;  Alternatively use =xetex=. Required for documents where I want to use ttf fonts.
   ;; (setq org-latex-pdf-process
-  ;;       '("xetex -shell-escape -interaction nonstopmode -output-directory %o %f"
-  ;;         "xetex -shell-escape -interaction nonstopmode -output-directory %o %f"
-  ;;         "xetex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+  ;;       '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+  ;;         "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+  ;;         "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+  ;;  Alternatively use =xelatex=. Required for documents where I want to use ttf fonts.
+  (setq org-latex-pdf-process
+        '("xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+          "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+          "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
 
   ;; Include =minted= package for LaTeX exports
   (add-to-list 'org-latex-packages-alist '("" "minted"))
