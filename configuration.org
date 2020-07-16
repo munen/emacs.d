@@ -1967,6 +1967,31 @@ Org Capture Templates are explained [[http://orgmode.org/manual/Capture-template
            "* %?\nURL: \nEntered on %U\n")))
 #+END_SRC
 
+*** Ensure text from capture-templates end with a newline
+
+If they don't, then the result will look like:
+
+#+BEGIN_EXAMPLE
+,* Tasks
+,** TODO Foo from capture-template* This should be on the next line
+#+END_EXAMPLE
+
+This obviously breaks the structure of the Org file. Here's a fix:
+
+ #+BEGIN_SRC emacs-lisp
+   (defun add-newline-at-end-if-none ()
+     "Add a newline at the end of the buffer if there isn't any."
+     (save-excursion
+       (save-restriction
+         (goto-char (1- (point-max)))
+         (if (not (looking-at "\n\n"))
+             (progn
+               (goto-char (point-max))
+               (insert "\n"))))))
+
+   (add-hook 'org-capture-before-finalize-hook 'add-newline-at-end-if-none)
+ #+END_SRC
+
 ** Pomodoro
 
 A leightweight implementation of the Pomodoro Technique is implemented
