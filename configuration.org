@@ -991,7 +991,7 @@ line break.
 Enable code folding for programming modes.
 
 - =zc=: Fold
-- =za=: Unfold
+- =za=: Toggle fold
 - =zR=: Unfold everything
 
 #+BEGIN_SRC emacs-lisp
