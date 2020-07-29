@@ -990,9 +990,10 @@ line break.
 
 Enable code folding for programming modes.
 
-- =zc=: Fold
-- =za=: Toggle fold
-- =zR=: Unfold everything
+- =zc=: Close fold (one)
+- =za=: Toggle fold (one)
+- =zr=: Open folds (all)
+- =zm=: Close folds (all)
 
 #+BEGIN_SRC emacs-lisp
 (add-hook 'prog-mode-hook #'hs-minor-mode)
