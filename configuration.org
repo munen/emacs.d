@@ -3020,6 +3020,22 @@ Configure =Counsel=
   (define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history)
 #+END_SRC
 
+Override =C-c C-j= (org-goto) with =counsel-org-goto= which brings
+super fast fuzzy matching and navigation capabilities for headlines.
+
+#+BEGIN_SRC emacs-lisp
+  (define-key org-mode-map (kbd "C-c C-j") 'counsel-org-goto)
+#+END_SRC
+
+Override =M-i= (tab-to-tab-stop) with =counsel-imenu= which brings
+fuzzy matching to the ability to jump to any indexed position from
+=imenu=.
+
+#+BEGIN_EXAMPLE emacs-lisp
+  (global-set-key (kbd "M-i") 'counsel-imenu)
+#+END_EXAMPLE
+
+
 Next to counsel, there's also =smex= which is =M-x= combined with
 =ido=. =smex= has a better sorting algorithm than =Counsel= and having
 both installed means that we get the =Counsel= interface with =smex=
@@ -3084,14 +3100,6 @@ Synosaurus completion (Default is =ido=)
 #+BEGIN_SRC emacs-lisp
   (setq synosaurus-choose-method 'ivy-read)
 #+END_SRC
-
-Override =C-c C-j= (org-goto) with =counsel-org-goto= which brings
-super fast fuzzy matching and navigation capabilities for headlines.
-
-#+BEGIN_SRC emacs-lisp
-  (define-key org-mode-map (kbd "C-c C-j") 'counsel-org-goto)
-#+END_SRC
-
 
 ** Obsolete alternatives
 
