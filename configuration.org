@@ -57,6 +57,7 @@ down in this file, some are used with the default configuration.
                         atomic-chrome
                         auto-complete
                         beacon
+                        bicycle
                         browse-kill-ring
                         cider
                         clj-refactor
@@ -988,16 +989,54 @@ line break.
 
 *** Code Folding
 
-Enable code folding for programming modes.
+Enable code folding for programming modes with two strategies:
 
-- =zc=: Close fold (one)
-- =za=: Toggle fold (one)
-- =zr=: Open folds (all)
-- =zm=: Close folds (all)
+**** 1. VIM style folds
+
+ - =zc=: Close fold (one)
+ - =za=: Toggle fold (one)
+ - =zr=: Open folds (all)
+ - =zm=: Close folds (all)
+
+ #+BEGIN_SRC emacs-lisp
+ (add-hook 'prog-mode-hook #'hs-minor-mode)
+ #+END_SRC
+
+**** 2. Org mode style folds
+
+=outline-minor-mode= is built-in to Emacs. It enables structural
+editing of hierarchical structures - just as Org mode does, but in any
+major mode.
+
+Change the shortcuts to be the same as in Org mode:
 
 #+BEGIN_SRC emacs-lisp
-(add-hook 'prog-mode-hook #'hs-minor-mode)
+(add-hook 'prog-mode-hook #'outline-minor-mode)
+
+;; Org mode style keybindings
+(define-key outline-minor-mode-map (kbd "C-<return>") 'outline-insert-heading)
+(define-key outline-minor-mode-map (kbd "M-S-<right>") 'outline-demote)
+(define-key outline-minor-mode-map (kbd "M-S-<left>") 'outline-promote)
+(define-key outline-minor-mode-map (kbd "C-c C-n") 'outline-next-visible-heading)
+(define-key outline-minor-mode-map (kbd "C-c C-p") 'outline-previous-visible-heading)
 #+END_SRC
+
+Leverage the [[https://github.com/tarsius/bicycle][bicycle]] library from tarsius for the ability to cycle
+visibility of local and global sections:
+
+#+BEGIN_SRC emacs-lisp
+(define-key outline-minor-mode-map (kbd "C-<tab>") 'bicycle-cycle)
+(define-key outline-minor-mode-map (kbd "<backtab>") 'bicycle-cycle-global)
+#+END_SRC
+
+Use the built-in foldout.el to narrow and widen the current subtree:
+
+#+BEGIN_SRC emacs-lisp
+(require 'foldout)
+(define-key outline-minor-mode-map (kbd "C-x n s") 'foldout-zoom-subtree)
+(define-key outline-minor-mode-map (kbd "C-x n w") 'foldout-exit-fold)
+#+END_SRC
+
 *** Line numbers
 
 Enable =linum-mode= for programming modes. For newer versions of
