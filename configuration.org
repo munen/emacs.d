@@ -3067,23 +3067,31 @@ code. Therefore I fall back to using isearch within PDFs.
 
 *** Improve other packages with ivy
 
-  Projectile completion (Default is =ido=)
+Projectile completion (Default is =ido=)
 
 #+BEGIN_SRC emacs-lisp
   (setq projectile-completion-system 'ivy)
 #+END_SRC
 
-  Mu4e "folder" and "from" completion (Default is =ido=)
+Mu4e "folder" and "from" completion (Default is =ido=)
 
 #+BEGIN_SRC emacs-lisp
   (setq mu4e-completing-read-function 'ivy-completing-read)
 #+END_SRC
 
-  Synosaurus completion (Default is =ido=)
+Synosaurus completion (Default is =ido=)
 
 #+BEGIN_SRC emacs-lisp
   (setq synosaurus-choose-method 'ivy-read)
 #+END_SRC
+
+Override =C-c C-j= (org-goto) with =counsel-org-goto= which brings
+super fast fuzzy matching and navigation capabilities for headlines.
+
+#+BEGIN_SRC emacs-lisp
+  (define-key org-mode-map (kbd "C-c C-j") 'counsel-org-goto)
+#+END_SRC
+
 
 ** Obsolete alternatives
 
