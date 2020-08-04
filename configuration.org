@@ -3707,6 +3707,13 @@ When evaluating the src-block above, it'll yield a table like:
 #+BEGIN_SRC emacs-lisp
 (load-file "~/src/200ok/200ok-admin/src/export-org-estimations/ok-export-org-estimations.el")
 #+END_SRC
+** General config
+
+Don't export the [[https://orgmode.org/manual/Publishing-options.html][html-validation-link]].
+
+#+BEGIN_SRC emacs-lisp
+(setq org-html-validation-link nil)
+#+END_SRC
 * Bad experience
 
 The following packages would be nice, in theory. In practice something
