@@ -3027,14 +3027,17 @@ super fast fuzzy matching and navigation capabilities for headlines.
   (define-key org-mode-map (kbd "C-c C-j") 'counsel-org-goto)
 #+END_SRC
 
-Override =M-i= (tab-to-tab-stop) with =counsel-imenu= which brings
-fuzzy matching to the ability to jump to any indexed position from
-=imenu=.
+Override =C-x i= (insert-file) in favor of =counsel-imenu= which
+brings fuzzy matching to the ability to jump to any indexed position
+to the already great =[[https://www.gnu.org/software/emacs/manual/html_node/emacs/Imenu.html][imenu]]=.
+
+- [ ] The keybinding does not work after restarting Emacs. Binding
+  =counsel-imenu= to something else like =M-i= also doesn't work. It's
+  quite peculiar.
 
 #+BEGIN_EXAMPLE emacs-lisp
-  (global-set-key (kbd "M-i") 'counsel-imenu)
+  (global-set-key (kbd "C-x i") 'counsel-imenu)
 #+END_EXAMPLE
-
 
 Next to counsel, there's also =smex= which is =M-x= combined with
 =ido=. =smex= has a better sorting algorithm than =Counsel= and having
