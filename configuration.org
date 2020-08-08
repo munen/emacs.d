@@ -1849,6 +1849,14 @@ go and to collaborate with non-Emacs users.
 #+BEGIN_SRC emacs-lisp
   (setq org-directory "~/Dropbox/org/")
 #+END_SRC
+
+=imenu= would normally only index two levels - since I run deeply
+nested documents, go up to six levels.
+
+#+BEGIN_SRC emacs-lisp
+(setq org-imenu-depth 6)
+#+END_SRC
+
 ** Plain Lists
 Allow ‘a.’, ‘A.’, ‘a)’ and ‘A) as list elements:
 
