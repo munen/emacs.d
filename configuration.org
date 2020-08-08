@@ -1143,7 +1143,8 @@ Remove =C-c C-p= (=cider-pprint-eval-last-sexp=) from mode map in
 favor of using [[org-style-folds-with-outline-minor-mode][Org mode style folding]].
 
 #+BEGIN_SRC emacs-lisp
-  (define-key cider-mode-map (kbd "C-c C-p") nil)
+  (add-hook 'cider-mode-hook (lambda ()
+    (define-key cider-mode-map (kbd "C-c C-p") nil)))
 #+END_SRC
 
 **** Dependencies
@@ -1507,6 +1508,7 @@ slide deck.
 
 #+BEGIN_SRC emacs-lisp
   (add-hook 'markdown-mode-hook 'flyspell-mode)
+  (add-hook 'markdown-mode-hook 'outline-minor-mode)
 #+END_SRC
 
 Unfortunately line breaks are semantic in some versions of markdown
