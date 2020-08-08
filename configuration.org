@@ -1002,7 +1002,11 @@ Enable code folding for programming modes with two strategies:
  (add-hook 'prog-mode-hook #'hs-minor-mode)
  #+END_SRC
 
-**** 2. Org mode style folds
+**** 2. Org mode style folds with =outline-minor-mode=
+     :PROPERTIES:
+     :CUSTOM_ID: org-style-folds-with-outline-minor-mode
+     :END:
+
 
 =outline-minor-mode= is built-in to Emacs. It enables structural
 editing of hierarchical structures - just as Org mode does, but in any
@@ -1132,6 +1136,15 @@ for developing Clojure.
 
 - =C-↑, C-↓= Cycle through REPL history.
 - More Cider shortcuts [[https://github.com/clojure-emacs/cider#cider-mode][here]].
+
+***** Customization
+
+Remove =C-c C-p= (=cider-pprint-eval-last-sexp=) from mode map in
+favor of using [[org-style-folds-with-outline-minor-mode][Org mode style folding]].
+
+#+BEGIN_SRC emacs-lisp
+  (define-key cider-mode-map (kbd "C-c C-p") nil)
+#+END_SRC
 
 **** Dependencies
 
