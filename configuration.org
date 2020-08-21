@@ -3542,16 +3542,60 @@ buffer). This is a major performance gain.
 (setq flyspell-issue-message-flag nil)
 #+END_SRC
 
-Switch between German and English dictionaries.
+**** Multiple dictionaries
+
+Since I live in Switzerland (and we have four languages in our
+country; none of them English), I regularly have files with multiple
+languages in them. For those, it's still important to have proper
+spell checking.
+
+[[https://github.com/hunspell/hunspell][Hunspell]] is a free spell checker and used by LibreOffice, Firefox and
+Chromium. It allows to set multiple dictionaries - even different
+dictionaries per language (=aspell=, for example also allows multiple
+dictionaries, but only for the same language).
+
+To use =hunspell=, install it first:
+
+#+BEGIN_EXAMPLE
+apt install hunspell hunspell-de-de hunspell-en-gb hunspell-en-us hunspell-de-ch-frami
+#+END_EXAMPLE
 
 #+BEGIN_SRC emacs-lisp
-  (defun flyspell-switch-dictionary()
-    "Switch between German and English dictionaries"
-    (interactive)
-    (let* ((dic ispell-current-dictionary)
-           (change (if (string= dic "deutsch") "english" "deutsch")))
-      (ispell-change-dictionary change)
-      (message "Dictionary switched from %s to %s" dic change)))
+  (with-eval-after-load "ispell"
+    ;; Configure `LANG`, otherwise ispell.el cannot find a 'default
+    ;; dictionary' even though multiple dictionaries will be configured
+    ;; in next line.
+    (setenv "LANG" "en_US")
+    (setq ispell-program-name "hunspell")
+    ;; Configure German, Swiss German, and two variants of English.
+    (setq ispell-dictionary "de_DE,de_CH,en_GB,en_US")
+    ;; ispell-set-spellchecker-params has to be called
+    ;; before ispell-hunspell-add-multi-dic will work
+    (ispell-set-spellchecker-params)
+    (ispell-hunspell-add-multi-dic "de_DE,de_CH,en_GB,en_US")
+    ;; For saving words to the personal dictionary, don't infer it from
+    ;; the locale, otherwise it would save to ~/.hunspell_de_DE.
+    (setq ispell-personal-dictionary "~/.hunspell_personal"))
+
+  ;; The personal dictionary file has to exist, otherwise hunspell will
+  ;; silently not use it.
+  (unless (file-exists-p "~/.hunspell_personal")
+          (shell-command "touch ~/.hunspell_personal"))
+#+END_SRC
+
+**** Deprecated
+
+Alternatively to using =hunspell=, here's an option to switch the
+dictionary between German and English.
+
+#+BEGIN_SRC emacs-lisp
+  ;; (defun flyspell-switch-dictionary()
+  ;;   "Switch between German and English dictionaries"
+  ;;   (interactive)
+  ;;   (let* ((dic ispell-current-dictionary)
+  ;;          (change (if (string= dic "deutsch") "english" "deutsch")))
+  ;;     (ispell-change-dictionary change)
+  ;;     (message "Dictionary switched from %s to %s" dic change)))
 #+END_SRC
 
 *** Do not loose all spellchecking information after adding one word to a personal dictionary
