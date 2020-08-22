@@ -3527,25 +3527,28 @@ Use the [[http://openthesaurus.de/][openthesaurus.de]] back-end.
 
 Flyspell is a built-in minor mode for on-the-fly spell checking.
 
-Flyspell uses ispell or aspell in the background. I'm using the
-default (ispell) and have installed a German dictionary from [[http://fmg-www.cs.ucla.edu/geoff/ispell-dictionaries.html#German-dicts][here]].
+Flyspell can use multiple back-ends (for example ispell, aspell or hunspell).
 
 *** Configuration
 
-Order corrections by likeliness, not by the default of alphabetical
-ordering.
+**** Order corrections by likeliness
+
+Do not order not by the default of alphabetical ordering.
 
 #+BEGIN_SRC emacs-lisp
 (setq flyspell-sort-corrections nil)
 #+END_SRC
 
-Do not print messages for every word (when checking the entire
-buffer). This is a major performance gain.
+**** Do not print messages for every word
+
+When checking the entire buffer, don't print messages for every word.
+This is a major performance gain.
+
 #+BEGIN_SRC emacs-lisp
 (setq flyspell-issue-message-flag nil)
 #+END_SRC
 
-**** Multiple dictionaries
+**** Use =hunspell= with multiple dictionaries
 
 Since I live in Switzerland (and we have four languages in our
 country; none of them English), I regularly have files with multiple
@@ -3586,10 +3589,30 @@ apt install hunspell hunspell-de-de hunspell-en-gb hunspell-en-us hunspell-de-ch
           (shell-command "touch ~/.hunspell_personal"))
 #+END_SRC
 
-**** Deprecated
+**** Do not loose all spellchecking information after adding one word to a personal dictionary
+
+ Advice to re-check the buffer after a word has been added to the
+ dictionary. This has the benefit of the word actually being cleared,
+ but the downside that the whole buffer has to be re-checked which an
+ take some time.
+
+ #+BEGIN_SRC emacs-lisp
+   ;; (defun flyspell-buffer-after-pdict-save (&rest _)
+   ;;   (flyspell-buffer))
+
+   ;; (advice-add 'ispell-pdict-save :after #'flyspell-buffer-after-pdict-save)
+ #+END_SRC
+
+ The proper solution (for which I don't have time now) is to just mark
+ all further occurrences of the word you just saved as correct (without
+ having to recheck the whole buffer).
+
+**** Deprecated =aspell= setup
 
 Alternatively to using =hunspell=, here's an option to switch the
 dictionary between German and English.
+
+The German dictionary is from [[http://fmg-www.cs.ucla.edu/geoff/ispell-dictionaries.html#German-dicts][here]].
 
 #+BEGIN_SRC emacs-lisp
   ;; (defun flyspell-switch-dictionary()
@@ -3600,26 +3623,6 @@ dictionary between German and English.
   ;;     (ispell-change-dictionary change)
   ;;     (message "Dictionary switched from %s to %s" dic change)))
 #+END_SRC
-
-*** Do not loose all spellchecking information after adding one word to a personal dictionary
-
-Advice to re-check the buffer after a word has been added to the
-dictionary. This has the benefit of the word actually being cleared,
-but the downside that the whole buffer has to be re-checked which an
-take some time.
-
-#+BEGIN_SRC emacs-lisp
-
-(defun flyspell-buffer-after-pdict-save (&rest _)
-  (flyspell-buffer))
-
-(advice-add 'ispell-pdict-save :after #'flyspell-buffer-after-pdict-save)
-
-#+END_SRC
-
-The proper solution (for which I don't have time now) is to just mark
-all further occurrences of the word you just saved as correct (without
-having to recheck the whole buffer).
 
 *** TODO Implement =ispell-pdict-save= with above requirement
 
