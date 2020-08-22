@@ -308,8 +308,11 @@ default to not confuse beginners.
 ** Remember the cursor position of files when reopening them
 #+BEGIN_SRC emacs-lisp
   (setq save-place-file "~/.emacs.d/saveplace")
-  (setq-default save-place t)
-  (require 'saveplace)
+  (if (version<= emacs-version "25.1")
+      (progn
+        (setq-default save-place t)
+        (require 'saveplace))
+    (save-place-mode 1))
 #+END_SRC
 ** Set $MANPATH, $PATH and exec-path from shell even when started from GUI helpers like =dmenu= or =Spotlight=
 
