@@ -2628,8 +2628,10 @@ mu init --my-address=alain.lafon@dispatched.ch --my-address=alain@200ok.ch --my-
 
 
    (add-hook 'mu4e-compose-pre-hook 'my-mu4e-set-account)
-   (add-hook 'mu4e-compose-mode-hook (lambda ()
-                                      (ispell-change-dictionary "deutsch")))
+   ;; Not required anymore, because hunspell supports multiple
+   ;; dictionaries at the same time.
+   ;; (add-hook 'mu4e-compose-mode-hook (lambda ()
+   ;;                                    (ispell-change-dictionary "deutsch")))
 
 
    (setq mu4e-refile-folder
@@ -3433,27 +3435,29 @@ I like to set timers, for example through [[file:org-pomodoro.el][org-pomodoro.e
  spaceline-compile=.
 
  #+BEGIN_SRC emacs-lisp
-      (require 'spaceline-config)
-      (spaceline-emacs-theme)
-      (spaceline-install
-        'main
-        '((evil-state :face highlight-face)
-          (buffer-id)
-          (org-timer-left-time)
-          ;; (ph/mu4e-context-segment :face 'ph/spaceline-mu4e-context-face)
-          (ph/remote-method :face 'ph/spaceline-tramp-method-face)
-          (ph/remote-user-and-host :face 'ph/spaceline-tramp-user-host-face)
-          (buffer-modified))
-        '(;;(minor-modes :when active)
-          (projectile-root)
-          (ph/version-control)
-          ;(line-column :when active)
-          ;(buffer-position :when active)
-          (ph/flycheck-info-segment :face 'ph/spaceline-flycheck-info-face :when active)
-          (ph/flycheck-warning-segment :face 'ph/spaceline-flycheck-warning-face :when active)
-          (ph/flycheck-error-segment :face 'ph/spaceline-flycheck-error-face :when active)
-          (line-column)
-          (major-mode)))
+   (require 'spaceline-config)
+   ;; Otherwise spaceline will be huge in Emacs >= 27.1
+   (setq powerline-height 1)
+   (spaceline-emacs-theme)
+   (spaceline-install
+     'main
+     '((evil-state :face highlight-face)
+       (buffer-id)
+       (org-timer-left-time)
+       ;; (ph/mu4e-context-segment :face 'ph/spaceline-mu4e-context-face)
+       (ph/remote-method :face 'ph/spaceline-tramp-method-face)
+       (ph/remote-user-and-host :face 'ph/spaceline-tramp-user-host-face)
+       (buffer-modified))
+     '(;;(minor-modes :when active)
+       (projectile-root)
+       (ph/version-control)
+       ;(line-column :when active)
+       ;(buffer-position :when active)
+       (ph/flycheck-info-segment :face 'ph/spaceline-flycheck-info-face :when active)
+       (ph/flycheck-warning-segment :face 'ph/spaceline-flycheck-warning-face :when active)
+       (ph/flycheck-error-segment :face 'ph/spaceline-flycheck-error-face :when active)
+       (line-column)
+       (major-mode)))
  #+END_SRC
 
  Set mode-line always active (don't hide segments when focus is on a different
