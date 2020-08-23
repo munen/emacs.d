@@ -3529,7 +3529,9 @@ Use the [[http://openthesaurus.de/][openthesaurus.de]] back-end.
 
 ** Flyspell
 
-Flyspell is a built-in minor mode for on-the-fly spell checking.
+Emacs has built-in functionality for [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Spelling.html][checking and correcting spelling]]
+called =ispell.el=. On top of that, there's a built-in minor mode for
+for on-the-fly spell checking. called =flyspell-mode=.
 
 Flyspell can use multiple back-ends (for example ispell, aspell or hunspell).
 
@@ -3554,15 +3556,17 @@ This is a major performance gain.
 
 **** Use =hunspell= with multiple dictionaries
 
-Since I live in Switzerland (and we have four languages in our
-country; none of them English), I regularly have files with multiple
-languages in them. For those, it's still important to have proper
-spell checking.
+Here in Switzerland, there are four official languages: Swiss German,
+French, Italian and Romansh. Also, we converse a lot in German and
+English. Hence, it's a regular occurrence to have one file with
+multiple languages in them. Especially for these situations it's still
+to have proper spell checking. Fortunately, Emacs has us covered!
 
 [[https://github.com/hunspell/hunspell][Hunspell]] is a free spell checker and used by LibreOffice, Firefox and
 Chromium. It allows to set multiple dictionaries - even different
 dictionaries per language (=aspell=, for example also allows multiple
-dictionaries, but only for the same language).
+dictionaries, but only for the same language). It also can be used as
+an =ispell.el= backend.
 
 To use =hunspell=, install it first:
 
