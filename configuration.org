@@ -86,7 +86,6 @@ down in this file, some are used with the default configuration.
                         flycheck
                         flycheck-flow
                         hide-mode-line
-                        ido-vertical-mode
                         impatient-mode
                         ini-mode
                         ivy counsel swiper
@@ -2993,18 +2992,6 @@ It works well while not breaking Emacs defaults.
   (ido-mode t)
   (ido-everywhere t)
   (setq ido-enable-flex-matching t)
-#+END_SRC
-
-** =ido-vertical-mode=
-
-https://github.com/creichert/ido-vertical-mode.el
-
-=ido-vertical-mode= makes =ido-mode= display vertically.
-
-#+BEGIN_SRC emacs-lisp
-(ido-vertical-mode 1)
-(setq ido-vertical-define-keys 'C-n-and-C-p-only)
-(setq ido-vertical-show-count t)
 #+END_SRC
 
 ** Ivy/Counsel/Swiper
