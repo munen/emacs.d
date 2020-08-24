@@ -21,11 +21,8 @@
                      25))
            (end   (if begin
                       (string-match ")" (buffer-string) begin))))
-      ;; TODO: Special characters conversion does not work.
-      ;; `string-to-multibyte` is obviously the wrong function
-      (mapcar #' string-to-multibyte
       (split-string (substring (buffer-string) begin end)
-                    "\,")))))
+                    "\,"))))
 
 ;; (with-current-buffer res
 ;;   (while (re-search-forward "my_regexp")
@@ -37,7 +34,10 @@
     "Given a LIST of translations, add them to the buffer."
     (when list
       (progn
-        (insert (car list))
+        (insert
+         (decode-coding-string
+          (mapconcat #'byte-to-string (car list) "")
+          'utf-8))
         (insert "\n"))
       (insert-translation-to-buffer (cdr list))))
 
@@ -45,14 +45,20 @@
 (defun initialize-translations-buffer (search-term)
   "Create a new buffer and initializs it with SEARCH-TERM."
 
-  ;; TODO: If a buffer "dict-results" exists, close it
+  ;; ;; If an old result is still open, close it
+  (when-let ((buffer (get-buffer "*dict-results*")))
+    (switch-to-buffer buffer)
+    (kill-buffer "*dict-results*")
+    (delete-window)
+    (other-window 1))
 
-  ;; Get or create a new buffer called "dict-results"
-  (get-buffer-create "dict-results")
+  ;; Get or create a new buffer called "*dict-results*"
+  (get-buffer-create "*dict-results*")
 
-  (with-current-buffer "dict-results"
+  (with-current-buffer "*dict-results*"
     ;; Initialize
     (erase-buffer)
+
     (org-mode)
 
     ;; TODO: First create a new minor mode, because local key maps are
@@ -73,7 +79,7 @@
                                 (concat "|" w1 "|" w2 "|"))
                               words1 words2))
 
-  (with-current-buffer "dict-results"
+  (with-current-buffer "*dict-results*"
     ;; Move behind the "Translations for: " header
     (forward-line)
     ;; Add actual data
@@ -88,7 +94,7 @@
     (goto-char (point-min)))
 
   (split-window)
-  (switch-to-buffer "dict-results"))
+  (switch-to-buffer "*dict-results*"))
 
 (defun query-dict.cc (search-term)
   "Query dict.cc with SEARCH-TERM."
