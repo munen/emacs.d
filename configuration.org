@@ -3425,6 +3425,10 @@ I like to set timers, for example through [[file:org-pomodoro.el][org-pomodoro.e
    (require 'spaceline-config)
    ;; Otherwise spaceline will be huge in Emacs >= 27.1
    (setq powerline-height 1)
+   ;; Since Emacs >= 27.1, there's no need for font trickery. Just use
+   ;; UTF-8.
+   (setq powerline-default-separator 'utf-8)
+
    (spaceline-emacs-theme)
    (spaceline-install
      'main
