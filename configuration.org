@@ -680,6 +680,30 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
                                      (string-to-number (or (match-string 3 name) ""))))
                             fn))) files)))
 #+END_SRC
+** Emacs takes SVG screenshot of itself
+
+   #+begin_src emacs-lisp
+    ;; https://www.reddit.com/r/emacs/comments/idz35e/emacs_27_can_take_svg_screenshots_of_itself/
+    (defun screenshot-svg ()
+      "Save a screenshot of the current frame as an SVG image.
+    Saves to a temp file and puts the filename in the kill ring."
+      (interactive)
+      (let* ((filename (make-temp-file "Emacs" nil ".svg"))
+             (data (x-export-frames nil 'svg)))
+        (with-temp-file filename
+          (insert data))
+        (kill-new filename)
+        (message filename)))
+   #+end_src
+** Search non-ASCII characters
+
+isearch can find a wide range of Unicode characters (like á, ⓐ, or 𝒶)
+when you search for ASCII characters (a in this example).
+
+  #+begin_src emacs-lisp
+    (setq search-default-mode #'char-fold-to-regexp)
+  #+end_src
+
 * General
 This section contains settings for non-built-in Emacs features that
 are generally applicable to different kinds of modes.
@@ -1711,7 +1735,9 @@ npm install -g eslint
 
   (defun autoformat-clojure-function ()
     "Cider function to format Clojure buffer."
-    (indent-buffer))
+    (indent-buffer)
+    ;; (cider-format-buffer)
+    )
 
   (defun autoformat-ruby-command ()
     "CLI tool to format Ruby."
@@ -2705,8 +2731,6 @@ mu init --my-address=alain.lafon@dispatched.ch --my-address=alain@200ok.ch --my-
    (add-to-list 'mu4e-bookmarks
                 '((concat d-spam d-archive " AND (flag:unread OR flag:flagged) AND NOT flag:trashed")
                   "Unread messages"      ?u))
-
-
  #+END_SRC
 
 
@@ -3929,7 +3953,6 @@ Parinfer algorithm is quite nice. I'll try again at some point.
 
 - A business partners configuration:
   https://github.com/SirPscl/emacs.d
-
 * Modes to check out
 
 Modes I probably could use, but haven't tried out, yet.
