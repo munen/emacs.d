@@ -3070,6 +3070,14 @@ to the already great =[[https://www.gnu.org/software/emacs/manual/html_node/emac
   (global-set-key (kbd "C-x i") 'counsel-imenu)
 #+END_SRC
 
+Override =find-file= and =dired= in favor of the counsel counter
+parts.
+
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "C-x C-f") 'counsel-find-file)
+  (global-set-key (kbd "C-x d") 'counsel-dired)
+#+END_SRC
+
 Next to counsel, there's also =smex= which is =M-x= combined with
 =ido=. =smex= has a better sorting algorithm than =Counsel= and having
 both installed means that we get the =Counsel= interface with =smex=
