@@ -2077,6 +2077,14 @@ This obviously breaks the structure of the Org file. Here's a fix:
    (add-hook 'org-capture-before-finalize-hook 'add-newline-at-end-if-none)
  #+END_SRC
 
+** Structure templates
+
+Enable the =<s TAB= syntax for [[https://orgmode.org/manual/Structure-Templates.html][structure templates]].
+
+#+begin_src emacs-lisp
+(require 'org-tempo)
+#+end_src
+
 ** Pomodoro
 
 A leightweight implementation of the Pomodoro Technique is implemented
