@@ -160,6 +160,16 @@ operations.
   (setq make-backup-files nil)
 #+END_SRC
 
+** Warn when opening big files
+
+The default warning comes with a 10MB file size which my machine
+handles with no noticeable delay at all. Hence, only warn when opening
+files bigger than 200MB.
+
+   #+begin_src emacs-lisp
+     (setq large-file-warning-threshold 200000000)
+   #+end_src
+
 ** Auto-Save in =/tmp=
 
 Store backups and auto-saved files in =TEMPORARY-FILE-DIRECTORY= (which
