@@ -3566,6 +3566,8 @@ Use the [[http://openthesaurus.de/][openthesaurus.de]] back-end.
 
 #+BEGIN_SRC emacs-lisp
   (setq synosaurus-backend 'synosaurus-backend-openthesaurus)
+
+  (defalias 'thesaurus-openthesaurus-de 'synosaurus-lookup)
 #+END_SRC
 
 ** Flyspell
