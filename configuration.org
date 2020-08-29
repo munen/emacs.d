@@ -1785,7 +1785,7 @@ npm install -g eslint
              (projectile-project-root)
              ".eslintrc.yml")
              " --stdin-filepath="
-             (buffer-name)
+             (buffer-file-name)
             " --parser babel"))
 #+END_SRC
 
