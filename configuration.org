@@ -2009,6 +2009,14 @@ result can actually be seen.
 	       ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
 
 #+END_SRC
+** Tags
+
+Align tags to the far right of the screen. =-77= would be good for a
+smaller 80 character terminal.
+
+   #+begin_src emacs-lisp
+     (setq org-tags-column -150)
+   #+end_src
 
 ** Capture Templates
    :PROPERTIES:
