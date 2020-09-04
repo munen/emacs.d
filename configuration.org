@@ -294,16 +294,54 @@ buffer containing that file so they can't get out of sync.
 Do not enable automatic line breaks for all text-mode based hooks,
 because several text-modes (markdown, mails) enjoy the pain of long
 lines. So here, I only add whitelisted modes sparingly. The other
-modes have a =visual-clean= configuration which makes the text look
-nice locally, at least.
+modes have a =visual-line-mode== configuration which makes the text
+look nice locally, at least.
 
 #+BEGIN_SRC emacs-lisp
   (add-hook 'org-mode-hook 'auto-fill-mode)
 #+END_SRC
 
+*** =visual-fill-column-mode=
+ https://github.com/joostkremers/visual-fill-column
+
+=visual-fill-column-mode= is a small Emacs minor mode that mimics the
+effect of =fill-column= in =visual-line-mode=. Instead of wrapping
+lines at the window edge, which is the standard behaviour of
+=visual-line-mode=, it wraps lines at =fill-column=. If =fill-column=
+is too large for the window, the text is wrapped at the window edge.
+
+Enable whenever upstream =visual-line-mode= is activated.
+
+ #+begin_src emacs-lisp
+ (add-hook 'visual-line-mode-hook #'visual-fill-column-mode)
+ (add-hook 'visual-line-mode-hook #'adaptive-wrap-prefix-mode)
+ #+end_src
+
+Enable =visual-fill-mode= for all text based modes:
+
+ #+begin_src emacs-lisp
+   ;; Don't do it at this time, it's only enabled for some modes explicitly.
+   ;; (add-hook 'text-mode-hook 'visual-line-mode)
+ #+end_src
+
+
+Enable =adative-wrap-prefix-mode=:
+
+https://elpa.gnu.org/packages/adaptive-wrap.html
+
+This package provides the `adaptive-wrap-prefix-mode' minor mode which
+sets the wrap-prefix property on the fly so that single-long-line
+paragraphs get word-wrapped in a way similar to what you'd get with
+M-q using adaptive-fill-mode, but without actually changing the
+buffer's text.
+
+ #+begin_src emacs-lisp
+ (add-hook 'visual-line-mode-hook #'adaptive-wrap-prefix-mode)
+ #+end_src
+
 ** Enable Narrow To Region
 
-Enable narrow-to-region (C-x n n / C-x n w). This is disabled by
+Enable narrow-to-region (=C-x n n= / =C-x n w=). This is disabled by
 default to not confuse beginners.
 
 #+BEGIN_SRC emacs-lisp
@@ -536,15 +574,6 @@ Thx [[https://github.com/jcfischer][@jcfischer]] for the function!
   (global-set-key (kbd "M-u")
                   (lookup-key key-translation-map "\C-x8\""))
 
-#+END_SRC
-
-** Clean up messy buffers (i.e. web wikis or elfeed-show)
-#+BEGIN_SRC emacs-lisp
-  (defun visual-clean ()
-    "Clean up messy buffers (i.e. web wikis or elfeed-show)"
-    (interactive)
-    (visual-line-mode)
-    (visual-fill-column-mode))
 #+END_SRC
 
 ** Generate passwords
@@ -1550,10 +1579,10 @@ slide deck.
 Unfortunately line breaks are semantic in some versions of markdown
 (for example Github). So doing automatic line breaks would be harmful.
 However, this leads to super long lines in many documents which is
-unreadable. Therefore, always use =visual-clean=.
+unreadable. Therefore, always use =visual-line-mode=.
 
 #+BEGIN_SRC emacs-lisp
-    (add-hook 'markdown-mode-hook 'visual-clean)
+  (add-hook 'markdown-mode-hook 'visual-line-mode)
 #+END_SRC
 
 ** Magit
@@ -2015,7 +2044,7 @@ Align tags to the far right of the screen. =-77= would be good for a
 smaller 80 character terminal.
 
    #+begin_src emacs-lisp
-     (setq org-tags-column -150)
+     (setq org-tags-column -100)
    #+end_src
 
 ** Capture Templates
@@ -2408,7 +2437,7 @@ Atom and RSS.
 Automatic word-wrap for elfeed entries:
 
 #+BEGIN_SRC emacs-lisp
-(add-hook 'elfeed-show-mode-hook 'visual-clean)
+(add-hook 'elfeed-show-mode-hook 'visual-line-mode)
 #+END_SRC
 
 Use VIM style scrolling in elfeed entries:
@@ -2677,13 +2706,7 @@ mu init --my-address=alain.lafon@dispatched.ch --my-address=alain@200ok.ch --my-
                  account-vars)
          (error "No email account found"))))
 
-
-   (add-hook 'mu4e-compose-pre-hook 'my-mu4e-set-account)
-   ;; Not required anymore, because hunspell supports multiple
-   ;; dictionaries at the same time.
-   ;; (add-hook 'mu4e-compose-mode-hook (lambda ()
-   ;;                                    (ispell-change-dictionary "deutsch")))
-
+   (add-hook 'mu4e-compose-mode-hook 'visual-line-mode)
 
    (setq mu4e-refile-folder
          (lambda (msg)
@@ -2962,7 +2985,7 @@ mu init --my-address=alain.lafon@dispatched.ch --my-address=alain@200ok.ch --my-
  helpful when people send mails with very long lines
 
 #+BEGIN_SRC emacs-lisp
-  (add-hook 'mu4e-view-mode-hook 'visual-clean)
+  (add-hook 'mu4e-view-mode-hook 'visual-line-mode)
 #+END_SRC
 
 
