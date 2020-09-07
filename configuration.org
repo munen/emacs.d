@@ -2582,7 +2582,7 @@ Configure =xdg-open= to use Emacs in =.local/share/applications/mimeapps.list=:
 https://www.djcbsoftware.nl/code/mu/mu4e/Initializing-the-message-store.html
 
 #+BEGIN_SRC shell
-mu init --my-address=alain.lafon@dispatched.ch --my-address=alain@200ok.ch --my-address=lafo@zhaw.ch --my-address=alain@zen-tempel.ch --my-address=preek@dispatched.ch
+mu init --my-address=alain.lafon@dispatched.ch --my-address=alain@200ok.ch --my-address=lafo@zhaw.ch --my-address=alain@zen-tempel.ch --my-address=preek@dispatched.ch --maildir=~/Maildir
 #+END_SRC
 
  Accounts setup
@@ -2610,8 +2610,6 @@ mu init --my-address=alain.lafon@dispatched.ch --my-address=alain@200ok.ch --my-
          ;; (when nothing has to be synched anyway)
          mu4e-get-mail-command "offlineimap_parallel.sh"
          mu4e-attachment-dir "~/Dropbox/org/files/inbox")
-
-   (setq mu4e-maildir "~/Maildir/")
 
    ;; show full addresses in view message (instead of just names)
    ;; toggle per name with M-RET
@@ -2705,6 +2703,8 @@ mu init --my-address=alain.lafon@dispatched.ch --my-address=alain@200ok.ch --my-
                      (set (car var) (cadr var)))
                  account-vars)
          (error "No email account found"))))
+
+   (add-hook 'mu4e-compose-pre-hook 'my-mu4e-set-account)
 
    (add-hook 'mu4e-compose-mode-hook 'visual-line-mode)
 
