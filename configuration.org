@@ -2236,10 +2236,11 @@ This will render the same time as above as:
                                  (concat org-directory "reference.org")
                                  (concat org-directory "media.org")
                                  (concat org-directory "shared_with_monika/shared_alain_and_monika.org")
-                                 "~/Dropbox/ZHAW/web3-unterlagen/README.org"
-                                 "~/Dropbox/ZHAW/weng-unterlagen/README.org"
-                                 "~/src/200ok/swiss-crowdfunder/TODO.org"
-                                 "~/src/200ok/200ok-admin/THINGS.org")))
+                                 ;; "~/Dropbox/ZHAW/web3-unterlagen/README.org"
+                                 ;; "~/Dropbox/ZHAW/weng-unterlagen/README.org"
+                                 ;; "~/src/200ok/swiss-crowdfunder/TODO.org"
+                                 "~/src/200ok/200ok-admin/THINGS.org"
+                                 )))
 
   (set-org-agenda-files)
 
@@ -2640,19 +2641,6 @@ mu init --my-address=alain.lafon@dispatched.ch --my-address=alain@200ok.ch --my-
         (smtpmail-smtp-server "mail.your-server.de")
         (smtpmail-stream-type starttls)
         (smtpmail-smtp-service 25))
-       ("zhaw"
-        (mu4e-compose-signature-auto-include nil)
-        (user-full-name  "Alain M. Lafon")
-        (mu4e-sent-folder "/zhaw/Sent Items")
-        (mu4e-drafts-folder "/zhaw/Drafts")
-        (mu4e-trash-folder "/zhaw/Deleted Items")
-        (user-mail-address "lafo@zhaw.ch")
-        (smtpmail-default-smtp-server "smtps.zhaw.ch")
-        (smtpmail-smtp-server "smtps.zhaw.ch")
-        (smtpmail-local-domain "zhaw.ch")
-        (smtpmail-smtp-user "lafo@zhaw.ch")
-        (smtpmail-stream-type starttls)
-        (smtpmail-smtp-service 587))
        ("zen-tempel"
         (user-full-name  "Zen Mönch Alain M. Lafon")
         (mu4e-compose-signature "Insopor Zen Akademie\nZen Mönch\n\nalain@zen-tempel.ch\n+41 76 405 05 67\n\nhttps://zen-temple.net/")
