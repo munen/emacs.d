@@ -3922,7 +3922,9 @@ When evaluating the src-block above, it'll yield a table like:
 #+END_SRC
 ** Export Org Mode TODO headers into estimation table
 #+BEGIN_SRC emacs-lisp
-(load-file "~/src/200ok/200ok-admin/src/export-org-estimations/ok-export-org-estimations.el")
+  (setq ok-export-org-estimations-file "~/src/200ok/200ok-admin/src/export-org-estimations/ok-export-org-estimations.el")
+  (unless (file-exists-p ok-export-org-estimations-file)
+    (load-file ok-export-org-estimations-file))
 #+END_SRC
 ** General config
 
