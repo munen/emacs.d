@@ -2154,7 +2154,8 @@ This obviously breaks the structure of the Org file. Here's a fix:
 Enable the =<s TAB= syntax for [[https://orgmode.org/manual/Structure-Templates.html][structure templates]].
 
 #+begin_src emacs-lisp
-(require 'org-tempo)
+  (if (version<= emacs-version "27.1")
+      (require 'org-tempo))
 #+end_src
 
 ** Pomodoro
