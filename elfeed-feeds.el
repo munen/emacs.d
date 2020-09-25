@@ -39,4 +39,5 @@
         ;; Insopor Zen Academy
         ("https://zen-temple.net/feed" zen)))
 
-(load "~/.emacs.d/private_feeds")
+(when (file-exists-p "~/.emacs.d/private_feeds")
+    (load "~/.emacs.d/private_feeds"))
