@@ -2154,7 +2154,7 @@ This obviously breaks the structure of the Org file. Here's a fix:
 Enable the =<s TAB= syntax for [[https://orgmode.org/manual/Structure-Templates.html][structure templates]].
 
 #+begin_src emacs-lisp
-  (if (version<= emacs-version "27.1")
+  (if (version<= "27.1" emacs-version)
       (require 'org-tempo))
 #+end_src
 
