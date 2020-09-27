@@ -578,7 +578,7 @@ Thx [[https://github.com/jcfischer][@jcfischer]] for the function!
 ** Generate passwords
    Through =pwgen=.
 
-   Thanks to [[https://github.com/branch14/emacs.d][@branch14]] of 200ok fame for the function!
+   Thanks to [[https://github.com/branch14/][@branch14]] of [[https://200ok.ch][200ok]] fame for the function!
 #+BEGIN_SRC emacs-lisp
   (defun generate-password-non-interactive ()
      (string-trim (shell-command-to-string "pwgen -A 24")))
@@ -741,6 +741,29 @@ when you search for ASCII characters (a in this example).
   #+begin_src emacs-lisp
     (setq search-default-mode #'char-fold-to-regexp)
   #+end_src
+** Move current line up or down
+
+https://emacsredux.com/blog/2013/04/02/move-current-line-up-or-down/
+
+   #+BEGIN_SRC emacs-lisp
+     (defun move-line-up ()
+       "Move up the current line."
+       (interactive)
+       (transpose-lines 1)
+       (forward-line -2)
+       (indent-according-to-mode))
+
+     (defun move-line-down ()
+       "Move down the current line."
+       (interactive)
+       (forward-line 1)
+       (transpose-lines 1)
+       (forward-line -1)
+       (indent-according-to-mode))
+
+     (global-set-key (kbd "M-<down>") 'move-line-down)
+     (global-set-key (kbd "M-<up>") 'move-line-up)
+   #+END_SRC
 
 * General
 This section contains settings for non-built-in Emacs features that
