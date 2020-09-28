@@ -451,6 +451,17 @@ left-to-right manner.
   (if (version<= "27.1" emacs-version)
       (setq bidi-inhibit-bpa t))
 #+end_src
+** =so-long=
+
+When the lines in a file are so long that performance could suffer to
+an unacceptable degree, we say "so long" to the slow modes and options
+enabled in that buffer, and invoke something much more basic in their
+place.
+
+#+begin_src emacs-lisp
+  (if (version<= "27.1" emacs-version)
+      (global-so-long-mode 1))
+#+end_src
 
 * Misc Custom Improvements
 
