@@ -430,6 +430,28 @@ standard Emacs load path, so that =require= just works.
   (add-to-list 'load-path "/home/munen/.guix-profile/share/emacs/site-lisp/")
   (add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e")
 #+END_SRC
+** Bidirectional Editing
+
+https://www.gnu.org/software/emacs/manual/html_node/emacs/Bidirectional-Editing.html
+
+Emacs supports editing text written in scripts, such as Arabic, Farsi,
+and Hebrew, whose natural ordering of horizontal text for display is
+from right to left. However, digits and Latin text embedded in these
+scripts are still displayed left to right.
+
+Whilst this is a great feature, it adds to the amount of line scans
+that Emacs has to do to render a line. Too many line scans will cause
+Emacs to hang. Since I personally do not work with right-to-left
+languages, I'm defaulting to displaying all paragraphs in a
+left-to-right manner.
+
+#+begin_src emacs-lisp
+  (setq bidi-paragraph-direction 'left-to-right)
+
+  (if (version<= "27.1" emacs-version)
+      (setq bidi-inhibit-bpa t))
+#+end_src
+
 * Misc Custom Improvements
 
 Some helper functions and packages I wrote that are only accessible
