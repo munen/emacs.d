@@ -2810,29 +2810,39 @@ mu init --my-address=alain.lafon@dispatched.ch --my-address=alain@200ok.ch --my-
 
  Check for supposed attachments prior to sending them
 
- #+BEGIN_SRC emacs-lisp
-   (defvar my-message-attachment-regexp "\\(
-                                         [Ww]e send\\|
-                                         [Ii] send\\|
-                                         attach\\|
-                                         [aA]ngehängt\\|
-                                         [aA]nhang\\|
-                                         [sS]chicke\\|
-                                         angehaengt\\|
-                                         haenge\\|
-                                         hänge\\)")
-   (defun my-message-check-attachment nil
-     "Check if there is an attachment in the message if I claim it."
+ #+begin_src emacs-lisp
+   (defun ok/message-attachment-present-p ()
+     "Return t if a non-gpg attachment is found in the current message."
      (save-excursion
-       (message-goto-body)
-       (when (search-forward-regexp my-message-attachment-regexp nil t nil)
-         (message-goto-body)
-         (unless (or (search-forward "<#part" nil t nil)
-                     (message-y-or-n-p
-                      "No attachment. Send the message ?" nil nil))
-           (error "No message sent")))))
-   (add-hook 'message-send-hook 'my-message-check-attachment)
- #+END_SRC
+       (save-restriction
+         (widen)
+         (goto-char (point-min))
+         (when (search-forward "<#part type" nil t) t))))
+
+   (setq ok/message-attachment-regexp
+     (regexp-opt '("[Ww]e send"
+                   "[Ii] send"
+                   "attach"
+                   "[aA]ngehängt"
+                   "[aA]nhang"
+                   "[sS]chicke"
+                   "angehaengt"
+                   "haenge"
+                   "hänge")))
+
+   (defun ok/message-warn-if-no-attachments ()
+     "Check if there is an attachment in the message if I claim it."
+     (when (and (save-excursion
+            (save-restriction
+        (widen)
+        (goto-char (point-min))
+        (re-search-forward ok/message-attachment-regexp nil t)))
+          (not (ok/message-attachment-present-p)))
+       (unless (y-or-n-p "No attachment. Send the message?")
+         (keyboard-quit))))
+
+   (add-hook 'message-send-hook #'ok/message-warn-if-no-attachments)
+ #+end_src
 
  For mail completion, only consider emails that have been seen in the
  last 6 months. This gets rid of legacy mail addresses of people.
