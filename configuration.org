@@ -446,7 +446,7 @@ languages, I'm defaulting to displaying all paragraphs in a
 left-to-right manner.
 
 #+begin_src emacs-lisp
-  (setq bidi-paragraph-direction 'left-to-right)
+  (setq-default bidi-paragraph-direction 'left-to-right)
 
   (if (version<= "27.1" emacs-version)
       (setq bidi-inhibit-bpa t))
