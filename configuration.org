@@ -3994,11 +3994,18 @@ When evaluating the src-block above, it'll yield a table like:
 #+END_SRC
 ** General config
 
-Don't export the [[https://orgmode.org/manual/Publishing-options.html][html-validation-link]].
+*** Don't export the [[https://orgmode.org/manual/Publishing-options.html][html-validation-link]]
 
 #+BEGIN_SRC emacs-lisp
 (setq org-html-validation-link nil)
 #+END_SRC
+
+*** Export planning information
+
+#+begin_src emacs-lisp
+  (setq org-export-with-planning t)
+#+end_src
+
 * Bad experience
 
 The following packages would be nice, in theory. In practice something
