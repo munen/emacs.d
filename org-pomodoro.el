@@ -9,7 +9,7 @@
 (defvar ok-pomodoro-buffer)
 (defvar ok-pomodoro-completed 0)
 (defvar ok-pomodoro-cancelled 0)
-(defvar ok-pomodoro-auto-clock-in t
+(defvar ok-pomodoro-auto-clock-in nil
   "When set to non-nil, a pomodoro will automatically be started when clocking in on any task in 'org-mode'.")
 
 (defun ok-pomodoro-reset ()
@@ -21,7 +21,7 @@
 (defun set-break-timer ()
   "When the timer is over, go back to work."
   (shell-command "notify-send -u critical 'Break is over.'")
-  (shell-command "say 'Break is over.'")
+  ;; (shell-command "say 'Break is over.'")
   ;; Overwrite the result from `shell-command`.
   (message "Break is over."))
 
@@ -29,7 +29,7 @@
   "When the timer is over, let the user take a break!"
   (setq ok-pomodoro-completed (+ 1 ok-pomodoro-completed))
   (shell-command "notify-send 'Time to take a break.'")
-  (shell-command "say 'Time to take a break.'")
+  ;; (shell-command "say 'Time to take a break.'")
   ;; Overwrite the result from `shell-command`.
   (message "Time to take a break."))
 

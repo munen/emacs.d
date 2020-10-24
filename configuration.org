@@ -3003,6 +3003,14 @@ mu init --my-address=alain.lafon@dispatched.ch --my-address=alain@200ok.ch --my-
     (message "Keep to three sentences.")))
 #+END_SRC
 
+**** Date format
+
+Set a sane ISO 8601 date format.
+
+#+begin_src emacs-lisp
+  (setq mu4e-headers-date-format "%+4Y-%m-%d")
+#+end_src
+
 **** ~format=flowed~
 
  Setting ~format=flowed~ for non-text-based mail clients which don't
