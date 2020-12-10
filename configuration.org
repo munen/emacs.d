@@ -84,6 +84,7 @@ down in this file, some are used with the default configuration.
                         forge
                         flycheck
                         flycheck-flow
+                        flycheck-package
                         hide-mode-line
                         impatient-mode
                         ini-mode
@@ -1040,10 +1041,22 @@ http://www.flycheck.org/
 Enable global on the fly syntax checking through =flycheck=.
 
 #+BEGIN_SRC emacs-lisp
-
   (add-hook 'after-init-hook #'global-flycheck-mode)
-
 #+END_SRC
+
+**** =flycheck-package=
+ https://github.com/purcell/flycheck-package
+
+This library provides a flycheck checker for the metadata in Emacs
+Lisp files which are intended to be packages. That metadata includes
+the package description, its dependencies and more.
+
+#+begin_src emacs-lisp
+(eval-after-load 'flycheck
+  '(flycheck-package-setup))
+#+end_src
+
+
 *** Manage TODO/FIXME/XXX comments
 
 https://github.com/vincekd/comment-tags
@@ -2296,6 +2309,7 @@ This will render the same time as above as:
                                  ;; "~/Dropbox/ZHAW/weng-unterlagen/README.org"
                                  ;; "~/src/200ok/swiss-crowdfunder/TODO.org"
                                  "~/src/200ok/200ok-admin/THINGS.org"
+                                 "~/src/200ok/200ok-admin/bluewin.org"
                                  )))
 
   (set-org-agenda-files)
@@ -2322,7 +2336,7 @@ an inbox). Orgmode makes this easy with the refile command =C-c C-w=.
 
 Define where the refiling can happen (the default is to the local buffer):
 #+BEGIN_SRC emacs-lisp
-  (setq org-refile-targets (quote ((org-agenda-files :maxlevel . 3))))
+  (setq org-refile-targets (quote ((org-agenda-files :maxlevel . 4))))
 #+END_SRC
 ** Show "calendar week" in calendar
 
