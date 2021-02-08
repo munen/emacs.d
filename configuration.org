@@ -3878,7 +3878,7 @@ Display Emoji (requires the =fonts-symbola= Debian package)
 ** Enable default theme and font
 
 #+BEGIN_SRC emacs-lisp
-  (light-mode)
+  (add-hook 'server-after-make-frame-hook 'light-mode)
 #+END_SRC
 * Org Mode Exports
 
