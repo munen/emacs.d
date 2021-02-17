@@ -931,7 +931,7 @@ Turning off evil when working in =cider--debug= minor mode:
     (evil-local-mode (if cider--debug-mode -1 1)))
 #+END_SRC
 
-** Unbind M-. and M- in =evil-mode=
+** Unbind certain Emacs keybindings in =evil-mode=
 =M-.= and =M-,= are popular keybindings for "jump to definition" and
 "back". =evil-mode= by default binds those to rather rarely used
 functions =evil-repeat-pop-next= and =xref-pop-marker-stack=, for some reason.
@@ -940,6 +940,17 @@ functions =evil-repeat-pop-next= and =xref-pop-marker-stack=, for some reason.
   (define-key evil-normal-state-map (kbd "M-.") nil)
   (define-key evil-normal-state-map (kbd "M-,") nil)
 #+END_SRC
+
+=M-l= and =M-l M-l= is =downcase-word=. This happens a lot by accident
+for me. And undoing it often undoes _a lot_ more - like deleting whole
+paragraphs of text. Also, I don't need it, because I'd use evil
+bindings for that.
+
+#+begin_src emacs-lisp
+  (define-key global-map (kbd "M-l") nil)
+  (define-key evil-insert-state-map (kbd "M-l M-l") nil)
+#+end_src
+
 ** Call =ex= by default on visual selection
 
 #+BEGIN_SRC emacs-lisp
@@ -3879,6 +3890,7 @@ Display Emoji (requires the =fonts-symbola= Debian package)
 
 #+BEGIN_SRC emacs-lisp
   (add-hook 'server-after-make-frame-hook 'light-mode)
+  (light-mode)
 #+END_SRC
 * Org Mode Exports
 
