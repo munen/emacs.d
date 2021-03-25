@@ -3083,6 +3083,22 @@ Set a sane ISO 8601 date format.
   (setq mu4e-msg2pdf "/usr/local/bin/msg2pdf")
 #+END_SRC
 
+**** I'm not Borg
+
+mu4e has a feature [[https://www.djcbsoftware.nl/code/mu/mu4e/Other-search-functionality.html][skipping duplicates]] designed for Borg.
+
+While I'm not Borg, being thrown in with the lot brings trouble. I
+like scanning my Spam folder for false positives. When 'duplicates'
+are not shown, it'll take me many runs to delete those tasty Bitcoin
+offers.
+
+An even better solution to the problem would actually be to
+automatically delete duplicates - maybe with procmail.
+
+     #+begin_src emacs-lisp
+     (setq mu4e-headers-skip-duplicates nil)
+     #+end_src
+
 **** TODO Use Quoted printable text for outgoing messages to enable automatic line breaks
 ***** If this is successfull, send upstream PR to MU4E
  https://mathiasbynens.be/notes/gmail-plain-text
