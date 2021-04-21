@@ -85,6 +85,7 @@ down in this file, some are used with the default configuration.
                         flycheck
                         flycheck-flow
                         flycheck-package
+                        hcl-mode
                         hide-mode-line
                         impatient-mode
                         ini-mode
