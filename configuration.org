@@ -1985,6 +1985,16 @@ settings in this file will trump my personal config.
 #+BEGIN_SRC emacs-lisp
 (editorconfig-mode 1)
 #+END_SRC
+** =hcl-mode=
+https://github.com/purcell/emacs-hcl-mode
+
+Major mode for [[https://github.com/hashicorp/hcl][Hashicorp Configuration Language]]. I use it for [[https://www.terraform.io/][Terraform]].
+
+#+begin_src emacs-lisp
+  (add-to-list 'auto-mode-alist '("\\.tf" . hcl-mode))
+#+end_src
+
+
 * Org mode
 
 Outline-based notes management and organizer. It is an outline-mode
