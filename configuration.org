@@ -2933,6 +2933,13 @@ mu init --my-address=alain.lafon@dispatched.ch --my-address=alain@200ok.ch --my-
 
  #+END_SRC
 
+ Disable colors for HTML mails. HTML mails, especially transactional
+ ones, can be very convoluted. Converting them to text and taking away
+ colors can make them more readable.
+ #+begin_src emacs-lisp
+   (setq shr-use-colors t)
+ #+end_src
+
  Disable "HTML over plain text" heuristic. This variable officially has
  this rationale: "Ratio between the length of the html and the plain
  text part below which mu4e will consider the plain text part to be
