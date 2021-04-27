@@ -96,6 +96,7 @@ down in this file, some are used with the default configuration.
                         js-comint
                         ledger-mode
                         magit
+                        magit-delta
                         markdown-mode
                         package-lint
                         parinfer
@@ -1727,6 +1728,26 @@ Show assigned issues and PRs directly in the status buffer:
   (magit-add-section-hook 'magit-status-sections-hook 'forge-insert-assigned-issues   nil t)
   (magit-add-section-hook 'magit-status-sections-hook 'forge-insert-assigned-pullreqs   nil t))
 #+END_SRC
+
+** =magit-delta=
+https://github.com/dandavison/magit-delta
+
+Provides a minor mode which configures Magit to use [[https://github.com/dandavison/delta][delta]] when displaying diffs.
+
+Enable =magit-delta= when running =magit=.
+#+begin_src emacs-lisp
+  (add-hook 'magit-mode-hook (lambda () (magit-delta-mode +1)))
+#+end_src
+
+Override the settings (=~/.gitconfig=) for =delta=, because the
+=line-numbers= feature won't work well with =magit-delta= (see
+https://github.com/dandavison/magit-delta/issues/13).
+#+begin_src emacs-lisp
+  (setq magit-delta-delta-args
+    '("--24-bit-color" "always"
+      "--features" "magit-delta"
+      "--color-only"))
+#+end_src
 
 ** Projectile
 
