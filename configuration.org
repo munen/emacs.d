@@ -118,6 +118,7 @@ down in this file, some are used with the default configuration.
                         which-key
                         writegood-mode
                         writeroom-mode
+                        quelpa
                         yaml-mode
                         zenburn-theme))
 #+END_SRC
@@ -131,6 +132,12 @@ down in this file, some are used with the default configuration.
       (package-install p))
     (add-to-list 'package-selected-packages p))
 #+END_SRC
+
+** Quelpa
+   https://github.com/quelpa/quelpa
+
+Build and install your Emacs Lisp packages on-the-fly directly from
+source.
 
 * Default Settings
 This section contains settings for built-in Emacs features.
