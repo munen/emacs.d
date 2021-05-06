@@ -3158,32 +3158,80 @@ automatically delete duplicates - maybe with procmail.
      "Append a `line` to a file behind `path`"
      (write-region (concat line "\n") nil path 'append))
 
+
    (defun mu4e-blacklist-from (msg)
      "Add the `from` of a message to the procmail blacklist"
      (let* ((from (mu4e-message-field msg :from))
             (from_name (car (car from)))
-            (from_address (cdr (car from))))
-       ;; Block the senders Name
+            (from_address (cdr (car from)))
+            (path "~/.procmail/blacklist_from.txt"))
+       ;; Blacklist the senders Name
        (if from_name
-           (append-line-to-file from_name "~/.procmail/blacklist_from.txt"))
-       ;; Block the Email-Address
-       (append-line-to-file from_address "~/.procmail/blacklist_from.txt")
+           (append-line-to-file from_name path))
+       ;; Blacklist the Email-Address
+       (append-line-to-file from_address path)
+       (shell-command (format "sort -u -o %s %s" path path))
+       (message "Blacklist: %s" from)))
 
-       (message "Blocking: %s" from)))
+
+   (defun mu4e-whitelist-from (msg)
+     "Add the `from` of a message to the procmail whitelist"
+     (let* ((from (mu4e-message-field msg :from))
+            (from_name (car (car from)))
+            (from_address (cdr (car from)))
+            (path "~/.procmail/whitelist_from.txt"))
+       ;; Whitelist the senders Name
+       (if from_name
+           (append-line-to-file from_name path))
+       ;; Whitelist the Email-Address
+       (append-line-to-file from_address path)
+       (shell-command (format "sort -u -o %s %s" path path))
+       (message "Whitelist: %s" from)))
+
+
+   ;; FIXME: Why isn't this working?
+   ;; (defun mu4e-strategy-from (strategy msg)
+   ;;   "If STRATEGY is 'blacklist', then add the `from` of a message to the
+   ;; procmail. If it is 'whitelist', then whitelist'."
+   ;;   (let* ((from (mu4e-message-field msg :from))
+   ;;          (from_name (car (car from)))
+   ;;          (from_address (cdr (car from)))
+   ;;          (path (format "~/.procmail/%s_from.txt" strategy)))
+   ;;     ;; Whitelist/Blacklist the senders Name
+   ;;     (if from_name
+   ;;         (append-line-to-file from_name path))
+   ;;     ;; Whitelist/Blacklist the Email-Address
+   ;;     (append-line-to-file from_address path)
+   ;;     (shell-command (format "sort -u -o %s %s" path path))
+   ;;     (message "%s: %s" strategy from)))
+
 
    (defun mu4e-blacklist-subject (msg)
      "Add the `subject` of a message to the procmail blacklist"
-     (let* ((subject (mu4e-message-field msg :subject)))
+     (let* ((subject (mu4e-message-field msg :subject))
+            (path "~/.procmail/blacklist_subject.txt"))
        (if subject
-           (append-line-to-file subject "~/.procmail/blacklist_subject.txt"))
+           (append-line-to-file subject path))
+       (shell-command (format "sort -u -o %s %s" path path))
 
-       (message "Blocking: %s" subject)))
-
-   (add-to-list 'mu4e-headers-actions
-     '("F Block 'From:'" . mu4e-blacklist-from) t)
+       (message "Blacklist: %s" subject)))
 
    (add-to-list 'mu4e-headers-actions
-     '("S Block 'Subject:'" . mu4e-blacklist-subject) t)
+                '("f Whitelist 'From:'" . mu4e-whitelist-from) t)
+
+   (add-to-list 'mu4e-headers-actions
+                '("F Block 'From:'" . mu4e-blacklist-from) t)
+
+
+   ;; FIXME: Why isn't this working?
+   ;; (add-to-list 'mu4e-headers-actions
+   ;;   '("f White 'From:'" . (apply-partially 'mu4e-strategy-from "whitelist")) t)
+
+   ;; (add-to-list 'mu4e-headers-actions
+   ;;   '("F Block 'From:'" . (apply-partially 'mu4e-strategy-from "blacklist")) t)
+
+   (add-to-list 'mu4e-headers-actions
+                '("S Block 'Subject:'" . mu4e-blacklist-subject) t)
 
  #+END_SRC
 *** Rewrite contact information
