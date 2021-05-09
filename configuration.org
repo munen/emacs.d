@@ -2838,30 +2838,33 @@ mu init --my-address=alain.lafon@dispatched.ch --my-address=alain@200ok.ch --my-
    ;; Empty the initial bookmark list
    (setq mu4e-bookmarks '())
 
-   ;; Re-define all standard bookmarks to not include the spam folders
-   ;; for searches
-   (defvar d-spam "NOT (maildir:/dispatched/INBOX.spambucket OR maildir:/zen-tempel/INBOX.spambucket OR maildir:/200ok/INBOX.spambucket OR maildir:/zhaw/\"Junk E-Mail\" OR maildir:/zhaw/\"Deleted Items\")")
 
    ;; All archived folders
    (defvar d-archive "NOT (maildir:/dispatched/INBOX.Archive OR maildir:/zen-tempel/INBOX.Archive OR maildir:/200ok/INBOX.Archive OR maildir:/zhaw/Archive)")
 
    (defvar inbox-folders (string-join '("maildir:/dispatched/INBOX"
-                                        "maildir:/zhaw/INBOX"
                                         "maildir:/zen-tempel/INBOX"
                                         "maildir:/200ok/INBOX")
                                       " OR "))
 
    (defvar draft-folders (string-join '("maildir:/dispatched/INBOX.Drafts"
-                                        "maildir:/zhaw/Drafts"
                                         "maildir:/zen-tempel/INBOX.Drafts"
                                         "maildir:/200ok/INBOX.Drafts")
                                       " OR "))
 
    (defvar spam-folders (string-join '("maildir:/dispatched/INBOX.spambucket"
-                                        "maildir:/zhaw/INBOX.spambucket"
                                         "maildir:/zen-tempel/INBOX.spambucket"
                                         "maildir:/200ok/INBOX.spambucket")
                                      " OR "))
+
+   (defvar blacklist-folders (string-join
+   '("maildir:/dispatched/INBOX.blacklist"
+   "maildir:/zen-tempel/INBOX.blacklist"
+   "maildir:/200ok/INBOX.blacklist") " OR "))
+
+   ;; Re-define all standard bookmarks to not include the spam and
+   ;; blacklist folders for searches
+   (defvar d-spam (format "NOT (%s OR %s)" spam-folders blacklist-folders))
 
    (add-to-list 'mu4e-bookmarks
                 '((concat d-spam " AND date:today..now")                  "Today's messages"     ?t))
@@ -2872,11 +2875,13 @@ mu init --my-address=alain.lafon@dispatched.ch --my-address=alain@200ok.ch --my-
    (add-to-list 'mu4e-bookmarks
                 '((concat d-spam " AND mime:image/*")                     "Messages with images" ?p))
    (add-to-list 'mu4e-bookmarks
-                '(spam-folders "All spambuckets"     ?S))
+                '(spam-folders "Spam"     ?S))
    (add-to-list 'mu4e-bookmarks
-                '(draft-folders "All drafts"     ?d))
+                '(blacklist-folders "Blacklisted"     ?B))
    (add-to-list 'mu4e-bookmarks
-                '(inbox-folders "All inbox mails"     ?i))
+                '(draft-folders "Drafts"     ?d))
+   (add-to-list 'mu4e-bookmarks
+                '(inbox-folders "Inbox"     ?i))
    (add-to-list 'mu4e-bookmarks
                 '((concat d-spam d-archive " AND (flag:unread OR flag:flagged) AND NOT flag:trashed")
                   "Unread messages"      ?u))
