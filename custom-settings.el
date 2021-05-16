@@ -25,6 +25,7 @@
       (encrypt))))
  '(org-agenda-files
    '("~/Dropbox/org/things.org" "~/Dropbox/org/reference.org" "~/Dropbox/org/media.org" "~/Dropbox/org/shared_with_monika/shared_alain_and_monika.org" "~/Dropbox/ZHAW/web3-unterlagen/README.org" "~/Dropbox/ZHAW/weng-unterlagen/README.org" "~/src/200ok/swiss-crowdfunder/TODO.org" "~/src/200ok/200ok-admin/THINGS.org"))
+ '(org-habit-graph-column 90)
  '(org-latex-text-markup-alist
    '((bold . "\\textbf{%s}")
      (code . protectedtexttt)
