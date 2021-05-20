@@ -2037,6 +2037,14 @@ go and to collaborate with non-Emacs users.
   (setq org-directory "~/Dropbox/org/")
 #+END_SRC
 
+Configure =org-display-inline-images= width so that they always fit.
+My screenshots would otherwise overflow, because I'm on a HiDPI
+display.
+
+#+begin_src emacs-lisp
+(setq org-image-actual-width 720)
+#+end_src
+
 ** Plain Lists
 Allow ‘a.’, ‘A.’, ‘a)’ and ‘A) as list elements:
 
@@ -2437,6 +2445,20 @@ https://github.com/abo-abo/org-download
      (add-hook 'dired-mode-hook 'org-download-enable)
      (setq org-download-heading-lvl nil)
    #+end_src
+
+
+Don't save org-download images nested according to header, save them
+flat.
+
+#+begin_src emacs-lisp
+(setq-default org-download-heading-lvl nil)
+#+end_src
+
+Save org-download images into the "images" directory.
+#+begin_src emacs-lisp
+(setq-default org-download-image-dir (concat org-directory "images"))
+#+end_src
+
 
 ** WIP Notifications / appointment reminders
 
