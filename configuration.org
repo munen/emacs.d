@@ -2428,6 +2428,16 @@ An extension to restclient.el for emacs that provides org-babel support.
    '((restclient . t)))
 #+END_SRC
 
+** =org-download=
+https://github.com/abo-abo/org-download
+
+   #+begin_src emacs-lisp
+     (require 'org-download)
+
+     (add-hook 'dired-mode-hook 'org-download-enable)
+     (setq org-download-heading-lvl nil)
+   #+end_src
+
 ** WIP Notifications / appointment reminders
 
  This is a work-in-progress, but already working.
