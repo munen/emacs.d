@@ -1504,17 +1504,6 @@ Run a JavaScript interpreter in an inferior process window.
             (local-set-key (kbd "C-c C-b") 'js-send-buffer-and-go)
             (local-set-key (kbd "C-c l") 'js-load-file-and-go)))
 #+END_SRC
-*** =flow=
-https://github.com/flowtype/flow-for-emacs/
-
-An emacs plugin for Flow, a static typechecker for JavaScript.
-
-- Shows errors found by typechecking JavaScript code with Flow.
-- Provides a bunch of common IDE features powered by Flow to aid reading and writing JavaScript code.
-#+BEGIN_SRC elisp
-(load-file "~/.emacs.d/flow-for-emacs/flow.el")
-#+END_SRC
-
 *** =flycheck-flow=
 
 [[https://flow.org/][Flow]] is a static type checker for JavaScript.
