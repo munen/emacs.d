@@ -2536,7 +2536,7 @@ Save org-download images into the "images" directory.
    (defadvice  org-agenda-redo (after org-agenda-redo-add-appts)
      "Pressing `r' on the agenda will also add appointments."
      (progn
-       (setq appt-time-msg-list nil)
+       (defvar appt-time-msg-list nil)
        (org-agenda-to-appt)))
 
    (ad-activate 'org-agenda-redo)
