@@ -3433,7 +3433,7 @@ capable counterparts
   =~/.authinfo.gpg= file, I have a line like:
 
 #+BEGIN_EXAMPLE
-machine irc.freenode.net login "munen" password SECRET_PASSWORD
+machine irc.libera.chat login "munen" password SECRET_PASSWORD
 #+END_EXAMPLE
 
   This file is automatically read when connecting to servers. It's the
@@ -3444,19 +3444,29 @@ machine irc.freenode.net login "munen" password SECRET_PASSWORD
 *Configure automatic join list*
 
 #+BEGIN_SRC emacs-lisp
-  (setq erc-autojoin-channels-alist '(("freenode.net" "#200ok" "#emacsconf" "#emacsconf-org" "#lobsters")
-                                      ;; This does not work, yet. The
-                                      ;; channels cannot be joined on
-                                      ;; connecting to bitlbee. bitlbee
-                                      ;; needs to first connect to the
-                                      ;; configured accounts (i.e.
-                                      ;; slack). This could happen in a
-                                      ;; timeout, or better event
-                                      ;; oriented on a message that
-                                      ;; bitlbee sends when connected to
-                                      ;; the account.
-                                      '(("localhost" "#internal" "#general"))))
+  (setq erc-autojoin-channels-alist '(("libera.chat" "#organice" "#200ok" "#emacsconf" "#emacsconf-org" "#lobsters")
+                                        ;; Deprecate Freenode (rationale https://github.com/200ok-ch/org-parser/pull/48)
+                                        ;; ("freenode.net" "#200ok" "#emacsconf" "#emacsconf-org" "#lobsters")
+                                        ;; This does not work, yet. The
+                                        ;; channels cannot be joined on
+                                        ;; connecting to bitlbee. bitlbee
+                                        ;; needs to first connect to the
+                                        ;; configured accounts (i.e.
+                                        ;; slack). This could happen in a
+                                        ;; timeout, or better event
+                                        ;; oriented on a message that
+                                        ;; bitlbee sends when connected to
+                                        ;; the account.
+                                        ;; '(("localhost" "#internal" "#general"))
+                                        ))
+
 #+END_SRC
+
+*By default, connect to Libera.Chat*
+
+#+begin_src emacs-lisp
+  (defconst erc-default-server "irc.libera.chat")
+#+end_src
 
 *Do not show join/quit info for lurkers*
 
