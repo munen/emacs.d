@@ -968,6 +968,15 @@ bindings for that.
   (define-key evil-insert-state-map (kbd "M-l M-l") nil)
 #+end_src
 
+=M-k= is =kill-sentence=. That happens by accident, as well. And
+sometimes, when in insert-mode, it even erases the history. I don't
+need it, I'd use evil for that.
+
+#+begin_src emacs-lisp
+  (define-key global-map (kbd "M-k") nil)
+  (define-key evil-insert-state-map (kbd "M-k M-k") nil)
+#+end_src
+
 ** Call =ex= by default on visual selection
 
 #+BEGIN_SRC emacs-lisp
