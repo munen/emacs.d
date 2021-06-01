@@ -473,6 +473,14 @@ place.
       (global-so-long-mode 1))
 #+end_src
 
+** Native compilation
+
+Do not report warnings and errors from asynchronous native compilation.
+
+   #+begin_src emacs-lisp
+     (setq native-comp-async-report-warnings-errors nil)
+   #+end_src
+
 * Misc Custom Improvements
 
 Some helper functions and packages I wrote that are only accessible

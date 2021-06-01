@@ -26,3 +26,4 @@ games
 /forge-database.sqlite
 /transient
 /private_feeds.el
+/eln-cache/
