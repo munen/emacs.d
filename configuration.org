@@ -1778,6 +1778,13 @@ Enable Projectile globally
   (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
 #+END_SRC
 
+Disable projectile when using TRAMP. Otherwise Tramp will crawl to a halt.
+
+#+begin_src emacs-lisp
+(defadvice projectile-project-root (around ignore-remote first activate)
+    (unless (file-remote-p default-directory) ad-do-it))
+#+end_src
+
 ** Dumb Jumb
 
 https://github.com/jacktasia/dumb-jump
@@ -2800,8 +2807,8 @@ mu init --my-address=alain.lafon@dispatched.ch --my-address=alain@200ok.ch --my-
         (smtpmail-stream-type starttls)
         (smtpmail-smtp-service 25))
        ("zen-tempel"
-        (user-full-name  "Zen Mönch Alain M. Lafon")
-        (mu4e-compose-signature "Insopor Zen Akademie\nZen Mönch\n\nalain@zen-tempel.ch\n+41 76 405 05 67\n\nhttps://zen-temple.net/")
+        (user-full-name  "Zen Mönch Bruder Alain M. Lafon")
+        (mu4e-compose-signature "Lambda Zen Tempel\nAbt\n\nalain@zen-tempel.ch\n+41 76 405 05 67\n\nhttps://zen-temple.net/")
         (mu4e-compose-signature-auto-include t)
         (mu4e-sent-folder "/zen-tempel/INBOX.Sent")
         (mu4e-drafts-folder "/zen-tempel/INBOX.Drafts")
