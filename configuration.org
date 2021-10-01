@@ -2231,7 +2231,7 @@ Org Capture Templates are explained [[http://orgmode.org/manual/Capture-template
            ;; Creates an expense line for the date of the mail, prompts
            ;; for the amount and currency
            ("e" "Expense" table-line (file+olp things-file "Inbox" "Expenses")
-            "|%(org-insert-time-stamp (org-read-date nil t \"%:date\") nil t) | %(from-name \"%:fromname\" \"%:fromaddress\" \"%:from\")| [[%:link][Mail]] | %^{amount} | %^{currency|usd|chf|eur} | | | %^{scope|200ok-alain|200ok-joint|insopor} |")
+            "|%(org-insert-time-stamp (org-read-date nil t \"%:date\") nil t) | %(from-name \"%:fromname\" \"%:fromaddress\" \"%:from\")| [[%:link][Mail]] | %^{amount} | %^{currency|usd|chf|eur} | | | %^{scope|200ok-alain|200ok-joint|lambda} |")
           ("m" "Mail" entry (file+olp things-file "Inbox" "Mails")
            ;; Creates "* TODO <2019-05-01 Wed> FromName [[mu4e:msgid:uuid][MessageSubject]] :200ok:
            ;; Therefore Emails can be properly:
@@ -3935,6 +3935,7 @@ Debian package.
   (when (eq system-type 'gnu/linux)
         (add-to-list 'default-frame-alist
                      '(font . "Fira Code Retina 9"))
+        (set-face-attribute 'default t :font "Fira Code Retina 9")
         ;; Manually setting the font
         ;; (set-frame-font "Fira Code Retina 9")
     ;; Default Browser
@@ -4002,7 +4003,7 @@ Display Emoji (requires the =fonts-symbola= Debian package)
   (defun light-mode ()
     "Enables a light theme."
     (interactive)
-    (set-face-attribute 'default nil :height 100)
+    ;; (set-face-attribute 'default nil :height 100)
     (mapcar 'disable-theme custom-enabled-themes)
     (load-theme 'spacemacs-light t))
 #+END_SRC
