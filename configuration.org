@@ -3079,11 +3079,15 @@ mu init --my-address=alain.lafon@dispatched.ch --my-address=alain@200ok.ch --my-
    ;; (add-hook 'mu4e-view-mode-hook 'epa-mail-mode)
 #+END_SRC
 
- Automatic line breaks when reading mail
+ When looking at emails, show them nicely wrapped. That's very
+ helpful when people send mails with very long lines.
 
- #+BEGIN_SRC emacs-lisp
- (add-hook 'mu4e-view-mode-hook 'visual-line-mode)
- #+END_SRC
+ Disabling for the moment, because some emails looks worse after it.
+ =visual-line-mode= can always be invoked by =w= in =mu4e-view-mode=.
+
+#+BEGIN_SRC emacs-lisp
+  ;; (add-hook 'mu4e-view-mode-hook 'visual-line-mode)
+#+END_SRC
 
  Do not reply to self
 
@@ -3163,13 +3167,6 @@ Set a sane ISO 8601 date format.
  #+BEGIN_SRC emacs-lisp
    (setq fill-flowed-encode-column 998)
  #+END_SRC
-
- When looking at emails, show them nicely wrapped. That's very
- helpful when people send mails with very long lines
-
-#+BEGIN_SRC emacs-lisp
-  (add-hook 'mu4e-view-mode-hook 'visual-line-mode)
-#+END_SRC
 
 
 
