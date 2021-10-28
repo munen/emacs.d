@@ -323,7 +323,6 @@ Enable whenever upstream =visual-line-mode= is activated.
 
  #+begin_src emacs-lisp
  (add-hook 'visual-line-mode-hook #'visual-fill-column-mode)
- (add-hook 'visual-line-mode-hook #'adaptive-wrap-prefix-mode)
  #+end_src
 
 Enable =visual-fill-mode= for all text based modes:
@@ -1659,8 +1658,9 @@ slide deck.
 ** yaml
 
 #+BEGIN_SRC emacs-lisp
-  (require 'yaml-mode)
-  (add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode))
+    (require 'yaml-mode)
+    (add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode))
+    (add-hook 'yaml-mode-hook 'visual-line-mode)
 #+END_SRC
 
 ** Markdown
