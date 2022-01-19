@@ -2420,7 +2420,8 @@ an inbox). Orgmode makes this easy with the refile command =C-c C-w=.
 
 Define where the refiling can happen (the default is to the local buffer):
 #+BEGIN_SRC emacs-lisp
-  (setq org-refile-targets (quote ((org-agenda-files :maxlevel . 4))))
+  (setq org-refile-targets (quote ((nil :maxlevel . 9) ;; local buffer
+                                   (org-agenda-files :maxlevel . 4))))
 #+END_SRC
 ** Show "calendar week" in calendar
 
@@ -2807,7 +2808,7 @@ mu init --my-address=alain.lafon@dispatched.ch --my-address=alain@200ok.ch --my-
    (defvar my-mu4e-account-alist
      '(("200ok"
         (user-full-name  "Alain M. Lafon")
-        (mu4e-compose-signature "200ok GmbH\nCEO\n\nalain@200ok.ch\n+41 76 405 05 67\nhttps://200ok.ch/\n\nCheck out our newest product: https://alephdam.200ok.ch/")
+        (mu4e-compose-signature "200ok GmbH\nCEO\n\nalain@200ok.ch\n+41 76 405 05 67\nhttps://200ok.ch/\n\nAutomate the delivery of news agency content: https://200ok.ch/alephdam.html")
         (mu4e-compose-signature-auto-include t)
         (mu4e-sent-folder "/200ok/INBOX.Sent")
         (mu4e-drafts-folder "/200ok/INBOX.Drafts")
@@ -2820,8 +2821,8 @@ mu init --my-address=alain.lafon@dispatched.ch --my-address=alain@200ok.ch --my-
         (smtpmail-stream-type starttls)
         (smtpmail-smtp-service 25))
        ("zen-tempel"
-        (user-full-name  "Zen Mönch Bruder Alain M. Lafon")
-        (mu4e-compose-signature "Lambda Zen Tempel\nAbt\n\nalain@zen-tempel.ch\n+41 76 405 05 67\n\nhttps://zen-temple.net/")
+        (user-full-name  "Brother Alain M. Lafon")
+        (mu4e-compose-signature "Lambda Zen Temple\nAbbot\n\nalain@zen-temple.net\n+41 76 405 05 67\n\nhttps://zen-temple.net/")
         (mu4e-compose-signature-auto-include t)
         (mu4e-sent-folder "/zen-tempel/INBOX.Sent")
         (mu4e-drafts-folder "/zen-tempel/INBOX.Drafts")
