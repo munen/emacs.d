@@ -2392,8 +2392,8 @@ This will render the same time as above as:
                                  ;; "~/Dropbox/ZHAW/web3-unterlagen/README.org"
                                  ;; "~/Dropbox/ZHAW/weng-unterlagen/README.org"
                                  ;; "~/src/200ok/swiss-crowdfunder/TODO.org"
-                                 "~/src/200ok/200ok-admin/THINGS.org"
-                                 "~/src/200ok/200ok-admin/bluewin.org"
+                                 "~/src/200ok/admin/THINGS.org"
+                                 "~/src/200ok/admin/bluewin.org"
                                  )))
 
   (set-org-agenda-files)
@@ -4153,7 +4153,7 @@ When evaluating the src-block above, it'll yield a table like:
 #+END_SRC
 ** Export Org Mode TODO headers into estimation table
 #+BEGIN_SRC emacs-lisp
-  (setq ok-export-org-estimations-file "~/src/200ok/200ok-admin/src/export-org-estimations/ok-export-org-estimations.el")
+  (setq ok-export-org-estimations-file "~/src/200ok/admin/src/export-org-estimations/ok-export-org-estimations.el")
   (unless (file-exists-p ok-export-org-estimations-file)
     (load-file ok-export-org-estimations-file))
 #+END_SRC
