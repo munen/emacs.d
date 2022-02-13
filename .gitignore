@@ -27,3 +27,5 @@ games
 /transient
 /private_feeds.el
 /eln-cache/
+/private_config.el
+/diary

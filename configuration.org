@@ -4171,6 +4171,64 @@ When evaluating the src-block above, it'll yield a table like:
   (setq org-export-with-planning t)
 #+end_src
 
+** Agenda to ICS file
+
+   This exports the Org mode Agenda to a ICS file, so that it can be
+   consumed by any calendar application.
+
+   #+begin_src emacs-lisp
+     ;; Setting dummy vars for private variables.
+     (setq org-agenda-private-local-path "/tmp/dummy.ics")
+     (setq org-agenda-private-remote-path "/sshx:user@host:path/dummy.ics")
+
+     ;; Override the dummy values from above.
+     (if (file-exists-p "~/.emacs.d/private_config.el")
+         (load-file "~/.emacs.d/private_config.el"))
+
+     (defun org-agenda-export-to-ics ()
+       ;; Run all custom agenda commands that have a file argument.
+       (org-batch-store-agenda-views)
+
+       ;; Org mode correctly exports TODO keywords as VTODO events in ICS.
+       ;; However, some proprietary calendars do not really work with
+       ;; standards (looking at you Google), so VTODO is ignored and only
+       ;; VEVENT is read.
+       (with-current-buffer (find-file-noselect org-agenda-private-local-path)
+         (goto-char (point-min))
+         (while (re-search-forward "VTODO" nil t)
+           (replace-match "VEVENT"))
+         (save-buffer))
+
+       ;; Copy the ICS file to a remote server (Tramp paths work).
+       (copy-file org-agenda-private-local-path org-agenda-private-remote-path t))
+   #+end_src
+
+   Since I'm editing my Org files not just with Emacs, but also with
+   [[https://github.com/200ok-ch/organice/][organice]], I'm doing this on a regular basis in a cron job which
+   runs this code:
+
+   #+begin_src shell
+     #!/bin/bash
+     emacs -batch -l ~/.emacs.d/init.el -eval "(org-agenda-export-to-ics)" -kill
+
+     if [[ "$?" != 0 ]]; then
+       notify-send -u critical "exporting org agenda failed"
+     fi
+   #+end_src
+
+   The hourly cron job looks like this:
+
+   #+begin_example
+   0 * * * * /home/munen/bin/export-org-agenda.sh
+   #+end_example
+
+*** Integration to Google calendar
+
+    Google calendar supports subscribing to ICS feeds out of the box.
+    However, it only updates the feed "every few hours" which seems to
+    be 12-24h. With this Google AppsScript, this can be configured in
+    a fine grained way: https://github.com/derekantrican/GAS-ICS-Sync
+
 * Bad experience
 
 The following packages would be nice, in theory. In practice something
