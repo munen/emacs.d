@@ -4190,6 +4190,7 @@ When evaluating the src-block above, it'll yield a table like:
            `(("X" agenda "" nil ,(list org-agenda-private-local-path))))
 
      (defun org-agenda-export-to-ics ()
+       (set-org-agenda-files)
        ;; Run all custom agenda commands that have a file argument.
        (org-batch-store-agenda-views)
 
