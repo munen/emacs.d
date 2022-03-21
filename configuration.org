@@ -977,6 +977,14 @@ need it, I'd use evil for that.
   (define-key evil-insert-state-map (kbd "M-k M-k") nil)
 #+end_src
 
+=TAB= is =evil-jump-forward=: Go to newer position in jump list.
+
+#+begin_src emacs-lisp
+  (define-key global-map (kbd "<tab>") nil)
+  (define-key evil-insert-state-map (kbd "<tab>") nil)
+  (evil-define-key 'normal org-mode-map (kbd "<tab>") #'org-cycle)
+#+end_src
+
 ** Call =ex= by default on visual selection
 
 #+BEGIN_SRC emacs-lisp
