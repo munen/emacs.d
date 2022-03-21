@@ -4189,6 +4189,9 @@ When evaluating the src-block above, it'll yield a table like:
      (setq org-agenda-private-local-path "/tmp/dummy.ics")
      (setq org-agenda-private-remote-path "/sshx:user@host:path/dummy.ics")
 
+     ;; Export the agenda for the next month (default is week)
+     (setq org-agenda-span (quote month))
+
      ;; Override the dummy values from above.
      (if (file-exists-p "~/.emacs.d/private_config.el")
          (load-file "~/.emacs.d/private_config.el"))
