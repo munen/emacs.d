@@ -3203,6 +3203,22 @@ automatically delete duplicates - maybe with procmail.
      (setq mu4e-headers-skip-duplicates nil)
      #+end_src
 
+**** Calendar invitations
+
+https://www.djcbsoftware.nl/code/mu/mu4e/iCalendar.html
+
+Ability to accept or reject mail calendar invitations as well as the
+ability to add accepted invitations to Org mode (and therefore to the
+agenda).
+
+#+begin_src emacs-lisp
+  (require 'mu4e-icalendar)
+  (mu4e-icalendar-setup)
+  (setq gnus-icalendar-org-capture-file "~/Dropbox/org/things.org")
+  (setq gnus-icalendar-org-capture-headline '("Calendar"))
+  (gnus-icalendar-org-setup)
+#+end_src
+
 **** TODO Use Quoted printable text for outgoing messages to enable automatic line breaks
 ***** If this is successfull, send upstream PR to MU4E
  https://mathiasbynens.be/notes/gmail-plain-text
