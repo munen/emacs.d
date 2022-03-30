@@ -51,6 +51,7 @@ down in this file, some are used with the default configuration.
 #+BEGIN_SRC emacs-lisp
 
   (defvar my-packages '(ac-cider
+                        ace-window
                         ac-js2
                         ag
                         atomic-chrome
@@ -377,17 +378,13 @@ default to not confuse beginners.
 (when (memq window-system '(mac ns x))
   (exec-path-from-shell-initialize))
 #+END_SRC
-** =windmove=
+** =ace-window=
+https://github.com/abo-abo/ace-window
 
-Windmove is built into Emacs. It lets you move point from window to
-window using Shift and the arrow keys. This is easier to type than
-‘C-x o’ when there are multiple windows open.
+Quickly switch windows in Emacs
 
 #+BEGIN_SRC emacs-lisp
-
-(when (fboundp 'windmove-default-keybindings)
-  (windmove-default-keybindings))
-
+  (global-set-key (kbd "M-o") 'ace-window)
 #+END_SRC
 
 ** =winner-mode=
