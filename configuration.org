@@ -90,7 +90,6 @@ down in this file, some are used with the default configuration.
                         hcl-mode
                         hide-mode-line
                         impatient-mode
-                        ini-mode
                         ivy counsel swiper
                         json-mode
                         js2-mode
@@ -1875,6 +1874,7 @@ npm install -g eslint
         (autoformat-with
          (cond ((derived-mode-p 'web-mode) 'autoformat-html-command)
                ((derived-mode-p 'css-mode) 'autoformat-css-command)
+               ((derived-mode-p 'nxml-mode) 'autoformat-xml-command)
                ((derived-mode-p 'json-mode) 'autoformat-json-command)
                ((derived-mode-p 'sass-mode) 'autoformat-sass-command)
                ((derived-mode-p 'yaml-mode) 'autoformat-yaml-command)
@@ -1932,6 +1932,10 @@ npm install -g eslint
   (defun autoformat-css-command ()
     "CLI tool to format CSS."
     "prettier --parser css")
+
+  (defun autoformat-xml-command ()
+    "CLI tool to format XML."
+    "xmllint -format -")
 
   (defun autoformat-sass-command ()
     "CLI tool to format SASS."
@@ -2400,7 +2404,8 @@ This will render the same time as above as:
                                  ;; "~/Dropbox/ZHAW/weng-unterlagen/README.org"
                                  ;; "~/src/200ok/swiss-crowdfunder/TODO.org"
                                  "~/src/200ok/admin/THINGS.org"
-                                 "~/src/200ok/admin/bluewin.org"
+                                 "~/src/200ok/admin/pm/bluewin/bluewin.org"
+                                 "~/src/200ok/admin/pm/accounting/accounting.org"
                                  )))
 
   (set-org-agenda-files)
