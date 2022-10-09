@@ -434,7 +434,7 @@ standard Emacs load path, so that =require= just works.
 
 #+BEGIN_SRC emacs-lisp
   (add-to-list 'load-path "/home/munen/.guix-profile/share/emacs/site-lisp/")
-  (add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e")
+  (add-to-list 'load-path "/usr/share/emacs/site-lisp/elpa-src/mu4e-1.8.7/")
 #+END_SRC
 ** Bidirectional Editing
 
@@ -2783,7 +2783,8 @@ mu init --my-address=alain.lafon@dispatched.ch --my-address=alain@200ok.ch --my-
 
    (require 'mu4e)
 
-   (require 'org-mu4e)
+   ;; Not required from 1.8.7-2, it's already included
+   ;; (require 'org-mu4e)
 
    (setq send-mail-function 'smtpmail-send-it)
 
@@ -2834,7 +2835,7 @@ mu init --my-address=alain.lafon@dispatched.ch --my-address=alain@200ok.ch --my-
         (smtpmail-smtp-service 25))
        ("zen-tempel"
         (user-full-name  "Brother Alain M. Lafon")
-        (mu4e-compose-signature "Lambda Zen Temple\nAbbot\n\nalain@zen-temple.net\n+41 76 405 05 67\n\nhttps://zen-temple.net/")
+        (mu4e-compose-signature "Lambda Zen Tempel\n\nalain@zen-temple.net\n+41 76 405 05 67\n\nhttps://zen-temple.net/")
         (mu4e-compose-signature-auto-include t)
         (mu4e-sent-folder "/zen-tempel/INBOX.Sent")
         (mu4e-drafts-folder "/zen-tempel/INBOX.Drafts")
