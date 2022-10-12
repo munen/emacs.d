@@ -2227,6 +2227,7 @@ Org Capture Templates are explained [[http://orgmode.org/manual/Capture-template
   (define-key global-map "\C-cc" 'org-capture)
 
   (setq things-file (expand-file-name "things.org" org-directory))
+  (setq reference-file (expand-file-name "reference.org" org-directory))
   (setq media-file (expand-file-name "media.org" org-directory))
 
   (defun get-domainname (address)
@@ -2272,6 +2273,8 @@ Org Capture Templates are explained [[http://orgmode.org/manual/Capture-template
            "* %?\t%^g\n#+BEGIN_SRC %^{language}\n%i\n#+END_SRC")
           ("S" "Shopping" entry (file+olp "~/Dropbox/org/shared_with_monika/shared_alain_and_monika.org" "Shopping")
            "* TODO %?\n  %U\n  %i\n  %a")
+          ("l" "Logbook entry" entry (file+olp+datetree reference-file "Logbook")
+           "* %?\n  %U\n  %i\n  %a")
           ("p" "password" entry (file+headline "~/Dropbox/org/vault/primary.org.gpg" "Passwords")
            ;; Prompt for name
            "* %^{name}
