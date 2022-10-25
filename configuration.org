@@ -433,8 +433,13 @@ always have a recent version. This adds the installed packages to the
 standard Emacs load path, so that =require= just works.
 
 #+BEGIN_SRC emacs-lisp
-  (add-to-list 'load-path "/home/munen/.guix-profile/share/emacs/site-lisp/")
-  (add-to-list 'load-path "/usr/share/emacs/site-lisp/elpa-src/mu4e-1.8.7/")
+  ;; Single directory
+  ;; (add-to-list 'load-path "~/.guix-profile/share/emacs/site-lisp/mu4e")
+
+  ;; All sub directories
+  (let ((default-directory  "~/.guix-profile/share/emacs/site-lisp/"))
+    (normal-top-level-add-subdirs-to-load-path))
+
 #+END_SRC
 ** Bidirectional Editing
 
