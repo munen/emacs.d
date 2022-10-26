@@ -439,7 +439,6 @@ standard Emacs load path, so that =require= just works.
   ;; All sub directories
   (let ((default-directory  "~/.guix-profile/share/emacs/site-lisp/"))
     (normal-top-level-add-subdirs-to-load-path))
-
 #+END_SRC
 ** Bidirectional Editing
 
@@ -3965,14 +3964,24 @@ The German dictionary is from [[http://fmg-www.cs.ucla.edu/geoff/ispell-dictiona
 * OS Specific
 ** Linux
 
-"Fira Code Retina" as default font. Get it via the =fonts-firacode=
-Debian package.
+My preferred font is "Fira Code Retina". In Debian, the package is
+called =fonts-firacode=, in Guix it's =font-fira-code=. However, in
+Guix, the font looks a bit off:
+https://screenshots.200ok.ch/screenshot_2022_10_26-5bb92403.png
+
+Hence, I'm going with DejaVu Mono Sans for the moment.
 
 #+BEGIN_SRC emacs-lisp
   (when (eq system-type 'gnu/linux)
         (add-to-list 'default-frame-alist
-                     '(font . "Fira Code Retina 9"))
-        (set-face-attribute 'default t :font "Fira Code Retina 9")
+                     '(font . "DejaVu Sans Mono 9"))
+
+        ;; This would be my preferred font:
+
+        ;; (add-to-list 'default-frame-alist
+        ;;              '(font . "Fira CodeSource Code Pro Retina 9"))
+        ;; (set-face-attribute 'default t :font "Fira Code Retina 9")
+
         ;; Manually setting the font
         ;; (set-frame-font "Fira Code Retina 9")
     ;; Default Browser
@@ -3984,11 +3993,25 @@ Debian package.
     (pdf-tools-install))
 #+END_SRC
 
-Display Emoji (requires the =fonts-symbola= Debian package)
+*** Display Emoji
+**** Debian
+Requires the =fonts-symbola= Debian package
 
 #+BEGIN_SRC emacs-lisp
-(set-fontset-font t nil "Symbola" nil 'prepend)
+  ;; (set-fontset-font t nil "Symbola" nil 'prepend)
 #+END_SRC
+
+**** Guix
+
+#+BEGIN_SRC emacs-lisp
+  (set-fontset-font t '(#x1f000 . #x1faff)
+                (font-spec :family "Noto Color Emoji"))
+#+END_SRC
+
+
+#+begin_src scheme :noweb-ref packages :noweb-sep ""
+  "font-google-noto"
+#+end_src
 
 
 ** macOS
@@ -4340,3 +4363,26 @@ https://github.com/pezra/rspec-mode#usage
 ** Increase selected region by semantic units
 
  https://github.com/magnars/expand-region.el
+
+* Guix
+
+*Guix Packages*
+
+#+begin_src scheme :noweb-ref packages :noweb-sep ""
+
+  "mu"
+  "emacs-spacemacs-theme"
+  "font-fira-code"
+
+#+end_src
+
+
+#+begin_src scheme :tangle .config/guix/manifests/emacs.scm :noweb yes
+
+  (specifications->manifest
+   '(;;"emacs"
+     "emacs-native-comp"
+     <<packages>>
+  ))
+
+#+end_src
