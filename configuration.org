@@ -3757,13 +3757,16 @@ I like to set timers, for example through [[file:org-pomodoro.el][org-pomodoro.e
 
  #+BEGIN_SRC emacs-lisp
    (require 'spaceline-config)
+   (spaceline-spacemacs-theme)
+
    ;; Otherwise spaceline will be huge in Emacs >= 27.1
-   (setq powerline-height 1)
+   ;; (setq powerline-height 1)
+   ;; Since Emacs >= 28.2, it needs to be bigger to stay the same size.
+   (setq powerline-height 22)
    ;; Since Emacs >= 27.1, there's no need for font trickery. Just use
    ;; UTF-8.
-   (setq powerline-default-separator 'utf-8)
+   ;; (setq powerline-default-separator 'utf-8)
 
-   (spaceline-emacs-theme)
    (spaceline-install
      'main
      '((evil-state :face highlight-face)
@@ -3816,6 +3819,13 @@ I like to set timers, for example through [[file:org-pomodoro.el][org-pomodoro.e
    (eval-after-load "which-key"
      '(diminish 'which-key-mode))
  #+END_SRC
+
+*** Guix Packages
+
+#+begin_src scheme :noweb-ref packages :noweb-sep ""
+  "emacs-spaceline"
+#+end_src
+
 ** =hide-mode-line=
 
 https://github.com/hlissner/emacs-hide-mode-line
@@ -4004,8 +4014,9 @@ Requires the =fonts-symbola= Debian package
 **** Guix
 
 #+BEGIN_SRC emacs-lisp
-  (set-fontset-font t '(#x1f000 . #x1faff)
-                (font-spec :family "Noto Color Emoji"))
+  (set-fontset-font t nil "Noto Color Emoji" nil 'prepend)
+  ;; (set-fontset-font t '(#x1f000 . #x1faff)
+  ;;               (font-spec :family "Noto Color Emoji"))
 #+END_SRC
 
 
