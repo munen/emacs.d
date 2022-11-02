@@ -3975,25 +3975,30 @@ The German dictionary is from [[http://fmg-www.cs.ucla.edu/geoff/ispell-dictiona
 ** Linux
 
 My preferred font is "Fira Code Retina". In Debian, the package is
-called =fonts-firacode=, in Guix it's =font-fira-code=. However, in
-Guix, the font looks a bit off:
-https://screenshots.200ok.ch/screenshot_2022_10_26-5bb92403.png
-
-Hence, I'm going with DejaVu Mono Sans for the moment.
+called =fonts-firacode=, in Guix it's =font-fira-code=.
 
 #+BEGIN_SRC emacs-lisp
   (when (eq system-type 'gnu/linux)
+
         (add-to-list 'default-frame-alist
-                     '(font . "DejaVu Sans Mono 9"))
+                     '(font . "Fira Code Retina 9"))
 
-        ;; This would be my preferred font:
-
+        ;; In the past, this was the name for the same font:
+      
         ;; (add-to-list 'default-frame-alist
         ;;              '(font . "Fira CodeSource Code Pro Retina 9"))
         ;; (set-face-attribute 'default t :font "Fira Code Retina 9")
 
+
+        ;; This is a great fallback font. It looks very similar and
+        ;; comes preinstalled on many systems.
+
+        ;; (add-to-list 'default-frame-alist
+        ;;              '(font . "DejaVu Sans Mono 9"))
+
         ;; Manually setting the font
         ;; (set-frame-font "Fira Code Retina 9")
+
     ;; Default Browser
     (setq browse-url-browser-function 'browse-url-generic
           browse-url-generic-program "firefox"
@@ -4391,8 +4396,7 @@ https://github.com/pezra/rspec-mode#usage
 #+begin_src scheme :tangle .config/guix/manifests/emacs.scm :noweb yes
 
   (specifications->manifest
-   '(;;"emacs"
-     "emacs-native-comp"
+   '("emacs"
      <<packages>>
   ))
 
