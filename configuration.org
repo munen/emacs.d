@@ -1113,46 +1113,6 @@ Emacs instance when needed.
   ;; (require 'flycheck-grammarly)
 #+end_src
 
-
-*** Manage TODO/FIXME/XXX comments
-
-https://github.com/vincekd/comment-tags
-
-=comment-tags= highlights and lists comment tags such as 'TODO', 'FIXME', 'XXX'.
-
-Commands (prefixed by =C-c t=):
-
-    - =b= to list tags in current buffer (comment-tags-list-tags-buffer).
-    - =a= to list tags in all buffers (comment-tags-list-tags-buffers).
-    - =s= to jump to tag in current buffer by a word or phrase using reading-completion (comment-tags-find-tags-buffer).
-    - =n= to jump to next tag from point (comment-tags-next-tag).
-    - =p= to jump to previous tag from point (comment-tags-previous-tag).
-
-#+BEGIN_SRC emacs-lisp
-  (setq comment-tags-keymap-prefix (kbd "C-c t"))
-  (with-eval-after-load "comment-tags"
-    (setq comment-tags-keyword-faces
-          `(;; A concrete TODO with actionable steps
-            ("TODO" . ,(list :weight 'bold :foreground "#DF5427"))
-            ;; A non-concrete TODO. We only know something is broken/amiss.
-            ("FIXME" . ,(list :weight 'bold :foreground "#DF5427"))
-            ;; Works, but is a code smell (quick fix). Might break down the line.
-            ("HACK" . ,(list :weight 'bold :foreground "#DF5427"))
-            ;; Assumption that needs to be verified.
-            ("CHECK" . ,(list :weight 'bold :foreground "#CC6437"))
-            ;; Use to highlight a regular, but especially important, comment.
-            ("NOTE" . ,(list :weight 'bold :foreground "#1FDA9A"))
-            ;; Use to highlight a regular, but especially important, comment.
-            ("INFO" . ,(list :weight 'bold :foreground "#1FDA9A"))))
-    (setq comment-tags-comment-start-only t
-          comment-tags-require-colon t
-          comment-tags-case-sensitive t
-          comment-tags-show-faces t
-          comment-tags-lighter nil))
-  (add-hook 'prog-mode-hook 'comment-tags-mode)
-  (add-hook 'conf-mode-hook 'comment-tags-mode)
-#+END_SRC
-
 *** Auto-indent with the Return key
 
 #+BEGIN_SRC emacs-lisp
@@ -2060,6 +2020,7 @@ Major mode for [[https://github.com/hashicorp/hcl][Hashicorp Configuration Langu
 #+begin_src emacs-lisp
   (add-to-list 'auto-mode-alist '("\\.tf" . hcl-mode))
 #+end_src
+
 
 
 * Org mode
@@ -4312,6 +4273,52 @@ When evaluating the src-block above, it'll yield a table like:
     However, it only updates the feed "every few hours" which seems to
     be 12-24h. With this Google AppsScript, this can be configured in
     a fine grained way: https://github.com/derekantrican/GAS-ICS-Sync
+
+* Manage TODO/FIXME/XXX comments
+
+https://github.com/tarsius/hl-todo
+
+In the past, I've used [[https://github.com/vincekd/comment-tags][comment-tags-mode]]. It's last commit is 2017,
+while hl-todo is still actively developed in 2022 by tarsius.
+
+=hl-todo= highlights and lists comment tags such as 'TODO', 'FIXME', 'XXX'.
+
+#+BEGIN_SRC emacs-lisp
+  (require 'hl-todo)
+
+   (setq hl-todo-keyword-faces
+    '(("TODO"  . "#DF5427")  ; A concrete TODO with actionable steps
+      ("FIXME" . "#DF5427")  ; A non-concrete TODO. We only know something is broken/amiss.
+      ("HACK"  . "#DF5427")  ; Works, but is a code smell (quick fix). Might break down the line.
+      ("CHECK" . "#CC6437")  ; Assumption that needs to be verified.
+      ("NOTE"  . "#1FDA9A")  ; Use to highlight a regular, but especially important, comment.
+      ("INFO"  . "#1FDA9A")  ; Use to highlight a regular, but especially important, comment.
+      ))
+
+
+#+END_SRC
+
+Define helpful shortcuts:
+
+#+begin_src emacs-lisp
+  (define-key hl-todo-mode-map (kbd "C-c t p") 'hl-todo-previous)
+  (define-key hl-todo-mode-map (kbd "C-c t n") 'hl-todo-next)
+  (define-key hl-todo-mode-map (kbd "C-c t o") 'hl-todo-occur)
+  (define-key hl-todo-mode-map (kbd "C-c t i") 'hl-todo-insert)
+#+end_src
+
+Enable =hl-todo= mode where required:
+
+#+begin_src emacs-lisp
+  (add-hook 'prog-mode-hook 'hl-todo-mode)
+  (add-hook 'conf-mode-hook 'hl-todo-mode)
+#+end_src
+
+** Guix Packages
+
+#+begin_src scheme :noweb-ref packages :noweb-sep ""
+  "emacs-hl-todo"
+#+end_src
 
 * Bad experience
 
