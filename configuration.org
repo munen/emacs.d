@@ -53,8 +53,6 @@ Spread throughout this config, there are source blocks with
 tangled into one Emacs manifest, so that all things Emacs are well
 defined in just one config file.
 
-Whenever a change to these blocks is made, call =M-x org-babel-tangle (C-c C-v t)=.
-
 #+begin_src fundamental :tangle ~/.config/guix/manifests/emacs.scm :noweb yes
   (specifications->manifest
    '("emacs"
@@ -76,7 +74,26 @@ that =require= just works.
     (normal-top-level-add-subdirs-to-load-path))
 #+END_SRC
 
+**** Automatically tangle Guix manifest
+#+auto_tangle: t
+https://github.com/yilkalargaw/org-auto-tangle
 
+Whenever a change to the Guix package blocks is made, it would be
+possible to manually call =M-x org-babel-tangle (C-c C-v t)=.
+
+With =auto-tangle=, it's a bit more convenient, though.
+
+#+begin_src emacs-lisp
+  (require 'org-auto-tangle)
+
+  (add-hook 'org-mode-hook 'org-auto-tangle-mode)
+#+end_src
+
+*Guix package*
+
+#+begin_src fundamental :noweb-ref packages
+  "emacs-org-auto-tangle"
+#+end_src
 
 * Dependency management
 
@@ -3980,7 +3997,7 @@ called =fonts-firacode=, in Guix it's =font-fira-code=.
                      '(font . "Fira Code Retina 9"))
 
         ;; In the past, this was the name for the same font:
-      
+
         ;; (add-to-list 'default-frame-alist
         ;;              '(font . "Fira CodeSource Code Pro Retina 9"))
         ;; (set-face-attribute 'default t :font "Fira Code Retina 9")
@@ -4432,4 +4449,3 @@ https://github.com/pezra/rspec-mode#usage
 ** Increase selected region by semantic units
 
  https://github.com/magnars/expand-region.el
-
