@@ -24,13 +24,76 @@ Windows, look it up [[https://www.gnu.org/software/emacs/manual/html_node/efaq-w
 
 =git clone git@github.com:munen/emacs.d.git ~/.emacs.d=
 
-*Dependencies*
+** Dependencies
+
+*** package.el
 
 Emacs dependencies/libraries are managed via the internal [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Packages.html#Packages][package
 management system]]. To initially install packages, open
 =~/.emacs.d/init.el=, refresh your package list with =M-x
 package-refresh-contents= and install everything using =M-x
 eval-buffer=.
+
+*** Guix
+
+I'm running Debian and for some things I use [[https://www.gnu.org/software/guix/][GNU Guix]] for package
+management. This Emacs config started out using just package.el, but
+it's moving towards using Guix whenever possible. The benefits are
+plenty:
+
+- No package drift
+- Ability to install dependencies outside of Emacs (fonts, binaries, etc)
+- Reproducibility
+- Transactional upgrades with the option to roll back
+
+**** Create a Guix manifest for Emacs
+
+Spread throughout this config, there are source blocks with
+=:noweb-ref packages= config. They define Guix packages which are
+tangled into one Emacs manifest, so that all things Emacs are well
+defined in just one config file.
+
+#+begin_src fundamental :tangle ~/.config/guix/manifests/emacs.scm :noweb yes
+  (specifications->manifest
+   '("emacs"
+     <<packages>>
+  ))
+#+end_src
+
+**** Add guix packages to load-path
+
+This adds the installed packages to the standard Emacs load path, so
+that =require= just works.
+
+#+BEGIN_SRC emacs-lisp
+  ;; Single directory
+  ;; (add-to-list 'load-path "~/.guix-profile/share/emacs/site-lisp/mu4e")
+
+  ;; All sub directories
+  (let ((default-directory  "~/.guix-profile/share/emacs/site-lisp/"))
+    (normal-top-level-add-subdirs-to-load-path))
+#+END_SRC
+
+**** Automatically tangle Guix manifest
+#+auto_tangle: t
+https://github.com/yilkalargaw/org-auto-tangle
+
+Whenever a change to the Guix package blocks is made, it would be
+possible to manually call =M-x org-babel-tangle (C-c C-v t)=.
+
+With =auto-tangle=, it's a bit more convenient, though.
+
+#+begin_src emacs-lisp
+  (require 'org-auto-tangle)
+
+  (add-hook 'org-mode-hook 'org-auto-tangle-mode)
+#+end_src
+
+*Guix package*
+
+#+begin_src fundamental :noweb-ref packages
+  "emacs-org-auto-tangle"
+#+end_src
 
 * Dependency management
 
@@ -109,8 +172,6 @@ down in this file, some are used with the default configuration.
                         restclient
                         robe
                         sass-mode
-                        spacemacs-theme
-                        spaceline
                         smex
                         synosaurus
                         tide
@@ -424,21 +485,6 @@ when connecting to an FTP, try to revert to active mode.
 #+BEGIN_SRC emacs-lisp
 (setq custom-file "~/.emacs.d/custom-settings.el")
 (load custom-file t)
-#+END_SRC
-** Add guix packages to load-path
-
-I'm running Debian and for some things I use [[https://www.gnu.org/software/guix/][GNU Guix]] for package
-management. For example mu4e is installed through guix, so that I can
-always have a recent version. This adds the installed packages to the
-standard Emacs load path, so that =require= just works.
-
-#+BEGIN_SRC emacs-lisp
-  ;; Single directory
-  ;; (add-to-list 'load-path "~/.guix-profile/share/emacs/site-lisp/mu4e")
-
-  ;; All sub directories
-  (let ((default-directory  "~/.guix-profile/share/emacs/site-lisp/"))
-    (normal-top-level-add-subdirs-to-load-path))
 #+END_SRC
 ** Bidirectional Editing
 
@@ -2710,6 +2756,12 @@ For starttls to work when sending mail, install gnutls:
 - Debian: =apt-get install gnutls-bin=
 - macOS: =brew install gnutls=
 
+**** Guix packages
+
+#+begin_src fundamental :noweb-ref packages
+  "mu"
+#+end_src
+
 *** General
 
 -  Configure =.offlineimaprc= file for IMAP
@@ -3783,7 +3835,7 @@ I like to set timers, for example through [[file:org-pomodoro.el][org-pomodoro.e
 
 *** Guix Packages
 
-#+begin_src scheme :noweb-ref packages :noweb-sep ""
+#+begin_src fundamental :noweb-ref packages
   "emacs-spaceline"
 #+end_src
 
@@ -3945,7 +3997,7 @@ called =fonts-firacode=, in Guix it's =font-fira-code=.
                      '(font . "Fira Code Retina 9"))
 
         ;; In the past, this was the name for the same font:
-      
+
         ;; (add-to-list 'default-frame-alist
         ;;              '(font . "Fira CodeSource Code Pro Retina 9"))
         ;; (set-face-attribute 'default t :font "Fira Code Retina 9")
@@ -3968,6 +4020,11 @@ called =fonts-firacode=, in Guix it's =font-fira-code=.
     ;; enable pdf-tools
     (pdf-tools-install))
 #+END_SRC
+*** Guix packages
+
+#+begin_src fundamental :noweb-ref packages
+  "font-fira-code"
+#+end_src
 
 *** Display Emoji
 **** Debian
@@ -3986,7 +4043,7 @@ Requires the =fonts-symbola= Debian package
 #+END_SRC
 
 
-#+begin_src scheme :noweb-ref packages :noweb-sep ""
+#+begin_src fundamental :noweb-ref packages
   "font-google-noto"
 #+end_src
 
@@ -4053,6 +4110,12 @@ Requires the =fonts-symbola= Debian package
     (mapcar 'disable-theme custom-enabled-themes)
     (set-face-attribute 'default nil :height 150))
 #+END_SRC
+
+*** Guix packages
+
+#+begin_src fundamental :noweb-ref packages
+  "emacs-spacemacs-theme"
+#+end_src
 
 ** Enable default theme and font
 
@@ -4314,9 +4377,9 @@ Enable =hl-todo= mode where required:
   (add-hook 'conf-mode-hook 'hl-todo-mode)
 #+end_src
 
-** Guix Packages
+** Guix packages
 
-#+begin_src scheme :noweb-ref packages :noweb-sep ""
+#+begin_src fundamental :noweb-ref packages
   "emacs-hl-todo"
 #+end_src
 
@@ -4386,25 +4449,3 @@ https://github.com/pezra/rspec-mode#usage
 ** Increase selected region by semantic units
 
  https://github.com/magnars/expand-region.el
-
-* Guix
-
-*Guix Packages*
-
-#+begin_src scheme :noweb-ref packages :noweb-sep ""
-
-  "mu"
-  "emacs-spacemacs-theme"
-  "font-fira-code"
-
-#+end_src
-
-
-#+begin_src scheme :tangle .config/guix/manifests/emacs.scm :noweb yes
-
-  (specifications->manifest
-   '("emacs"
-     <<packages>>
-  ))
-
-#+end_src
