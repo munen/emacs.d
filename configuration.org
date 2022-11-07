@@ -2069,6 +2069,11 @@ Major mode for [[https://github.com/hashicorp/hcl][Hashicorp Configuration Langu
 
 
 
+** Drools
+
+#+begin_src emacs-lisp
+  (add-to-list 'auto-mode-alist '("\\.drl\\'" . java-mode))
+#+end_src
 * Org mode
 
 Outline-based notes management and organizer. It is an outline-mode
