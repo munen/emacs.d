@@ -22,7 +22,7 @@ Emacs configuration is usually done in the home directory in the
 =.emacs.d= folder. This holds true for Unix and Linux systems. For
 Windows, look it up [[https://www.gnu.org/software/emacs/manual/html_node/efaq-w32/Location-of-init-file.html][here]].
 
-=git clone git@github.com:munen/emacs.d.git ~/.emacs.d=
+=git clone https://github.com/munen/emacs.d.git ~/.emacs.d=
 
 ** Dependencies
 
