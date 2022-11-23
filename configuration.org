@@ -2801,7 +2801,7 @@ https://www.djcbsoftware.nl/code/mu/mu4e/Initializing-the-message-store.html
 mu init --my-address=alain.lafon@dispatched.ch --my-address=alain@200ok.ch --my-address=lafo@zhaw.ch --my-address=alain@zen-tempel.ch --my-address=preek@dispatched.ch --maildir=~/Maildir
 #+END_SRC
 
- Accounts setup
+**** Accounts setup
 
  #+BEGIN_SRC emacs-lisp
 
@@ -2984,7 +2984,7 @@ mu init --my-address=alain.lafon@dispatched.ch --my-address=alain@200ok.ch --my-
  #+END_SRC
 
 
- Check for supposed attachments prior to sending them
+**** Check for supposed attachments prior to sending them
 
  #+begin_src emacs-lisp
    (defun ok/message-attachment-present-p ()
@@ -3020,6 +3020,9 @@ mu init --my-address=alain.lafon@dispatched.ch --my-address=alain@200ok.ch --my-
    (add-hook 'message-send-hook #'ok/message-warn-if-no-attachments)
  #+end_src
 
+
+**** Mail autocompletion
+
  For mail completion, only consider emails that have been seen in the
  last 6 months. This gets rid of legacy mail addresses of people.
 
@@ -3031,7 +3034,7 @@ mu init --my-address=alain.lafon@dispatched.ch --my-address=alain@200ok.ch --my-
 
  #+END_SRC
 
- HTML Mails
+**** HTML Mails
 
  #+BEGIN_SRC emacs-lisp
  (require 'mu4e-contrib)
@@ -3069,14 +3072,14 @@ mu init --my-address=alain.lafon@dispatched.ch --my-address=alain@200ok.ch --my-
  (setq mu4e-view-html-plaintext-ratio-heuristic  most-positive-fixnum)
  #+END_SRC
 
-
+**** Spellchecking
 
 #+BEGIN_SRC emacs-lisp
    (add-hook 'mu4e-compose-mode-hook 'flyspell-mode)
 #+END_SRC
 
 
- Updating mails:
+**** Updating mails
 
    - Periodic - every 15 minutes
    - Happening in the background
@@ -3088,7 +3091,7 @@ mu init --my-address=alain.lafon@dispatched.ch --my-address=alain@200ok.ch --my-
  (setq mu4e-index-update-in-background t)
  #+END_SRC
 
- GPG configuration:
+**** GPG configuration
 
  - =C-c RET s o= to sign
  - =C-c RET C-c= to encrypt
@@ -3119,6 +3122,8 @@ mu init --my-address=alain.lafon@dispatched.ch --my-address=alain@200ok.ch --my-
    ;; (add-hook 'mu4e-view-mode-hook 'epa-mail-mode)
 #+END_SRC
 
+**** Handle very long lines
+
  When looking at emails, show them nicely wrapped. That's very
  helpful when people send mails with very long lines.
 
@@ -3129,32 +3134,33 @@ mu init --my-address=alain.lafon@dispatched.ch --my-address=alain@200ok.ch --my-
   ;; (add-hook 'mu4e-view-mode-hook 'visual-line-mode)
 #+END_SRC
 
- Do not reply to self
+**** Do not reply to self
 
  #+BEGIN_SRC emacs-lisp
    (setq mu4e-compose-dont-reply-to-self t)
  #+END_SRC
 
- Store link to message if in header view, not to header query.
+**** Store link to message if in header view, not to header query
 
  #+BEGIN_SRC emacs-lisp
    (setq org-mu4e-link-query-in-headers-mode nil)
  #+END_SRC
 
- Customize header fields to show in =mu4e-view=.
+**** Customize header fields
+
  This only adds =:bcc=.
 
 #+BEGIN_SRC emacs-lisp
   (setq mu4e-view-fields '(:from :to :cc :bcc :subject :flags :date :maildir :mailing-list :tags :attachments :signature :decryption))
 #+END_SRC
 
-  Close mu4e without asking.
+**** Close mu4e without asking
 
 #+BEGIN_SRC emacs-lisp
   (setq mu4e-confirm-quit nil)
 #+END_SRC
 
-  Reminder to keep to three sentences.
+**** Reminder to keep to three sentences
 
   Rationale: E-mail takes too long to respond to, resulting in
   continuous inbox overflow for those who receive a lot of it.
