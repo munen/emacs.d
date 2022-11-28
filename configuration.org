@@ -2418,11 +2418,9 @@ This will render the same time as above as:
                                  (concat org-directory "reference.org")
                                  (concat org-directory "media.org")
                                  (concat org-directory "shared_with_monika/shared_alain_and_monika.org")
-                                 ;; "~/Dropbox/ZHAW/web3-unterlagen/README.org"
-                                 ;; "~/Dropbox/ZHAW/weng-unterlagen/README.org"
-                                 ;; "~/src/200ok/swiss-crowdfunder/TODO.org"
                                  "~/src/200ok/admin/THINGS.org"
                                  "~/src/200ok/admin/pm/bluewin/bluewin.org"
+                                 "~/src/200ok/admin/pm/fp/fp.org"
                                  "~/src/200ok/admin/pm/accounting/accounting.org"
                                  )))
 
@@ -4298,9 +4296,15 @@ When evaluating the src-block above, it'll yield a table like:
      (if (file-exists-p "~/.emacs.d/private_config.el")
          (load-file "~/.emacs.d/private_config.el"))
 
-     ;; Define a custom command to save the org agenda to a file
      (setq org-agenda-custom-commands
-           `(("X" agenda "" nil ,(list org-agenda-private-local-path))))
+           `(;; Agenda to only show personal GTD files and filter work
+             ;; related files which is easy to add with `#+FILETAGS:
+             ;; 200ok`.
+             ("c" "Custom agenda, ignore 200ok tag"
+              ((agenda ""))
+              ((org-agenda-tag-filter-preset '("-200ok"))))
+             ;; Define a custom command to save the org agenda to a file
+             ("X" agenda "" nil ,(list org-agenda-private-local-path))))
 
      (defun org-agenda-export-to-ics ()
        (set-org-agenda-files)
