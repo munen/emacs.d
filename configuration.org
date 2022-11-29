@@ -3269,8 +3269,8 @@ agenda).
      "If STRATEGY is 'blacklist', then add the `from` of a message to the
    procmail. If it is 'whitelist', then whitelist'."
      (let* ((from (mu4e-message-field msg :from))
-            (from_name (car (car from)))
-            (from_address (cdr (car from)))
+            (from_name (car (cdr (car from))))
+            (from_address (car (cdr (cdr (cdr (car from))))))
             (path (format "~/.procmail/%s_from.txt" strategy)))
        ;; Whitelist/Blacklist the senders Name
        (if from_name
@@ -4298,8 +4298,7 @@ When evaluating the src-block above, it'll yield a table like:
 
      (setq org-agenda-custom-commands
            `(;; Agenda to only show personal GTD files and filter work
-             ;; related files which is easy to add with `#+FILETAGS:
-             ;; 200ok`.
+             ;; related files which is easy to add with `#+FILETAGS: 200ok`.
              ("c" "Custom agenda, ignore 200ok tag"
               ((agenda ""))
               ((org-agenda-tag-filter-preset '("-200ok"))))
