@@ -2515,6 +2515,14 @@ Save org-download images into the "images" directory.
 #+end_src
 
 
+** Org habits
+https://orgmode.org/manual/Tracking-your-habits.html
+
+Show habits outside of today's agenda view:
+
+#+begin_src emacs-lisp
+  (setq org-habit-show-habits-only-for-today nil)
+#+end_src
 ** WIP Notifications / appointment reminders
 
  This is a work-in-progress, but already working.
