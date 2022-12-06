@@ -886,21 +886,24 @@ The codes does the following:
   ;;;       (setq count (+ count cnt))))
   ;;;   (print count))
 
-  
-  ;; Using a reducer, but adding dash.el as dependency.
 
-  (require 'dash)
+  ;; Using a reducer:
 
   (defun productivity-of-the-day ()
-    (--reduce-from 
-     (let* ((folder (file-name-directory it))
-            (file (file-name-nondirectory it))
-            (cmd (concat "cd " folder "; git log --since=yesterday -p " file " | grep TODO | grep -E \"^\\+|^\\-\" | wc -l"))
-            (cnt (string-to-number (shell-command-to-string cmd))))
-       (+ acc cnt))
-     0
-     org-agenda-files))
+    (seq-reduce
+     (lambda (acc it)
+       (let* ((folder (file-name-directory it))
+              (file (file-name-nondirectory it))
+              (cmd (concat "cd " folder "; git log --since=yesterday -p " file " | grep TODO | grep -E \"^\\+|^\\-\" | wc -l"))
+              (cnt (string-to-number (shell-command-to-string cmd))))
+         (+ acc cnt)))
+     org-agenda-files
+     0))
 #+end_src
+
+The =grep -E= part ensures that the function counts all occurences of
+TODO which have either been added or removed by discounting the ones
+that are just in the vicinity and also shown in the diff.
 
 I add the result of =productivity-of-the-day= to my i3 status bar
 (polybar), so it's always visible. [[https://github.com/munen/dotfiles/commit/53b912cf12ddfb9769958690f14c1f80171a0e13][Here's the config for it]].
