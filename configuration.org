@@ -874,31 +874,22 @@ The codes does the following:
 3. Aggregate and print.
 
 #+begin_src emacs-lisp
-  ;; Std. Elisp way, including some mutable state, but fully functional:
-
-  ;;; (defun productivity-of-the-day ()
-  ;;;   (setq count 0)
-  ;;;   (dolist (path org-agenda-files)
-  ;;;     (let* ((folder (file-name-directory path))
-  ;;;            (file (file-name-nondirectory path))
-  ;;;            (cmd (concat "cd " folder "; git log --since=yesterday -p " file " | grep TODO | grep -E \"^\\+|^\\-\" | wc -l"))
-  ;;;            (cnt (string-to-number (shell-command-to-string cmd))))
-  ;;;       (setq count (+ count cnt))))
-  ;;;   (print count))
-
-
-  ;; Using a reducer:
-
-  (defun productivity-of-the-day ()
-    (seq-reduce
-     (lambda (acc it)
-       (let* ((folder (file-name-directory it))
-              (file (file-name-nondirectory it))
-              (cmd (concat "cd " folder "; git log --since=yesterday -p " file " | grep TODO | grep -E \"^\\+|^\\-\" | wc -l"))
-              (cnt (string-to-number (shell-command-to-string cmd))))
-         (+ acc cnt)))
-     org-agenda-files
-     0))
+    (defun productivity-of-the-day ()
+      (seq-reduce
+       (lambda (acc it)
+         (let* ((folder (file-name-directory it))
+                (file (file-name-nondirectory it))
+                (cmd (concat "cd "
+                             folder
+                             "; git log --since=yesterday -p "
+                             file
+                             "| grep TODO "
+                             "| grep -E \"^\\+|^\\-\" "
+                             "| wc -l"))
+                (cnt (string-to-number (shell-command-to-string cmd))))
+           (+ acc cnt)))
+       org-agenda-files
+       0))
 #+end_src
 
 The =grep -E= part ensures that the function counts all occurences of
