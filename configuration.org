@@ -860,6 +860,50 @@ https://emacsredux.com/blog/2013/04/02/move-current-line-up-or-down/
      (global-set-key (kbd "M-<down>") 'move-line-down)
      (global-set-key (kbd "M-<up>") 'move-line-up)
    #+END_SRC
+** How productive was I today?
+
+The =productivity-of-the-day= returns the total number of TODO
+statements that have either been added or removed from all agenda
+files. This is a pretty good proxy for productivity - or at least to
+see that there's a bit of progress throughout the day.
+
+The codes does the following:
+
+1. For any org-agenda-file, go to its base directory.
+2. Count the added or removed TODO statements with =git log --since=yesterday -p things.org | grep TODO | grep -E "^\+|^\-" | wc -l=
+3. Aggregate and print.
+
+#+begin_src emacs-lisp
+  ;; Std. Elisp way, including some mutable state, but fully functional:
+
+  ;;; (defun productivity-of-the-day ()
+  ;;;   (setq count 0)
+  ;;;   (dolist (path org-agenda-files)
+  ;;;     (let* ((folder (file-name-directory path))
+  ;;;            (file (file-name-nondirectory path))
+  ;;;            (cmd (concat "cd " folder "; git log --since=yesterday -p " file " | grep TODO | grep -E \"^\\+|^\\-\" | wc -l"))
+  ;;;            (cnt (string-to-number (shell-command-to-string cmd))))
+  ;;;       (setq count (+ count cnt))))
+  ;;;   (print count))
+
+  
+  ;; Using a reducer, but adding dash.el as dependency.
+
+  (require 'dash)
+
+  (defun productivity-of-the-day ()
+    (--reduce-from 
+     (let* ((folder (file-name-directory it))
+            (file (file-name-nondirectory it))
+            (cmd (concat "cd " folder "; git log --since=yesterday -p " file " | grep TODO | grep -E \"^\\+|^\\-\" | wc -l"))
+            (cnt (string-to-number (shell-command-to-string cmd))))
+       (+ acc cnt))
+     0
+     org-agenda-files))
+#+end_src
+
+I add the result of =productivity-of-the-day= to my i3 status bar
+(polybar), so it's always visible. [[https://github.com/munen/dotfiles/commit/53b912cf12ddfb9769958690f14c1f80171a0e13][Here's the config for it]].
 
 * General
 This section contains settings for non-built-in Emacs features that
@@ -3586,26 +3630,29 @@ This part of the configuration was kindly provided by [[https://github.com/SirPs
  Slightly simplified flycheck segments for =info=, =warning= and =error=.
 
  #+BEGIN_SRC emacs-lisp
- (spaceline-define-segment ph/flycheck-warning-segment
-   (if (flycheck-has-current-errors-p)
-       (let ((c (cdr (assq 'warning (flycheck-count-errors
-                                     flycheck-current-errors)))))
-         (powerline-raw
-          (if c (format "%s" c))))))
 
- (spaceline-define-segment ph/flycheck-error-segment
-   (if (flycheck-has-current-errors-p)
-       (let ((c (cdr (assq 'error (flycheck-count-errors
-                                     flycheck-current-errors)))))
-         (powerline-raw
-          (if c (format "%s" c))))))
+   ;; This is throwing errors when debugging elisp since [2022-12-06 Tue].
+   
+   ; (spaceline-define-segment ph/flycheck-warning-segment
+   ;   (if (flycheck-has-current-errors-p)
+   ;       (let ((c (cdr (assq 'warning (flycheck-count-errors
+   ;                                     flycheck-current-errors)))))
+   ;         (powerline-raw
+   ;          (if c (format "%s" c))))))
 
- (spaceline-define-segment ph/flycheck-info-segment
-   (if (flycheck-has-current-errors-p)
-       (let ((c (cdr (assq 'info (flycheck-count-errors
-                                     flycheck-current-errors)))))
-         (powerline-raw
-          (if c (format "%s" c))))))
+   (spaceline-define-segment ph/flycheck-error-segment
+     (if (flycheck-has-current-errors-p)
+         (let ((c (cdr (assq 'error (flycheck-count-errors
+                                       flycheck-current-errors)))))
+           (powerline-raw
+            (if c (format "%s" c))))))
+
+   (spaceline-define-segment ph/flycheck-info-segment
+     (if (flycheck-has-current-errors-p)
+         (let ((c (cdr (assq 'info (flycheck-count-errors
+                                       flycheck-current-errors)))))
+           (powerline-raw
+            (if c (format "%s" c))))))
  #+END_SRC
 
  Default faces for the flycheck segments.
