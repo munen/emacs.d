@@ -870,26 +870,37 @@ see that there's a bit of progress throughout the day.
 The codes does the following:
 
 1. For any org-agenda-file, go to its base directory.
-2. Count the added or removed TODO statements with =git log --since=yesterday -p things.org | grep TODO | grep -E "^\+|^\-" | wc -l=
+2. Count the added or removed TODO statements with =git log --since=midnight -p things.org | grep TODO | grep -E "^\+|^\-" | wc -l=
 3. Aggregate and print.
 
 #+begin_src emacs-lisp
-    (defun productivity-of-the-day ()
-      (seq-reduce
-       (lambda (acc it)
-         (let* ((folder (file-name-directory it))
-                (file (file-name-nondirectory it))
-                (cmd (concat "cd "
-                             folder
-                             "; git log --since=yesterday -p "
-                             file
-                             "| grep TODO "
-                             "| grep -E \"^\\+|^\\-\" "
-                             "| wc -l"))
-                (cnt (string-to-number (shell-command-to-string cmd))))
-           (+ acc cnt)))
-       org-agenda-files
-       0))
+  (defun count-lines-with-expression (s exp)
+    "Count the number of lines in the string S that contain the regular expression EXP."
+    (let ((count 0))
+      (mapc (lambda (line)
+              (when (string-match-p exp line)
+                (setq count (+ 1 count))))
+            (split-string s "\n"))
+      count))
+
+
+  (defun productivity-of-the-day ()
+    (seq-reduce
+     (lambda (acc it)
+       (let* ((folder (file-name-directory it))
+              (file (file-name-nondirectory it))
+              (base-cmd (concat "cd "
+                                folder
+                                "; git log --since=midnight -p "
+                                file
+                                "| grep TODO"))
+              (changed (shell-command-to-string base-cmd))
+              (added (count-lines-with-expression changed "^\\+"))
+              (removed (count-lines-with-expression changed "^\\-")))
+         (cons (+ (car acc) added)
+               (- (cdr acc) removed))))
+     org-agenda-files
+     '(0 . 0)))
 #+end_src
 
 The =grep -E= part ensures that the function counts all occurences of
