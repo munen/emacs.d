@@ -1226,9 +1226,10 @@ Markdown, because it uses [[http://daringfireball.net/projects/markdown/syntax#p
 line break.
 
 #+BEGIN_SRC emacs-lisp
-    (add-hook 'before-save-hook '(lambda()
-                                  (when (not (or (derived-mode-p 'markdown-mode)))
-                                    (delete-trailing-whitespace))))
+      (add-hook 'before-save-hook '(lambda()
+                                     (when (not (or (derived-mode-p 'markdown-mode)
+                                                    (derived-mode-p 'org-mode)))
+                                      (delete-trailing-whitespace))))
 #+END_SRC
 
 *** Code Folding
@@ -2572,6 +2573,15 @@ Show habits outside of today's agenda view:
 #+begin_src emacs-lisp
   (setq org-habit-show-habits-only-for-today nil)
 #+end_src
+** Tables
+
+Bring back 'clear cell' shortcut which used to be the default binding,
+but was removed in the [[https://github.com/bzg/org-mode/blob/main/etc/ORG-NEWS#the-keybinding-for-org-table-blank-field-has-been-removed][9.5 release]].
+
+#+begin_src emacs-lisp
+(define-key org-mode-map (kbd "C-c SPC") #'org-table-blank-field)
+#+end_src
+
 ** WIP Notifications / appointment reminders
 
  This is a work-in-progress, but already working.
@@ -2900,7 +2910,7 @@ mu init --my-address=alain.lafon@dispatched.ch --my-address=alain@200ok.ch --my-
    (defvar my-mu4e-account-alist
      '(("200ok"
         (user-full-name  "Alain M. Lafon")
-        (mu4e-compose-signature "200ok GmbH\nCEO\n\nalain@200ok.ch\n+41 76 405 05 67\nhttps://200ok.ch/\n\nOptimize your work force schedule: https://200ok.ch/shiftplanning.html")
+        (mu4e-compose-signature "200ok GmbH\nCEO\n\nalain@200ok.ch\n+41 76 405 05 67\nhttps://200ok.ch/\n\norganice is the best way to get stuff done: https://organice.200ok.ch")
         (mu4e-compose-signature-auto-include t)
         (mu4e-sent-folder "/200ok/INBOX.Sent")
         (mu4e-drafts-folder "/200ok/INBOX.Drafts")
@@ -3637,7 +3647,7 @@ This part of the configuration was kindly provided by [[https://github.com/SirPs
  #+BEGIN_SRC emacs-lisp
 
    ;; This is throwing errors when debugging elisp since [2022-12-06 Tue].
-   
+
    ; (spaceline-define-segment ph/flycheck-warning-segment
    ;   (if (flycheck-has-current-errors-p)
    ;       (let ((c (cdr (assq 'warning (flycheck-count-errors

@@ -44,7 +44,77 @@
  '(package-selected-packages
    '(hl-todo ace-window rfc-mode rust-mode tree-sitter-langs tree-sitter org-download magit-delta hcl-mode logview org-ql keycast adaptive-wrap counsel-jq package-lint tide flycheck-package rjsx-mode evil-escape erc-image edit-indirect atomic-chrome ob-restclient diminish elfeed spaceline ido-vertical-mode spacemacs-theme solarized-theme editorconfig dired-narrow evil-mc forge edit-server dumb-jump ggtags browse-kill-ring clipmon rainbow-mode beacon js2-refactor graphviz-dot-mode js-comint intero haskell-mode comment-tags handlebars-mode json-mode mustache-mode seeing-is-believing elfeed-goodies elfeed-org zenburn-theme writegood-mode writeroom-mode which-key darktooth-theme magit restclient impatient-mode evil-numbers evil-surround evil-leader evil smex ledger-mode robe enh-ruby-mode markdown-mode projectile coffee-mode tern-auto-complete tern pdf-tools yaml-mode sass-mode fixme-mode flycheck-flow ac-js2 js2-mode ac-cider exec-path-from-shell cider clj-refactor parinfer clojure-mode web-mode auto-complete flycheck ag))
  '(safe-local-variable-values
-   '((org-treat-insert-todo-heading-as-state-change . 1)
+   '((eval progn
+           (custom-set-variables
+            '(org-latex-text-markup-alist
+              '((bold . "\\textbf{%s}")
+                (code . protectedtexttt)
+                (italic . "\\emph{%s}")
+                (strike-through . "\\sout{%s}")
+                (underline . "\\uline{%s}")
+                (verbatim . "%s")))
+            '(org-download-heading-lvl nil)
+            '(org-download-image-dir "./images")
+            '(org-image-actual-width 720))
+           (defun autocalc-clocktable nil
+             (when
+                 (derived-mode-p 'org-mode)
+               (save-excursion
+                 (goto-char 0)
+                 (if
+                     (string-equal
+                      (car
+                       (cdr
+                        (car
+                         (org-collect-keywords
+                          '("AUTOCALC_CLOCKTABLES")))))
+                      "t")
+                     (progn
+                       (goto-char
+                        (search-forward "clocktable"))
+                       (org-clock-report))))))
+           (add-hook 'before-save-hook 'autocalc-clocktable)
+           (defun ok-add-number-grouping
+               (number &optional separator)
+             "Add commas to NUMBER and return it as a string. Optional
+         SEPARATOR is the string to use to separate groups. It
+         defaults to a apostrophe."
+             (let
+                 ((num
+                   (if
+                       (floatp number)
+                       (format "%0.2f" number)
+                     (number-to-string number)))
+                  (op
+                   (or separator "'")))
+               (while
+                   (string-match "\\(.*[0-9]\\)\\([0-9][0-9][0-9].*\\)" num)
+                 (setq num
+                       (concat
+                        (match-string 1 num)
+                        op
+                        (match-string 2 num))))
+               num))
+           (defmacro ok-org-get-var
+               (name)
+             "Retrieves an org-variable NAME and casts it into a number."
+             `(string-to-number
+               (org-sbe ,name)))
+           (defun ok-number-as-chf
+               (number)
+             "Take a NUMBER, format and return it like 'CHF 12'345.-' If the NUMBER is a float, then the precision is ."
+             (concat "CHF "
+                     (ok-add-number-grouping
+                      (if
+                          (stringp number)
+                          (string-to-number number)
+                        number))
+                     (if
+                         (floatp number)
+                         "" ".-"))))
+     (org-treat-insert-todo-heading-as-state-change . t)
+     (eval org-babel-lob-ingest "../common-pm.org")
+     (org-treat-insert-todo-heading-as-state-change . 1)
      (eval setq org-treat-insert-todo-heading-as-state-change t)
      (eval progn
            (custom-set-variables
