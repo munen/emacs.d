@@ -3046,6 +3046,10 @@ mu init --my-address=alain.lafon@dispatched.ch --my-address=alain@200ok.ch --my-
    (add-to-list 'mu4e-bookmarks
                 '((concat d-spam d-archive " AND (flag:unread OR flag:flagged) AND NOT flag:trashed")
                   "Unread messages"      ?u))
+   ;; Hack to get to a temporary inbox zero state when starting a new year
+   (add-to-list 'mu4e-bookmarks
+                '((concat d-spam d-archive (concat " (flag:unread OR flag:flagged) AND NOT flag:trashed AND date:" (format-time-string "%Y")))
+                  "Unread messages, current year"      ?U))
  #+END_SRC
 
 
@@ -4201,6 +4205,18 @@ Requires the =fonts-symbola= Debian package
   (add-hook 'server-after-make-frame-hook 'light-mode)
   (light-mode)
 #+END_SRC
+
+Note: If I wanted to make a distinction between GUI and terminal
+modes, this would be reasonable boilerplate:
+
+#+begin_example
+(add-hook 'after-make-frame-functions
+  (lambda ()
+    ;; we want some font only in GUI Emacs
+    (when (display-graphics-p)
+      (set-frame-font "DejaVu Sans Mono 28")))
+#+end_example
+
 * Org Mode Exports
 
 ** Time Export Table
