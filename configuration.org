@@ -3501,6 +3501,11 @@ start it with an empty string as argument.
                                 (counsel-M-x "")))
 #+END_SRC
 
+Override =insert-char=.
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "C-x 8 RET") 'counsel-unicode-char)
+#+END_SRC
+
 *** Where =Ivy= doesn't work well
 
 **** Overwriting standard Emacs functionality
