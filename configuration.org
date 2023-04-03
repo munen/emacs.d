@@ -2390,10 +2390,24 @@ Enable the =<s TAB= syntax for [[https://orgmode.org/manual/Structure-Templates.
 
 ** Pomodoro
 
-A leightweight implementation of the Pomodoro Technique is implemented
-through customizing orgmode. For every Clock that is started (=C-c C-x
-C-i=) an automatic Timer is scheduled to 25min. After these 25min are
-up, a "Time to take a break!" message is played and a pop-up
+A lightweight implementation of the Pomodoro Technique is implemented
+through customizing Org mode. These are the commands:
+
+- =ok-pomodoro-start=
+- =ok-pomodoro-cancel=
+- =ok-pomodoro-break=
+- =ok-pomodoro-reset=: Reset the completed and cancelled counters.
+
+It sets the following stats:
+  
+- =ok-pomodoro-completed=
+- =ok-pomodoro-cancelled=
+
+Alternatively, if you do not want to manually start a pomodoro, you
+can hook into the Org mode clocking mechanism. When
+=ok-pomodoro-auto-clock-in= is set, for every Clock that is started
+(=C-c C-x C-i=) an automatic Timer is scheduled to 25min. After these
+25min are up, a "Time to take a break!" message is played and a pop-up
 notification is shown.
 
 The timer is not automatically stopped on clocking out, because clocking
@@ -2923,7 +2937,7 @@ mu init --my-address=alain.lafon@dispatched.ch --my-address=alain@200ok.ch --my-
         (smtpmail-stream-type starttls)
         (smtpmail-smtp-service 25))
        ("zen-tempel"
-        (user-full-name  "Brother Alain M. Lafon")
+        (user-full-name  "Munen Alain M. Lafon")
         (mu4e-compose-signature "Lambda Zen Tempel\n\nalain@zen-temple.net\n+41 76 405 05 67\n\nhttps://zen-temple.net/")
         (mu4e-compose-signature-auto-include t)
         (mu4e-sent-folder "/zen-tempel/INBOX.Sent")
