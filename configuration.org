@@ -2123,6 +2123,36 @@ Major mode for [[https://github.com/hashicorp/hcl][Hashicorp Configuration Langu
 #+begin_src emacs-lisp
   (add-to-list 'auto-mode-alist '("\\.drl\\'" . java-mode))
 #+end_src
+
+* Whisper.cpp with whisper.el
+https://github.com/natrys/whisper.el
+
+I installed [[https://github.com/ggerganov/whisper.cpp][whisper.ccp]] manually on the commandline, though whisper.el
+supports automatic installation.
+
+I benchmarked different models against each other. The "base" model is
+quite fast and has good results. "tiny" has worse results and starting
+from "small", the computation time goes _way_ up.
+
+Also, I've benchmarked whisper.cpp streaming vs whisper.el and the
+latter is far superior.
+
+Note that setting the =whisper-language= to 'auto' implies that one
+recording can only have _one_ language. Giving it multiple sentences
+in different languages will not return a happy result.
+
+#+begin_src emacs-lisp
+  (quelpa '(whisper :fetcher git :url "https://github.com/natrys/whisper.el.git"))
+
+  (setq whisper-install-directory "~/src"
+        whisper-model "base"
+        whisper-language "auto"
+        ;; whisper-language "en"
+        whisper-use-threads nil
+        whisper-translate nil)
+
+  (define-key global-map (kbd "C-x R") 'whisper-run)
+#+end_src
 * Org mode
 
 Outline-based notes management and organizer. It is an outline-mode
