@@ -41,16 +41,17 @@
         (insert "\n"))
       (insert-translation-to-buffer (cdr list))))
 
-
 (defun initialize-translations-buffer (search-term)
-  "Create a new buffer and initializs it with SEARCH-TERM."
+  "Create a new buffer and initializes it with SEARCH-TERM."
 
-  ;; ;; If an old result is still open, close it
+  ;; If an old result is still open, close it
   (when-let ((buffer (get-buffer "*dict-results*")))
     (switch-to-buffer buffer)
-    (kill-buffer "*dict-results*")
-    (delete-window)
-    (other-window 1))
+    (if (one-window-p)
+        ;; If this is the only visible window, switch to another buffer
+        (switch-to-buffer (other-buffer))
+      ;; Otherwise, just delete the window
+      (delete-window)))
 
   ;; Get or create a new buffer called "*dict-results*"
   (get-buffer-create "*dict-results*")
@@ -58,16 +59,10 @@
   (with-current-buffer "*dict-results*"
     ;; Initialize
     (erase-buffer)
-
     (org-mode)
-
-    ;; TODO: First create a new minor mode, because local key maps are
-    ;; shared between all buffers of the same major mode!
-    ;; (local-set-key (kbd "q") '(lambda()
-    ;;                             (interactive)
-    ;;                             (delete-window)))
-
     (insert (concat "* Translations for: " search-term "\n\n"))))
+
+
 
 (defun main (results)
   "Main logic: Add the dict.cc RESULTS to a results buffer."
