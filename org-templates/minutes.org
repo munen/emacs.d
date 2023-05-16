@@ -1,5 +1,5 @@
-*** MEETING %?
-    - Date/Time/Location: %(org-insert-time-stamp (current-time))
+*** MEETING %? %(org-insert-time-stamp (current-time))
+    - Location: 
     - Goal:
     - Attendees:
 **** Intro
