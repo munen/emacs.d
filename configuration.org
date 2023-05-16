@@ -162,6 +162,7 @@ down in this file, some are used with the default configuration.
                         magit
                         magit-delta
                         markdown-mode
+                        org-ai
                         package-lint
                         pdf-tools
                         projectile
@@ -2145,14 +2146,16 @@ in different languages will not return a happy result.
   (quelpa '(whisper :fetcher git :url "https://github.com/natrys/whisper.el.git"))
 
   (setq whisper-install-directory "~/src"
-        whisper-model "base"
+        whisper-model "base-q8_0"
         whisper-language "auto"
-        ;; whisper-language "en"
-        whisper-use-threads nil
+        whisper-use-threads 10
         whisper-translate nil)
 
   (define-key global-map (kbd "C-x R") 'whisper-run)
 #+end_src
+
+
+
 * Org mode
 
 Outline-based notes management and organizer. It is an outline-mode
@@ -2218,15 +2221,15 @@ Allow ‘a.’, ‘A.’, ‘a)’ and ‘A) as list elements:
 
   ;; Allow =pdflatex= to use shell-commands. This will allow it to use
   ;; =pygments= as syntax highlighter for exports to PDF.
-  ;; (setq org-latex-pdf-process
-  ;;       '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-  ;;         "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-  ;;         "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
-  ;;  Alternatively use =xelatex=. Required for documents where I want to use ttf fonts.
   (setq org-latex-pdf-process
-        '("xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-          "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-          "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+        '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+          "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+          "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+  ;;  Alternatively use =xelatex=. Required for documents where I want to use ttf fonts.
+  ;;(setq org-latex-pdf-process
+  ;;      '("xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+  ;;        "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+  ;;        "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
 
   ;; Include =minted= package for LaTeX exports
   (add-to-list 'org-latex-packages-alist '("" "minted"))
@@ -2617,6 +2620,37 @@ Show habits outside of today's agenda view:
 #+begin_src emacs-lisp
   (setq org-habit-show-habits-only-for-today nil)
 #+end_src
+** =org-ai=
+https://github.com/rksm/org-ai
+
+General setup:
+
+#+begin_src emacs-lisp
+  (require 'org-ai)
+  (add-hook 'org-mode-hook #'org-ai-mode)
+#+end_src
+
+The OpenAI API key is in the =~/.authinfo= file.
+
+Integrate "ai" snippet in Org mode:
+
+#+begin_src emacs-lisp
+  (org-ai-install-yasnippets)
+  (setq org-ai-default-chat-model "gpt-3.5-turbo")
+  ;; (setq org-ai-default-chat-model "gpt-4")
+  (add-hook 'org-mode-hook #'yas-minor-mode)
+#+end_src
+
+Typing "ai =TAB=" will create a block like this:
+
+#+begin_example
+#+begin_ai
+[SYS]: You are a helpful assistant.
+
+[ME]: 
+#+end_ai
+#+end_example
+
 ** Tables
 
 Bring back 'clear cell' shortcut which used to be the default binding,
@@ -3498,6 +3532,8 @@ Configure =Counsel=
 
 #+BEGIN_SRC emacs-lisp
   (global-set-key (kbd "C-x b") 'counsel-ibuffer)
+  (global-set-key (kbd "C-h d") 'counsel-describe-function)
+  (global-set-key (kbd "C-h v") 'counsel-describe-variable)
   ;; Run `counsel-ag` against the current directory and not against the
   ;; whole project
   (global-set-key (kbd "C-c k") '(lambda()

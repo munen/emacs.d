@@ -1,9 +1,12 @@
-*** MINUTES %(org-insert-time-stamp (current-time)) %?
-    - Date/Time/Location:
+*** MEETING %?
+    - Date/Time/Location: %(org-insert-time-stamp (current-time))
     - Goal:
     - Attendees:
 **** Intro
      - [ ] Ask if recording is OK
+     - [ ] Meeting minutes will be distributed after the meeting
+**** AGENDA
+**** MINUTES
 **** Follow-ups
 ***** TODO Foo                                                  :responsible:
 **** Decisions
