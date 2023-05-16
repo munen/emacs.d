@@ -3586,6 +3586,11 @@ Override =insert-char=.
   (global-set-key (kbd "C-x 8 RET") 'counsel-unicode-char)
 #+END_SRC
 
+Make the prompt line selectable (with =C-p=).
+#+begin_src emacs-lisp
+  (setq ivy-use-selectable-prompt t)
+#+end_src
+
 *** Where =Ivy= doesn't work well
 
 **** Overwriting standard Emacs functionality
