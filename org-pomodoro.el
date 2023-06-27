@@ -38,6 +38,17 @@
   (let ((starting-buffer-name (buffer-name (current-buffer))))
     (not (string-equal starting-buffer-name ok-pomodoro-buffer))))
 
+(defun ok-pomodoro-set-todo ()
+  "Display the todo for the next Pomodoro via dunst."
+  (interactive)
+  (let* ((todo (read-from-minibuffer "Next Pomodoro: ")))
+    (shell-command
+     (format "notify-send -t %s -u low \"%s\""
+             (* 25 ; min
+                60 ; secs
+                100)
+             todo))))
+
 (defun ok-pomodoro-break ()
   "."
   (interactive)
