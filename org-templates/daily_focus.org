@@ -2,7 +2,6 @@
 
 **** Process
 
-    - [ ] Stop messengers
     - [ ] Go into DND mode
     - [ ] Start by setting one Pomodoro just to get the day organized
     - [ ] Set a timetable for today
@@ -23,10 +22,15 @@
 
 **** Timetable
 
-**** Journal
-
 **** Next
 
-   - [ ] %?
-   - [ ]
-   - [ ]
+| Prio | Type | Time started | *TODO Today*       | Pomodoros | Completed |
+|------+------+--------------+--------------------+-----------+-----------|
+|      |      |              | %?                 |           |           |
+|------+------+--------------+--------------------+-----------+-----------|
+|      |      |              | Unplanned & Urgent |           |           |
+|------+------+--------------+--------------------+-----------+-----------|
+|      |      |              |                    |           |           |
+
+**** Journal
+
