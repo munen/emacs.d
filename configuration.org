@@ -2521,17 +2521,17 @@ This will render the same time as above as:
 
 ** GTD
 #+BEGIN_SRC emacs-lisp
+  (load-library "find-lisp")
+
   (defun set-org-agenda-files ()
     "Set different org-files to be used in `org-agenda`."
-    (setq org-agenda-files (list (concat org-directory "things.org")
-                                 (concat org-directory "reference.org")
-                                 (concat org-directory "media.org")
-                                 (concat org-directory "shared_with_monika/shared_alain_and_monika.org")
-                                 "~/src/200ok/admin/THINGS.org"
-                                 "~/src/200ok/admin/pm/bluewin/bluewin.org"
-                                 "~/src/200ok/admin/pm/fp/fp.org"
-                                 "~/src/200ok/admin/pm/accounting/accounting.org"
-                                 )))
+    (setq org-agenda-files (flatten-list
+                            (list (concat org-directory "things.org")
+                                  (concat org-directory "reference.org")
+                                  (concat org-directory "media.org")
+                                  (concat org-directory "shared_with_monika/shared_alain_and_monika.org")
+                                  "~/src/200ok/admin/THINGS.org"
+                                  (find-lisp-find-files "~/src/200ok/admin/pm/" "^pm.*\.org$")))))
 
   (set-org-agenda-files)
 
@@ -2546,8 +2546,6 @@ This will render the same time as above as:
     (org-agenda-day-view)
     (shrink-window-if-larger-than-buffer)
     (other-window 1))
-
-
 #+END_SRC
 ** Refile Targets
 
@@ -2759,7 +2757,7 @@ but was removed in the [[https://github.com/bzg/org-mode/blob/main/etc/ORG-NEWS#
                 (when (seq-contains org-agenda-files (s-replace "/home/munen" "~" (buffer-file-name)))
                     (org-agenda-to-appt))))
  #+END_SRC
-
+ 
 * pdf-tools
 
 https://github.com/vedang/pdf-tools, forked from https://github.com/politza/pdf-tools
