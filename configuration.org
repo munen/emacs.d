@@ -1109,6 +1109,18 @@ This results in the same feature-set like this vim keybinding:
 :imap jk <esc>
 #+END_SRC
 
+** Change some Emacs keybindings
+
+With =backward-kill-sentence=, I sometimes shoot myself in the foot. I
+trigger this shortcut by accident and then all kinds of stuff happens.
+And =undo-tree-undo= does not always undo the deed for reasons.
+Anyway, I do not need the Emacs style =backward-kill-sentence=:
+
+#+begin_src emacs-lisp
+  (global-unset-key (kbd "C-x <backspace>"))
+  (global-unset-key (kbd "C-x DEL"))
+#+end_src
+
 * Which Key
   =which-key= displays available keybindings in a popup.
 
