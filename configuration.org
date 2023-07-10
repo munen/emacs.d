@@ -2951,7 +2951,7 @@ Configure =xdg-open= to use Emacs in =.local/share/applications/mimeapps.list=:
 https://www.djcbsoftware.nl/code/mu/mu4e/Initializing-the-message-store.html
 
 #+BEGIN_SRC shell
-mu init --my-address=alain.lafon@dispatched.ch --my-address=alain@200ok.ch --my-address=lafo@zhaw.ch --my-address=alain@zen-tempel.ch --my-address=preek@dispatched.ch --maildir=~/Maildir
+mu init --my-address=alain.lafon@dispatched.ch --my-address=alain@200ok.ch --my-address=support@200ok.ch --my-address=lafo@zhaw.ch --my-address=alain@zen-tempel.ch --my-address=preek@dispatched.ch --maildir=~/Maildir
 #+END_SRC
 
 **** Accounts setup
@@ -3007,6 +3007,20 @@ mu init --my-address=alain.lafon@dispatched.ch --my-address=alain@200ok.ch --my-
         (smtpmail-default-smtp-server "mail.your-server.de")
         (smtpmail-local-domain "200ok.ch")
         (smtpmail-smtp-user "munen@200ok.ch")
+        (smtpmail-smtp-server "mail.your-server.de")
+        (smtpmail-stream-type starttls)
+        (smtpmail-smtp-service 25))
+       ("200ok-support"
+        (user-full-name  "200ok Support")
+        (mu4e-compose-signature "200ok GmbH\nCEO\n\nalain@200ok.ch\n+41 76 405 05 67\nhttps://200ok.ch/\n\norganice is the best way to get stuff done: https://organice.200ok.ch")
+        (mu4e-compose-signature-auto-include t)
+        (mu4e-sent-folder "/200ok-support/INBOX.Sent")
+        (mu4e-drafts-folder "/200ok-support/INBOX.Drafts")
+        (mu4e-trash-folder "/200ok-support/INBOX.Trash")
+        (user-mail-address "support@200ok.ch")
+        (smtpmail-default-smtp-server "mail.your-server.de")
+        (smtpmail-local-domain "200ok.ch")
+        (smtpmail-smtp-user "support@200ok.ch")
         (smtpmail-smtp-server "mail.your-server.de")
         (smtpmail-stream-type starttls)
         (smtpmail-smtp-service 25))
@@ -3077,6 +3091,9 @@ mu init --my-address=alain.lafon@dispatched.ch --my-address=alain@200ok.ch --my-
             ((string-match "^/200ok.*"
                            (mu4e-message-field msg :maildir))
              "/200ok/INBOX.Archive")
+            ((string-match "^/200ok-support.*"
+                           (mu4e-message-field msg :maildir))
+             "/200ok-support/INBOX.Archive")
             ((string-match "^/zhaw.*"
                            (mu4e-message-field msg :maildir))
              "/zhaw/Archive")
@@ -3089,27 +3106,31 @@ mu init --my-address=alain.lafon@dispatched.ch --my-address=alain@200ok.ch --my-
 
 
    ;; All archived folders
-   (defvar d-archive "NOT (maildir:/dispatched/INBOX.Archive OR maildir:/zen-tempel/INBOX.Archive OR maildir:/200ok/INBOX.Archive OR maildir:/zhaw/Archive)")
+   (defvar d-archive "NOT (maildir:/dispatched/INBOX.Archive OR maildir:/zen-tempel/INBOX.Archive OR maildir:/200ok/INBOX.Archive OR maildir:/200ok-support/INBOX.Archive OR maildir:/zhaw/Archive)")
 
    (defvar inbox-folders (string-join '("maildir:/dispatched/INBOX"
                                         "maildir:/zen-tempel/INBOX"
-                                        "maildir:/200ok/INBOX")
+                                        "maildir:/200ok/INBOX"
+                                        "maildir:/200ok-support/INBOX")
                                       " OR "))
 
    (defvar draft-folders (string-join '("maildir:/dispatched/INBOX.Drafts"
                                         "maildir:/zen-tempel/INBOX.Drafts"
-                                        "maildir:/200ok/INBOX.Drafts")
+                                        "maildir:/200ok/INBOX.Drafts"
+                                        "maildir:/200ok-support/INBOX.Drafts")
                                       " OR "))
 
    (defvar spam-folders (string-join '("maildir:/dispatched/INBOX.spambucket"
-                                        "maildir:/zen-tempel/INBOX.spambucket"
-                                        "maildir:/200ok/INBOX.spambucket")
+                                       "maildir:/zen-tempel/INBOX.spambucket"
+                                       "maildir:/200ok/INBOX.spambucket"
+                                       "maildir:/200ok-support/INBOX.spambucket")
                                      " OR "))
 
    (defvar blacklist-folders (string-join
-   '("maildir:/dispatched/INBOX.blacklist"
-   "maildir:/zen-tempel/INBOX.blacklist"
-   "maildir:/200ok/INBOX.blacklist") " OR "))
+                              '("maildir:/dispatched/INBOX.blacklist"
+                                "maildir:/zen-tempel/INBOX.blacklist"
+                                "maildir:/200ok/INBOX.blacklist"
+                                "maildir:/200ok-support/INBOX.blacklist") " OR "))
 
    ;; Re-define all standard bookmarks to not include the spam and
    ;; blacklist folders for searches
