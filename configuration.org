@@ -136,6 +136,7 @@ down in this file, some are used with the default configuration.
                         editorconfig
                         elfeed
                         elfeed-goodies
+                        emacs-everywhere
                         enh-ruby-mode
                         erc-image
                         evil
@@ -894,7 +895,7 @@ The codes does the following:
                                 folder
                                 "; git log --since=midnight -p "
                                 file
-                                "| grep TODO"))
+                                "| egrep 'TODO|WAITING'"))
               (changed (shell-command-to-string base-cmd))
               (added (count-lines-with-expression changed "^\\+"))
               (removed (count-lines-with-expression changed "^\\-")))
