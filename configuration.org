@@ -2358,7 +2358,7 @@ Org Capture Templates are explained [[http://orgmode.org/manual/Capture-template
                      (list fromname fromaddress from))))
 
   (setq org-capture-templates
-        '(("t" "Todo" entry (file+olp things-file "Inbox" "Tasks")
+        `(("t" "Todo" entry (file+olp things-file "Inbox" "Tasks")
            "* TODO %?\n  %U\n  %i\n  %a")
            ("w" "Waiting" entry (file+olp things-file "Waiting")
            "* WAITING %?\n  %U\n  %i\n  %a")
@@ -2384,8 +2384,14 @@ Org Capture Templates are explained [[http://orgmode.org/manual/Capture-template
            "* %?\t%^g\n#+BEGIN_SRC %^{language}\n%i\n#+END_SRC")
           ("S" "Shopping" entry (file+olp "~/Dropbox/org/shared_with_monika/shared_alain_and_monika.org" "Shopping")
            "* TODO %?\n  %U\n  %i\n  %a")
-          ("l" "Logbook entry" entry (file+olp+datetree reference-file "Logbook")
+
+          ("l" "Logbook entry" entry (file+olp reference-file "Logbook" ,(format-time-string "%Y"))
            "* %?\n  %U\n  %i\n  %a")
+          ;; NOTE: This would result in a cleanlier logbook, but
+          ;; organice does not support it, yet.
+          ;; ("l" "Logbook entry" entry (file+olp+datetree reference-file "Logbook")
+          ;;  "* %?\n  %U\n  %i\n  %a")
+
           ("p" "password" entry (file+headline "~/Dropbox/org/vault/primary.org.gpg" "Passwords")
            ;; Prompt for name
            "* %^{name}
