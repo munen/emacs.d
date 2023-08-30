@@ -7,6 +7,7 @@
 (require 'org-timer)
 
 (defvar ok-pomodoro-buffer)
+(defvar ok-pomodoro-current)
 (defvar ok-pomodoro-completed 0)
 (defvar ok-pomodoro-cancelled 0)
 (defvar ok-pomodoro-auto-clock-in nil
@@ -39,15 +40,24 @@
     (not (string-equal starting-buffer-name ok-pomodoro-buffer))))
 
 (defun ok-pomodoro-set-todo ()
-  "Display the todo for the next Pomodoro via dunst."
+  "Set the current Pomodoro task."
   (interactive)
   (let* ((todo (read-from-minibuffer "Next Pomodoro: ")))
-    (shell-command
-     (format "notify-send -t %s -u low \"%s\""
-             (* 25 ; min
-                60 ; secs
-                100)
-             todo))))
+    (setq ok-pomodoro-current todo)))
+
+(defun ok-pomodoro-notify-dunst ()
+  "Display the todo for the next Pomodoro via dunst."
+  (interactive)
+  (shell-command
+   (format "notify-send -t %s -u low \"%s\""
+           (* 25 ; min
+              60 ; secs
+              100)
+           ok-pomodoro-current)))
+
+(defun ok-current-pomodoro ()
+  "Return the current Pomodoro task."
+  (concat "🍅 "  ok-pomodoro-current))
 
 (defun ok-pomodoro-break ()
   "."
@@ -59,6 +69,7 @@
     (when switchp
       (switch-to-buffer ok-pomodoro-buffer))
     (remove-hook 'org-timer-done-hook 'set-start-timer)
+    (setq ok-pomodoro-current nil)
     (add-hook 'org-timer-done-hook 'set-break-timer)
     (org-timer-set-timer 5)
     (when switchp
@@ -68,6 +79,7 @@
   "Cancel the current pomodoro timer."
   (interactive)
   (setq ok-pomodoro-cancelled (+ 1 ok-pomodoro-cancelled))
+  (setq ok-pomodoro-current nil)
   (org-timer-stop))
 
 (defun ok-pomodoro-start ()
