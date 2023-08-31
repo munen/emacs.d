@@ -85,9 +85,11 @@
 (defun ok-current-pomodoro ()
   "Return the current Pomodoro task."
   (let ((remaining-time (ok-pomodoro-remaining-time)))
-    (concat "🍅 " (when remaining-time
-                    (concat remaining-time " - "))
-                    ok-pomodoro-current)))
+    (concat "🍅 "
+            (when remaining-time
+              (concat remaining-time " - "))
+            (when (boundp 'ok-pomodoro-current)
+              ok-pomodoro-current))))
 
 (defun ok-pomodoro-break ()
   "."
