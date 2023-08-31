@@ -3005,7 +3005,7 @@ mu init --my-address=alain.lafon@dispatched.ch --my-address=alain@200ok.ch --my-
    (defvar my-mu4e-account-alist
      '(("200ok"
         (user-full-name  "Alain M. Lafon")
-        (mu4e-compose-signature "200ok GmbH\nCEO\n\nalain@200ok.ch\n+41 76 405 05 67\nhttps://200ok.ch/\n\norganice is the best way to get stuff done: https://organice.200ok.ch")
+        (mu4e-compose-signature "200ok GmbH\nCEO\n\nalain@200ok.ch\n+41 76 405 05 67\nhttps://200ok.ch/\n\nBook an appointment with me: https://200ok.ch/calendar/alain.html \n\norganice is the best way to get stuff done: https://organice.200ok.ch")
         (mu4e-compose-signature-auto-include t)
         (mu4e-sent-folder "/200ok/INBOX.Sent")
         (mu4e-drafts-folder "/200ok/INBOX.Drafts")
@@ -3019,7 +3019,7 @@ mu init --my-address=alain.lafon@dispatched.ch --my-address=alain@200ok.ch --my-
         (smtpmail-smtp-service 25))
        ("200ok-support"
         (user-full-name  "200ok Support")
-        (mu4e-compose-signature "200ok GmbH\nCEO\n\nalain@200ok.ch\n+41 76 405 05 67\nhttps://200ok.ch/\n\norganice is the best way to get stuff done: https://organice.200ok.ch")
+        (mu4e-compose-signature "200ok GmbH\nCEO\n\nalain@200ok.ch\n+41 76 405 05 67\nhttps://200ok.ch/\n\nBook an appointment with me: https://200ok.ch/calendar/alain.html \n\norganice is the best way to get stuff done: https://organice.200ok.ch")
         (mu4e-compose-signature-auto-include t)
         (mu4e-sent-folder "/200ok-support/INBOX.Sent")
         (mu4e-drafts-folder "/200ok-support/INBOX.Drafts")
