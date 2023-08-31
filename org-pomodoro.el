@@ -55,9 +55,36 @@
               100)
            ok-pomodoro-current)))
 
+(defun ok-pomodoro-remaining-time ()
+  "Return the time left in the current org-timer (i.e. a pomodoro)."
+  (when (boundp 'org-timer-countdown-timer)
+    (if org-timer-countdown-timer
+        (let* ((rtime (decode-time
+                       (time-subtract (timer--time org-timer-countdown-timer)
+                                      (current-time))))
+               (rsecs (nth 0 rtime))
+               (rmins (nth 1 rtime))
+               ;; Show time only in 15s increments (so it's not too
+               ;; distracting). This could probably done in math instead
+               ;; of a cond statement.
+               (dsecs (cond
+                       ((>= rsecs 45) 45)
+                       ((>= rsecs 30) 30)
+                       ((>= rsecs 15) 15)
+                       ;; Usually round seconds down to 0.
+                       ((and
+                         (< rsecs 15)
+                         (> rmins 0)) 0)
+                       ;; Unless it's less than 15 secs left, then
+                       ;; actually count down.
+                       ((and
+                         (< rsecs 15)
+                         (= rmins 0)) rsecs))))
+          (format "%02d:%02d" rmins dsecs)))))
+
 (defun ok-current-pomodoro ()
   "Return the current Pomodoro task."
-  (concat "🍅 "  ok-pomodoro-current))
+  (concat "🍅 " (ok-pomodoro-remaining-time) " - " ok-pomodoro-current))
 
 (defun ok-pomodoro-break ()
   "."

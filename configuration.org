@@ -3948,31 +3948,9 @@ I like to set timers, for example through [[file:org-pomodoro.el][org-pomodoro.e
 #+BEGIN_SRC emacs-lisp
   (spaceline-define-segment org-timer-left-time
     "Show the time left in the current org-timer (i.e. a pomodoro)."
-    (when (boundp 'org-timer-countdown-timer)
-      (if org-timer-countdown-timer
-        (let* ((rtime (decode-time
-                       (time-subtract (timer--time org-timer-countdown-timer)
-                                      (current-time))))
-               (rsecs (nth 0 rtime))
-               (rmins (nth 1 rtime))
-               ;; Show time only in 15s increments (so it's not too
-               ;; distracting). This could probably done in math instead
-               ;; of a cond statement.
-               (dsecs (cond
-                       ((>= rsecs 45) 45)
-                       ((>= rsecs 30) 30)
-                       ((>= rsecs 15) 15)
-                       ;; Usually round seconds down to 0.
-                       ((and
-                         (< rsecs 15)
-                         (> rmins 0)) 0)
-                       ;; Unless it's less than 15 secs left, then
-                       ;; actually count down.
-                       ((and
-                         (< rsecs 15)
-                         (= rmins 0)) rsecs))))
-          (format "%02d:%02d" rmins dsecs)))))
+    (ok-pomodoro-remaining-time))
 #+END_SRC
+
 *** Setup
 
  Setting up the mode-line and order of segements. Compile the modeline with =M-x
@@ -3994,7 +3972,7 @@ I like to set timers, for example through [[file:org-pomodoro.el][org-pomodoro.e
      'main
      '((evil-state :face highlight-face)
        (buffer-id)
-       (org-timer-left-time)
+       ;; (org-timer-left-time) ;; Currently, I show the remaining time in Polybar, not Emacs.
        ;; (ph/mu4e-context-segment :face 'ph/spaceline-mu4e-context-face)
        (ph/remote-method :face 'ph/spaceline-tramp-method-face)
        (ph/remote-user-and-host :face 'ph/spaceline-tramp-user-host-face)
