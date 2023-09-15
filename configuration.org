@@ -2677,6 +2677,14 @@ but was removed in the [[https://github.com/bzg/org-mode/blob/main/etc/ORG-NEWS#
 (define-key org-mode-map (kbd "C-c SPC") #'org-table-blank-field)
 #+end_src
 
+** Org Attach
+
+Store a link to a file when attaching it. So after adding an
+attachment you can just use =C-c C-l= to insert the link.
+
+#+begin_src emacs-lisp
+  (setq org-attach-store-link-p 'attached)
+#+end_src
 ** WIP Notifications / appointment reminders
 
  This is a work-in-progress, but already working.
