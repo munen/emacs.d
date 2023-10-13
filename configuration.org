@@ -2686,6 +2686,12 @@ attachment you can just use =C-c C-l= to insert the link.
 #+begin_src emacs-lisp
   (setq org-attach-store-link-p 'attached)
 #+end_src
+** Markdown export
+
+#+begin_src emacs-lisp
+(eval-after-load "org"
+  '(require 'ox-md nil t))
+#+end_src
 ** WIP Notifications / appointment reminders
 
  This is a work-in-progress, but already working.
