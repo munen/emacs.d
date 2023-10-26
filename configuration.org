@@ -113,8 +113,7 @@ down in this file, some are used with the default configuration.
 
 #+BEGIN_SRC emacs-lisp
 
-  (defvar my-packages '(ac-cider
-                        ace-window
+  (defvar my-packages '(ace-window
                         ac-js2
                         ag
                         atomic-chrome
@@ -1426,22 +1425,6 @@ Create a =~/.lein/profiles.clj= file with:
 
 **** Emacs configuration
 
-Setup Cider with =auto-complete=.
-
-#+BEGIN_SRC emacs-lisp
-
-  (require 'ac-cider)
-  ;;(setq ac-quick-help-delay 0.5)
-  (add-hook 'cider-mode-hook 'ac-flyspell-workaround)
-  (add-hook 'cider-mode-hook 'ac-cider-setup)
-  (add-hook 'cider-repl-mode-hook 'ac-cider-setup)
-  (eval-after-load "auto-complete"
-    '(progn
-       (add-to-list 'ac-modes 'cider-mode)
-       (add-to-list 'ac-modes 'cider-repl-mode)))
-
-#+END_SRC
-
 When connecting to a repl, don't pop to the new repl buffer.
 
 #+BEGIN_SRC emacs-lisp
@@ -1454,15 +1437,19 @@ https://github.com/clojure-emacs/clj-refactor.el/
 
 A collection of Clojure refactoring functions for Emacs.
 
+Temporarily disable =clj-refactor=, because it throws an error on the
+require.
+
 #+BEGIN_SRC emacs-lisp
-  (require 'clj-refactor)
-  (add-hook 'clojure-mode-hook
-            (lambda ()
-              (clj-refactor-mode 1)
-              (setq cljr-warn-on-eval nil)
-              (yas-minor-mode 1) ; for adding require/use/import statements
-              ;; This choice of keybinding leaves cider-macroexpand-1 unbound
-              (cljr-add-keybindings-with-prefix "C-c C-m")))
+  ;; (require 'clj-refactor)
+
+  ;; (defun my-clojure-mode-hook ()
+  ;;   (clj-refactor-mode 1)
+  ;;   (yas-minor-mode 1) ; for adding require/use/import statements
+  ;;   ;; This choice of keybinding leaves cider-macroexpand-1 unbound
+  ;;   (cljr-add-keybindings-with-prefix "C-c C-m"))
+
+  ;; (add-hook 'clojure-mode-hook #'my-clojure-mode-hook)
 #+END_SRC
 
 =clj-refactor= enables refactorings like extracting functions (=C-c
@@ -1510,10 +1497,13 @@ themselves). Instead, it uses common Elisp.
             (switch-to-buffer (other-buffer)))
         (message "No Cider buffer!"))))
 
-  (define-key
-    clojure-mode-map
-    (kbd "C-c r")
-    'ok-cider-reload-integrant)
+
+  (add-hook 'clojure-mode-hook
+            '(lambda ()
+              (define-key
+               clojure-mode-map
+               (kbd "C-c r")
+               'ok-cider-reload-integrant)))
 #+END_SRC
 
 *Usage*
@@ -2247,7 +2237,7 @@ Allow ‘a.’, ‘A.’, ‘a)’ and ‘A) as list elements:
           "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
           "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
   ;;  Alternatively use =xelatex=. Required for documents where I want to use ttf fonts.
-  ;;(setq org-latex-pdf-process
+  ;; (setq org-latex-pdf-process
   ;;      '("xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"
   ;;        "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"
   ;;        "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
@@ -4146,15 +4136,15 @@ apt install hunspell hunspell-de-de hunspell-en-gb hunspell-en-us hunspell-de-ch
       ;; ispell-set-spellchecker-params has to be called
       ;; before ispell-hunspell-add-multi-dic will work
       (ispell-set-spellchecker-params)
-      (ispell-hunspell-add-multi-dic "de_DE,de_CH,en_GB,en_US")
-      ;; For saving words to the personal dictionary, don't infer it from
-      ;; the locale, otherwise it would save to ~/.hunspell_de_DE.
-      (setq ispell-personal-dictionary "~/.hunspell_personal"))
+      (ispell-hunspell-add-multi-dic "de_DE,de_CH,en_GB,en_US"))
 
+    ;; For saving words to the personal dictionary, don't infer it from
+    ;; the locale, otherwise it would save to ~/.hunspell_de_DE.
+    (setq ispell-personal-dictionary "~/.hunspell_personal")
     ;; The personal dictionary file has to exist, otherwise hunspell will
     ;; silently not use it.
     (unless (file-exists-p ispell-personal-dictionary)
-            (write-region "" nil ispell-personal-dictionary nil 0))
+      (write-region "" nil ispell-personal-dictionary))
 #+END_SRC
 
 **** Do not loose all spellchecking information after adding one word to a personal dictionary
@@ -4475,7 +4465,7 @@ When evaluating the src-block above, it'll yield a table like:
 #+END_SRC
 ** Export Org Mode TODO headers into estimation table
 #+BEGIN_SRC emacs-lisp
-  (setq ok-export-org-estimations-file "~/src/200ok/admin/src/export-org-estimations/ok-export-org-estimations.el")
+  (setq ok-export-org-estimations-file "~/src/200ok/admin/src/org-ok-estimations/org-ok-estimations.el")
   (unless (file-exists-p ok-export-org-estimations-file)
     (load-file ok-export-org-estimations-file))
 #+END_SRC
