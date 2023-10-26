@@ -529,6 +529,13 @@ Do not report warnings and errors from asynchronous native compilation.
      (setq native-comp-async-report-warnings-errors nil)
    #+end_src
 
+** Smooth scrolling
+
+#+begin_src emacs-lisp
+  (when (>= emacs-major-version 29)
+    (pixel-scroll-precision-mode 1))
+#+end_src
+
 * Misc Custom Improvements
 
 Some helper functions and packages I wrote that are only accessible
