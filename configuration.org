@@ -2165,6 +2165,21 @@ in different languages will not return a happy result.
   (define-key global-map (kbd "C-x R") 'whisper-run)
 #+end_src
 
+** Access to whisper recordings in Emacs from anywhere in the OS
+
+With an OS keybinding of =Shift + Alt + r=, I run =emacsclient -c
+--eval '(start-whisper-recording)= (I use xbindkeys for that).
+
+#+begin_src emacs-lisp
+  (defun start-whisper-recording ()
+    "Interactively start a new whisper recording."
+    (interactive)
+    (switch-to-buffer "*whisper-recording*")
+    (self-insert-command 1)
+    (whisper-run))
+
+#+end_src
+
 
 
 * Org mode
