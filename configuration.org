@@ -535,6 +535,18 @@ Do not report warnings and errors from asynchronous native compilation.
     (pixel-scroll-precision-mode 1))
 #+end_src
 
+** =undo-tree=
+
+#+begin_src emacs-lisp
+  (global-undo-tree-mode) 
+#+end_src
+
+*Guix package*
+
+#+begin_src fundamental :noweb-ref packages
+  "emacs-undo-tree"
+#+end_src
+
 * Misc Custom Improvements
 
 Some helper functions and packages I wrote that are only accessible
