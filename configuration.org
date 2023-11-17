@@ -539,6 +539,11 @@ Do not report warnings and errors from asynchronous native compilation.
 
 #+begin_src emacs-lisp
   (global-undo-tree-mode) 
+  (setq undo-tree-auto-save-history nil)
+
+  (with-eval-after-load 'evil
+    (define-key evil-normal-state-map (kbd "u") 'undo-tree-undo)
+    (define-key evil-normal-state-map (kbd "C-r") 'undo-tree-redo))
 #+end_src
 
 *Guix package*
