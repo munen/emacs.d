@@ -960,7 +960,22 @@ browse-kill-ring is the Emacs extension for you.
   (define-key browse-kill-ring-mode-map (kbd "j") 'browse-kill-ring-forward)
   (define-key browse-kill-ring-mode-map (kbd "k") 'browse-kill-ring-previous)
 #+END_SRC
+** =emacs-everywhere=
+https://github.com/tecosaur/emacs-everywhere/
+  
+#+begin_src fundamental :noweb-ref packages
+  "xclip"
+  "xdotool"
+  "xprop"
+  "xwininfo"
+#+end_src
 
+** =gnuplot=
+https://github.com/emacs-gnuplot/gnuplot
+
+#+begin_src fundamental :noweb-ref packages
+  "emacs-gnuplot"
+#+end_src
 * =evil-mode=
 Evil is an extensible Vim layer for Emacs.
 
