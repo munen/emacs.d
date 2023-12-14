@@ -103,7 +103,9 @@ With =auto-tangle=, it's a bit more convenient, though.
   (require 'package)
 
   (setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
-                           ("melpa" . "https://melpa.org/packages/")))
+                           ;; ("nongnu" . "https://elpa.nongnu.org/nongnu/")
+                           ("melpa" . "https://melpa.org/packages/")
+                           ))
 #+END_SRC
 
 ** Define packages that are to be installed
@@ -3075,7 +3077,7 @@ mu init --my-address=alain.lafon@dispatched.ch --my-address=alain@200ok.ch --my-
         (smtpmail-smtp-user "munen@200ok.ch")
         (smtpmail-smtp-server "mail.your-server.de")
         (smtpmail-stream-type starttls)
-        (smtpmail-smtp-service 25))
+        (smtpmail-smtp-service 587))
        ("200ok-support"
         (user-full-name  "200ok Support")
         (mu4e-compose-signature "200ok GmbH\nCEO\n\nalain@200ok.ch\n+41 76 405 05 67\nhttps://200ok.ch/\n\nBook an appointment with me: https://200ok.ch/calendar/alain.html \n\norganice is the best way to get stuff done: https://organice.200ok.ch")
@@ -3089,7 +3091,7 @@ mu init --my-address=alain.lafon@dispatched.ch --my-address=alain@200ok.ch --my-
         (smtpmail-smtp-user "support@200ok.ch")
         (smtpmail-smtp-server "mail.your-server.de")
         (smtpmail-stream-type starttls)
-        (smtpmail-smtp-service 25))
+        (smtpmail-smtp-service 587))
        ("zen-tempel"
         (user-full-name  "Munen Alain M. Lafon")
         (mu4e-compose-signature "Lambda Zen Tempel\n\nalain@zen-temple.net\n+41 76 405 05 67\n\nhttps://zen-temple.net/")
@@ -3103,7 +3105,7 @@ mu init --my-address=alain.lafon@dispatched.ch --my-address=alain@200ok.ch --my-
         (smtpmail-smtp-user "alain@zen-tempel.ch")
         (smtpmail-smtp-server "mail.your-server.de")
         (smtpmail-stream-type starttls)
-        (smtpmail-smtp-service 25))
+        (smtpmail-smtp-service 587))
        ("dispatched"
         (user-full-name  "Alain M. Lafon")
         (mu4e-compose-signature-auto-include nil)
@@ -3116,7 +3118,7 @@ mu init --my-address=alain.lafon@dispatched.ch --my-address=alain@200ok.ch --my-
         (smtpmail-smtp-user "munen@dispatched.ch")
         (smtpmail-smtp-server "mail.your-server.de")
         (smtpmail-stream-type starttls)
-        (smtpmail-smtp-service 25))))
+        (smtpmail-smtp-service 587))))
 
    ;; Whenever a new mail is to be composed, change all relevant
    ;; configuration variables to the respective account. This method is
@@ -3225,6 +3227,8 @@ mu init --my-address=alain.lafon@dispatched.ch --my-address=alain@200ok.ch --my-
    (add-to-list 'mu4e-bookmarks
                 '((concat d-spam d-archive (concat " (flag:unread OR flag:flagged) AND NOT flag:trashed AND date:" (format-time-string "%Y")))
                   "Unread messages, current year"      ?U))
+   (add-to-list 'mu4e-bookmarks
+                '("(cron OR monit OR logcheck or UptimeRobot) AND flag:unread" "Monitoring"     ?M))
  #+END_SRC
 
 
@@ -3554,9 +3558,12 @@ agenda).
     (cond
      ((string-match "phil@200ok.ch" contact) ; Phil sometimes dosn't add his name to the reply-to.
       "Phil Hofmann <phil@200ok.ch>")
+     ((string-match "d.kuehner@n-pg.de" contact) ; Sanitize NPG encoding
+      "Dominik Kühner <d.kuehner@n-pg.de>")
      ((string-match "wiffbubbles@icloud.com" contact) ; Monika writes her name in all caps and I don't want to forward it like that.
-     "Monika Bieri <wiffbubbles@icloud.com>"
-      )
+     "Monika Bieri <wiffbubbles@icloud.com>")
+     ((string-match "bieri.monika@icloud.com" contact) ; Monika writes her name in all caps and I don't want to forward it like that.
+     "Monika Bieri <bieri.monika@icloud.com>")
      (t contact)))
 
   (setq mu4e-contact-process-function 'munen-contact-processor)

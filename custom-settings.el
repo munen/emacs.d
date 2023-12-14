@@ -41,11 +41,96 @@
  '(org-log-into-drawer t)
  '(org-modules
    '(ol-bbdb ol-bibtex ol-docview ol-eww ol-gnus org-habit ol-info ol-irc ol-mhe ol-rmail ol-w3m))
+ '(org-safe-remote-resources '("\\`https://screenshots\\.200ok\\.ch\\(?:/\\|\\'\\)"))
  '(org-table-copy-increment nil)
  '(package-selected-packages
-   '(gnuplot emacs-everywhere org-ai whisper hl-todo ace-window rfc-mode rust-mode tree-sitter-langs tree-sitter org-download magit-delta hcl-mode logview org-ql keycast adaptive-wrap counsel-jq package-lint tide flycheck-package rjsx-mode evil-escape erc-image edit-indirect atomic-chrome ob-restclient diminish elfeed spaceline ido-vertical-mode spacemacs-theme solarized-theme editorconfig dired-narrow evil-mc forge edit-server dumb-jump ggtags browse-kill-ring clipmon rainbow-mode beacon js2-refactor graphviz-dot-mode js-comint intero haskell-mode comment-tags handlebars-mode json-mode mustache-mode seeing-is-believing elfeed-goodies elfeed-org zenburn-theme writegood-mode writeroom-mode which-key darktooth-theme magit restclient impatient-mode evil-numbers evil-surround evil-leader evil smex ledger-mode robe enh-ruby-mode markdown-mode projectile coffee-mode tern-auto-complete tern pdf-tools yaml-mode sass-mode fixme-mode flycheck-flow ac-js2 js2-mode ac-cider exec-path-from-shell cider clj-refactor parinfer clojure-mode web-mode auto-complete flycheck ag))
+   '(eat org undo-tree gnuplot emacs-everywhere org-ai whisper hl-todo ace-window rfc-mode rust-mode tree-sitter-langs tree-sitter org-download magit-delta hcl-mode logview org-ql keycast adaptive-wrap counsel-jq package-lint tide flycheck-package rjsx-mode evil-escape erc-image edit-indirect atomic-chrome ob-restclient diminish elfeed spaceline ido-vertical-mode spacemacs-theme solarized-theme editorconfig dired-narrow evil-mc forge edit-server dumb-jump ggtags browse-kill-ring clipmon rainbow-mode beacon js2-refactor graphviz-dot-mode js-comint intero haskell-mode comment-tags handlebars-mode json-mode mustache-mode seeing-is-believing elfeed-goodies elfeed-org zenburn-theme writegood-mode writeroom-mode which-key darktooth-theme magit restclient impatient-mode evil-numbers evil-surround evil-leader evil smex ledger-mode robe enh-ruby-mode markdown-mode projectile coffee-mode tern-auto-complete tern pdf-tools yaml-mode sass-mode fixme-mode flycheck-flow ac-js2 js2-mode ac-cider exec-path-from-shell cider clj-refactor parinfer clojure-mode web-mode auto-complete flycheck ag))
+ '(password-word-equivalents
+   '("password" "passcode" "passphrase" "pass phrase" "pin" "decryption key" "encryption key" "암호" "パスワード" "ପ୍ରବେଶ ସଙ୍କେତ" "ពាក្យសម្ងាត់" "adgangskode" "contraseña" "contrasenya" "geslo" "hasło" "heslo" "iphasiwedi" "jelszó" "lösenord" "lozinka" "mật khẩu" "mot de passe" "parola" "pasahitza" "passord" "passwort" "pasvorto" "salasana" "senha" "slaptažodis" "wachtwoord" "كلمة السر" "ססמה" "лозинка" "пароль" "गुप्तशब्द" "शब्दकूट" "પાસવર્ડ" "సంకేతపదము" "ਪਾਸਵਰਡ" "ಗುಪ್ತಪದ" "கடவுச்சொல்" "അടയാളവാക്ക്" "গুপ্তশব্দ" "পাসওয়ার্ড" "රහස්පදය" "密码" "verification code"))
  '(safe-local-variable-values
-   '((org-latex-pdf-process "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f" "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f" "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f")
+   '((eval org-babel-lob-ingest "../common.org")
+     (eval progn
+           (load
+            (concat
+             (projectile-project-root)
+             "src/org-ok-estimations/org-ok-estimations"))
+           (org-babel-lob-ingest
+            (concat
+             (projectile-project-root)
+             "common.org"))
+           (custom-set-variables
+            '(org-latex-text-markup-alist
+              '((bold . "\\textbf{%s}")
+                (code . protectedtexttt)
+                (italic . "\\emph{%s}")
+                (strike-through . "\\sout{%s}")
+                (underline . "\\uline{%s}")
+                (verbatim . "%s")))
+            '(org-download-heading-lvl nil)
+            '(org-download-image-dir "./images")
+            '(org-image-actual-width 720))
+           (defun autocalc-clocktable nil
+             (when
+                 (derived-mode-p 'org-mode)
+               (save-excursion
+                 (goto-char 0)
+                 (if
+                     (string-equal
+                      (car
+                       (cdr
+                        (car
+                         (org-collect-keywords
+                          '("AUTOCALC_CLOCKTABLES")))))
+                      "t")
+                     (progn
+                       (goto-char
+                        (search-forward "clocktable"))
+                       (org-clock-report))))))
+           (add-hook 'before-save-hook 'autocalc-clocktable)
+           (defun ok-add-number-grouping
+               (number &optional separator)
+             "Add commas to NUMBER and return it as a string. Optional\12         SEPARATOR is the string to use to separate groups. It\12         defaults to a apostrophe."
+             (let
+                 ((num
+                   (if
+                       (floatp number)
+                       (format "%0.2f" number)
+                     (number-to-string number)))
+                  (op
+                   (or separator "'")))
+               (while
+                   (string-match "\\(.*[0-9]\\)\\([0-9][0-9][0-9].*\\)" num)
+                 (setq num
+                       (concat
+                        (match-string 1 num)
+                        op
+                        (match-string 2 num))))
+               num))
+           (defmacro ok-org-get-var
+               (name)
+             "Retrieves an org-variable NAME and casts it into a number."
+             `(string-to-number
+               (org-sbe ,name)))
+           (defun org-table-result
+               (table)
+             "The very last cell, which is typically the result of a spreadsheet."
+             (car
+              (last
+               (car
+                (last table)))))
+           (defun ok-number-as-chf
+               (number)
+             "Take a NUMBER, format and return it like 'CHF 12'345.-' If the NUMBER is a float, then the precision is ."
+             (concat "CHF "
+                     (ok-add-number-grouping
+                      (if
+                          (stringp number)
+                          (string-to-number number)
+                        number))
+                     (if
+                         (floatp number)
+                         "" ".-"))))
+     (org-latex-pdf-process "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f" "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f" "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f")
      (eval progn
            (custom-set-variables
             '(org-latex-text-markup-alist
@@ -78,9 +163,7 @@
            (add-hook 'before-save-hook 'autocalc-clocktable)
            (defun ok-add-number-grouping
                (number &optional separator)
-             "Add commas to NUMBER and return it as a string. Optional
-         SEPARATOR is the string to use to separate groups. It
-         defaults to a apostrophe."
+             "Add commas to NUMBER and return it as a string. Optional\12         SEPARATOR is the string to use to separate groups. It\12         defaults to a apostrophe."
              (let
                  ((num
                    (if
@@ -154,9 +237,7 @@
            (add-hook 'before-save-hook 'autocalc-clocktable)
            (defun ok-add-number-grouping
                (number &optional separator)
-             "Add commas to NUMBER and return it as a string. Optional
-         SEPARATOR is the string to use to separate groups. It
-         defaults to a apostrophe."
+             "Add commas to NUMBER and return it as a string. Optional\12         SEPARATOR is the string to use to separate groups. It\12         defaults to a apostrophe."
              (let
                  ((num
                    (if
@@ -220,9 +301,7 @@
            (add-hook 'before-save-hook 'autocalc-clocktable)
            (defun ok-add-number-grouping
                (number &optional separator)
-             "Add commas to NUMBER and return it as a string. Optional
-         SEPARATOR is the string to use to separate groups. It
-         defaults to a apostrophe."
+             "Add commas to NUMBER and return it as a string. Optional\12         SEPARATOR is the string to use to separate groups. It\12         defaults to a apostrophe."
              (let
                  ((num
                    (if
@@ -284,9 +363,7 @@
            (add-hook 'before-save-hook 'autocalc-clocktable)
            (defun ok-add-number-grouping
                (number &optional separator)
-             "Add commas to NUMBER and return it as a string. Optional
-         SEPARATOR is the string to use to separate groups. It
-         defaults to a apostrophe."
+             "Add commas to NUMBER and return it as a string. Optional\12         SEPARATOR is the string to use to separate groups. It\12         defaults to a apostrophe."
              (let
                  ((num
                    (if
@@ -341,9 +418,7 @@
            (add-hook 'before-save-hook 'autocalc-clocktable)
            (defun ok-add-number-grouping
                (number &optional separator)
-             "Add commas to NUMBER and return it as a string. Optional
-         SEPARATOR is the string to use to separate groups. It
-         defaults to a apostrophe."
+             "Add commas to NUMBER and return it as a string. Optional\12         SEPARATOR is the string to use to separate groups. It\12         defaults to a apostrophe."
              (let
                  ((num
                    (if
@@ -400,9 +475,7 @@
            (add-hook 'before-save-hook 'autocalc-clocktable)
            (defun ok-add-number-grouping
                (number &optional separator)
-             "Add commas to NUMBER and return it as a string. Optional
-         SEPARATOR is the string to use to separate groups. It
-         defaults to a apostrophe."
+             "Add commas to NUMBER and return it as a string. Optional\12         SEPARATOR is the string to use to separate groups. It\12         defaults to a apostrophe."
              (let
                  ((num
                    (if
@@ -458,9 +531,7 @@
            (add-hook 'before-save-hook 'autocalc-clocktable)
            (defun ok-add-number-grouping
                (number &optional separator)
-             "Add commas to NUMBER and return it as a string. Optional
-         SEPARATOR is the string to use to separate groups. It
-         defaults to a apostrophe."
+             "Add commas to NUMBER and return it as a string. Optional\12         SEPARATOR is the string to use to separate groups. It\12         defaults to a apostrophe."
              (let
                  ((num
                    (if
@@ -508,9 +579,7 @@
             '(org-image-actual-width 720))
            (defun ok-add-number-grouping
                (number &optional separator)
-             "Add commas to NUMBER and return it as a string. Optional
-         SEPARATOR is the string to use to separate groups. It
-         defaults to a apostrophe."
+             "Add commas to NUMBER and return it as a string. Optional\12         SEPARATOR is the string to use to separate groups. It\12         defaults to a apostrophe."
              (let
                  ((num
                    (if
@@ -557,9 +626,7 @@
             '(org-download-heading-lvl nil))
            (defun ok-add-number-grouping
                (number &optional separator)
-             "Add commas to NUMBER and return it as a string. Optional
-         SEPARATOR is the string to use to separate groups. It
-         defaults to a apostrophe."
+             "Add commas to NUMBER and return it as a string. Optional\12         SEPARATOR is the string to use to separate groups. It\12         defaults to a apostrophe."
              (let
                  ((num
                    (if
@@ -610,9 +677,7 @@
                 (verbatim . "%s"))))
            (defun ok-add-number-grouping
                (number &optional separator)
-             "Add commas to NUMBER and return it as a string. Optional
-         SEPARATOR is the string to use to separate groups. It
-         defaults to a apostrophe."
+             "Add commas to NUMBER and return it as a string. Optional\12         SEPARATOR is the string to use to separate groups. It\12         defaults to a apostrophe."
              (let
                  ((num
                    (if
@@ -657,9 +722,7 @@
                 (verbatim . "%s"))))
            (defun ok-add-number-grouping
                (number &optional separator)
-             "Add commas to NUMBER and return it as a string. Optional
-         SEPARATOR is the string to use to separate groups. It
-         defaults to a apostrophe."
+             "Add commas to NUMBER and return it as a string. Optional\12         SEPARATOR is the string to use to separate groups. It\12         defaults to a apostrophe."
              (let
                  ((num
                    (if
