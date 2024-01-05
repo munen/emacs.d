@@ -43,7 +43,8 @@
   "Set the current Pomodoro task."
   (interactive)
   (let* ((todo (read-from-minibuffer "Next Pomodoro: ")))
-    (setq ok-pomodoro-current todo)))
+    (setq ok-pomodoro-current todo))
+  (ok-pomodoro-start))
 
 (defun ok-pomodoro-notify-dunst ()
   "Display the todo for the next Pomodoro via dunst."
@@ -85,7 +86,7 @@
 (defun ok-current-pomodoro ()
   "Return the current Pomodoro task."
   (let ((remaining-time (ok-pomodoro-remaining-time)))
-    (concat "🍅 "
+    (concat ""
             (when remaining-time
               (concat remaining-time " - "))
             (when (boundp 'ok-pomodoro-current)

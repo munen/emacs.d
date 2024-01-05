@@ -3228,7 +3228,7 @@ mu init --my-address=alain.lafon@dispatched.ch --my-address=alain@200ok.ch --my-
                 '((concat d-spam d-archive (concat " (flag:unread OR flag:flagged) AND NOT flag:trashed AND date:" (format-time-string "%Y")))
                   "Unread messages, current year"      ?U))
    (add-to-list 'mu4e-bookmarks
-                '("(cron OR monit OR logcheck or UptimeRobot) AND flag:unread" "Monitoring"     ?M))
+                '("(cron OR monit OR logcheck or UptimeRobot or noreply@linode.com) AND flag:unread" "Monitoring"     ?M))
  #+END_SRC
 
 
