@@ -2738,6 +2738,31 @@ attachment you can just use =C-c C-l= to insert the link.
 (eval-after-load "org"
   '(require 'ox-md nil t))
 #+end_src
+** Custom functions
+*** Show only the next 'n' subheaders
+
+Something similar to `org-narrow-to-block`, but for a dynamic number
+of elements. This is useful when looking at a 'Next' entry in a GTD
+file and not wanting to be overwhelmed by the whole list, for example.
+
+#+begin_src emacs-lisp
+  (defun org-narrow-to-next-n-subheaders (n)
+    "Narrow the buffer to the next N subheaders."
+    (interactive "nNumber of subheaders: ")
+    (save-excursion
+      (org-back-to-heading t)
+      (let ((start (point))
+            end)
+        (forward-line)
+        (while (and (> n 0) (not (eobp)))
+          (when (org-at-heading-p)
+            (setq n (1- n)))
+          (forward-line))
+        (setq end (point))
+        (narrow-to-region start end))))
+
+#+end_src
+
 ** WIP Notifications / appointment reminders
 
  This is a work-in-progress, but already working.
