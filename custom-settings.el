@@ -48,7 +48,105 @@
  '(password-word-equivalents
    '("password" "passcode" "passphrase" "pass phrase" "pin" "decryption key" "encryption key" "암호" "パスワード" "ପ୍ରବେଶ ସଙ୍କେତ" "ពាក្យសម្ងាត់" "adgangskode" "contraseña" "contrasenya" "geslo" "hasło" "heslo" "iphasiwedi" "jelszó" "lösenord" "lozinka" "mật khẩu" "mot de passe" "parola" "pasahitza" "passord" "passwort" "pasvorto" "salasana" "senha" "slaptažodis" "wachtwoord" "كلمة السر" "ססמה" "лозинка" "пароль" "गुप्तशब्द" "शब्दकूट" "પાસવર્ડ" "సంకేతపదము" "ਪਾਸਵਰਡ" "ಗುಪ್ತಪದ" "கடவுச்சொல்" "അടയാളവാക്ക്" "গুপ্তশব্দ" "পাসওয়ার্ড" "රහස්පදය" "密码" "verification code"))
  '(safe-local-variable-values
-   '((eval org-babel-lob-ingest "../common.org")
+   '((eval progn
+           (load
+            (concat
+             (projectile-project-root)
+             "src/org-ok-estimations/org-ok-estimations"))
+           (org-babel-lob-ingest
+            (concat
+             (projectile-project-root)
+             "common.org"))
+           (custom-set-variables
+            '(org-latex-text-markup-alist
+              '((bold . "\\textbf{%s}")
+                (code . protectedtexttt)
+                (italic . "\\emph{%s}")
+                (strike-through . "\\sout{%s}")
+                (underline . "\\uline{%s}")
+                (verbatim . "%s")))
+            '(org-download-heading-lvl nil)
+            '(org-download-image-dir "./images")
+            '(org-image-actual-width 720))
+           (defun bottom-right
+               (table-name)
+             "Get the bottom right value from the Org mode table with the given name."
+             (save-excursion
+               (goto-char
+                (point-min))
+               (search-forward
+                (concat "#+NAME: " table-name))
+               (let
+                   ((table
+                     (org-table-to-lisp)))
+                 (let
+                     ((last-row
+                       (car
+                        (last table))))
+                   (car
+                    (last last-row))))))
+           (defun autocalc-clocktable nil
+             (when
+                 (derived-mode-p 'org-mode)
+               (save-excursion
+                 (goto-char 0)
+                 (if
+                     (string-equal
+                      (car
+                       (cdr
+                        (car
+                         (org-collect-keywords
+                          '("AUTOCALC_CLOCKTABLES")))))
+                      "t")
+                     (progn
+                       (goto-char
+                        (search-forward "clocktable"))
+                       (org-clock-report))))))
+           (add-hook 'before-save-hook 'autocalc-clocktable)
+           (defun ok-add-number-grouping
+               (number &optional separator)
+             "Add commas to NUMBER and return it as a string. Optional\12         SEPARATOR is the string to use to separate groups. It\12         defaults to a apostrophe."
+             (let
+                 ((num
+                   (if
+                       (floatp number)
+                       (format "%0.2f" number)
+                     (number-to-string number)))
+                  (op
+                   (or separator "'")))
+               (while
+                   (string-match "\\(.*[0-9]\\)\\([0-9][0-9][0-9].*\\)" num)
+                 (setq num
+                       (concat
+                        (match-string 1 num)
+                        op
+                        (match-string 2 num))))
+               num))
+           (defmacro ok-org-get-var
+               (name)
+             "Retrieves an org-variable NAME and casts it into a number."
+             `(string-to-number
+               (org-sbe ,name)))
+           (defun org-table-result
+               (table)
+             "The very last cell, which is typically the result of a spreadsheet."
+             (car
+              (last
+               (car
+                (last table)))))
+           (defun ok-number-as-chf
+               (number)
+             "Take a NUMBER, format and return it like 'CHF 12'345.-' If the NUMBER is a float, then the precision is ."
+             (concat "CHF "
+                     (ok-add-number-grouping
+                      (if
+                          (stringp number)
+                          (string-to-number number)
+                        number))
+                     (if
+                         (floatp number)
+                         "" ".-"))))
+     (eval org-babel-lob-ingest "../common.org")
      (eval progn
            (load
             (concat
