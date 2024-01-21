@@ -2406,7 +2406,7 @@ Org Capture Templates are explained [[http://orgmode.org/manual/Capture-template
 
     (setq org-capture-templates
           `(("t" "Todo" entry (file+olp things-file "Inbox" "Tasks")
-             "* TODO %?\n  %U\n  %i\n  %a")
+             "* TODO %?\n  %U\n  %i\n  %a" :prepend t)
              ("w" "Waiting" entry (file+olp things-file "Waiting")
              "* WAITING %?\n  %U\n  %i\n  %a")
              ;; Creates an expense line for the date of the mail, prompts
@@ -2429,11 +2429,11 @@ Org Capture Templates are explained [[http://orgmode.org/manual/Capture-template
             ("s" "Code Snippet" entry (file+headline "~/src/200ok/knowledge/README.org" "Snippets")
              ;; Prompt for tag and language
              "* %?\t%^g\n#+BEGIN_SRC %^{language}\n%i\n#+END_SRC")
-            ("S" "Shopping" entry (file+olp "~/Dropbox/org/shared_with_monika/shared_alain_and_monika.org" "Shopping")
-             "* TODO %?\n  %U\n  %i\n  %a")
+            ("S" "Shopping" entry (file+olp "~/Dropbox/org/shared_with_monika/shared_alain_and_monika.org" "@Shopping")
+             "* TODO %?\n  %U\n  %i\n  %a" :prepend t)
 
             ("l" "Logbook entry" entry (file+olp reference-file "Logbook" ,(format-time-string "%Y"))
-             "* %?\n  %U\n  %i\n  %a")
+             "* %?\n  %U\n  %i\n  %a" :prepend t)
             ;; NOTE: This would result in a cleanlier logbook, but
             ;; organice does not support it, yet.
             ;; ("l" "Logbook entry" entry (file+olp+datetree reference-file "Logbook")
@@ -2450,7 +2450,7 @@ Org Capture Templates are explained [[http://orgmode.org/manual/Capture-template
      :END:")
 
             ("u" "URL / Media Inbox" entry (file+olp media-file "Inbox")
-                         "* %?\n%U\nURL: \n")
+                         "* %?\n%U\nURL: \n" :prepend t)
             ;; Legacy style
             ;; ("u" "URL" entry
             ;;  (file+datetree media-file)
