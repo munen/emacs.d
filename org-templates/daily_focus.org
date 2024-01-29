@@ -2,6 +2,7 @@
 
 **** Process
 
+- [[file:~/Dropbox/org/shared_with_monika/shared_alain_and_monika.org::#tagesablauf-habits][Tagesablauf]]
 - [[file:~/Dropbox/org/things.org::#growth_mindset][Growth Mindset]]
 - [[file:~/Dropbox/org/things.org::#pomodoro_process][Pomodoro Process]]
 - [[file:~/Dropbox/src/200ok/handbook/gtd.org::#daily_gtd][Daily GTD]]
