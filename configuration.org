@@ -4308,6 +4308,7 @@ called =fonts-firacode=, in Guix it's =font-fira-code=.
 
 #+begin_src fundamental :noweb-ref packages
   "font-fira-code"
+  "fontconfig"
 #+end_src
 
 *** Display Emoji
