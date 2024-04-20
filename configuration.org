@@ -2696,6 +2696,16 @@ https://github.com/karthink/gptel
 #+begin_src emacs-lisp
   (setq gptel-default-mode 'org-mode)
   (setq gptel-model "gpt-4-turbo-preview")
+
+  (gptel-make-ollama "Ollama"             
+    :host "localhost:11434"               
+    :stream t                            
+    :models '("codellama"))        
+
+  (gptel-make-kagi "Kagi"                    
+    :key private-kagi-key)
+
+  (global-set-key (kbd "M-G") 'gptel-menu)
 #+end_src
 
 ** =org-ai=
