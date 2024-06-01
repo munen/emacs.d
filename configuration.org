@@ -150,7 +150,7 @@ down in this file, some are used with the default configuration.
                         forge
                         flycheck
                         flycheck-flow
-                        flycheck-grammarly
+                        flycheck-clj-kondo
                         flycheck-package
                         gnuplot
                         hcl-mode
@@ -1258,17 +1258,7 @@ the package description, its dependencies and more.
   '(flycheck-package-setup))
 #+end_src
 
-**** =flycheck-grammarly=
-     https://github.com/emacs-grammarly/flycheck-grammarly
 
-Grammarly support for flycheck.
-
-Do not enable by default, so that not all text is sent to
-grammarly.com automatically. I will only enable this in a separate
-Emacs instance when needed.
-#+begin_src emacs-lisp
-  ;; (require 'flycheck-grammarly)
-#+end_src
 
 *** Auto-indent with the Return key
 
@@ -1479,25 +1469,20 @@ https://github.com/clojure-emacs/clj-refactor.el/
 
 A collection of Clojure refactoring functions for Emacs.
 
-Temporarily disable =clj-refactor=, because it throws an error on the
-require.
-
 #+BEGIN_SRC emacs-lisp
-  ;; (require 'clj-refactor)
+  (require 'clj-refactor)
 
-  ;; (defun my-clojure-mode-hook ()
-  ;;   (clj-refactor-mode 1)
-  ;;   (yas-minor-mode 1) ; for adding require/use/import statements
-  ;;   ;; This choice of keybinding leaves cider-macroexpand-1 unbound
-  ;;   (cljr-add-keybindings-with-prefix "C-c C-m"))
+  (defun my-clojure-mode-hook ()
+    (clj-refactor-mode 1)
+    (yas-minor-mode 1) ; for adding require/use/import statements
+    ;; This choice of keybinding leaves cider-macroexpand-1 unbound
+    (cljr-add-keybindings-with-prefix "C-c C-m"))
 
-  ;; (add-hook 'clojure-mode-hook #'my-clojure-mode-hook)
+  (add-hook 'clojure-mode-hook #'my-clojure-mode-hook)
 #+END_SRC
 
 =clj-refactor= enables refactorings like extracting functions (=C-c
 C-m ef=). Find the list of available refactorings [[https://github.com/clojure-emacs/clj-refactor.el/wiki][here]].
-
-
 
 *** Customizations
 
@@ -1552,6 +1537,16 @@ themselves). Instead, it uses common Elisp.
 
 When you want to reload the =system=, use =C-c r=. It will save your
 current buffer and reload the =system=.
+
+*** =flycheck-clj-kondo=
+https://github.com/borkdude/flycheck-clj-kondo
+
+clj-kondo is installed via stow.
+
+#+begin_src 
+(with-eval-after-load 'clojure-mode
+  (require 'flycheck-clj-kondo))
+#+end_src
 
 ** JavaScript
 
