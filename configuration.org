@@ -3275,31 +3275,77 @@ mu init --my-address=alain.lafon@dispatched.ch --my-address=alain@200ok.ch --my-
    ;; blacklist folders for searches
    (defvar d-spam (format "NOT (%s OR %s)" spam-folders blacklist-folders))
 
+   ;; Today
+   (let ((today-query (concat d-spam " AND date:today..now")))
+     (add-to-list 'mu4e-bookmarks
+               `(:name "Today's messages"
+                 :query ,today-query
+                 :key ?t)))
+
+   ;; Last 7 days
+   (let ((seven-days-query (concat d-spam " AND date:7d..now")))
+     (add-to-list 'mu4e-bookmarks
+                  `(:name "Last 7 days"
+                    :query ,seven-days-query
+                    :key ?w)))
+
+   ;; Flagged
+   (let ((flagged-query (concat d-spam " AND flag:flagged")))
+     (add-to-list 'mu4e-bookmarks
+                  `(:name "Flagged"
+                    :query ,flagged-query
+                    :key ?f)))
+
+   ;; Messages with images
+   (let ((images-query (concat d-spam " AND mime:image/*")))
+     (add-to-list 'mu4e-bookmarks
+                  `(:name "Messages with images"
+                    :query ,images-query
+                    :key ?p)))
+
+   ;; Spam
    (add-to-list 'mu4e-bookmarks
-                '((concat d-spam " AND date:today..now")                  "Today's messages"     ?t))
+                `(:name "Spam"
+                  :query ,spam-folders
+                  :key ?S))
+
+   ;; Blacklisted
    (add-to-list 'mu4e-bookmarks
-                '((concat d-spam " AND date:7d..now")                     "Last 7 days"          ?w))
+                `(:name "Blacklisted"
+                  :query ,blacklist-folders
+                  :key ?B))
+
+   ;; Drafts
    (add-to-list 'mu4e-bookmarks
-                '((concat d-spam " AND flag:flagged")                     "Flagged"              ?f))
+                `(:name "Drafts"
+                  :query ,draft-folders
+                  :key ?d))
+
+   ;; Inbox
    (add-to-list 'mu4e-bookmarks
-                '((concat d-spam " AND mime:image/*")                     "Messages with images" ?p))
+                `(:name "Inbox"
+                  :query ,inbox-folders
+                  :key ?i))
+
+   ;; Unread messages
+   (let ((unread-query (concat d-spam d-archive " AND (flag:unread OR flag:flagged) AND NOT flag:trashed")))
+     (add-to-list 'mu4e-bookmarks
+                  `(:name "Unread messages"
+                    :query ,unread-query
+                    :key ?u)))
+
+   ;; Unread messages, current year
+   (let ((current-year-query (concat d-spam d-archive (concat " (flag:unread OR flag:flagged) AND NOT flag:trashed AND date:" (format-time-string "%Y")))))
+     (add-to-list 'mu4e-bookmarks
+                  `(:name "Unread messages, current year"
+                    :query ,current-year-query
+                    :key ?U)))
+
+   ;; Monitoring
    (add-to-list 'mu4e-bookmarks
-                '(spam-folders "Spam"     ?S))
-   (add-to-list 'mu4e-bookmarks
-                '(blacklist-folders "Blacklisted"     ?B))
-   (add-to-list 'mu4e-bookmarks
-                '(draft-folders "Drafts"     ?d))
-   (add-to-list 'mu4e-bookmarks
-                '(inbox-folders "Inbox"     ?i))
-   (add-to-list 'mu4e-bookmarks
-                '((concat d-spam d-archive " AND (flag:unread OR flag:flagged) AND NOT flag:trashed")
-                  "Unread messages"      ?u))
-   ;; Hack to get to a temporary inbox zero state when starting a new year
-   (add-to-list 'mu4e-bookmarks
-                '((concat d-spam d-archive (concat " (flag:unread OR flag:flagged) AND NOT flag:trashed AND date:" (format-time-string "%Y")))
-                  "Unread messages, current year"      ?U))
-   (add-to-list 'mu4e-bookmarks
-                '("(cron OR monit OR logcheck or UptimeRobot or noreply@linode.com) AND flag:unread" "Monitoring"     ?M))
+                '(:name "Monitoring"
+                  :query "(cron OR monit OR logcheck or UptimeRobot or noreply@linode.com) AND flag:unread"
+                  :key ?M))
  #+END_SRC
 
 
