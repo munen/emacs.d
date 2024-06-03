@@ -1859,12 +1859,13 @@ Add 200ok gitlab instance to list of known forges
                    forge-gitlab-repository)))
 #+END_SRC
 
-Show assigned issues and PRs directly in the status buffer:
+Show assigned issues and PRs as well as requested reviews directly in the status buffer:
 
 #+BEGIN_SRC emacs-lisp
-(with-eval-after-load 'magit
-  (magit-add-section-hook 'magit-status-sections-hook 'forge-insert-assigned-issues   nil t)
-  (magit-add-section-hook 'magit-status-sections-hook 'forge-insert-assigned-pullreqs   nil t))
+  (with-eval-after-load 'magit
+    (magit-add-section-hook 'magit-status-sections-hook 'forge-insert-assigned-issues   nil t)
+    (magit-add-section-hook 'magit-status-sections-hook 'forge-insert-assigned-pullreqs  nil t)
+    (magit-add-section-hook 'magit-status-sections-hook 'forge-insert-requested-reviews  nil t))
 #+END_SRC
 
 ** =magit-delta=
