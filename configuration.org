@@ -3405,6 +3405,18 @@ mu init --my-address=alain.lafon@dispatched.ch --my-address=alain@200ok.ch --my-
 
  #+END_SRC
 
+**** Enable temp file for faster communication between mu and mu4e
+
+#+begin_src emacs-lisp
+  ;; Enable to show debug render times
+  ;; (setq mu4e-headers-report-render-time t)
+  (setq mu4e-mu-allow-temp t)
+#+end_src
+
+Mini Benchmark (Searching for 'phil'):
+With temp file:    [mu4e] Found 500 matching messages; 0 hidden; search: 142.3 ms (0.28 ms/msg); render: 122.1 ms (0.24 ms/msg)
+Without temp file: [mu4e] Found 500 matching messages; 0 hidden; search: 181.3 ms (0.36 ms/msg); render: 134.6 ms (0.27 ms/msg)
+
 **** HTML Mails
 
  #+BEGIN_SRC emacs-lisp
