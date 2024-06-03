@@ -4319,7 +4319,7 @@ apt install hunspell hunspell-de-de hunspell-en-gb hunspell-en-us hunspell-de-ch
       ;; Configure `LANG`, otherwise ispell.el cannot find a 'default
       ;; dictionary' even though multiple dictionaries will be configured
       ;; in next line.
-      (setenv "LANG" "en_US.UTF-8")
+      (setenv "LANG" "en_US")
       (setq ispell-program-name "hunspell")
       ;; Configure German, Swiss German, and two variants of English.
       (setq ispell-dictionary "de_DE,de_CH,en_GB,en_US")
