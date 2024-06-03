@@ -3137,8 +3137,8 @@ mu init --my-address=alain.lafon@dispatched.ch --my-address=alain@200ok.ch --my-
    (defvar my-mu4e-account-alist
      '(("200ok"
         (user-full-name  "Alain M. Lafon")
-        (mu4e-compose-signature "200ok GmbH\nCEO\n\nalain@200ok.ch\n+41 76 405 05 67\nhttps://200ok.ch/\n\nBook an appointment with me: https://200ok.ch/calendar/alain.html \n\norganice is the best way to get stuff done: https://organice.200ok.ch")
-        (mu4e-compose-signature-auto-include t)
+        (message-signature "200ok GmbH\nCEO\n\nalain@200ok.ch\n+41 76 405 05 67\nhttps://200ok.ch/\n\nBook an appointment with me: https://200ok.ch/calendar/alain.html \n\norganice is the best way to get stuff done: https://organice.200ok.ch")
+        (message-signature-auto-include t)
         (mu4e-sent-folder "/200ok/INBOX.Sent")
         (mu4e-drafts-folder "/200ok/INBOX.Drafts")
         (mu4e-trash-folder "/200ok/INBOX.Trash")
@@ -3151,8 +3151,8 @@ mu init --my-address=alain.lafon@dispatched.ch --my-address=alain@200ok.ch --my-
         (smtpmail-smtp-service 587))
        ("200ok-support"
         (user-full-name  "200ok Support")
-        (mu4e-compose-signature "200ok GmbH\nCEO\n\nalain@200ok.ch\n+41 76 405 05 67\nhttps://200ok.ch/\n\nBook an appointment with me: https://200ok.ch/calendar/alain.html \n\norganice is the best way to get stuff done: https://organice.200ok.ch")
-        (mu4e-compose-signature-auto-include t)
+        (message-signature "200ok GmbH\nCEO\n\nalain@200ok.ch\n+41 76 405 05 67\nhttps://200ok.ch/\n\nBook an appointment with me: https://200ok.ch/calendar/alain.html \n\norganice is the best way to get stuff done: https://organice.200ok.ch")
+        (message-signature-auto-include t)
         (mu4e-sent-folder "/200ok-support/INBOX.Sent")
         (mu4e-drafts-folder "/200ok-support/INBOX.Drafts")
         (mu4e-trash-folder "/200ok-support/INBOX.Trash")
@@ -3165,8 +3165,8 @@ mu init --my-address=alain.lafon@dispatched.ch --my-address=alain@200ok.ch --my-
         (smtpmail-smtp-service 587))
        ("zen-tempel"
         (user-full-name  "Munen Alain M. Lafon")
-        (mu4e-compose-signature "Lambda Zen Tempel\n\nalain@zen-temple.net\n+41 76 405 05 67\n\nhttps://zen-temple.net/")
-        (mu4e-compose-signature-auto-include t)
+        (message-signature "Lambda Zen Tempel\n\nalain@zen-temple.net\n+41 76 405 05 67\n\nhttps://zen-temple.net/")
+        (message-signature-auto-include t)
         (mu4e-sent-folder "/zen-tempel/INBOX.Sent")
         (mu4e-drafts-folder "/zen-tempel/INBOX.Drafts")
         (mu4e-trash-folder "/zen-tempel/INBOX.Trash")
@@ -3179,7 +3179,7 @@ mu init --my-address=alain.lafon@dispatched.ch --my-address=alain@200ok.ch --my-
         (smtpmail-smtp-service 587))
        ("dispatched"
         (user-full-name  "Alain M. Lafon")
-        (mu4e-compose-signature-auto-include nil)
+        (message-signature-auto-include nil)
         (mu4e-sent-folder "/dispatched/INBOX.Sent")
         (mu4e-drafts-folder "/dispatched/INBOX.Drafts")
         (mu4e-trash-folder "/dispatched/INBOX.Trash")
