@@ -3348,6 +3348,12 @@ mu init --my-address=alain.lafon@dispatched.ch --my-address=alain@200ok.ch --my-
                   :key ?M))
  #+END_SRC
 
+**** Use Emacs completion instead of mu completion
+
+#+begin_src emacs-lisp
+  (setq mu4e-read-option-use-builtin nil
+        mu4e-completing-read-function 'completing-read) 
+#+end_src
 
 **** Check for supposed attachments prior to sending them
 
