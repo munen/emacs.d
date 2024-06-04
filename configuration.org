@@ -1543,9 +1543,9 @@ https://github.com/borkdude/flycheck-clj-kondo
 
 clj-kondo is installed via stow.
 
-#+begin_src 
-(with-eval-after-load 'clojure-mode
-  (require 'flycheck-clj-kondo))
+#+begin_src emacs-lisp
+  (add-hook 'clojure-mode-hook
+            (lambda () (require 'flycheck-clj-kondo)))
 #+end_src
 
 ** JavaScript
