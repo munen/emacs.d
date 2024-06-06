@@ -166,6 +166,7 @@ down in this file, some are used with the default configuration.
                         magit-delta
                         markdown-mode
                         org-ai
+                        org-mime
                         package-lint
                         pdf-tools
                         projectile
@@ -3637,6 +3638,26 @@ agenda).
   (setq gnus-icalendar-org-capture-headline '("Calendar"))
   (gnus-icalendar-org-setup)
 #+end_src
+
+**** org-mime
+https://github.com/org-mime/org-mime
+
+org-mime can be used to send HTML email using Org-mode HTML export. 
+
+#+begin_src emacs-lisp
+  (require 'org-mime)
+#+end_src
+
+Usage:
+
+- Run =M-x org-mime-htmlize= from within a mail composition buffer to
+  export either the entire buffer or just the active region to html,
+  and embed the results into the buffer as a text/html mime section.
+- You could use =org-mime-edit-mail-in-org-mode= edit mail in a special
+  editor with org-mode.
+- After =org-mime-htmlize=, you can always run
+  =org-mime-revert-to-plain-text-mail= restore the original plain text
+  mail.
 
 **** TODO Use Quoted printable text for outgoing messages to enable automatic line breaks
 ***** If this is successfull, send upstream PR to MU4E
