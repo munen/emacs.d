@@ -987,6 +987,13 @@ https://github.com/emacs-gnuplot/gnuplot
 #+begin_src fundamental :noweb-ref packages
   "emacs-gnuplot"
 #+end_src
+
+** Printing
+https://www.emacswiki.org/emacs/PrintingFromEmacs
+
+#+begin_src emacs-lisp
+  (setq ps-lpr-command "print_preview")
+#+end_src
 * =evil-mode=
 Evil is an extensible Vim layer for Emacs.
 
