@@ -1,3 +1,5 @@
+;; Inspired by https://simonsafar.com/2024/whisper/
+
 (defvar ok-whisper--ffmpeg-process nil)
 (defvar ok-whisper--temp-file nil)
 
