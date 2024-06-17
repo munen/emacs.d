@@ -2208,7 +2208,11 @@ in different languages will not return a happy result.
         whisper-use-threads 10
         whisper-translate nil)
 
-  (define-key global-map (kbd "C-x R") 'whisper-run)
+
+  ;; Don't use this locally anymore, because it's too slow for me to run
+  ;; a large model on a machine without appropriate GPU. I'm using
+  ;; ok-whisper, instead.
+  ;; (define-key global-map (kbd "C-x R") 'whisper-run)
 #+end_src
 
 ** Access to whisper recordings in Emacs from anywhere in the OS
@@ -2226,7 +2230,12 @@ With an OS keybinding of =Shift + Alt + r=, I run =emacsclient -c
 
 #+end_src
 
+* Whisper via OpenAI API
 
+#+begin_src emacs-lisp
+  (load "~/.emacs.d/ok-whisper")
+  (define-key global-map (kbd "C-x R") 'ok-whisper--record-dwim)
+#+end_src
 
 * Org mode
 
