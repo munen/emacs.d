@@ -2906,6 +2906,15 @@ file and not wanting to be overwhelmed by the whole list, for example.
                     (org-agenda-to-appt))))
  #+END_SRC
  
+* Codeium
+https://codeium.com/about
+https://github.com/Exafunction/codeium.el
+
+#+begin_src emacs-lisp
+  (quelpa '(codeium :fetcher git :url "https://github.com/Exafunction/codeium.el.git"))
+  (add-to-list 'completion-at-point-functions #'codeium-completion-at-point)
+#+end_src
+
 * pdf-tools
 
 https://github.com/vedang/pdf-tools, forked from https://github.com/politza/pdf-tools
@@ -3774,8 +3783,10 @@ character inputs or through powerful regular expressions.
 *** Configuration
 
 #+BEGIN_SRC emacs-lisp
-    (setq enable-recursive-minibuffers t)
-    (global-set-key (kbd "<f6>") 'ivy-resume)
+  (ivy-mode)
+  (setq enable-recursive-minibuffers t)
+  (global-set-key (kbd "<f6>") 'ivy-resume)
+  (global-set-key (kbd "C-c SPC") 'complete-symbol)
 #+END_SRC
 
 Show total amount of matches and the index of the current match
