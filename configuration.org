@@ -3886,12 +3886,6 @@ Make the prompt line selectable (with =C-p=).
 Some basic features are overwritten when "everything" becomes an =Ivy=
 search buffer. For example:
 
-- When two =dired= buffers are open and files should be copied from
-  one to the other, one can use the =up= and =down= keys to toggle the
-  destination. When this is a search buffer, it will auto complete for
-  all local folders, instead. Since copying files is something I do
-  often, this already means I have to disable =Ivy= globally.
-
 - =Tramp= auto-completion doesn't work for me. I'm using =sudo:=, =ssh:=
   and the likes a lot in =dired= mode. Auto completion when within
   =Tramp= is broken for me, so I always have to type out the whole
@@ -3908,6 +3902,17 @@ code. Therefore I fall back to using isearch within PDFs.
   (add-hook 'pdf-view-mode-hook '(lambda()
                                    (define-key pdf-view-mode-map "\C-s" 'isearch-forward)))
 #+END_SRC
+
+When two =dired= buffers are open and files should be copied from one
+to the other, one can use the =up= and =down= keys to toggle the
+destination. When this is a search buffer, it will auto complete for
+all local folders, instead. This is something I do often.
+
+#+begin_src emacs-lisp
+  (add-hook 'dired-mode-hook
+            '(lambda ()
+               (ivy-mode -1)))
+#+end_src
 
 *** Improve other packages with ivy
 
