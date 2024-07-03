@@ -14,7 +14,7 @@
   (message "Temporary file created at: %s" ok-whisper--temp-file)
   (let* ((proc (start-process-shell-command
                 "voice ffmpeg" "*ffmpeg*"
-                (format "ffmpeg -y -t 60 -f pulse -i default %s" ok-whisper--temp-file))))
+                (format "ffmpeg -y -t 180 -f pulse -i default %s" ok-whisper--temp-file))))
     (setq ok-whisper--ffmpeg-process proc)
     (message "Recording...")
     (set-process-sentinel proc 'ok-whisper--recording-sentinel)))
@@ -46,3 +46,11 @@
     (message "Transcription result: %s" transcription)
     (insert transcription)
     (delete-file audio-path)))
+
+(defun ok-whisper--transcribe-file ()
+  "Select an audio file and transcribe it using OpenAI's Whisper API."
+  (interactive)
+  (let ((audio-file (read-file-name "Select audio file to transcribe: ")))
+    (if (file-exists-p audio-file)
+        (ok-whisper--call-openai-whisper audio-file)
+      (message "Selected file does not exist."))))
