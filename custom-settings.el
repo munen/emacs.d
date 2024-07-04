@@ -39,11 +39,11 @@
  '(org-image-actual-width 720)
  '(org-latex-text-markup-alist
    '((bold . "\\textbf{%s}")
-     (code . protectedtexttt)
+     (code . "\\texttt{%s}")
      (italic . "\\emph{%s}")
      (strike-through . "\\sout{%s}")
      (underline . "\\uline{%s}")
-     (verbatim . "%s")))
+     (verbatim . "\\texttt{%s}")))
  '(org-log-into-drawer t)
  '(org-modules
    '(ol-bbdb ol-bibtex ol-docview ol-eww ol-gnus org-habit ol-info ol-irc ol-mhe ol-rmail ol-w3m))
