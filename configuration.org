@@ -147,7 +147,6 @@ down in this file, some are used with the default configuration.
                         evil-numbers
                         evil-surround
                         exec-path-from-shell
-                        forge
                         flycheck
                         flycheck-flow
                         flycheck-clj-kondo
@@ -162,7 +161,6 @@ down in this file, some are used with the default configuration.
                         js2-refactor
                         js-comint
                         ledger-mode
-                        magit
                         magit-delta
                         markdown-mode
                         org-ai
@@ -1821,6 +1819,12 @@ https://github.com/magit/magit
 
 Magit is an interface to the version control system Git.
 
+*** Guix packages
+
+#+begin_src fundamental :noweb-ref packages
+  "emacs-magit"
+#+end_src
+
 *** Configuration
 
 Create shortcut for =Magit=.
@@ -1841,10 +1845,28 @@ Always sign commits with GPG
   (add-hook 'with-editor-mode-hook 'evil-normal-state)
 #+END_SRC
 
+
+
+**** Performance
+https://magit.vc/manual/magit/Performance.html
+
+#+begin_src emacs-lisp
+  (setq magit-refresh-verbose t)
+  (remove-hook 'magit-refs-sections-hook 'magit-insert-tags)
+
+  (remove-hook 'server-switch-hook 'magit-commit-diffq)
+  (remove-hook 'with-editor-filter-visit-hook 'magit-commit-diff)
+#+end_src
 ** Forge
 https://github.com/magit/forge/
 
 Work with Git forges from the comfort of [[#magit][Magit]].
+
+*** Guix packages
+
+#+begin_src fundamental :noweb-ref packages
+  "emacs-forge"
+#+end_src
 
 #+BEGIN_SRC emacs-lisp
 (with-eval-after-load 'magit
@@ -1870,10 +1892,14 @@ Add 200ok gitlab instance to list of known forges
 Show assigned issues and PRs as well as requested reviews directly in the status buffer:
 
 #+BEGIN_SRC emacs-lisp
-  (with-eval-after-load 'magit
-    (magit-add-section-hook 'magit-status-sections-hook 'forge-insert-assigned-issues   nil t)
-    (magit-add-section-hook 'magit-status-sections-hook 'forge-insert-assigned-pullreqs  nil t)
-    (magit-add-section-hook 'magit-status-sections-hook 'forge-insert-requested-reviews  nil t))
+  ;; TODO: This is not possible in newer versions of magit/forge,
+  ;;       anymore, but there are alternatives:
+  ;;       https://github.com/magit/forge/issues/676
+
+  ;; (with-eval-after-load 'magit
+  ;;   (magit-add-section-hook 'magit-status-sections-hook 'forge-insert-assigned-issues   nil t)
+  ;;   (magit-add-section-hook 'magit-status-sections-hook 'forge-insert-assigned-pullreqs  nil t)
+  ;;   (magit-add-section-hook 'magit-status-sections-hook 'forge-insert-requested-reviews  nil t))
 #+END_SRC
 
 ** =magit-delta=
@@ -1883,7 +1909,8 @@ Provides a minor mode which configures Magit to use [[https://github.com/dandavi
 
 Enable =magit-delta= when running =magit=.
 #+begin_src emacs-lisp
-  (add-hook 'magit-mode-hook (lambda () (magit-delta-mode +1)))
+  (with-eval-after-load 'magit
+    (add-hook 'magit-mode-hook (lambda () (magit-delta-mode +1))))
 #+end_src
 
 Override the settings (=~/.gitconfig=) for =delta=, because the
@@ -2378,6 +2405,21 @@ result can actually be seen.
 	       ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
 
 #+END_SRC
+
+** Memoir org mode Export
+
+#+begin_src emacs-lisp
+(with-eval-after-load 'ox-latex
+  (add-to-list 'org-latex-classes
+               '("memoir"
+                 "\\documentclass[12pt]{memoir}"
+                 ("\\chapter{%s}" . "\\chapter*{%s}")
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}")
+                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
+#+end_src
 ** Tags
 
 Align tags to the far right of the screen. =-77= would be good for a
@@ -2715,13 +2757,13 @@ Show habits outside of today's agenda view:
 https://github.com/karthink/gptel
 
 #+begin_src emacs-lisp
-  (load "~/src/gptel-clone/gptel-openai.el")
-  (load "~/src/gptel-clone/gptel-org.el")
-  (load "~/src/gptel-clone/gptel.el")
-  (load "~/src/gptel-clone/gptel-curl.el")
-  (load "~/src/gptel-clone/gptel-transient.el")
-  (load "~/src/gptel-clone/gptel-kagi.el")
-  (load "~/src/gptel-clone/gptel-ollama.el")
+  ;; (load "~/src/gptel-clone/gptel-openai.el")
+  ;; (load "~/src/gptel-clone/gptel-org.el")
+  ;; (load "~/src/gptel-clone/gptel.el")
+  ;; (load "~/src/gptel-clone/gptel-curl.el")
+  ;; (load "~/src/gptel-clone/gptel-transient.el")
+  ;; (load "~/src/gptel-clone/gptel-kagi.el")
+  ;; (load "~/src/gptel-clone/gptel-ollama.el")
 
   (setq gptel-default-mode 'org-mode)
   (setq gptel-model "gpt-4-turbo-preview")
@@ -2740,7 +2782,7 @@ https://github.com/karthink/gptel
   (global-set-key (kbd "C-c g m") 'gptel-menu)
   (global-set-key (kbd "C-c g c") 'gptel)
   (global-set-key (kbd "C-c g s") 'gptel-send)
-  (global-set-key (kbd "C-c g a") 'gptel-add-context)
+  (global-set-key (kbd "C-c g a") 'gptel-add)
   (global-set-key (kbd "C-c g A") 'gptel-abort)
 
   ;; (global-set-key (kbd "M-G") 'gptel-menu)
@@ -2802,6 +2844,14 @@ attachment you can just use =C-c C-l= to insert the link.
 (eval-after-load "org"
   '(require 'ox-md nil t))
 #+end_src
+** Better unfold performance
+https://www.reddit.com/r/orgmode/comments/1drz332/anyone_else_occasionally_experience_being_unable/
+
+Sometimes/quite often, hitting TAB just won't unfold a heading.
+#+begin_src emacs-lisp
+  (setq org-fold-core-style 'overlays)
+#+end_src
+
 ** Custom functions
 *** Show only the next 'n' subheaders
 
@@ -2957,28 +3007,28 @@ Atom and RSS.
 ** Configuration
 
 #+BEGIN_SRC emacs-lisp
-  (require 'elfeed)
-  (require 'elfeed-goodies)
+  ;; (require 'elfeed)
+  ;; (require 'elfeed-goodies)
 
-  (elfeed-goodies/setup)
+  ;; (elfeed-goodies/setup)
 #+END_SRC
 
 Automatic word-wrap for elfeed entries:
 
 #+BEGIN_SRC emacs-lisp
-(add-hook 'elfeed-show-mode-hook 'visual-line-mode)
+  ;; (add-hook 'elfeed-show-mode-hook 'visual-line-mode)
 #+END_SRC
 
 Use VIM style scrolling in elfeed entries:
 
 #+BEGIN_SRC emacs-lisp
-  (define-key elfeed-show-mode-map (kbd "C-e") 'evil-scroll-line-down)
-  (define-key elfeed-show-mode-map (kbd "C-y") 'evil-scroll-line-up)
+  ;; (define-key elfeed-show-mode-map (kbd "C-e") 'evil-scroll-line-down)
+  ;; (define-key elfeed-show-mode-map (kbd "C-y") 'evil-scroll-line-up)
 #+END_SRC
 
 ** Define elfeed feeds
 #+BEGIN_SRC emacs-lisp
-(load "~/.emacs.d/elfeed-feeds.el")
+  ;; (load "~/.emacs.d/elfeed-feeds.el")
 #+END_SRC
 * Integration with browsers
 
@@ -3544,6 +3594,13 @@ Without temp file: [mu4e] Found 500 matching messages; 0 hidden; search: 181.3 m
   ;; (add-hook 'mu4e-view-mode-hook 'visual-line-mode)
 #+END_SRC
 
+**** Always reply everyone, not just the sender
+
+#+begin_src emacs-lisp
+  (eval-after-load 'mu4e
+    '(define-key mu4e-compose-minor-mode-map  "R" #'mu4e-compose-wide-reply))
+#+end_src
+
 **** Do not reply to self
 
  #+BEGIN_SRC emacs-lisp
@@ -3644,9 +3701,10 @@ offers.
 An even better solution to the problem would actually be to
 automatically delete duplicates - maybe with procmail.
 
-     #+begin_src emacs-lisp
-     (setq mu4e-headers-skip-duplicates nil)
-     #+end_src
+#+begin_src emacs-lisp
+  ;; Disabled for the moment.
+  ;; (setq mu4e-headers-skip-duplicates t)
+#+end_src
 
 **** Calendar invitations
 
@@ -4021,6 +4079,13 @@ machine irc.libera.chat login "munen" password SECRET_PASSWORD
 https://github.com/TheBB/spaceline
 
 This part of the configuration was kindly provided by [[https://github.com/SirPscl/emacs.d#spaceline][SirPscl]].
+
+
+*** Guix packages
+
+#+begin_src fundamental :noweb-ref packages
+  "emacs-spaceline"
+#+end_src
 
  #+BEGIN_SRC emacs-lisp
  (require 'spaceline)
