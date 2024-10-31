@@ -1851,11 +1851,13 @@ Always sign commits with GPG
 https://magit.vc/manual/magit/Performance.html
 
 #+begin_src emacs-lisp
+  (setq magit-refresh-status-buffer nil)
   (setq magit-refresh-verbose t)
-  (remove-hook 'magit-refs-sections-hook 'magit-insert-tags)
-
-  (remove-hook 'server-switch-hook 'magit-commit-diffq)
-  (remove-hook 'with-editor-filter-visit-hook 'magit-commit-diff)
+  
+  (with-eval-after-load 'magit
+    (remove-hook 'magit-refs-sections-hook 'magit-insert-tags)
+    (remove-hook 'server-switch-hook 'magit-commit-diffq)
+    (remove-hook 'with-editor-filter-visit-hook 'magit-commit-diff))
 #+end_src
 ** Forge
 https://github.com/magit/forge/
@@ -1911,6 +1913,34 @@ Enable =magit-delta= when running =magit=.
 #+begin_src emacs-lisp
   (with-eval-after-load 'magit
     (add-hook 'magit-mode-hook (lambda () (magit-delta-mode +1))))
+#+end_src
+
+Enable =magit-delta= only for 'regular' diffs, but not when merging
+huge amounts of stuff, because that'll make Emacs hang. Taken from
+https://github.com/dandavison/magit-delta/issues/9#issuecomment-795435781.
+
+#+begin_src emacs-lisp
+  (defun magit-delta-toggle ()
+    "Toggle magit-delta-mode and refresh magit."
+    (interactive)
+    (progn
+      (call-interactively 'magit-delta-mode)
+      (magit-refresh)))
+
+  (defvar nth/magit-delta-point-max 50000)
+  ;; Disable mode if there are too many characters
+  (advice-add 'magit-delta-call-delta-and-convert-ansi-escape-sequences :around
+              (defun nth/magit-delta-colorize-maybe-a (fn &rest args)
+                (if (<= (point-max) nth/magit-delta-point-max)
+                    (apply fn args)
+                  (magit-delta-mode -1))))
+  ;; Re-enable mode after `magit-refresh' if there aren't too many characters
+  (add-hook 'magit-post-refresh-hook
+            (defun nth/magit-enable-magit-delta-maybe-h (&rest _args)
+              (when (and (not magit-delta-mode)
+                         (<= (point-max) nth/magit-delta-point-max))
+                (magit-delta-mode +1))))
+
 #+end_src
 
 Override the settings (=~/.gitconfig=) for =delta=, because the
