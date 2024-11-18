@@ -1845,14 +1845,12 @@ Always sign commits with GPG
   (add-hook 'with-editor-mode-hook 'evil-normal-state)
 #+END_SRC
 
-
-
 **** Performance
 https://magit.vc/manual/magit/Performance.html
 
 #+begin_src emacs-lisp
   (setq magit-refresh-status-buffer nil)
-  (setq magit-refresh-verbose t)
+  ;; (setq magit-refresh-verbose t)
   
   (with-eval-after-load 'magit
     (remove-hook 'magit-refs-sections-hook 'magit-insert-tags)
@@ -2526,6 +2524,8 @@ Org Capture Templates are explained [[http://orgmode.org/manual/Capture-template
              "* TODO %?\n  %U\n  %i\n  %a" :prepend t)
 
             ("l" "Logbook entry" entry (file+olp reference-file "Logbook" ,(format-time-string "%Y"))
+             "* %?\n  %U\n  %i\n  %a" :prepend t)
+            ("L" "200ok Logbook entry" entry (file+olp "~/src/200ok/admin/THINGS.org" "Reference" "Logbook" ,(format-time-string "%Y"))
              "* %?\n  %U\n  %i\n  %a" :prepend t)
             ;; NOTE: This would result in a cleanlier logbook, but
             ;; organice does not support it, yet.
