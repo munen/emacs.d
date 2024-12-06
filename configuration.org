@@ -151,7 +151,9 @@ down in this file, some are used with the default configuration.
                         flycheck-flow
                         flycheck-clj-kondo
                         flycheck-package
+                        forge
                         gnuplot
+                        gptel
                         hcl-mode
                         hide-mode-line
                         impatient-mode
@@ -1864,9 +1866,12 @@ Work with Git forges from the comfort of [[#magit][Magit]].
 
 *** Guix packages
 
-#+begin_src fundamental :noweb-ref packages
-  "emacs-forge"
-#+end_src
+Temporarily use the version from melpa, because there's no official
+release tag, but there's lots of new commits and releases on melpa.
+
+# #+begin_src fundamental :noweb-ref packages
+#   "emacs-forge"
+# #+end_src
 
 #+BEGIN_SRC emacs-lisp
 (with-eval-after-load 'magit
@@ -2798,6 +2803,7 @@ https://github.com/karthink/gptel
 
   (setq gptel-default-mode 'org-mode)
   (setq gptel-model "gpt-4-turbo-preview")
+  (setq gptel-track-media t)
 
   ;; The chats can have long lines.
   (add-hook 'gptel-mode-hook 'visual-line-mode)
@@ -4615,7 +4621,7 @@ Requires the =fonts-symbola= Debian package
     (interactive)
 
     (mapcar 'disable-theme custom-enabled-themes)
-    (set-face-attribute 'default nil :height 150)
+    ;; (set-face-attribute 'default nil :height 150)
     ;; Themes
     ;; (set-frame-parameter nil 'background-mode 'dark)
 
@@ -4659,21 +4665,20 @@ Requires the =fonts-symbola= Debian package
 
 ** Enable default theme and font
 
-#+BEGIN_SRC emacs-lisp
-  (add-hook 'server-after-make-frame-hook 'light-mode)
+#+begin_src emacs-lisp
+  (add-hook 'server-after-make-frame-hook
+            (lambda ()
+              ;; Do not load the light-mode in the terminal. Some colors
+              ;; will then be wrong for both GUI and TUI. Could be an
+              ;; error in spacemacs-light, but I will always start the
+              ;; GUI first, anyway.
+              (when (display-graphic-p)
+                (light-mode))))
   (light-mode)
-#+END_SRC
+#+end_src
 
-Note: If I wanted to make a distinction between GUI and terminal
-modes, this would be reasonable boilerplate:
-
-#+begin_example
-(add-hook 'after-make-frame-functions
-  (lambda ()
-    ;; we want some font only in GUI Emacs
-    (when (display-graphics-p)
-      (set-frame-font "DejaVu Sans Mono 28")))
-#+end_example
+If I wanted to make a distinction between GUI and terminal
+modes, the above would be good boilerplate, too.
 
 * Org Mode Exports
 
