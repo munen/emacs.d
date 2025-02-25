@@ -14,7 +14,6 @@
      (programming . "You are a large language model and a careful programmer. Provide code and only code as output without any additional text, prompt or note.")
      (writing . "You are a large language model and a writing assistant. Respond concisely.")
      (chat . "You are a large language model and a conversation partner. Respond concisely.")))
- '(gptel-model "gpt-4o")
  '(mml-secure-key-preferences
    '((OpenPGP
       (sign
