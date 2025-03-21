@@ -2293,9 +2293,9 @@ With an OS keybinding of =Shift + Alt + r=, I run =emacsclient -c
 * Whisper via OpenAI API
 
 #+begin_src emacs-lisp
-  (add-to-list 'load-path "~/src/200ok/ok-whisper")
-  (require 'ok-whisper)
-  (define-key global-map (kbd "C-x R") 'ok-whisper--record-dwim)
+  (add-to-list 'load-path "~/src/200ok/ok-audio-transcription")
+  (require 'ok-audio-transcription)
+  (define-key global-map (kbd "C-x R") 'ok-audio-transcription--record-dwim)
 #+end_src
 
 * Org mode
