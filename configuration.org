@@ -2570,16 +2570,25 @@ This obviously breaks the structure of the Org file. Here's a fix:
 
  #+BEGIN_SRC emacs-lisp
    (defun add-newline-at-end-if-none ()
-     "Add a newline at the end of the buffer if there isn't any."
+     "Add a newline at the end of the buffer if there isn't any,
+      but skip this for table-type captures."
      (save-excursion
        (save-restriction
-         (goto-char (1- (point-max)))
-         (if (not (looking-at "\n\n"))
-             (progn
-               (goto-char (point-max))
-               (insert "\n"))))))
+         ;; First check if this is a table capture
+         (let* ((template (org-capture-get :template))
+                (type (org-capture-get :type)))
+           ;; Only add newline if not a table-type capture
+           (unless (member type '(table table-line))
+             (goto-char (1- (point-max)))
+             (if (not (looking-at "\n\n"))
+                 (progn
+                   (goto-char (point-max))
+                   (insert "\n"))))))))
 
-   (add-hook 'org-capture-before-finalize-hook 'add-newline-at-end-if-none)
+
+   ;; NOTE: I think this might have been fixed upstream at some point.
+   ;; For the time being, I'll leave the code, but remove the hook.
+   ;; (add-hook 'org-capture-before-finalize-hook 'add-newline-at-end-if-none)
  #+END_SRC
 
 ** Structure templates
@@ -3876,6 +3885,11 @@ org-mime can be used to send HTML email using Org-mode HTML export.
 
 #+begin_src emacs-lisp
   (require 'org-mime)
+
+  ;; automatically htmlize all outgoing mail. that's even reasonable if
+  ;; I don't explicitly wanted to use 'org', but just make an itemized
+  ;; list or sth.
+  (add-hook 'message-send-hook #'org-mime-htmlize)
 #+end_src
 
 Usage:
