@@ -2825,6 +2825,105 @@ https://github.com/karthink/gptel
 *** Tool Use
 
 #+begin_src emacs-lisp
+  (gptel-make-tool
+   :name "Search the web"
+   :function (lambda (query)
+               (let ((url (format "https://%s:%s@search.twohundredok.com/search?q=%s&format=json"
+                                  munen-gptel--twohundredok-user
+                                  munen-gptel--twohundredok-password
+                                  (url-hexify-string query))))
+                 (with-temp-buffer
+                   (url-insert-file-contents url)
+                   (let ((json-response (json-read)))
+                     (mapconcat (lambda (result)
+                                  (format "%s - %s\n%s" (cdr (assoc 'title result)) (cdr (assoc 'url result)) (cdr (assoc 'content result))))
+                                (cdr (assoc 'results json-response))
+                                "\n\n")))))
+   :description "Search the web using searxng"
+   :args '((:name "query"
+                  :type string
+                  :description "The search query"   
+                  :required t))
+   :category "web")
+
+
+
+  (defun munen-gptel--trafilatura-fetch-url (url)
+    "Fetch content from URL using trafilatura and return it as a string."
+    (with-temp-buffer
+      (call-process "trafilatura" nil t nil "--output-format=markdown" "--with-metadata" "-u" url)
+      (buffer-string)))
+
+  (gptel-make-tool
+   :name "TrafilaturaFetch"
+   :function #'munen-gptel--trafilatura-fetch-url
+   :description "Fetch content from a URL using trafilatura"
+   :args '((:name "url"
+                  :type string
+                  :description "URL to fetch content from"
+                  :required t))
+   :category "fetch")
+
+
+  (defun munen-gptel--replace-buffer (buffer-name content)
+    "Completely replace contents of BUFFER-NAME with CONTENT."
+    (with-current-buffer buffer-name
+      (erase-buffer)
+      (insert content)
+      (format "Buffer replaced: %s" buffer-name)))
+
+  (gptel-make-tool
+   :name "ReplaceBuffer"
+   :function #'munen-gptel--replace-buffer
+   :description "Completely overwrites buffer contents"
+   :args '((:name "buffer_name"
+                  :type string
+                  :description "Name of the buffer to overwrite"
+                  :required t)
+           (:name "content"
+                  :type string
+                  :description "Content to write to the buffer"
+                  :required t))
+   :category "edit")
+
+
+  (defun munen-gptel--edit-buffer (buffer-name old-string new-string)
+    "In BUFFER-NAME, replace OLD-STRING with NEW-STRING."
+    (with-current-buffer buffer-name
+      (let ((case-fold-search nil))  ;; Case-sensitive search
+        (save-excursion
+          (goto-char (point-min))
+          (let ((count 0))
+            (while (search-forward old-string nil t)
+              (setq count (1+ count)))
+            (if (= count 0)
+                (format "Error: Could not find text to replace in buffer %s" buffer-name)
+              (if (> count 1)
+                  (format "Error: Found %d matches for the text to replace in buffer %s" count buffer-name)
+                (goto-char (point-min))
+                (search-forward old-string)
+                (replace-match new-string t t)
+                (format "Successfully edited buffer %s" buffer-name))))))))
+
+  (gptel-make-tool
+   :name "EditBuffer"
+   :function #'munen-gptel--edit-buffer
+   :description "Edits Emacs buffers"
+   :args '((:name "buffer_name"
+                  :type string
+                  :description "Name of the buffer to modify"
+                  :required t)
+           (:name "old_string"
+                  :type string
+                  :description "Text to replace (must match exactly)"
+                  :required t)
+           (:name "new_string"
+                  :type string
+                  :description "Text to replace old_string with"
+                  :required t))
+   :category "edit")
+
+
   (defun munen-gptel--edit_file (file-path file-edits)
     "In FILE-PATH, apply FILE-EDITS with pattern matching and replacing."
     (with-current-buffer (find-file (expand-file-name file-path))
