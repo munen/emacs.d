@@ -2818,12 +2818,63 @@ https://github.com/karthink/gptel
   (global-set-key (kbd "C-c g s") 'gptel-send)
   (global-set-key (kbd "C-c g a") 'gptel-add)
   (global-set-key (kbd "C-c g A") 'gptel-abort)
+
+  (setq gptel-cache '(message system tool))
 #+end_src
 
 *** Tool Use
 
 #+begin_src emacs-lisp
+  (defun munen-gptel--edit_file (file-path file-edits)
+    "In FILE-PATH, apply FILE-EDITS with pattern matching and replacing."
+    (with-current-buffer (find-file (expand-file-name file-path))
+      (let ((inhibit-read-only t)
+            (case-fold-search nil)
+            (edit-success nil)
+            (file-name (expand-file-name file-path))
+            (yes-to-all nil)
+            (ask-once-done nil))
+        (dolist (file-edit (seq-into file-edits 'list))
+          (when-let ((line-number (plist-get file-edit :line_number))
+                     (old-string (plist-get file-edit :old_string))
+                     (new-string (plist-get file-edit :new_string))
+                     (is-valid-old-string (not (string= old-string ""))))
+            (goto-char (point-min))
+            (forward-line (1- line-number))
+            (when (and (search-forward old-string nil t)
+                       (or yes-to-all (y-or-n-p (format "Replacing \"%s\" with \"%s\" ?" old-string new-string))))
+              (replace-match new-string t t)
+              (setq edit-success t)
+              (unless (or yes-to-all ask-once-done)
+                (setq yes-to-all (y-or-n-p (format "Say yes to all the following replacement?"))
+                      ask-once-done t)))))
+        (if (and edit-success (y-or-n-p (format "Finished replacing, save changes to file?")))
+            (progn
+              (write-file file-name)
+              (format "Successfully edited %s" file-name))
+          (format "Failed to edited %s" file-name)))))
+
   (with-eval-after-load 'gptel
+    (gptel-make-tool
+     :function #'munen-gptel--edit_file
+     :name "edit_file"
+     :description "Edit file with a list of edits, each edit contains a line-number,
+  a old-string and a new-string, new-string will replace the old-string at the specified line."
+     :args (list '(:name "file-path"
+                         :type "string"
+                         :description "The full path of the file to edit")
+                 '(:name "file-edits"
+                         :type array
+                         :items (:type object
+                                       :properties
+                                       (:line_number
+                                        (:type integer :description "The line number of the file where edit starts.")
+                                        :old_string
+                                        (:type string :description "The old-string to be replaced.")
+                                        :new_string
+                                        (:type string :description "The new-string to replace old-string.")))
+                         :description "The list of edits to apply on the file"))
+     :category "filesystem")
     (gptel-make-tool
      :function (lambda (url)
                  (with-current-buffer (url-retrieve-synchronously url)
@@ -3370,7 +3421,7 @@ mu init --my-address=alain.lafon@dispatched.ch --my-address=alain@200ok.ch --my-
    (defvar my-mu4e-account-alist
      '(("200ok"
         (user-full-name  "Alain M. Lafon")
-        (message-signature "200ok GmbH\nCEO\n\nalain@200ok.ch\n+41 76 405 05 67\nhttps://200ok.ch/\n\nBook an appointment with me: https://200ok.ch/calendar/alain.html \n\norganice is the best way to get stuff done: https://organice.200ok.ch")
+        (message-signature "\n200ok GmbH, CEO\n\nalain@200ok.ch, +41 76 405 05 67\n\nhttps://200ok.ch/\n\nBook an appointment with me: https://200ok.ch/calendar/alain.html \n\norganice is the best way to get stuff done: https://organice.200ok.ch")
         (message-signature-auto-include t)
         (mu4e-sent-folder "/200ok/INBOX.Sent")
         (mu4e-drafts-folder "/200ok/INBOX.Drafts")
@@ -3384,7 +3435,7 @@ mu init --my-address=alain.lafon@dispatched.ch --my-address=alain@200ok.ch --my-
         (smtpmail-smtp-service 587))
        ("200ok-support"
         (user-full-name  "200ok Support")
-        (message-signature "200ok GmbH\nCEO\n\nalain@200ok.ch\n+41 76 405 05 67\nhttps://200ok.ch/\n\nBook an appointment with me: https://200ok.ch/calendar/alain.html \n\norganice is the best way to get stuff done: https://organice.200ok.ch")
+        (message-signature "\n200ok GmbH, CEO\n\nalain@200ok.ch, +41 76 405 05 67\n\nhttps://200ok.ch/\n\nBook an appointment with me: https://200ok.ch/calendar/alain.html \n\norganice is the best way to get stuff done: https://organice.200ok.ch")
         (message-signature-auto-include t)
         (mu4e-sent-folder "/200ok-support/INBOX.Sent")
         (mu4e-drafts-folder "/200ok-support/INBOX.Drafts")
@@ -3398,7 +3449,7 @@ mu init --my-address=alain.lafon@dispatched.ch --my-address=alain@200ok.ch --my-
         (smtpmail-smtp-service 587))
        ("zen-tempel"
         (user-full-name  "Munen Alain M. Lafon")
-        (message-signature "Lambda Zen Tempel\n\nalain@zen-temple.net\n+41 76 405 05 67\n\nhttps://zen-temple.net/")
+        (message-signature "\nLambda Zen Tempel\n\nalain@zen-temple.net, +41 76 405 05 67\n\nhttps://zen-temple.net/")
         (message-signature-auto-include t)
         (mu4e-sent-folder "/zen-tempel/INBOX.Sent")
         (mu4e-drafts-folder "/zen-tempel/INBOX.Drafts")
@@ -3889,7 +3940,17 @@ org-mime can be used to send HTML email using Org-mode HTML export.
   ;; automatically htmlize all outgoing mail. that's even reasonable if
   ;; I don't explicitly wanted to use 'org', but just make an itemized
   ;; list or sth.
-  (add-hook 'message-send-hook #'org-mime-htmlize)
+  (defun conditional-org-mime-htmlize ()
+    "Apply org-mime-htmlize only if the message is not a forwarded email."
+    (let ((subject (message-field-value "Subject")))
+      (when (not (and subject
+                      (or (string-match-p "^\\(Fwd\\|FW\\|Forward\\):" subject)
+                          ;; You might want to add other forwarding patterns here
+                          )))
+        (org-mime-htmlize))))
+
+  ;; Replace the old hook with our conditional version
+  (add-hook 'message-send-hook #'conditional-org-mime-htmlize)
 #+end_src
 
 Usage:
