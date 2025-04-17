@@ -157,6 +157,7 @@ down in this file, some are used with the default configuration.
                         hcl-mode
                         hide-mode-line
                         impatient-mode
+                        sops
                         ivy counsel swiper
                         json-mode
                         js2-mode
@@ -2242,6 +2243,18 @@ Major mode for [[https://github.com/hashicorp/hcl][Hashicorp Configuration Langu
   (add-to-list 'auto-mode-alist '("\\.drl\\'" . java-mode))
 #+end_src
 
+** =sops-mode=
+https://github.com/djgoku/sops
+
+#+begin_src emacs-lisp
+  (global-sops-mode 1)
+#+end_src
+
+When opening an encrypted file, it will still show the encrypted
+values. To edit in the clear, use =sops-edit-file=. After
+modifications have been made you can save with =sops-save-file= or
+discard modifications with =sops-cancel=.
+
 * Whisper.cpp with whisper.el
 https://github.com/natrys/whisper.el
 
@@ -2826,7 +2839,7 @@ https://github.com/karthink/gptel
 
 #+begin_src emacs-lisp
   (gptel-make-tool
-   :name "Search the web"
+   :name "SearchViaSearXNG"
    :function (lambda (query)
                (let ((url (format "https://%s:%s@search.twohundredok.com/search?q=%s&format=json"
                                   munen-gptel--twohundredok-user
@@ -2862,7 +2875,7 @@ https://github.com/karthink/gptel
                   :type string
                   :description "URL to fetch content from"
                   :required t))
-   :category "fetch")
+   :category "web")
 
 
   (defun munen-gptel--replace-buffer (buffer-name content)
@@ -2983,7 +2996,7 @@ https://github.com/karthink/gptel
                      (with-temp-buffer
                        (shr-insert-document dom)
                        (buffer-substring-no-properties (point-min) (point-max))))))
-     :name "read_url"
+     :name "ReadUrlViaEmacs"
      :description "Fetch and read the contents of a URL"
      :args (list '(:name "url"
                          :type "string"
