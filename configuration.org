@@ -2821,6 +2821,9 @@ https://github.com/karthink/gptel
   ;; The chats can have long lines.
   (add-hook 'gptel-mode-hook 'visual-line-mode)
 
+  ;; And can be pages long.
+  (add-hook 'gptel-post-stream-hook 'gptel-auto-scroll)
+
   (gptel-make-ollama "Ollama"             
                      :host "localhost:11434"               
                      :stream t                            
@@ -4053,13 +4056,18 @@ org-mime can be used to send HTML email using Org-mode HTML export.
   ;; I don't explicitly wanted to use 'org', but just make an itemized
   ;; list or sth.
   (defun conditional-org-mime-htmlize ()
-    "Apply org-mime-htmlize only if the message is not a forwarded email."
+    "Apply org-mime-htmlize only if the message is not a forwarded email.
+  Disables inline images during this specific export."
     (let ((subject (message-field-value "Subject")))
       (when (not (and subject
                       (or (string-match-p "^\\(Fwd\\|FW\\|Forward\\):" subject)
                           ;; You might want to add other forwarding patterns here
                           )))
-        (org-mime-htmlize))))
+        ;; Temporarily set org-html-inline-images to nil for this export
+        ;; using let-binding. The original value is restored after
+        ;; org-mime-htmlize finishes.
+        (let ((org-html-inline-images nil))
+          (org-mime-htmlize)))))
 
   ;; Replace the old hook with our conditional version
   (add-hook 'message-send-hook #'conditional-org-mime-htmlize)
