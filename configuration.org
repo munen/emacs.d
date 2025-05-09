@@ -3083,7 +3083,7 @@ https://github.com/karthink/gptel
      :function #'my-gptel--edit_file
      :name "edit_file"
      :description "Edit file with a list of edits, each edit contains a line-number,
-    a old-string and a new-string, new-string will replace the old-string at the specified line."
+      a old-string and a new-string, new-string will replace the old-string at the specified line."
      :args (list '(:name "file-path"
                          :type string
                          :description "The full path of the file to edit")
@@ -3100,43 +3100,7 @@ https://github.com/karthink/gptel
                          :description "The list of edits to apply on the file"))
      :category "filesystem")
 
-    (gptel-make-tool
-     :function (lambda (script_program script_file script_args)
-                 (with-temp-message "Executing command ..."
-                   (shell-command-to-string
-                    (concat script_program " "
-                            (expand-file-name script_file) " "
-                            script_args))))
-     :name "run_script"
-     :description "Executes a user-specified script using a given program/interpreter and arguments. Returns the standard output of the script as a string. IMPORTANT: This tool allows execution of arbitrary code; user confirmation will be required before any script is run."
-     :args (list
-            '(:name "script_program"
-                    :type string
-                    :description "The program or interpreter to execute the script (e.g., 'python', 'bash', 'node').")
-            '(:name "script_file"
-                    :type string
-                    :description "Path to the script file to execute. Supports relative paths from the user's home directory (e.g., using '~').")
-            '(:name "script_args"
-                    :type string
-                    :description "Command-line arguments to be passed to the script. Provide as a single string. Can be an empty string if no arguments are needed."))
-     :category "filesystem"
-     :confirm t  ;; Crucial: This ensures gptel will ask for your confirmation
-     :include t  ;; Optional: Consider if you want results automatically in the buffer
-     )
 
-
-
-    (gptel-make-tool
-     :function (lambda (command)
-                 (with-temp-message (format "Running command: %s" command)
-                   (shell-command-to-string command)))
-     :name "run_command"
-     :description "Run a command."
-     :args (list
-            '(:name "command"
-                    :type "string"
-                    :description "Command to run."))
-     :category "command")
 
     (defun run_async_command (callback command)
       "Run COMMAND asynchronously and pass output to CALLBACK."
@@ -3308,68 +3272,6 @@ https://github.com/karthink/gptel
 *** Tool Use
 
 #+begin_src emacs-lisp
-  ;; (gptel-make-tool
-  ;;  :name "SearchViaSearXNG"
-  ;;  :function (lambda (query)
-  ;;              (let ((url (format "https://%s:%s@search.twohundredok.com/search?q=%s&format=json"
-  ;;                                 munen-gptel--twohundredok-user
-  ;;                                 munen-gptel--twohundredok-password
-  ;;                                 (url-hexify-string query))))
-  ;;                (with-temp-buffer
-  ;;                  (url-insert-file-contents url)
-  ;;                  (let ((json-response (json-read)))
-  ;;                    (mapconcat (lambda (result)
-  ;;                                 (format "%s - %s\n%s" (cdr (assoc 'title result)) (cdr (assoc 'url result)) (cdr (assoc 'content result))))
-  ;;                               (cdr (assoc 'results json-response))
-  ;;                               "\n\n")))))
-  ;;  :description "Search the web using searxng"
-  ;;  :args '((:name "query"
-  ;;                 :type string
-  ;;                 :description "The search query"   
-  ;;                 ))
-  ;;  :category "web")
-
-
-
-  ;; (defun munen-gptel--trafilatura-fetch-url (url)
-  ;;   "Fetch content from URL using trafilatura and return it as a string."
-  ;;   (with-temp-buffer
-  ;;     (call-process "trafilatura" nil t nil "--output-format=markdown" "--with-metadata" "-u" url)
-  ;;     (buffer-string)))
-
-  ;; (gptel-make-tool
-  ;;  :name "TrafilaturaFetch"
-  ;;  :function #'munen-gptel--trafilatura-fetch-url
-  ;;  :description "Fetch content from a URL using trafilatura"
-  ;;  :args '((:name "url"
-  ;;                 :type string
-  ;;                 :description "URL to fetch content from"
-  ;;                 ))
-  ;;  :category "web")
-
-
-  ;; (defun codel-replace-buffer (buffer-name content)
-  ;;   "Completely replace contents of BUFFER-NAME with CONTENT."
-  ;;   (with-current-buffer buffer-name
-  ;;     (erase-buffer)
-  ;;     (insert content)
-  ;;     (format "Buffer replaced: %s" buffer-name)))
-
-  ;; (gptel-make-tool
-  ;;  :name "ReplaceBuffer"
-  ;;  :function #'codel-replace-buffer
-  ;;  :description "Completely overwrites buffer contents"
-  ;;  :args '((:name "buffer_name"
-  ;;                 :type string
-  ;;                 :description "Name of the buffer to overwrite"
-  ;;                 )
-  ;;          (:name "content"
-  ;;                 :type string
-  ;;                 :description "Content to write to the buffer"
-  ;;                 ))
-  ;;  :category "edit")
-
-
   ;; (defun codel-edit-buffer (buffer-name old-string new-string)
   ;;   "In BUFFER-NAME, replace OLD-STRING with NEW-STRING."
   ;;   (with-current-buffer buffer-name
@@ -3577,6 +3479,93 @@ https://github.com/karthink/gptel
   ;;                        :type string
   ;;                        :description "Path to the file to read.  Supports relative paths and ~."))
   ;;    :category "filesystem"))
+#+end_src
+*** Tool use confirmed
+
+#+begin_src emacs-lisp
+  (gptel-make-tool
+   :function (lambda (command &optional working_dir)
+               (with-temp-message (format "Executing command: `%s`" command)
+                 (let ((default-directory (if (and working_dir (not (string= working_dir "")))
+                                              (expand-file-name working_dir)
+                                            default-directory)))
+                   (shell-command-to-string command))))
+   :name "run_command"
+   :description "Executes a shell command and returns the output as a string. IMPORTANT: This tool allows execution of arbitrary code; user confirmation will be required before any command is run."
+   :args (list
+          '(:name "command"
+                  :type string
+                  :description "The complete shell command to execute.")
+          '(:name "working_dir"
+                  :type string
+                  :description "Optional: The directory in which to run the command. Defaults to the current directory if not specified."))
+   :category "command"
+   :confirm t
+   :include t)
+
+  (gptel-make-tool
+   :function (lambda (query)
+               (with-temp-message (format "Searching for: `%s`" query)
+                 (let ((url (format "https://%s:%s@search.twohundredok.com/search?q=%s&format=json"
+                                  munen-gptel--twohundredok-user
+                                  munen-gptel--twohundredok-password
+                                  (url-hexify-string query))))
+                   (with-temp-buffer
+                     (url-insert-file-contents url)
+                     (let ((json-response (json-read)))
+                       (mapconcat (lambda (result)
+                                  (format "%s - %s\n%s" (cdr (assoc 'title result)) (cdr (assoc 'url result)) (cdr (assoc 'content result))))
+                                (cdr (assoc 'results json-response))
+                                "\n\n"))))))
+   :name "search_web"
+   :description "Searches the web using SearXNG metasearch engine and returns formatted results including titles, URLs, and content excerpts."
+   :args (list
+          '(:name "query"
+                  :type string
+                  :description "The search query to execute against the search engine."))
+   :category "web"
+   :confirm t
+   :include t)
+
+  (defun munen-gptel--trafilatura-fetch-url (url)
+    "Fetch content from URL using trafilatura and return it as a string."
+    (with-temp-message (format "Fetching content from: %s" url)
+      (with-temp-buffer
+        (call-process "trafilatura" nil t nil "--output-format=markdown" "--with-metadata" "-u" url)
+        (buffer-string))))
+
+  (gptel-make-tool
+   :name "TrafilaturaFetch"
+   :function #'munen-gptel--trafilatura-fetch-url
+   :description "Fetch content from a URL using trafilatura, which extracts main content and metadata while removing boilerplate, navigation and ads."
+   :args '((:name "url"
+                  :type string
+                  :description "URL to fetch content from"))
+   :category "web"
+   :confirm t
+   :include t)
+
+  (gptel-make-tool
+   :function (lambda (buffer_name content)
+               (with-temp-message (format "Replacing buffer contents: `%s`" buffer_name)
+                 (if (get-buffer buffer_name)
+                     (with-current-buffer buffer_name
+                       (erase-buffer)
+                       (insert content)
+                       (format "Buffer contents replaced: %s" buffer_name))
+                   (format "Error: Buffer '%s' not found" buffer_name))))
+   :name "ReplaceBuffer"
+   :description "Completely overwrites buffer contents with the provided content. IMPORTANT: This tool will erase all existing content in the specified buffer; user confirmation will be required."
+   :args (list
+          '(:name "buffer_name"
+                  :type string
+                  :description "The name of the buffer whose contents will be replaced.")
+          '(:name "content"
+                  :type string
+                  :description "The new content to write to the buffer, replacing all existing content."))
+   :category "edit"
+   :confirm t
+   :include t)
 #+end_src
 ** aidermacs
 https://github.com/MatthewZMD/aidermacs
