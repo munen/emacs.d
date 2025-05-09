@@ -118,6 +118,7 @@ down in this file, some are used with the default configuration.
   (defvar my-packages '(ace-window
                         ac-js2
                         ag
+                        aidermacs
                         atomic-chrome
                         auto-complete
                         beacon
@@ -2810,338 +2811,6 @@ Show habits outside of today's agenda view:
 #+begin_src emacs-lisp
   (setq org-habit-show-habits-only-for-today nil)
 #+end_src
-** =gptel=
-
-https://github.com/karthink/gptel
-
-#+begin_src emacs-lisp
-  (setq gptel-default-mode 'org-mode)
-  (setq gptel-track-media t)
-
-  ;; The chats can have long lines.
-  (add-hook 'gptel-mode-hook 'visual-line-mode)
-
-  ;; And can be pages long.
-  (add-hook 'gptel-post-stream-hook 'gptel-auto-scroll)
-
-  (gptel-make-ollama "Ollama"             
-                     :host "localhost:11434"               
-                     :stream t                            
-                     :models '("codellama"))        
-
-  (global-set-key (kbd "C-c g m") 'gptel-menu)
-  (global-set-key (kbd "C-c g c") 'gptel)
-  (global-set-key (kbd "C-c g s") 'gptel-send)
-  (global-set-key (kbd "C-c g a") 'gptel-add)
-  (global-set-key (kbd "C-c g A") 'gptel-abort)
-
-  (setq gptel-cache '(message system tool))
-  (setq gptel-use-tools t)
-#+end_src
-
-*** Tool Use
-
-#+begin_src emacs-lisp
-  (gptel-make-tool
-   :name "SearchViaSearXNG"
-   :function (lambda (query)
-               (let ((url (format "https://%s:%s@search.twohundredok.com/search?q=%s&format=json"
-                                  munen-gptel--twohundredok-user
-                                  munen-gptel--twohundredok-password
-                                  (url-hexify-string query))))
-                 (with-temp-buffer
-                   (url-insert-file-contents url)
-                   (let ((json-response (json-read)))
-                     (mapconcat (lambda (result)
-                                  (format "%s - %s\n%s" (cdr (assoc 'title result)) (cdr (assoc 'url result)) (cdr (assoc 'content result))))
-                                (cdr (assoc 'results json-response))
-                                "\n\n")))))
-   :description "Search the web using searxng"
-   :args '((:name "query"
-                  :type string
-                  :description "The search query"   
-                  :required t))
-   :category "web")
-
-
-
-  (defun munen-gptel--trafilatura-fetch-url (url)
-    "Fetch content from URL using trafilatura and return it as a string."
-    (with-temp-buffer
-      (call-process "trafilatura" nil t nil "--output-format=markdown" "--with-metadata" "-u" url)
-      (buffer-string)))
-
-  (gptel-make-tool
-   :name "TrafilaturaFetch"
-   :function #'munen-gptel--trafilatura-fetch-url
-   :description "Fetch content from a URL using trafilatura"
-   :args '((:name "url"
-                  :type string
-                  :description "URL to fetch content from"
-                  :required t))
-   :category "web")
-
-
-  (defun codel-replace-buffer (buffer-name content)
-    "Completely replace contents of BUFFER-NAME with CONTENT."
-    (with-current-buffer buffer-name
-      (erase-buffer)
-      (insert content)
-      (format "Buffer replaced: %s" buffer-name)))
-
-  (gptel-make-tool
-   :name "ReplaceBuffer"
-   :function #'codel-replace-buffer
-   :description "Completely overwrites buffer contents"
-   :args '((:name "buffer_name"
-                  :type string
-                  :description "Name of the buffer to overwrite"
-                  :required t)
-           (:name "content"
-                  :type string
-                  :description "Content to write to the buffer"
-                  :required t))
-   :category "edit")
-
-
-  (defun codel-edit-buffer (buffer-name old-string new-string)
-    "In BUFFER-NAME, replace OLD-STRING with NEW-STRING."
-    (with-current-buffer buffer-name
-      (let ((case-fold-search nil))  ;; Case-sensitive search
-        (save-excursion
-          (goto-char (point-min))
-          (let ((count 0))
-            (while (search-forward old-string nil t)
-              (setq count (1+ count)))
-            (if (= count 0)
-                (format "Error: Could not find text to replace in buffer %s" buffer-name)
-              (if (> count 1)
-                  (format "Error: Found %d matches for the text to replace in buffer %s" count buffer-name)
-                (goto-char (point-min))
-                (search-forward old-string)
-                (replace-match new-string t t)
-                (format "Successfully edited buffer %s" buffer-name))))))))
-
-  (gptel-make-tool
-   :name "EditBuffer"
-   :function #'codel-edit-buffer
-   :description "Edits Emacs buffers"
-   :args '((:name "buffer_name"
-                  :type string
-                  :description "Name of the buffer to modify"
-                  :required t)
-           (:name "old_string"
-                  :type string
-                  :description "Text to replace (must match exactly)"
-                  :required t)
-           (:name "new_string"
-                  :type string
-                  :description "Text to replace old_string with"
-                  :required t))
-   :category "edit")
-
-
-  (defun my-gptel--edit_file (file-path file-edits)
-    "In FILE-PATH, apply FILE-EDITS with pattern matching and replacing."
-    (if (and file-path (not (string= file-path "")) file-edits)
-        (with-current-buffer (get-buffer-create "*edit-file*")
-          (insert-file-contents (expand-file-name file-path))
-          (let ((inhibit-read-only t)
-                (case-fold-search nil)
-                (file-name (expand-file-name file-path))
-                (edit-success nil))
-            ;; apply changes
-            (dolist (file-edit (seq-into file-edits 'list))
-              (when-let ((line-number (plist-get file-edit :line_number))
-                         (old-string (plist-get file-edit :old_string))
-                         (new-string (plist-get file-edit :new_string))
-                         (is-valid-old-string (not (string= old-string ""))))
-                (goto-char (point-min))
-                (forward-line (1- line-number))
-                (when (search-forward old-string nil t)
-                  (replace-match new-string t t)
-                  (setq edit-success t))))
-            ;; return result to gptel
-            (if edit-success
-                (progn
-                  ;; show diffs
-                  (ediff-buffers (find-file-noselect file-name) (current-buffer))
-                  (format "Successfully edited %s" file-name))
-              (format "Failed to edited %s" file-name))))
-      (format "Failed to edited %s" file-path)))
-
-  (with-eval-after-load 'gptel
-    (gptel-make-tool
-     :function #'my-gptel--edit_file
-     :name "edit_file"
-     :description "Edit file with a list of edits, each edit contains a line-number,
-  a old-string and a new-string, new-string will replace the old-string at the specified line."
-     :args (list '(:name "file-path"
-                         :type string
-                         :description "The full path of the file to edit")
-                 '(:name "file-edits"
-                         :type array
-                         :items (:type object
-                                       :properties
-                                       (:line_number
-                                        (:type integer :description "The line number of the file where edit starts.")
-                                        :old_string
-                                        (:type string :description "The old-string to be replaced.")
-                                        :new_string
-                                        (:type string :description "The new-string to replace old-string.")))
-                         :description "The list of edits to apply on the file"))
-     :category "filesystem")
-    (gptel-make-tool
-     :function (lambda (url)
-                 (with-current-buffer (url-retrieve-synchronously url)
-                   (goto-char (point-min)) (forward-paragraph)
-                   (let ((dom (libxml-parse-html-region (point) (point-max))))
-                     (run-at-time 0 nil #'kill-buffer (current-buffer))
-                     (with-temp-buffer
-                       (shr-insert-document dom)
-                       (buffer-substring-no-properties (point-min) (point-max))))))
-     :name "read_url"
-     :description "Fetch and read the contents of a URL"
-     :args (list '(:name "url"
-                         :type string
-                         :description "The URL to read"))
-     :category "web")
-
-    (gptel-make-tool
-     :function (lambda (buffer text)
-                 (with-current-buffer (get-buffer-create buffer)
-                   (save-excursion
-                     (goto-char (point-max))
-                     (insert text)))
-                 (format "Appended text to buffer %s" buffer))
-     :name "append_to_buffer"
-     :description "Append text to the an Emacs buffer.  If the buffer does not exist, it will be created."
-     :args (list '(:name "buffer"
-                         :type string
-                         :description "The name of the buffer to append text to.")
-                 '(:name "text"
-                         :type string
-                         :description "The text to append to the buffer."))
-     :category "emacs")
-
-    ;; Message buffer logging tool
-    (gptel-make-tool
-     :function (lambda (text)
-                 (message "%s" text)
-                 (format "Message sent: %s" text))
-     :name "echo_message"
-     :description "Send a message to the *Messages* buffer"
-     :args (list '(:name "text"
-                         :type string
-                         :description "The text to send to the messages buffer"))
-     :category "emacs")
-
-    ;; buffer retrieval tool
-    (gptel-make-tool
-     :function (lambda (buffer)
-                 (unless (buffer-live-p (get-buffer buffer))
-                   (error "Error: buffer %s is not live." buffer))
-                 (with-current-buffer  buffer
-                   (buffer-substring-no-properties (point-min) (point-max))))
-     :name "read_buffer"
-     :description "Return the contents of an Emacs buffer"
-     :args (list '(:name "buffer"
-                         :type string
-                         :description "The name of the buffer whose contents are to be retrieved"))
-     :category "emacs")
-
-
-    (gptel-make-tool
-     :function (lambda (directory)
-                 (mapconcat #'identity
-                            (directory-files directory)
-                            "\n"))
-     :name "list_directory"
-     :description "List the contents of a given directory"
-     :args (list '(:name "directory"
-                         :type string
-                         :description "The path to the directory to list"))
-     :category "filesystem")
-
-    (gptel-make-tool
-     :function (lambda (parent name)
-                 (condition-case nil
-                     (progn
-                       (make-directory (expand-file-name name parent) t)
-                       (format "Directory %s created/verified in %s" name parent))
-                   (error (format "Error creating directory %s in %s" name parent))))
-     :name "make_directory"
-     :description "Create a new directory with the given name in the specified parent directory"
-     :args (list '(:name "parent"
-                         :type string
-                         :description "The parent directory where the new directory should be created, e.g. /tmp")
-                 '(:name "name"
-                         :type string
-                         :description "The name of the new directory to create, e.g. testdir"))
-     :category "filesystem")
-
-    (gptel-make-tool
-     :function (lambda (path filename content)
-                 (let ((full-path (expand-file-name filename path)))
-                   (with-temp-buffer
-                     (insert content)
-                     (write-file full-path))
-                   (format "Created file %s in %s" filename path)))
-     :name "create_file"
-     :description "Create a new file with the specified content"
-     :args (list '(:name "path"
-                         :type string
-                         :description "The directory where to create the file")
-                 '(:name "filename"
-                         :type string
-                         :description "The name of the file to create")
-                 '(:name "content"
-                         :type string
-                         :description "The content to write to the file"))
-     :category "filesystem")
-
-    (gptel-make-tool
-     :function (lambda (filepath)
-                 (with-temp-buffer
-                   (insert-file-contents (expand-file-name filepath))
-                   (buffer-string)))
-     :name "read_file"
-     :description "Read and display the contents of a file"
-     :args (list '(:name "filepath"
-                         :type string
-                         :description "Path to the file to read.  Supports relative paths and ~."))
-     :category "filesystem"))
-#+end_src
-
-** =org-ai=
-https://github.com/rksm/org-ai
-
-General setup:
-
-#+begin_src emacs-lisp
-  (require 'org-ai)
-  (add-hook 'org-mode-hook #'org-ai-mode)
-#+end_src
-
-The OpenAI API key is in the =~/.authinfo= file.
-
-Integrate "ai" snippet in Org mode:
-
-#+begin_src emacs-lisp
-  (org-ai-install-yasnippets)
-  (setq org-ai-default-chat-model "gpt-3.5-turbo")
-  ;; (setq org-ai-default-chat-model "gpt-4")
-  (add-hook 'org-mode-hook #'yas-minor-mode)
-#+end_src
-
-Typing "ai =TAB=" will create a block like this:
-
-#+begin_ai
-[SYS]: You are a helpful assistant.
-
-[ME]: 
-#+end_ai
-
 ** Tables
 
 Bring back 'clear cell' shortcut which used to be the default binding,
@@ -3286,13 +2955,643 @@ file and not wanting to be overwhelmed by the whole list, for example.
                     (org-agenda-to-appt))))
  #+END_SRC
  
-* Codeium
-https://codeium.com/about
-https://github.com/Exafunction/codeium.el
+* AI
+** =gptel=
+
+https://github.com/karthink/gptel
 
 #+begin_src emacs-lisp
-  (quelpa '(codeium :fetcher git :url "https://github.com/Exafunction/codeium.el.git"))
-  (add-to-list 'completion-at-point-functions #'codeium-completion-at-point)
+  (setq gptel-default-mode 'org-mode)
+  (setq gptel-track-media t)
+
+  ;; The chats can have long lines.
+  (add-hook 'gptel-mode-hook 'visual-line-mode)
+
+  ;; And can be pages long.
+  (add-hook 'gptel-post-stream-hook 'gptel-auto-scroll)
+
+  (gptel-make-ollama "Ollama"             
+                     :host "localhost:11434"               
+                     :stream t                            
+                     :models '("codellama"))        
+
+  (global-set-key (kbd "C-c g m") 'gptel-menu)
+  (global-set-key (kbd "C-c g c") 'gptel)
+  (global-set-key (kbd "C-c g s") 'gptel-send)
+  (global-set-key (kbd "C-c g a") 'gptel-add)
+  (global-set-key (kbd "C-c g A") 'gptel-abort)
+
+  (setq gptel-cache '(message system tool))
+  (setq gptel-use-tools t)
+#+end_src
+
+*** Tool use new
+
+#+begin_src emacs-lisp
+  (with-eval-after-load 'gptel
+    (gptel-make-tool
+     :function (lambda (filepath)
+                 (with-temp-buffer
+                   (insert-file-contents (expand-file-name filepath))
+                   (buffer-string)))
+     :name "read_file"
+     :description "Read and display the contents of a file"
+     :args (list '(:name "filepath"
+                         :type string
+                         :description "Path to the file to read. Supports relative paths and ~."))
+     :category "filesystem")
+
+    (gptel-make-tool
+     :function (lambda (directory)
+                 (mapconcat #'identity
+                            (directory-files directory)
+                            "\n"))
+     :name "list_directory"
+     :description "List the contents of a given directory"
+     :args (list '(:name "directory"
+                         :type string
+                         :description "The path to the directory to list"))
+     :category "filesystem")
+
+    (gptel-make-tool
+     :function (lambda (parent name)
+                 (condition-case nil
+                     (progn
+                       (make-directory (expand-file-name name parent) t)
+                       (format "Directory %s created/verified in %s" name parent))
+                   (error (format "Error creating directory %s in %s" name parent))))
+     :name "make_directory"
+     :description "Create a new directory with the given name in the specified parent directory"
+     :args (list '(:name "parent"
+                         :type string
+                         :description "The parent directory where the new directory should be created, e.g. /tmp")
+                 '(:name "name"
+                         :type string
+                         :description "The name of the new directory to create, e.g. testdir"))
+     :category "filesystem")
+
+    (gptel-make-tool
+     :function (lambda (path filename content)
+                 (let ((full-path (expand-file-name filename path)))
+                   (with-temp-buffer
+                     (insert content)
+                     (write-file full-path))
+                   (format "Created file %s in %s" filename path)))
+     :name "create_file"
+     :description "Create a new file with the specified content"
+     :args (list '(:name "path"
+                         :type string
+                         :description "The directory where to create the file")
+                 '(:name "filename"
+                         :type string
+                         :description "The name of the file to create")
+                 '(:name "content"
+                         :type string
+                         :description "The content to write to the file"))
+     :category "filesystem")
+
+    (defun my-gptel--edit_file (file-path file-edits)
+      "In FILE-PATH, apply FILE-EDITS with pattern matching and replacing."
+      (if (and file-path (not (string= file-path "")) file-edits)
+          (with-current-buffer (get-buffer-create "*edit-file*")
+            (insert-file-contents (expand-file-name file-path))
+            (let ((inhibit-read-only t)
+                  (case-fold-search nil)
+                  (file-name (expand-file-name file-path))
+                  (edit-success nil))
+              ;; apply changes
+              (dolist (file-edit (seq-into file-edits 'list))
+                (when-let ((line-number (plist-get file-edit :line_number))
+                           (old-string (plist-get file-edit :old_string))
+                           (new-string (plist-get file-edit :new_string))
+                           (is-valid-old-string (not (string= old-string ""))))
+                  (goto-char (point-min))
+                  (forward-line (1- line-number))
+                  (when (search-forward old-string nil t)
+                    (replace-match new-string t t)
+                    (setq edit-success t))))
+              ;; return result to gptel
+              (if edit-success
+                  (progn
+                    ;; show diffs
+                    (ediff-buffers (find-file-noselect file-name) (current-buffer))
+                    (format "Successfully edited %s" file-name))
+                (format "Failed to edited %s" file-name))))
+        (format "Failed to edited %s" file-path)))
+
+    (gptel-make-tool
+     :function #'my-gptel--edit_file
+     :name "edit_file"
+     :description "Edit file with a list of edits, each edit contains a line-number,
+  a old-string and a new-string, new-string will replace the old-string at the specified line."
+     :args (list '(:name "file-path"
+                         :type string
+                         :description "The full path of the file to edit")
+                 '(:name "file-edits"
+                         :type array
+                         :items (:type object
+                                       :properties
+                                       (:line_number
+                                        (:type integer :description "The line number of the file where edit starts.")
+                                        :old_string
+                                        (:type string :description "The old-string to be replaced.")
+                                        :new_string
+                                        (:type string :description "The new-string to replace old-string.")))
+                         :description "The list of edits to apply on the file"))
+     :category "filesystem")
+
+    (gptel-make-tool
+     :function (lambda (script_program script_file script_args)
+                 (with-temp-message "Executing command ..."
+                   (shell-command-to-string
+                    (concat script_program " "
+                            (expand-file-name script_file) " "
+                            script_args))))
+     :name "run_script"
+     :description "Run script"
+     :args (list
+            '(:name "script_program"
+                    :type string
+                    :description "Program to run the the script.")
+            '(:name "script_file"
+                    :type string
+                    :description "Path to the script to run. Supports relative paths and ~.")
+            '(:name "script_args"
+                    :type string
+                    :description "Args for script to run."))
+     :category "filesystem")
+
+    (gptel-make-tool
+     :function (lambda (command)
+                 (with-temp-message (format "Running command: %s" command)
+                   (shell-command-to-string command)))
+     :name "run_command"
+     :description "Run a command."
+     :args (list
+            '(:name "command"
+                    :type "string"
+                    :description "Command to run."))
+     :category "command")
+
+    (defun run_async_command (callback command)
+      "Run COMMAND asynchronously and pass output to CALLBACK."
+      (condition-case error
+          (let ((buffer (generate-new-buffer " *async output*")))
+            (with-temp-message (format "Running async command: %s" command)
+              (async-shell-command command buffer nil))
+            (let ((proc (get-buffer-process buffer)))
+              (when proc
+                (set-process-sentinel
+                 proc
+                 (lambda (process _event)
+                   (unless (process-live-p process)
+                     (with-current-buffer (process-buffer process)
+                       (let ((output (buffer-substring-no-properties (point-min) (point-max))))
+                         (kill-buffer (current-buffer))
+                         (funcall callback output)))))))))
+        (t
+         ;; Handle any kind of error
+         (funcall callback (format "An error occurred: %s" error)))))
+
+    (gptel-make-tool
+     :function #'run_async_command
+     :name "run_async_command"
+     :description "Run an async command."
+     :args (list
+            '(:name "command"
+                    :type "string"
+                    :description "Command to run."))
+     :category "command"
+     :async t
+     :include t)
+
+    (gptel-make-tool
+     :function (lambda (text)
+                 (message "%s" text)
+                 (format "Message sent: %s" text))
+     :name "echo_message"
+     :description "Send a message to the *Messages* buffer"
+     :args (list '(:name "text"
+                         :type string
+                         :description "The text to send to the messages buffer"))
+     :category "emacs")
+    (defun gptel-read-documentation (symbol)
+      "Read the documentation for SYMBOL, which can be a function or variable."
+      (let ((sym (intern symbol)))
+        (cond
+         ((fboundp sym)
+          (documentation sym))
+         ((boundp sym)
+          (documentation-property sym 'variable-documentation))
+         (t
+          (format "No documentation found for %s" symbol)))))
+
+    (gptel-make-tool
+     :name "read_documentation"
+     :function #'gptel-read-documentation
+     :description "Read the documentation for a given function or variable"
+     :args (list '(:name "name"
+                         :type string
+                         :description "The name of the function or variable whose documentation is to be retrieved"))
+     :category "emacs")
+
+    (gptel-make-tool
+     :function (lambda (url)
+                 (with-current-buffer (url-retrieve-synchronously url)
+                   (goto-char (point-min))
+                   (forward-paragraph)
+                   (let ((dom (libxml-parse-html-region (point) (point-max))))
+                     (run-at-time 0 nil #'kill-buffer (current-buffer))
+                     (with-temp-buffer
+                       (shr-insert-document dom)
+                       (buffer-substring-no-properties (point-min) (point-max))))))
+     :name "read_url"
+     :description "Fetch and read the contents of a URL"
+     :args (list '(:name "url"
+                         :type string
+                         :description "The URL to read"))
+     :category "web")
+
+    (gptel-make-tool
+     :function (lambda (buffer)
+                 (unless (buffer-live-p (get-buffer buffer))
+                   (error "Error: buffer %s is not live." buffer))
+                 (with-current-buffer buffer
+                   (buffer-substring-no-properties (point-min) (point-max))))
+     :name "read_buffer"
+     :description "Return the contents of an Emacs buffer"
+     :args (list '(:name "buffer"
+                         :type string
+                         :description "The name of the buffer whose contents are to be retrieved"))
+     :category "emacs")
+
+    (gptel-make-tool
+     :function (lambda (buffer text)
+                 (with-current-buffer (get-buffer-create buffer)
+                   (save-excursion
+                     (goto-char (point-max))
+                     (insert text)))
+                 (format "Appended text to buffer %s" buffer))
+     :name "append_to_buffer"
+     :description "Append text to an Emacs buffer. If the buffer does not exist, it will be created."
+     :args (list '(:name "buffer"
+                         :type string
+                         :description "The name of the buffer to append text to.")
+                 '(:name "text"
+                         :type string
+                         :description "The text to append to the buffer."))
+     :category "emacs")
+
+    (defun codel-edit-buffer (buffer-name old-string new-string)
+      "In BUFFER-NAME, replace OLD-STRING with NEW-STRING."
+      (with-current-buffer buffer-name
+        (let ((case-fold-search nil))  ;; Case-sensitive search
+          (save-excursion
+            (goto-char (point-min))
+            (let ((count 0))
+              (while (search-forward old-string nil t)
+                (setq count (1+ count)))
+              (if (= count 0)
+                  (format "Error: Could not find text to replace in buffer %s" buffer-name)
+                (if (> count 1)
+                    (format "Error: Found %d matches for the text to replace in buffer %s" count buffer-name)
+                  (goto-char (point-min))
+                  (search-forward old-string)
+                  (replace-match new-string t t)
+                  (format "Successfully edited buffer %s" buffer-name))))))))
+
+    (gptel-make-tool
+     :name "EditBuffer"
+     :function #'codel-edit-buffer
+     :description "Edits Emacs buffers"
+     :args '((:name "buffer_name"
+                    :type string
+                    :description "Name of the buffer to modify"
+                    )
+             (:name "old_string"
+                    :type string
+                    :description "Text to replace (must match exactly)"
+                    )
+             (:name "new_string"
+                    :type string
+                    :description "Text to replace old_string with"
+                    ))
+     :category "edit")
+
+    (defun codel-replace-buffer (buffer-name content)
+      "Completely replace contents of BUFFER-NAME with CONTENT."
+      (with-current-buffer buffer-name
+        (erase-buffer)
+        (insert content)
+        (format "Buffer replaced: %s" buffer-name)))
+
+    (gptel-make-tool
+     :name "ReplaceBuffer"
+     :function #'codel-replace-buffer
+     :description "Completely overwrites buffer contents"
+     :args '((:name "buffer_name"
+                    :type string
+                    :description "Name of the buffer to overwrite"
+                    )
+             (:name "content"
+                    :type string
+                    :description "Content to write to the buffer"
+                    ))
+     :category "edit"))
+#+end_src
+
+*** Tool Use
+
+#+begin_src emacs-lisp
+  ;; (gptel-make-tool
+  ;;  :name "SearchViaSearXNG"
+  ;;  :function (lambda (query)
+  ;;              (let ((url (format "https://%s:%s@search.twohundredok.com/search?q=%s&format=json"
+  ;;                                 munen-gptel--twohundredok-user
+  ;;                                 munen-gptel--twohundredok-password
+  ;;                                 (url-hexify-string query))))
+  ;;                (with-temp-buffer
+  ;;                  (url-insert-file-contents url)
+  ;;                  (let ((json-response (json-read)))
+  ;;                    (mapconcat (lambda (result)
+  ;;                                 (format "%s - %s\n%s" (cdr (assoc 'title result)) (cdr (assoc 'url result)) (cdr (assoc 'content result))))
+  ;;                               (cdr (assoc 'results json-response))
+  ;;                               "\n\n")))))
+  ;;  :description "Search the web using searxng"
+  ;;  :args '((:name "query"
+  ;;                 :type string
+  ;;                 :description "The search query"   
+  ;;                 ))
+  ;;  :category "web")
+
+
+
+  ;; (defun munen-gptel--trafilatura-fetch-url (url)
+  ;;   "Fetch content from URL using trafilatura and return it as a string."
+  ;;   (with-temp-buffer
+  ;;     (call-process "trafilatura" nil t nil "--output-format=markdown" "--with-metadata" "-u" url)
+  ;;     (buffer-string)))
+
+  ;; (gptel-make-tool
+  ;;  :name "TrafilaturaFetch"
+  ;;  :function #'munen-gptel--trafilatura-fetch-url
+  ;;  :description "Fetch content from a URL using trafilatura"
+  ;;  :args '((:name "url"
+  ;;                 :type string
+  ;;                 :description "URL to fetch content from"
+  ;;                 ))
+  ;;  :category "web")
+
+
+  ;; (defun codel-replace-buffer (buffer-name content)
+  ;;   "Completely replace contents of BUFFER-NAME with CONTENT."
+  ;;   (with-current-buffer buffer-name
+  ;;     (erase-buffer)
+  ;;     (insert content)
+  ;;     (format "Buffer replaced: %s" buffer-name)))
+
+  ;; (gptel-make-tool
+  ;;  :name "ReplaceBuffer"
+  ;;  :function #'codel-replace-buffer
+  ;;  :description "Completely overwrites buffer contents"
+  ;;  :args '((:name "buffer_name"
+  ;;                 :type string
+  ;;                 :description "Name of the buffer to overwrite"
+  ;;                 )
+  ;;          (:name "content"
+  ;;                 :type string
+  ;;                 :description "Content to write to the buffer"
+  ;;                 ))
+  ;;  :category "edit")
+
+
+  ;; (defun codel-edit-buffer (buffer-name old-string new-string)
+  ;;   "In BUFFER-NAME, replace OLD-STRING with NEW-STRING."
+  ;;   (with-current-buffer buffer-name
+  ;;     (let ((case-fold-search nil))  ;; Case-sensitive search
+  ;;       (save-excursion
+  ;;         (goto-char (point-min))
+  ;;         (let ((count 0))
+  ;;           (while (search-forward old-string nil t)
+  ;;             (setq count (1+ count)))
+  ;;           (if (= count 0)
+  ;;               (format "Error: Could not find text to replace in buffer %s" buffer-name)
+  ;;             (if (> count 1)
+  ;;                 (format "Error: Found %d matches for the text to replace in buffer %s" count buffer-name)
+  ;;               (goto-char (point-min))
+  ;;               (search-forward old-string)
+  ;;               (replace-match new-string t t)
+  ;;               (format "Successfully edited buffer %s" buffer-name))))))))
+
+  ;; (gptel-make-tool
+  ;;  :name "EditBuffer"
+  ;;  :function #'codel-edit-buffer
+  ;;  :description "Edits Emacs buffers"
+  ;;  :args '((:name "buffer_name"
+  ;;                 :type string
+  ;;                 :description "Name of the buffer to modify"
+  ;;                 )
+  ;;          (:name "old_string"
+  ;;                 :type string
+  ;;                 :description "Text to replace (must match exactly)"
+  ;;                 )
+  ;;          (:name "new_string"
+  ;;                 :type string
+  ;;                 :description "Text to replace old_string with"
+  ;;                 ))
+  ;;  :category "edit")
+
+
+  ;; (defun my-gptel--edit_file (file-path file-edits)
+  ;;   "In FILE-PATH, apply FILE-EDITS with pattern matching and replacing."
+  ;;   (if (and file-path (not (string= file-path "")) file-edits)
+  ;;       (with-current-buffer (get-buffer-create "*edit-file*")
+  ;;         (insert-file-contents (expand-file-name file-path))
+  ;;         (let ((inhibit-read-only t)
+  ;;               (case-fold-search nil)
+  ;;               (file-name (expand-file-name file-path))
+  ;;               (edit-success nil))
+  ;;           ;; apply changes
+  ;;           (dolist (file-edit (seq-into file-edits 'list))
+  ;;             (when-let ((line-number (plist-get file-edit :line_number))
+  ;;                        (old-string (plist-get file-edit :old_string))
+  ;;                        (new-string (plist-get file-edit :new_string))
+  ;;                        (is-valid-old-string (not (string= old-string ""))))
+  ;;               (goto-char (point-min))
+  ;;               (forward-line (1- line-number))
+  ;;               (when (search-forward old-string nil t)
+  ;;                 (replace-match new-string t t)
+  ;;                 (setq edit-success t))))
+  ;;           ;; return result to gptel
+  ;;           (if edit-success
+  ;;               (progn
+  ;;                 ;; show diffs
+  ;;                 (ediff-buffers (find-file-noselect file-name) (current-buffer))
+  ;;                 (format "Successfully edited %s" file-name))
+  ;;             (format "Failed to edited %s" file-name))))
+  ;;     (format "Failed to edited %s" file-path)))
+
+  ;; (with-eval-after-load 'gptel
+  ;;   (gptel-make-tool
+  ;;    :function #'my-gptel--edit_file
+  ;;    :name "edit_file"
+  ;;    :description "Edit file with a list of edits, each edit contains a line-number,
+  ;; a old-string and a new-string, new-string will replace the old-string at the specified line."
+  ;;    :args (list '(:name "file-path"
+  ;;                        :type string
+  ;;                        :description "The full path of the file to edit")
+  ;;                '(:name "file-edits"
+  ;;                        :type array
+  ;;                        :items (:type object
+  ;;                                      :properties
+  ;;                                      (:line_number
+  ;;                                       (:type integer :description "The line number of the file where edit starts.")
+  ;;                                       :old_string
+  ;;                                       (:type string :description "The old-string to be replaced.")
+  ;;                                       :new_string
+  ;;                                       (:type string :description "The new-string to replace old-string.")))
+  ;;                        :description "The list of edits to apply on the file"))
+  ;;    :category "filesystem")
+  ;;   (gptel-make-tool
+  ;;    :function (lambda (url)
+  ;;                (with-current-buffer (url-retrieve-synchronously url)
+  ;;                  (goto-char (point-min)) (forward-paragraph)
+  ;;                  (let ((dom (libxml-parse-html-region (point) (point-max))))
+  ;;                    (run-at-time 0 nil #'kill-buffer (current-buffer))
+  ;;                    (with-temp-buffer
+  ;;                      (shr-insert-document dom)
+  ;;                      (buffer-substring-no-properties (point-min) (point-max))))))
+  ;;    :name "read_url"
+  ;;    :description "Fetch and read the contents of a URL"
+  ;;    :args (list '(:name "url"
+  ;;                        :type string
+  ;;                        :description "The URL to read"))
+  ;;    :category "web")
+
+  ;;   (gptel-make-tool
+  ;;    :function (lambda (buffer text)
+  ;;                (with-current-buffer (get-buffer-create buffer)
+  ;;                  (save-excursion
+  ;;                    (goto-char (point-max))
+  ;;                    (insert text)))
+  ;;                (format "Appended text to buffer %s" buffer))
+  ;;    :name "append_to_buffer"
+  ;;    :description "Append text to the an Emacs buffer.  If the buffer does not exist, it will be created."
+  ;;    :args (list '(:name "buffer"
+  ;;                        :type string
+  ;;                        :description "The name of the buffer to append text to.")
+  ;;                '(:name "text"
+  ;;                        :type string
+  ;;                        :description "The text to append to the buffer."))
+  ;;    :category "emacs")
+
+  ;;   ;; Message buffer logging tool
+  ;;   (gptel-make-tool
+  ;;    :function (lambda (text)
+  ;;                (message "%s" text)
+  ;;                (format "Message sent: %s" text))
+  ;;    :name "echo_message"
+  ;;    :description "Send a message to the *Messages* buffer"
+  ;;    :args (list '(:name "text"
+  ;;                        :type string
+  ;;                        :description "The text to send to the messages buffer"))
+  ;;    :category "emacs")
+
+  ;;   ;; buffer retrieval tool
+  ;;   (gptel-make-tool
+  ;;    :function (lambda (buffer)
+  ;;                (unless (buffer-live-p (get-buffer buffer))
+  ;;                  (error "Error: buffer %s is not live." buffer))
+  ;;                (with-current-buffer  buffer
+  ;;                  (buffer-substring-no-properties (point-min) (point-max))))
+  ;;    :name "read_buffer"
+  ;;    :description "Return the contents of an Emacs buffer"
+  ;;    :args (list '(:name "buffer"
+  ;;                        :type string
+  ;;                        :description "The name of the buffer whose contents are to be retrieved"))
+  ;;    :category "emacs")
+
+
+  ;;   (gptel-make-tool
+  ;;    :function (lambda (directory)
+  ;;                (mapconcat #'identity
+  ;;                           (directory-files directory)
+  ;;                           "\n"))
+  ;;    :name "list_directory"
+  ;;    :description "List the contents of a given directory"
+  ;;    :args (list '(:name "directory"
+  ;;                        :type string
+  ;;                        :description "The path to the directory to list"))
+  ;;    :category "filesystem")
+
+  ;;   (gptel-make-tool
+  ;;    :function (lambda (parent name)
+  ;;                (condition-case nil
+  ;;                    (progn
+  ;;                      (make-directory (expand-file-name name parent) t)
+  ;;                      (format "Directory %s created/verified in %s" name parent))
+  ;;                  (error (format "Error creating directory %s in %s" name parent))))
+  ;;    :name "make_directory"
+  ;;    :description "Create a new directory with the given name in the specified parent directory"
+  ;;    :args (list '(:name "parent"
+  ;;                        :type string
+  ;;                        :description "The parent directory where the new directory should be created, e.g. /tmp")
+  ;;                '(:name "name"
+  ;;                        :type string
+  ;;                        :description "The name of the new directory to create, e.g. testdir"))
+  ;;    :category "filesystem")
+
+  ;;   (gptel-make-tool
+  ;;    :function (lambda (path filename content)
+  ;;                (let ((full-path (expand-file-name filename path)))
+  ;;                  (with-temp-buffer
+  ;;                    (insert content)
+  ;;                    (write-file full-path))
+  ;;                  (format "Created file %s in %s" filename path)))
+  ;;    :name "create_file"
+  ;;    :description "Create a new file with the specified content"
+  ;;    :args (list '(:name "path"
+  ;;                        :type string
+  ;;                        :description "The directory where to create the file")
+  ;;                '(:name "filename"
+  ;;                        :type string
+  ;;                        :description "The name of the file to create")
+  ;;                '(:name "content"
+  ;;                        :type string
+  ;;                        :description "The content to write to the file"))
+  ;;    :category "filesystem")
+
+  ;;   (gptel-make-tool
+  ;;    :function (lambda (filepath)
+  ;;                (with-temp-buffer
+  ;;                  (insert-file-contents (expand-file-name filepath))
+  ;;                  (buffer-string)))
+  ;;    :name "read_file"
+  ;;    :description "Read and display the contents of a file"
+  ;;    :args (list '(:name "filepath"
+  ;;                        :type string
+  ;;                        :description "Path to the file to read.  Supports relative paths and ~."))
+  ;;    :category "filesystem"))
+#+end_src
+** aidermacs
+https://github.com/MatthewZMD/aidermacs
+
+#+begin_src emacs-lisp
+  (require 'aidermacs)
+  (with-eval-after-load 'aidermacs
+    (global-set-key (kbd "C-c a") 'aidermacs-transient-menu)
+    (setq aidermacs-comint-multiline-newline-key "S-<return>")
+    ;; Configure variables
+    (setq aidermacs-use-architect-mode nil)
+    ;; No need showing the diff after change
+    (setq aidermacs-show-diff-after-change nil)
+    (setq aidermacs-auto-accept-architect t)
+    (add-to-list 'aidermacs-extra-args "--cache-prompts")
+    (add-to-list 'aidermacs-extra-args "--no-gitignore")
+    ;; (setq aidermacs-default-model "sonnet")
+    (setq aidermacs-default-model "gemini/gemini-2.5-pro-exp-03-25")
+    ;; (setq aidermacs-default-model "groq/meta-llama/llama-4-maverick-17b-128e-instruct")
+    )
 #+end_src
 
 * pdf-tools
