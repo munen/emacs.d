@@ -3083,7 +3083,7 @@ https://github.com/karthink/gptel
      :function #'my-gptel--edit_file
      :name "edit_file"
      :description "Edit file with a list of edits, each edit contains a line-number,
-  a old-string and a new-string, new-string will replace the old-string at the specified line."
+    a old-string and a new-string, new-string will replace the old-string at the specified line."
      :args (list '(:name "file-path"
                          :type string
                          :description "The full path of the file to edit")
@@ -3108,18 +3108,23 @@ https://github.com/karthink/gptel
                             (expand-file-name script_file) " "
                             script_args))))
      :name "run_script"
-     :description "Run script"
+     :description "Executes a user-specified script using a given program/interpreter and arguments. Returns the standard output of the script as a string. IMPORTANT: This tool allows execution of arbitrary code; user confirmation will be required before any script is run."
      :args (list
             '(:name "script_program"
                     :type string
-                    :description "Program to run the the script.")
+                    :description "The program or interpreter to execute the script (e.g., 'python', 'bash', 'node').")
             '(:name "script_file"
                     :type string
-                    :description "Path to the script to run. Supports relative paths and ~.")
+                    :description "Path to the script file to execute. Supports relative paths from the user's home directory (e.g., using '~').")
             '(:name "script_args"
                     :type string
-                    :description "Args for script to run."))
-     :category "filesystem")
+                    :description "Command-line arguments to be passed to the script. Provide as a single string. Can be an empty string if no arguments are needed."))
+     :category "filesystem"
+     :confirm t  ;; Crucial: This ensures gptel will ask for your confirmation
+     :include t  ;; Optional: Consider if you want results automatically in the buffer
+     )
+
+
 
     (gptel-make-tool
      :function (lambda (command)
