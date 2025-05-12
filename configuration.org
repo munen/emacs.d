@@ -3070,7 +3070,6 @@ https://github.com/karthink/gptel
                        :type string
                        :description "The content to write to the file"))
    :category "filesystem"
-   :confirm t
    :include t)
 
 
@@ -3257,7 +3256,6 @@ https://github.com/karthink/gptel
                   :type string
                   :description "The search query to execute against the search engine."))
    :category "web"
-   :confirm t
    :include t)
 
   (defun munen-gptel--trafilatura-fetch-url (url)
@@ -3275,7 +3273,6 @@ https://github.com/karthink/gptel
                   :type string
                   :description "URL to fetch content from"))
    :category "web"
-   :confirm t
    :include t)
 
   (gptel-make-tool
@@ -3297,7 +3294,6 @@ https://github.com/karthink/gptel
                   :type string
                   :description "The new content to write to the buffer, replacing all existing content."))
    :category "edit"
-   :confirm t
    :include t)
 
 
