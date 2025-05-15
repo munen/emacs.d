@@ -3006,7 +3006,29 @@ https://github.com/karthink/gptel
    :category "emacs"
    :include t)
 
-
+  (gptel-make-tool
+   :function (lambda (buffer text)
+               (with-temp-message (format "Appending to buffer: %s" buffer)
+                 (condition-case err
+                     (if (buffer-live-p (get-buffer buffer))
+                         (with-current-buffer buffer
+                           (goto-char (point-max))
+                           (insert text)
+                           (format "Successfully appended text to buffer %s." buffer))
+                       (format "Error: buffer %s is not live or does not exist." buffer))
+                   (error (format "Error appending to buffer %s: %s"
+                                  buffer (error-message-string err))))))
+   :name "append_to_buffer"
+   :description "Append the given text to the end of an Emacs buffer. Returns a success or error message."
+   :args (list
+          '(:name "buffer"
+            :type string
+            :description "The name of the buffer to append to.")
+          '(:name "text"
+            :type string
+            :description "The text to append to the buffer."))
+   :category "emacs"
+   :include t)
 
   (defun gptel-read-documentation (symbol)
     "Read the documentation for SYMBOL, which can be a function or variable."
