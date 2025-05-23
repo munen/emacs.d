@@ -3240,7 +3240,7 @@ https://github.com/karthink/gptel
   (gptel-make-tool
    :name "apply_diff_fenced"
    :description (concat
-                 "Applies a diff (patch) to a specified file using fenced diff content. "
+                 "Applies a diff (patch) to a specified file using fenced diff content. This is the PREFERRED method for modifying files as it is more token-efficient."
                  "The diff must be provided within fenced code blocks (=diff or =patch) and be in unified format. "
                  "The LLM should generate the diff such that the file paths within the diff "
                  "(e.g., '--- a/filename' '+++ b/filename') are appropriate for the 'file_path' argument and chosen 'patch_options'. "
@@ -3363,7 +3363,7 @@ https://github.com/karthink/gptel
                      (insert new_content))
                    (format "Successfully replaced content in %s" full-path))))
    :name "replace_file_contents"
-   :description "Replaces the entire content of a specified file with new content. IMPORTANT: This tool will completely overwrite the existing file content; user confirmation will be required."
+   :description "Replaces the entire content of a specified file with new content. This tool should be used as a FALLBACK if 'apply_diff_fenced' fails repeatedly, as it requires more tokens to send the entire file content. IMPORTANT: This tool will completely overwrite the existing file content."
    :args (list
           '(:name "file_path"
                   :type string
