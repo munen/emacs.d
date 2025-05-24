@@ -3114,7 +3114,6 @@ https://github.com/karthink/gptel
                        :type string
                        :description "The name of the new directory to create, e.g. testdir"))
    :category "filesystem"
-   :confirm t
    :include t)
 
 
@@ -3264,7 +3263,6 @@ https://github.com/karthink/gptel
                   :optional t
                   :description "Optional: The directory in which to interpret file_path and run patch. Defaults to the current buffer's directory if not specified."))
    :category "filesystem"
-   :confirm t
    :function
    (lambda (file_path diff_content &optional patch_options working_dir)
      ;; Extract diff content from fenced blocks
@@ -3374,7 +3372,7 @@ https://github.com/karthink/gptel
           '(:name "working_dir"
                   :type string
                   :description "Optional: The directory in which to interpret file_path. Defaults to the current directory if not specified."))
-   :category "file"
+   :category "filesystem"
    :include t)
 
   (gptel-make-tool
@@ -3394,7 +3392,6 @@ https://github.com/karthink/gptel
                   :type string
                   :description "Optional: The directory in which to run the command. Defaults to the current directory if not specified."))
    :category "command"
-   :confirm t
    :include t)
 
   (gptel-make-tool
