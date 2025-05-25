@@ -3463,10 +3463,10 @@ Temporarily use my patch:
                              (buffer-string))
                          (error (format "Error reading file: %s - %s" filepath (error-message-string err))))))))
      :name "read_file"
-     :description "Read and display the contents of a file"
+     :description "Read and display the contents of a file. Note: If a file is already included in the current gptel context (conversation), there is no need to read it again as the context is always current."
      :args (list '(:name "filepath"
                          :type string
-                         :description "Path to the file to read. Supports relative paths and ~."))
+                         :description "Path to the file to read. Supports relative paths and ~. Only use this tool for files not already in the conversation context."))
      :category "filesystem"
      :include t)
 #+end_src
