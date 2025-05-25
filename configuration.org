@@ -2996,450 +2996,452 @@ Temporarily use my patch:
 *** Tool Use
 
 #+begin_src emacs-lisp
-    (gptel-make-tool
-     :function (lambda (buffer)
-                 (with-temp-message (format "Reading buffer: %s" buffer)
-                   (condition-case err
-                       (if (buffer-live-p (get-buffer buffer))
-                           (with-current-buffer buffer
-                             (buffer-substring-no-properties (point-min) (point-max)))
-                         (format "Error: buffer %s is not live." buffer))
-                     (error (format "Error reading buffer %s: %s" 
-                                    buffer (error-message-string err))))))
-     :name "read_buffer"
-     :description "Return the contents of an Emacs buffer"
-     :args (list '(:name "buffer"
-                         :type string
-                         :description "The name of the buffer whose contents are to be retrieved"))
-     :category "emacs"
-     :include t)
+  (gptel-make-tool
+   :function (lambda (buffer)
+               (with-temp-message (format "Reading buffer: %s" buffer)
+                 (condition-case err
+                     (if (buffer-live-p (get-buffer buffer))
+                         (with-current-buffer buffer
+                           (buffer-substring-no-properties (point-min) (point-max)))
+                       (format "Error: buffer %s is not live." buffer))
+                   (error (format "Error reading buffer %s: %s" 
+                                  buffer (error-message-string err))))))
+   :name "read_buffer"
+   :description "Return the contents of an Emacs buffer"
+   :args (list '(:name "buffer"
+                       :type string
+                       :description "The name of the buffer whose contents are to be retrieved"))
+   :category "emacs"
+   :include t)
 
-    (gptel-make-tool
-     :function (lambda (buffer text)
-                 (with-temp-message (format "Appending to buffer: %s" buffer)
-                   (condition-case err
-                       (if (buffer-live-p (get-buffer buffer))
-                           (with-current-buffer buffer
-                             (goto-char (point-max))
-                             (insert text)
-                             (format "Successfully appended text to buffer %s." buffer))
-                         (format "Error: buffer %s is not live or does not exist." buffer))
-                     (error (format "Error appending to buffer %s: %s"
-                                    buffer (error-message-string err))))))
-     :name "append_to_buffer"
-     :description "Append the given text to the end of an Emacs buffer. Returns a success or error message."
-     :args (list
-            '(:name "buffer"
-                    :type string
-                    :description "The name of the buffer to append to.")
-            '(:name "text"
-                    :type string
-                    :description "The text to append to the buffer."))
-     :category "emacs"
-     :include t)
+  (gptel-make-tool
+   :function (lambda (buffer text)
+               (with-temp-message (format "Appending to buffer: %s" buffer)
+                 (condition-case err
+                     (if (buffer-live-p (get-buffer buffer))
+                         (with-current-buffer buffer
+                           (goto-char (point-max))
+                           (insert text)
+                           (format "Successfully appended text to buffer %s." buffer))
+                       (format "Error: buffer %s is not live or does not exist." buffer))
+                   (error (format "Error appending to buffer %s: %s"
+                                  buffer (error-message-string err))))))
+   :name "append_to_buffer"
+   :description "Append the given text to the end of an Emacs buffer. Returns a success or error message."
+   :args (list
+          '(:name "buffer"
+                  :type string
+                  :description "The name of the buffer to append to.")
+          '(:name "text"
+                  :type string
+                  :description "The text to append to the buffer."))
+   :category "emacs"
+   :include t)
 
-    (defun gptel-read-documentation (symbol)
-      "Read the documentation for SYMBOL, which can be a function or variable."
-      (with-temp-message (format "Reading documentation for: %s" symbol)
-        (condition-case err
-            (let ((sym (intern symbol)))
-              (cond
-               ((fboundp sym)
-                (documentation sym))
-               ((boundp sym)
-                (documentation-property sym 'variable-documentation))
-               (t
-                (format "No documentation found for %s" symbol))))
-          (error (format "Error reading documentation for %s: %s" 
-                         symbol (error-message-string err))))))
+  (defun gptel-read-documentation (symbol)
+    "Read the documentation for SYMBOL, which can be a function or variable."
+    (with-temp-message (format "Reading documentation for: %s" symbol)
+      (condition-case err
+          (let ((sym (intern symbol)))
+            (cond
+             ((fboundp sym)
+              (documentation sym))
+             ((boundp sym)
+              (documentation-property sym 'variable-documentation))
+             (t
+              (format "No documentation found for %s" symbol))))
+        (error (format "Error reading documentation for %s: %s" 
+                       symbol (error-message-string err))))))
 
-    (gptel-make-tool
-     :name "read_documentation"
-     :function #'gptel-read-documentation
-     :description "Read the documentation for a given function or variable"
-     :args (list '(:name "name"
-                         :type string
-                         :description "The name of the function or variable whose documentation is to be retrieved"))
-     :category "emacs"
-     :include t)
-
-
-    (gptel-make-tool
-     :function (lambda (text)
-                 (with-temp-message (format "Sending message: %s" text)
-                   (message "%s" text)
-                   (format "Message sent: %s" text)))
-     :name "echo_message"
-     :description "Send a message to the *Messages* buffer"
-     :args (list '(:name "text"
-                         :type string
-                         :description "The text to send to the messages buffer"))
-     :category "emacs"
-     :include t)
-
-    (gptel-make-tool
-     :function (lambda (path filename content)
-                 (with-temp-message (format "Creating file: %s in %s" filename path)
-                   (condition-case err
-                       (let ((full-path (expand-file-name filename path)))
-                         (with-temp-buffer
-                           (insert content)
-                           (write-file full-path))
-                         (format "Created file %s in %s" filename path))
-                     (error (format "Error creating file %s in %s: %s" 
-                                    filename path (error-message-string err))))))
-     :name "create_file"
-     :description "Create a new file with the specified content"
-     :args (list '(:name "path"
-                         :type string
-                         :description "The directory where to create the file")
-                 '(:name "filename"
-                         :type string
-                         :description "The name of the file to create")
-                 '(:name "content"
-                         :type string
-                         :description "The content to write to the file"))
-     :category "filesystem"
-     :include t)
+  (gptel-make-tool
+   :name "read_documentation"
+   :function #'gptel-read-documentation
+   :description "Read the documentation for a given function or variable"
+   :args (list '(:name "name"
+                       :type string
+                       :description "The name of the function or variable whose documentation is to be retrieved"))
+   :category "emacs"
+   :include t)
 
 
+  (gptel-make-tool
+   :function (lambda (text)
+               (with-temp-message (format "Sending message: %s" text)
+                 (message "%s" text)
+                 (format "Message sent: %s" text)))
+   :name "echo_message"
+   :description "Send a message to the *Messages* buffer"
+   :args (list '(:name "text"
+                       :type string
+                       :description "The text to send to the messages buffer"))
+   :category "emacs"
+   :include t)
 
-    (gptel-make-tool
-     :function (lambda (parent name)
-                 (with-temp-message (format "Creating directory: %s in %s" name parent)
-                   (condition-case err
-                       (progn
-                         (make-directory (expand-file-name name parent) t)
-                         (format "Directory %s created/verified in %s" name parent))
-                     (error (format "Error creating directory %s in %s: %s" 
-                                    name parent (error-message-string err))))))
-     :name "make_directory"
-     :description "Create a new directory with the given name in the specified parent directory"
-     :args (list '(:name "parent"
-                         :type string
-                         :description "The parent directory where the new directory should be created, e.g. /tmp")
-                 '(:name "name"
-                         :type string
-                         :description "The name of the new directory to create, e.g. testdir"))
-     :category "filesystem"
-     :include t)
+  (gptel-make-tool
+   :function (lambda (path filename content)
+               (with-temp-message (format "Creating file: %s in %s" filename path)
+                 (condition-case err
+                     (let ((full-path (expand-file-name filename path)))
+                       (with-temp-buffer
+                         (insert content)
+                         (write-file full-path))
+                       (format "Created file %s in %s" filename path))
+                   (error (format "Error creating file %s in %s: %s" 
+                                  filename path (error-message-string err))))))
+   :name "create_file"
+   :description "Create a new file with the specified content"
+   :args (list '(:name "path"
+                       :type string
+                       :description "The directory where to create the file")
+               '(:name "filename"
+                       :type string
+                       :description "The name of the file to create")
+               '(:name "content"
+                       :type string
+                       :description "The content to write to the file"))
+   :category "filesystem"
+   :include t)
 
 
-    (gptel-make-tool
-     :function (lambda (directory)
-                 (with-temp-message (format "Listing directory: %s" directory)
-                   (condition-case err
-                       (mapconcat #'identity
-                                  (directory-files directory)
-                                  "\n")
-                     (error (format "Error listing directory: %s - %s" directory (error-message-string err))))))
-     :name "list_directory"
-     :description "List the contents of a given directory"
-     :args (list '(:name "directory"
-                         :type string
-                         :description "The path to the directory to list"))
-     :category "filesystem"
-     :include t)
 
-    (gptel-make-tool
-     :name "apply_diff"
-     :description (concat
-                   "Applies a diff (patch) to a specified file. "
-                   "The diff must be in the unified format (output of 'diff -u original_file new_file'). "
-                   "The LLM should generate the diff such that the file paths within the diff "
-                   "(e.g., '--- a/filename' '+++ b/filename') are appropriate for the 'file_path' argument and chosen 'patch_options'. "
-                   "Common 'patch_options' include: '' (empty, if paths in diff are exact or relative to current dir of file_path), "
-                   "'-p0' (if diff paths are full or exactly match the target including prefixes like 'a/'), "
-                   "'-p1' (if diff paths have one leading directory to strip, e.g., diff has 'a/src/file.c' and you want to patch 'src/file.c' from project root). "
-                   "Default options are '-N' (ignore already applied patches).")
-     :args (list
-            '(:name "file_path"
-                    :type string
-                    :description "The path to the file that needs to be patched.")
-            '(:name "diff_content"
-                    :type string
-                    :description "The diff content in unified format (e.g., from 'diff -u').")
-            '(:name "patch_options"
-                    :type string
-                    :optional t
-                    :description "Optional: Additional options for the 'patch' command (e.g., '-p1', '-p0', '-R'). Defaults to '-N'. Prepend other options if needed, e.g., '-p1 -N'.")
-            '(:name "working_dir"
-                    :type string
-                    :optional t
-                    :description "Optional: The directory in which to interpret file_path and run patch. Defaults to the current buffer's directory if not specified."))
-     :category "filesystem"
-     :function
-     (lambda (file_path diff_content &optional patch_options working_dir)
-       (let ((original-default-directory default-directory)
-             (user-patch-options (if (and patch_options (not (string-empty-p patch_options)))
-                                     (split-string patch_options " " t)
-                                   nil))
-             ;; Combine user options with -N, ensuring -N is there.
-             ;; If user provides -N or --forward, use their version. Otherwise, add -N.
-             (base-options '("-N"))
-             (effective-patch-options '()))
+  (gptel-make-tool
+   :function (lambda (parent name)
+               (with-temp-message (format "Creating directory: %s in %s" name parent)
+                 (condition-case err
+                     (progn
+                       (make-directory (expand-file-name name parent) t)
+                       (format "Directory %s created/verified in %s" name parent))
+                   (error (format "Error creating directory %s in %s: %s" 
+                                  name parent (error-message-string err))))))
+   :name "make_directory"
+   :description "Create a new directory with the given name in the specified parent directory"
+   :args (list '(:name "parent"
+                       :type string
+                       :description "The parent directory where the new directory should be created, e.g. /tmp")
+               '(:name "name"
+                       :type string
+                       :description "The name of the new directory to create, e.g. testdir"))
+   :category "filesystem"
+   :include t)
 
-         (if user-patch-options
-             (if (or (member "-N" user-patch-options) (member "--forward" user-patch-options))
-                 (setq effective-patch-options user-patch-options)
-               (setq effective-patch-options (append user-patch-options base-options)))
-           (setq effective-patch-options base-options))
 
-         (let* ((out-buf-name (generate-new-buffer-name "*patch-stdout*"))
-                (err-buf-name (generate-new-buffer-name "*patch-stderr*"))
-                (target-file nil)
-                (exit-status -1) ; Initialize to a known non-zero value
-                (result-output "")
-                (result-error ""))
-           (unwind-protect
-               (progn
-                 (when (and working_dir (not (string-empty-p working_dir)))
-                   (setq default-directory (expand-file-name working_dir)))
+  (gptel-make-tool
+   :function (lambda (directory)
+               (with-temp-message (format "Listing directory: %s" directory)
+                 (condition-case err
+                     (mapconcat #'identity
+                                (directory-files directory)
+                                "\n")
+                   (error (format "Error listing directory: %s - %s" directory (error-message-string err))))))
+   :name "list_directory"
+   :description "List the contents of a given directory"
+   :args (list '(:name "directory"
+                       :type string
+                       :description "The path to the directory to list"))
+   :category "filesystem"
+   :include t)
 
-                 (setq target-file (expand-file-name file_path))
+  (gptel-make-tool
+   :name "apply_diff"
+   :description (concat
+                 "Applies a diff (patch) to a specified file. "
+                 "USE THIS TOOL FOR ALL LLMs EXCEPT GEMINI (use apply_diff_fenced for Gemini). "
+                 "The diff must be in the unified format (output of 'diff -u original_file new_file'). "
+                 "The LLM should generate the diff such that the file paths within the diff "
+                 "(e.g., '--- a/filename' '+++ b/filename') are appropriate for the 'file_path' argument and chosen 'patch_options'. "
+                 "Common 'patch_options' include: '' (empty, if paths in diff are exact or relative to current dir of file_path), "
+                 "'-p0' (if diff paths are full or exactly match the target including prefixes like 'a/'), "
+                 "'-p1' (if diff paths have one leading directory to strip, e.g., diff has 'a/src/file.c' and you want to patch 'src/file.c' from project root). "
+                 "Default options are '-N' (ignore already applied patches).")
+   :args (list
+          '(:name "file_path"
+                  :type string
+                  :description "The path to the file that needs to be patched.")
+          '(:name "diff_content"
+                  :type string
+                  :description "The diff content in unified format (e.g., from 'diff -u').")
+          '(:name "patch_options"
+                  :type string
+                  :optional t
+                  :description "Optional: Additional options for the 'patch' command (e.g., '-p1', '-p0', '-R'). Defaults to '-N'. Prepend other options if needed, e.g., '-p1 -N'.")
+          '(:name "working_dir"
+                  :type string
+                  :optional t
+                  :description "Optional: The directory in which to interpret file_path and run patch. Defaults to the current buffer's directory if not specified."))
+   :category "filesystem"
+   :function
+   (lambda (file_path diff_content &optional patch_options working_dir)
+     (let ((original-default-directory default-directory)
+           (user-patch-options (if (and patch_options (not (string-empty-p patch_options)))
+                                   (split-string patch_options " " t)
+                                 nil))
+           ;; Combine user options with -N, ensuring -N is there.
+           ;; If user provides -N or --forward, use their version. Otherwise, add -N.
+           (base-options '("-N"))
+           (effective-patch-options '()))
 
-                 (unless (file-exists-p target-file)
-                   ;; Use error to signal failure, which gptel should catch.
-                   (error "File to patch does not exist: %s" target-file))
+       (if user-patch-options
+           (if (or (member "-N" user-patch-options) (member "--forward" user-patch-options))
+               (setq effective-patch-options user-patch-options)
+             (setq effective-patch-options (append user-patch-options base-options)))
+         (setq effective-patch-options base-options))
 
-                 (with-temp-message (format "Applying diff to: `%s` with options: %s" target-file effective-patch-options)
-                   (with-temp-buffer
-                     (insert diff_content)
-                     (unless (eq (char-before (point-max)) ?\n)
-                       (goto-char (point-max))
-                       (insert "\n"))
+       (let* ((out-buf-name (generate-new-buffer-name "*patch-stdout*"))
+              (err-buf-name (generate-new-buffer-name "*patch-stderr*"))
+              (target-file nil)
+              (exit-status -1) ; Initialize to a known non-zero value
+              (result-output "")
+              (result-error ""))
+         (unwind-protect
+             (progn
+               (when (and working_dir (not (string-empty-p working_dir)))
+                 (setq default-directory (expand-file-name working_dir)))
 
-                     ;; Pass buffer *names* to call-process-region
-                     (setq exit-status (apply #'call-process-region
-                                              (point-min) (point-max)
-                                              "patch"       ; Command
-                                              nil           ; delete region (no)
-                                              (list out-buf-name err-buf-name) ; stdout/stderr buffer names
-                                              nil           ; display (no)
-                                              (append effective-patch-options (list target-file))))))
+               (setq target-file (expand-file-name file_path))
 
-                 ;; Retrieve content from buffers using their names
-                 (let ((stdout-buf (get-buffer out-buf-name))
-                       (stderr-buf (get-buffer err-buf-name)))
-                   (when stdout-buf
-                     (with-current-buffer stdout-buf
-                       (setq result-output (buffer-string))))
-                   (when stderr-buf
-                     (with-current-buffer stderr-buf
-                       (setq result-error (buffer-string)))))
+               (unless (file-exists-p target-file)
+                 ;; Use error to signal failure, which gptel should catch.
+                 (error "File to patch does not exist: %s" target-file))
 
-                 (if (= exit-status 0)
-                     (format "Diff successfully applied to %s.\nPatch command options: %s\nPatch STDOUT:\n%s\nPatch STDERR:\n%s"
-                             target-file effective-patch-options result-output result-error)
-                   ;; Signal an Elisp error, which gptel will catch and display.
-                   ;; The arguments to 'error' become the error message.
-                   (error "Failed to apply diff to %s (exit status %s).\nPatch command options: %s\nPatch STDOUT:\n%s\nPatch STDERR:\n%s"
-                          target-file exit-status effective-patch-options result-output result-error)))
-             ;; Cleanup clause of unwind-protect
-             (setq default-directory original-default-directory)
-             (let ((stdout-buf-obj (get-buffer out-buf-name))
-                   (stderr-buf-obj (get-buffer err-buf-name)))
-               (when (buffer-live-p stdout-buf-obj) (kill-buffer stdout-buf-obj))
-               (when (buffer-live-p stderr-buf-obj) (kill-buffer stderr-buf-obj)))))))
-     :include t)
+               (with-temp-message (format "Applying diff to: `%s` with options: %s" target-file effective-patch-options)
+                 (with-temp-buffer
+                   (insert diff_content)
+                   (unless (eq (char-before (point-max)) ?\n)
+                     (goto-char (point-max))
+                     (insert "\n"))
 
-    (gptel-make-tool
-     :name "apply_diff_fenced"
-     :description (concat
-                   "Applies a diff (patch) to a specified file using fenced diff content. This is the PREFERRED method for modifying files as it is more token-efficient."
-                   "The diff must be provided within fenced code blocks (=diff or =patch) and be in unified format. "
-                   "The LLM should generate the diff such that the file paths within the diff "
-                   "(e.g., '--- a/filename' '+++ b/filename') are appropriate for the 'file_path' argument and chosen 'patch_options'. "
-                   "Common 'patch_options' include: '' (empty, if paths in diff are exact or relative to current dir of file_path), "
-                   "'-p0' (if diff paths are full or exactly match the target including prefixes like 'a/'), "
-                   "'-p1' (if diff paths have one leading directory to strip, e.g., diff has 'a/src/file.c' and you want to patch 'src/file.c' from project root). "
-                   "Default options are '-N' (ignore already applied patches).")
-     :args (list
-            '(:name "file_path"
-                    :type string
-                    :description "The path to the file that needs to be patched.")
-            '(:name "diff_content"
-                    :type string
-                    :description "The diff content within fenced code blocks (=diff or =patch) in unified format.")
-            '(:name "patch_options"
-                    :type string
-                    :optional t
-                    :description "Optional: Additional options for the 'patch' command (e.g., '-p1', '-p0', '-R'). Defaults to '-N'. Prepend other options if needed, e.g., '-p1 -N'.")
-            '(:name "working_dir"
-                    :type string
-                    :optional t
-                    :description "Optional: The directory in which to interpret file_path and run patch. Defaults to the current buffer's directory if not specified."))
-     :category "filesystem"
-     :function
-     (lambda (file_path diff_content &optional patch_options working_dir)
-       ;; Extract diff content from fenced blocks
-       (let ((extracted-diff 
-              (if (string-match "=\\(?:diff\\|patch\\)?\n\\(\\(?:.\\|\n\\)*?\\)\n=" diff_content)
-                  (match-string 1 diff_content)
-                ;; If no fenced block found, try to use content as-is but warn
-                (progn
-                  (message "Warning: No fenced diff block found, using content as-is")
-                  diff_content))))
-         
-         ;; Continue with original logic using extracted diff
-         (setq diff_content extracted-diff))
+                   ;; Pass buffer *names* to call-process-region
+                   (setq exit-status (apply #'call-process-region
+                                            (point-min) (point-max)
+                                            "patch"       ; Command
+                                            nil           ; delete region (no)
+                                            (list out-buf-name err-buf-name) ; stdout/stderr buffer names
+                                            nil           ; display (no)
+                                            (append effective-patch-options (list target-file))))))
+
+               ;; Retrieve content from buffers using their names
+               (let ((stdout-buf (get-buffer out-buf-name))
+                     (stderr-buf (get-buffer err-buf-name)))
+                 (when stdout-buf
+                   (with-current-buffer stdout-buf
+                     (setq result-output (buffer-string))))
+                 (when stderr-buf
+                   (with-current-buffer stderr-buf
+                     (setq result-error (buffer-string)))))
+
+               (if (= exit-status 0)
+                   (format "Diff successfully applied to %s.\nPatch command options: %s\nPatch STDOUT:\n%s\nPatch STDERR:\n%s"
+                           target-file effective-patch-options result-output result-error)
+                 ;; Signal an Elisp error, which gptel will catch and display.
+                 ;; The arguments to 'error' become the error message.
+                 (error "Failed to apply diff to %s (exit status %s).\nPatch command options: %s\nPatch STDOUT:\n%s\nPatch STDERR:\n%s"
+                        target-file exit-status effective-patch-options result-output result-error)))
+           ;; Cleanup clause of unwind-protect
+           (setq default-directory original-default-directory)
+           (let ((stdout-buf-obj (get-buffer out-buf-name))
+                 (stderr-buf-obj (get-buffer err-buf-name)))
+             (when (buffer-live-p stdout-buf-obj) (kill-buffer stdout-buf-obj))
+             (when (buffer-live-p stderr-buf-obj) (kill-buffer stderr-buf-obj)))))))
+   :include t)
+
+  (gptel-make-tool
+   :name "apply_diff_fenced"
+   :description (concat
+                 "Applies a diff (patch) to a specified file using fenced diff content. This is the PREFERRED method for modifying files as it is more token-efficient."
+                 "USE THIS TOOL ONLY FOR GEMINI MODELS (other LLMs should use apply_diff). "
+                 "The diff must be provided within fenced code blocks (=diff or =patch) and be in unified format. "
+                 "The LLM should generate the diff such that the file paths within the diff "
+                 "(e.g., '--- a/filename' '+++ b/filename') are appropriate for the 'file_path' argument and chosen 'patch_options'. "
+                 "Common 'patch_options' include: '' (empty, if paths in diff are exact or relative to current dir of file_path), "
+                 "'-p0' (if diff paths are full or exactly match the target including prefixes like 'a/'), "
+                 "'-p1' (if diff paths have one leading directory to strip, e.g., diff has 'a/src/file.c' and you want to patch 'src/file.c' from project root). "
+                 "Default options are '-N' (ignore already applied patches).")
+   :args (list
+          '(:name "file_path"
+                  :type string
+                  :description "The path to the file that needs to be patched.")
+          '(:name "diff_content"
+                  :type string
+                  :description "The diff content within fenced code blocks (=diff or =patch) in unified format.")
+          '(:name "patch_options"
+                  :type string
+                  :optional t
+                  :description "Optional: Additional options for the 'patch' command (e.g., '-p1', '-p0', '-R'). Defaults to '-N'. Prepend other options if needed, e.g., '-p1 -N'.")
+          '(:name "working_dir"
+                  :type string
+                  :optional t
+                  :description "Optional: The directory in which to interpret file_path and run patch. Defaults to the current buffer's directory if not specified."))
+   :category "filesystem"
+   :function
+   (lambda (file_path diff_content &optional patch_options working_dir)
+     ;; Extract diff content from fenced blocks
+     (let ((extracted-diff 
+            (if (string-match "=\\(?:diff\\|patch\\)?\n\\(\\(?:.\\|\n\\)*?\\)\n=" diff_content)
+                (match-string 1 diff_content)
+              ;; If no fenced block found, try to use content as-is but warn
+              (progn
+                (message "Warning: No fenced diff block found, using content as-is")
+                diff_content))))
        
-       (let ((original-default-directory default-directory)
-             (user-patch-options (if (and patch_options (not (string-empty-p patch_options)))
-                                     (split-string patch_options " " t)
-                                   nil))
-             ;; Combine user options with -N, ensuring -N is there.
-             ;; If user provides -N or --forward, use their version. Otherwise, add -N.
-             (base-options '("-N"))
-             (effective-patch-options '()))
+       ;; Continue with original logic using extracted diff
+       (setq diff_content extracted-diff))
+     
+     (let ((original-default-directory default-directory)
+           (user-patch-options (if (and patch_options (not (string-empty-p patch_options)))
+                                   (split-string patch_options " " t)
+                                 nil))
+           ;; Combine user options with -N, ensuring -N is there.
+           ;; If user provides -N or --forward, use their version. Otherwise, add -N.
+           (base-options '("-N"))
+           (effective-patch-options '()))
 
-         (if user-patch-options
-             (if (or (member "-N" user-patch-options) (member "--forward" user-patch-options))
-                 (setq effective-patch-options user-patch-options)
-               (setq effective-patch-options (append user-patch-options base-options)))
-           (setq effective-patch-options base-options))
+       (if user-patch-options
+           (if (or (member "-N" user-patch-options) (member "--forward" user-patch-options))
+               (setq effective-patch-options user-patch-options)
+             (setq effective-patch-options (append user-patch-options base-options)))
+         (setq effective-patch-options base-options))
 
-         (let* ((out-buf-name (generate-new-buffer-name "*patch-stdout*"))
-                (err-buf-name (generate-new-buffer-name "*patch-stderr*"))
-                (target-file nil)
-                (exit-status -1) ; Initialize to a known non-zero value
-                (result-output "")
-                (result-error ""))
-           (unwind-protect
-               (progn
-                 (when (and working_dir (not (string-empty-p working_dir)))
-                   (setq default-directory (expand-file-name working_dir)))
+       (let* ((out-buf-name (generate-new-buffer-name "*patch-stdout*"))
+              (err-buf-name (generate-new-buffer-name "*patch-stderr*"))
+              (target-file nil)
+              (exit-status -1) ; Initialize to a known non-zero value
+              (result-output "")
+              (result-error ""))
+         (unwind-protect
+             (progn
+               (when (and working_dir (not (string-empty-p working_dir)))
+                 (setq default-directory (expand-file-name working_dir)))
 
-                 (setq target-file (expand-file-name file_path))
+               (setq target-file (expand-file-name file_path))
 
-                 (unless (file-exists-p target-file)
-                   ;; Use error to signal failure, which gptel should catch.
-                   (error "File to patch does not exist: %s" target-file))
+               (unless (file-exists-p target-file)
+                 ;; Use error to signal failure, which gptel should catch.
+                 (error "File to patch does not exist: %s" target-file))
 
-                 (with-temp-message (format "Applying diff to: `%s` with options: %s" target-file effective-patch-options)
+               (with-temp-message (format "Applying diff to: `%s` with options: %s" target-file effective-patch-options)
+                 (with-temp-buffer
+                   (insert diff_content)
+                   (unless (eq (char-before (point-max)) ?\n)
+                     (goto-char (point-max))
+                     (insert "\n"))
+
+                   ;; Pass buffer *names* to call-process-region
+                   (setq exit-status (apply #'call-process-region
+                                            (point-min) (point-max)
+                                            "patch"       ; Command
+                                            nil           ; delete region (no)
+                                            (list out-buf-name err-buf-name) ; stdout/stderr buffer names
+                                            nil           ; display (no)
+                                            (append effective-patch-options (list target-file))))))
+
+               ;; Retrieve content from buffers using their names
+               (let ((stdout-buf (get-buffer out-buf-name))
+                     (stderr-buf (get-buffer err-buf-name)))
+                 (when stdout-buf
+                   (with-current-buffer stdout-buf
+                     (setq result-output (buffer-string))))
+                 (when stderr-buf
+                   (with-current-buffer stderr-buf
+                     (setq result-error (buffer-string)))))
+
+               (if (= exit-status 0)
+                   (format "Diff successfully applied to %s.\nPatch command options: %s\nPatch STDOUT:\n%s\nPatch STDERR:\n%s"
+                           target-file effective-patch-options result-output result-error)
+                 ;; Signal an Elisp error, which gptel will catch and display.
+                 ;; The arguments to 'error' become the error message.
+                 (error "Failed to apply diff to %s (exit status %s).\nPatch command options: %s\nPatch STDOUT:\n%s\nPatch STDERR:\n%s"
+                        target-file exit-status effective-patch-options result-output result-error)))
+           ;; Cleanup clause of unwind-protect
+           (setq default-directory original-default-directory)
+           (let ((stdout-buf-obj (get-buffer out-buf-name))
+                 (stderr-buf-obj (get-buffer err-buf-name)))
+             (when (buffer-live-p stdout-buf-obj) (kill-buffer stdout-buf-obj))
+             (when (buffer-live-p stderr-buf-obj) (kill-buffer stderr-buf-obj)))))))
+   :include t)
+
+  (gptel-make-tool
+   :function (lambda (file_path new_content &optional working_dir)
+               (with-temp-message (format "Replacing content in file: `%s`" file_path)
+                 (let ((default-directory (if (and working_dir (not (string= working_dir "")))
+                                              (expand-file-name working_dir)
+                                            default-directory))
+                       (full-path (expand-file-name file_path)))
+                   (with-temp-file full-path
+                     (insert new_content))
+                   (format "Successfully replaced content in %s" full-path))))
+   :name "replace_file_contents"
+   :description "Replaces the entire content of a specified file with new content. This tool should be used as a FALLBACK if 'apply_diff_fenced' fails repeatedly, as it requires more tokens to send the entire file content. IMPORTANT: This tool will completely overwrite the existing file content."
+   :args (list
+          '(:name "file_path"
+                  :type string
+                  :description "The path to the file that needs to be replaced.")
+          '(:name "new_content"
+                  :type string
+                  :description "The new content for the file.")
+          '(:name "working_dir"
+                  :type string
+                  :description "Optional: The directory in which to interpret file_path. Defaults to the current directory if not specified."))
+   :category "filesystem"
+   :include t)
+
+  (gptel-make-tool
+   :function (lambda (command &optional working_dir)
+               (with-temp-message (format "Executing command: `%s`" command)
+                 (let ((default-directory (if (and working_dir (not (string= working_dir "")))
+                                              (expand-file-name working_dir)
+                                            default-directory)))
+                   (shell-command-to-string command))))
+   :name "run_command"
+   :description "Executes a shell command and returns the output as a string. IMPORTANT: This tool allows execution of arbitrary code; user confirmation will be required before any command is run."
+   :args (list
+          '(:name "command"
+                  :type string
+                  :description "The complete shell command to execute.")
+          '(:name "working_dir"
+                  :type string
+                  :description "Optional: The directory in which to run the command. Defaults to the current directory if not specified."))
+   :category "command"
+   :include t)
+
+  (gptel-make-tool
+   :function (lambda (query)
+               (with-temp-message (format "Searching for: `%s`" query)
+                 (let ((url (format "https://%s:%s@search.twohundredok.com/search?q=%s&format=json"
+                                    munen-gptel--twohundredok-user
+                                    munen-gptel--twohundredok-password
+                                    (url-hexify-string query))))
                    (with-temp-buffer
-                     (insert diff_content)
-                     (unless (eq (char-before (point-max)) ?\n)
-                       (goto-char (point-max))
-                       (insert "\n"))
+                     (url-insert-file-contents url)
+                     (let ((json-response (json-read)))
+                       (mapconcat (lambda (result)
+                                    (format "%s - %s\n%s" (cdr (assoc 'title result)) (cdr (assoc 'url result)) (cdr (assoc 'content result))))
+                                  (cdr (assoc 'results json-response))
+                                  "\n\n"))))))
+   :name "search_web"
+   :description "Searches the web using SearXNG metasearch engine and returns formatted results including titles, URLs, and content excerpts."
+   :args (list
+          '(:name "query"
+                  :type string
+                  :description "The search query to execute against the search engine."))
+   :category "web"
+   :include t)
 
-                     ;; Pass buffer *names* to call-process-region
-                     (setq exit-status (apply #'call-process-region
-                                              (point-min) (point-max)
-                                              "patch"       ; Command
-                                              nil           ; delete region (no)
-                                              (list out-buf-name err-buf-name) ; stdout/stderr buffer names
-                                              nil           ; display (no)
-                                              (append effective-patch-options (list target-file))))))
+  (defun munen-gptel--trafilatura-fetch-url (url)
+    "Fetch content from URL using trafilatura and return it as a string."
+    (with-temp-message (format "Fetching content from: %s" url)
+      (with-temp-buffer
+        (call-process "trafilatura" nil t nil "--output-format=markdown" "--with-metadata" "-u" url)
+        (buffer-string))))
 
-                 ;; Retrieve content from buffers using their names
-                 (let ((stdout-buf (get-buffer out-buf-name))
-                       (stderr-buf (get-buffer err-buf-name)))
-                   (when stdout-buf
-                     (with-current-buffer stdout-buf
-                       (setq result-output (buffer-string))))
-                   (when stderr-buf
-                     (with-current-buffer stderr-buf
-                       (setq result-error (buffer-string)))))
-
-                 (if (= exit-status 0)
-                     (format "Diff successfully applied to %s.\nPatch command options: %s\nPatch STDOUT:\n%s\nPatch STDERR:\n%s"
-                             target-file effective-patch-options result-output result-error)
-                   ;; Signal an Elisp error, which gptel will catch and display.
-                   ;; The arguments to 'error' become the error message.
-                   (error "Failed to apply diff to %s (exit status %s).\nPatch command options: %s\nPatch STDOUT:\n%s\nPatch STDERR:\n%s"
-                          target-file exit-status effective-patch-options result-output result-error)))
-             ;; Cleanup clause of unwind-protect
-             (setq default-directory original-default-directory)
-             (let ((stdout-buf-obj (get-buffer out-buf-name))
-                   (stderr-buf-obj (get-buffer err-buf-name)))
-               (when (buffer-live-p stdout-buf-obj) (kill-buffer stdout-buf-obj))
-               (when (buffer-live-p stderr-buf-obj) (kill-buffer stderr-buf-obj)))))))
-     :include t)
-
-    (gptel-make-tool
-     :function (lambda (file_path new_content &optional working_dir)
-                 (with-temp-message (format "Replacing content in file: `%s`" file_path)
-                   (let ((default-directory (if (and working_dir (not (string= working_dir "")))
-                                                (expand-file-name working_dir)
-                                              default-directory))
-                         (full-path (expand-file-name file_path)))
-                     (with-temp-file full-path
-                       (insert new_content))
-                     (format "Successfully replaced content in %s" full-path))))
-     :name "replace_file_contents"
-     :description "Replaces the entire content of a specified file with new content. This tool should be used as a FALLBACK if 'apply_diff_fenced' fails repeatedly, as it requires more tokens to send the entire file content. IMPORTANT: This tool will completely overwrite the existing file content."
-     :args (list
-            '(:name "file_path"
-                    :type string
-                    :description "The path to the file that needs to be replaced.")
-            '(:name "new_content"
-                    :type string
-                    :description "The new content for the file.")
-            '(:name "working_dir"
-                    :type string
-                    :description "Optional: The directory in which to interpret file_path. Defaults to the current directory if not specified."))
-     :category "filesystem"
-     :include t)
-
-    (gptel-make-tool
-     :function (lambda (command &optional working_dir)
-                 (with-temp-message (format "Executing command: `%s`" command)
-                   (let ((default-directory (if (and working_dir (not (string= working_dir "")))
-                                                (expand-file-name working_dir)
-                                              default-directory)))
-                     (shell-command-to-string command))))
-     :name "run_command"
-     :description "Executes a shell command and returns the output as a string. IMPORTANT: This tool allows execution of arbitrary code; user confirmation will be required before any command is run."
-     :args (list
-            '(:name "command"
-                    :type string
-                    :description "The complete shell command to execute.")
-            '(:name "working_dir"
-                    :type string
-                    :description "Optional: The directory in which to run the command. Defaults to the current directory if not specified."))
-     :category "command"
-     :include t)
-
-    (gptel-make-tool
-     :function (lambda (query)
-                 (with-temp-message (format "Searching for: `%s`" query)
-                   (let ((url (format "https://%s:%s@search.twohundredok.com/search?q=%s&format=json"
-                                      munen-gptel--twohundredok-user
-                                      munen-gptel--twohundredok-password
-                                      (url-hexify-string query))))
-                     (with-temp-buffer
-                       (url-insert-file-contents url)
-                       (let ((json-response (json-read)))
-                         (mapconcat (lambda (result)
-                                      (format "%s - %s\n%s" (cdr (assoc 'title result)) (cdr (assoc 'url result)) (cdr (assoc 'content result))))
-                                    (cdr (assoc 'results json-response))
-                                    "\n\n"))))))
-     :name "search_web"
-     :description "Searches the web using SearXNG metasearch engine and returns formatted results including titles, URLs, and content excerpts."
-     :args (list
-            '(:name "query"
-                    :type string
-                    :description "The search query to execute against the search engine."))
-     :category "web"
-     :include t)
-
-    (defun munen-gptel--trafilatura-fetch-url (url)
-      "Fetch content from URL using trafilatura and return it as a string."
-      (with-temp-message (format "Fetching content from: %s" url)
-        (with-temp-buffer
-          (call-process "trafilatura" nil t nil "--output-format=markdown" "--with-metadata" "-u" url)
-          (buffer-string))))
-
-    (gptel-make-tool
-     :name "TrafilaturaFetch"
-     :function #'munen-gptel--trafilatura-fetch-url
-     :description "Fetch content from a URL using trafilatura, which extracts main content and metadata while removing boilerplate, navigation and ads."
-     :args '((:name "url"
-                    :type string
-                    :description "URL to fetch content from"))
-     :category "web"
-     :include t)
+  (gptel-make-tool
+   :name "TrafilaturaFetch"
+   :function #'munen-gptel--trafilatura-fetch-url
+   :description "Fetch content from a URL using trafilatura, which extracts main content and metadata while removing boilerplate, navigation and ads."
+   :args '((:name "url"
+                  :type string
+                  :description "URL to fetch content from"))
+   :category "web"
+   :include t)
 
 #+end_src
 
