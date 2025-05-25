@@ -2712,7 +2712,8 @@ This will render the same time as above as:
                                   (concat org-directory "media.org")
                                   (concat org-directory "shared_with_monika/shared_alain_and_monika.org")
                                   "~/src/200ok/admin/THINGS.org"
-                                  (find-lisp-find-files "~/src/200ok/admin/pm/" "^pm.*\.org$")))))
+                                  (when (file-directory-p "~/src/200ok/admin/pm/")
+                                    (find-lisp-find-files "~/src/200ok/admin/pm/" "^pm.*\.org$"))))))
 
   (set-org-agenda-files)
 
@@ -3392,7 +3393,10 @@ Temporarily use my patch:
                                             default-directory)))
                    (shell-command-to-string command))))
    :name "run_command"
-   :description "Executes a shell command and returns the output as a string. IMPORTANT: This tool allows execution of arbitrary code; user confirmation will be required before any command is run."
+   :description (concat
+                 "Executes a shell command and returns the output as a string. IMPORTANT: This tool allows execution of arbitrary code."
+                 "Installed commandline tools: coreutils, git, patch, findutils, the-silver-searcher curl"
+                 "NOTE: You can use a combination of `find` and `the-silver-searcher` to find your way around a codebase")
    :args (list
           '(:name "command"
                   :type string
