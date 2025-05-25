@@ -101,7 +101,19 @@
      "கடவுச்சொல்" "അടയാളവാക്ക്" "গুপ্তশব্দ" "পাসওয়ার্ড" "රහස්පදය" "密码"
      "verification code"))
  '(safe-local-variable-values
-   '((eval and (fboundp 'toc-org-mode) (toc-org-mode 1))
+   '((eval progn
+           (setq gptel-read-file-ignore-patterns
+                 '("doc/*" "fixtures/*" "recordings/*" "dev/*"
+                   "resources/*" "config/*" ".sourceme" ".sourceme/*"
+                   "logs/*" "local/*" "systems/*" "cache/*" "bin/*"
+                   "ctx.clj" "repomix.md" "gitleaks-baseline.json"
+                   "*_test.clj" "*.org"))
+           (setq cider-ns-code-reload-tool "cider.clj-reload/reload")
+           (setq sql-postgres-login-params
+                 '((user :default "postgres")
+                   (database :default "alephdam_events")
+                   (server :default "localhost") (port :default 5432))))
+     (eval and (fboundp 'toc-org-mode) (toc-org-mode 1))
      (toc-org-max-depth . 4)
      (eval progn
            (setq cider-ns-code-reload-tool "cider.clj-reload/reload")
