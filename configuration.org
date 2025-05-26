@@ -543,6 +543,7 @@ Do not report warnings and errors from asynchronous native compilation.
 ** =undo-tree=
 
 #+begin_src emacs-lisp
+  (require 'undo-tree)
   (global-undo-tree-mode) 
   (setq undo-tree-auto-save-history nil)
 
@@ -2780,30 +2781,6 @@ An extension to restclient.el for emacs that provides org-babel support.
    '((restclient . t)))
 #+END_SRC
 
-** =org-download=
-https://github.com/abo-abo/org-download
-
-   #+begin_src emacs-lisp
-     (require 'org-download)
-
-     (add-hook 'dired-mode-hook 'org-download-enable)
-     (setq org-download-heading-lvl nil)
-   #+end_src
-
-
-Don't save org-download images nested according to header, save them
-flat.
-
-#+begin_src emacs-lisp
-(setq-default org-download-heading-lvl nil)
-#+end_src
-
-Save org-download images into the "images" directory.
-#+begin_src emacs-lisp
-(setq-default org-download-image-dir (concat org-directory "images"))
-#+end_src
-
-
 ** Org habits
 https://orgmode.org/manual/Tracking-your-habits.html
 
@@ -4979,6 +4956,7 @@ I like to set timers, for example through [[file:org-pomodoro.el][org-pomodoro.e
 
  #+BEGIN_SRC emacs-lisp
    (require 'spaceline-config)
+   (require 'spaceline)
    (spaceline-spacemacs-theme)
 
    ;; Otherwise spaceline will be huge in Emacs >= 27.1
