@@ -3365,29 +3365,23 @@ Temporarily use my patch:
    :include t)
 
   (gptel-make-tool
-   :function (lambda (file_path new_content &optional working_dir)
-               (with-temp-message (format "Replacing content in file: `%s`" file_path)
-                 (let ((default-directory (if (and working_dir (not (string= working_dir "")))
-                                              (expand-file-name working_dir)
-                                            default-directory))
-                       (full-path (expand-file-name file_path)))
-                   (with-temp-file full-path
-                     (insert new_content))
-                   (format "Successfully replaced content in %s" full-path))))
-   :name "replace_file_contents"
-   :description "Replaces the entire content of a specified file with new content. This tool should be used as a FALLBACK if 'apply_diff_fenced' fails repeatedly, as it requires more tokens to send the entire file content. IMPORTANT: This tool will completely overwrite the existing file content."
-   :args (list
-          '(:name "file_path"
-                  :type string
-                  :description "The path to the file that needs to be replaced.")
-          '(:name "new_content"
-                  :type string
-                  :description "The new content for the file.")
-          '(:name "working_dir"
-                  :type string
-                  :description "Optional: The directory in which to interpret file_path. Defaults to the current directory if not specified."))
-   :category "filesystem"
-   :include t)
+     :function (lambda (file_path new_content)
+                 (with-temp-message (format "Replacing content in file: `%s`" file_path)
+                   (let ((full-path (expand-file-name file_path)))
+                     (with-temp-file full-path
+                       (insert new_content))
+                     (format "Successfully replaced content in %s" full-path))))
+     :name "replace_file_contents_new"
+     :description "Replaces the entire content of a specified file with new content. This tool should be used as a FALLBACK if 'apply_diff' or 'apply_diff_fenced' fail repeatedly, as it requires more tokens to send the entire file content. IMPORTANT: This tool will completely overwrite the existing file content."
+     :args (list
+            '(:name "file_path"
+                    :type string
+                    :description "The path to the file that needs to be replaced.")
+            '(:name "new_content"
+                    :type string
+                    :description "The new content for the file."))
+     :category "filesystem"
+     :include t)
 
   (gptel-make-tool
    :function (lambda (command &optional working_dir)
