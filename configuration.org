@@ -3146,23 +3146,6 @@ Temporarily use my patch:
    :category "filesystem"
    :include t)
 
-
-  (gptel-make-tool
-   :function (lambda (directory)
-               (with-temp-message (format "Listing directory: %s" directory)
-                 (condition-case err
-                     (mapconcat #'identity
-                                (directory-files directory)
-                                "\n")
-                   (error (format "Error listing directory: %s - %s" directory (error-message-string err))))))
-   :name "list_directory"
-   :description "List the contents of a given directory"
-   :args (list '(:name "directory"
-                       :type string
-                       :description "The path to the directory to list"))
-   :category "filesystem"
-   :include t)
-
   (gptel-make-tool
    :name "apply_diff"
    :description (concat
@@ -3468,6 +3451,134 @@ Temporarily use my patch:
    :category "web"
    :include t)
 
+#+end_src
+
+*** list_directory
+
+This tool emulates =tree= behavior, but it adheres to =.gitignore= and
+it's written entirely in elisp, so it is platform independent.
+
+#+begin_src emacs-lisp
+(gptel-make-tool
+ :function (lambda (directory &optional max-depth show-hidden)
+             (with-temp-message (format "Listing directory tree: %s" directory)
+               (condition-case err
+                   (let ((max-depth (or max-depth 3))
+                         (show-hidden (and show-hidden (not (string= show-hidden "")))))
+                     (gptel--directory-tree directory max-depth show-hidden))
+                 (error (format "Error listing directory: %s - %s" directory (error-message-string err))))))
+ :name "list_directory"
+ :description "List the contents of a directory in a tree format, respecting .gitignore files"
+ :args (list '(:name "directory"
+                     :type string
+                     :description "The path to the directory to list")
+             '(:name "max-depth"
+                     :type string
+                     :description "Optional: Maximum depth to traverse (default: 3)")
+             '(:name "show-hidden"
+                     :type string
+                     :description "Optional: Show hidden files/directories (default: false)"))
+ :category "filesystem"
+ :include t)
+
+(defun gptel--parse-gitignore (gitignore-file)
+  "Parse a .gitignore file and return a list of patterns."
+  (when (file-exists-p gitignore-file)
+    (with-temp-buffer
+      (insert-file-contents gitignore-file)
+      (let ((patterns '()))
+        (goto-char (point-min))
+        (while (not (eobp))
+          (let ((line (string-trim (buffer-substring-no-properties
+                                   (line-beginning-position)
+                                   (line-end-position)))))
+            (unless (or (string-empty-p line) (string-prefix-p "#" line))
+              (push line patterns)))
+          (forward-line 1))
+        (nreverse patterns)))))
+
+(defun gptel--should-ignore-p (file-path gitignore-patterns)
+  "Check if FILE-PATH should be ignored based on GITIGNORE-PATTERNS."
+  (let ((relative-path (file-name-nondirectory file-path)))
+    (cl-some (lambda (pattern)
+               (cond
+                ;; Directory pattern (ends with /)
+                ((string-suffix-p "/" pattern)
+                 (and (file-directory-p file-path)
+                      (string-match-p (concat "^" (regexp-quote (string-remove-suffix "/" pattern)) "$")
+                                     relative-path)))
+                ;; Exact match
+                ((not (string-match-p "[*?]" pattern))
+                 (string= relative-path pattern))
+                ;; Wildcard pattern
+                (t
+                 (string-match-p (concat "^" (replace-regexp-in-string "\\*" ".*" (regexp-quote pattern)) "$")
+                                relative-path))))
+             gitignore-patterns)))
+
+(defun gptel--collect-gitignore-patterns (directory)
+  "Collect all .gitignore patterns from DIRECTORY and parent directories."
+  (let ((patterns '())
+        (current-dir (expand-file-name directory)))
+    (while (and current-dir (not (string= current-dir "/")))
+      (let ((gitignore-file (expand-file-name ".gitignore" current-dir)))
+        (when (file-exists-p gitignore-file)
+          (setq patterns (append (gptel--parse-gitignore gitignore-file) patterns))))
+      (let ((parent (file-name-directory (directory-file-name current-dir))))
+        (setq current-dir (if (string= parent current-dir) nil parent))))
+    ;; Add common ignore patterns
+    (append patterns '(".git" ".DS_Store" "node_modules" "__pycache__" "*.pyc"))))
+
+(defun gptel--directory-tree (directory max-depth show-hidden)
+  "Generate a tree representation of DIRECTORY."
+  (let ((expanded-dir (expand-file-name directory)))
+    (concat (abbreviate-file-name expanded-dir) "\n"
+            (gptel--directory-tree-recursive expanded-dir "" max-depth 0 show-hidden))))
+
+(defun gptel--directory-tree-recursive (directory prefix max-depth current-depth show-hidden)
+  "Internal recursive function for generating directory tree."
+  (if (>= current-depth max-depth)
+      ""
+    (let* ((expanded-dir (expand-file-name directory))
+           (gitignore-patterns (gptel--collect-gitignore-patterns expanded-dir))
+           (entries (condition-case nil
+                        (directory-files expanded-dir t "^[^.]" t)
+                      (error nil)))
+           (filtered-entries '())
+           (result ""))
+
+      ;; Add hidden files if requested
+      (when show-hidden
+        (setq entries (append entries
+                             (directory-files expanded-dir t "^\\.[^.]" t))))
+
+      ;; Filter out ignored files
+      (dolist (entry entries)
+        (unless (gptel--should-ignore-p entry gitignore-patterns)
+          (push entry filtered-entries)))
+
+      (setq filtered-entries (sort filtered-entries #'string<))
+
+      ;; Generate tree output
+      (let ((total (length filtered-entries)))
+        (dotimes (i total)
+          (let* ((entry (nth i filtered-entries))
+                 (basename (file-name-nondirectory entry))
+                 (is-last (= i (1- total)))
+                 (is-dir (file-directory-p entry))
+                 (connector (if is-last "└── " "├── "))
+                 (new-prefix (concat prefix (if is-last "    " "│   "))))
+
+            (setq result (concat result prefix connector basename
+                                (if is-dir "/" "") "\n"))
+
+            ;; Recurse into directories
+            (when (and is-dir (< (1+ current-depth) max-depth))
+              (setq result (concat result
+                                  (gptel--directory-tree-recursive entry new-prefix
+                                                                  max-depth (1+ current-depth)
+                                                                  show-hidden)))))))
+      result)))
 #+end_src
 
 *** read_file
