@@ -3078,6 +3078,27 @@ Temporarily use my patch:
    :category "emacs"
    :include t)
 
+   (gptel-make-tool
+   :function (lambda (buffer_name content)
+               (with-temp-message (format "Replacing buffer contents: `%s`" buffer_name)
+                 (if (get-buffer buffer_name)
+                     (with-current-buffer buffer_name
+                       (erase-buffer)
+                       (insert content)
+                       (format "Buffer contents replaced: %s" buffer_name))
+                   (format "Error: Buffer '%s' not found" buffer_name))))
+   :name "replace_buffer"
+   :description "Completely overwrites buffer contents with the provided content."
+   :args (list
+          '(:name "buffer_name"
+                  :type string
+                  :description "The name of the buffer whose contents will be replaced.")
+          '(:name "content"
+                  :type string
+                  :description "The new content to write to the buffer, replacing all existing content."))
+   :category "emacs"
+   :include t)
+
   (gptel-make-tool
    :function (lambda (path filename content)
                (with-temp-message (format "Creating file: %s in %s" filename path)
