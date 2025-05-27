@@ -3611,6 +3611,107 @@ A list of patterns that prevent the =read_file= tool from accessing certain file
   instead of file contents
 - Use in =.dir-locals.el= for project-specific configuration
 
+*** file_lint_with_flycheck
+
+#+begin_src emacs-lisp
+  (gptel-make-tool
+   :name "file_lint_with_flycheck"
+   :description (concat
+                 "Lints the specified file using Flycheck in Emacs, returning any errors or warnings "
+                 "(or a 'no errors found' message).\n\n"
+                 "**LLM Workflow for Code Modification:**\n"
+                 "1.  **Baseline Check:** Run this tool on the file *before* generating a patch or "
+                 "other code modifications. This helps understand the existing lint status and "
+                 "avoid re-introducing pre-existing issues or being blamed for them.\n"
+                 "2.  **Verification Check:** After your changes have been applied to the file "
+                 "(e.g., via a patch), run this tool again.\n"
+                 "3.  **Self-Correction:** Compare the lint output from step 2 (after your changes) "
+                 "with the baseline from step 1 (before your changes). If your modifications "
+                 "introduced *new* lint errors, you are expected to refactor your code to fix "
+                 "these new errors. Re-run this lint tool to confirm your fixes before "
+                 "considering the task complete. Focus on fixing errors introduced by your changes.")
+   :args (list '(:name "filename"
+                       :type "string"
+                       :description "The path (relative or absolute) to the file to be checked."))
+   :category "emacs"
+   :include t
+   :function
+   (lambda (filename)
+     (unless (require 'flycheck nil t)
+       (error "Flycheck package is not available."))
+     (unless (stringp filename)
+       (error "Filename argument must be a string."))
+     (let ((original-filename filename))
+       (condition-case err
+           (let* ((absolute-filename (expand-file-name filename))
+                  (buffer-object (get-file-buffer absolute-filename))
+                  (temp-buffer-created (not buffer-object))
+                  (buffer (or buffer-object
+                              (progn
+                                (unless (file-exists-p absolute-filename)
+                                  (error "File not found: %s (expanded from %s)" absolute-filename original-filename))
+                                (find-file-noselect absolute-filename))))
+                  (flycheck-was-on-in-buffer nil)
+                  (errors-string "Error: Failed to collect Flycheck results.")) ; Default error
+
+             (unless (buffer-live-p buffer)
+               (error "Could not open or find buffer for file: %s" absolute-filename))
+
+             (with-temp-message (format "Linting %s with Flycheck..." absolute-filename)
+               (unwind-protect
+                   (progn ;; Main work block
+                     (with-current-buffer buffer
+                       (setq flycheck-was-on-in-buffer flycheck-mode)
+                       (unless flycheck-mode
+                         (flycheck-mode 1)
+                         (unless flycheck-mode
+                           (error "Failed to enable Flycheck mode in buffer %s." (buffer-name))))
+
+                       (flycheck-buffer) ;; Request a syntax check
+
+                       (let ((timeout 15.0)
+                             (start-time (float-time)))
+                         (while (and (flycheck-running-p)
+                                     (< (- (float-time) start-time) timeout))
+                           (sit-for 0.1 t))) ;; Wait, process events
+
+                       ;; Check reason for loop termination & collect errors
+                       (if (flycheck-running-p)
+                           (error "Flycheck timed out after %.0f seconds for %s" timeout absolute-filename)
+                         ;; Flycheck is no longer running, collect errors
+                         (progn
+                           ;; flycheck-current-errors is a VARIABLE
+                           (let ((current-errors flycheck-current-errors))
+                             (if current-errors
+                                 (setq errors-string
+                                       (format "Flycheck results for %s:\n%s"
+                                               absolute-filename
+                                               (mapconcat
+                                                (lambda (err-obj) ;; err-obj is a flycheck-error struct
+                                                  (format "- %S at L%s%s (%s): %s"
+                                                          (flycheck-error-level err-obj)
+                                                          (flycheck-error-line err-obj)
+                                                          (if-let ((col (flycheck-error-column err-obj))) ; CORRECTED
+                                                              (format ":C%s" col) "")
+                                                          (flycheck-error-checker err-obj)
+                                                          (flycheck-error-message err-obj)))
+                                                current-errors "\n")))
+                               (setq errors-string (format "No Flycheck errors found in %s." absolute-filename)))))))
+                     ;; errors-string is now set based on Flycheck output
+                     ) ;; End of with-current-buffer
+                   ;; Cleanup block for unwind-protect
+                   (progn
+                     (when (buffer-live-p buffer)
+                       (with-current-buffer buffer
+                         (when (and flycheck-mode (not flycheck-was-on-in-buffer))
+                           (flycheck-mode 0))))
+                     (when (and temp-buffer-created (buffer-live-p buffer))
+                       (kill-buffer buffer)))))
+             errors-string)
+         (error (format "Error linting file %s: %s"
+                        original-filename (error-message-string err)))))))
+#+end_src
+
 ** aidermacs
 https://github.com/MatthewZMD/aidermacs
 
