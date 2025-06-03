@@ -2974,6 +2974,8 @@ Temporarily use my patch:
 
 *** Tool Use
 
+**** Misc
+
 #+begin_src emacs-lisp
   (gptel-make-tool
    :function (lambda (buffer)
@@ -3219,8 +3221,13 @@ Temporarily use my patch:
   - :old_string - The exact string to find and replace
   - :new_string - The replacement string
 
-  Returns a success/failure message indicating whether edits were applied.
-  WARNING: This modifies files without confirmation - use with caution!"
+  EDITING RULES:
+  - The old_string must EXACTLY MATCH the existing file content at the specified line
+  - Include enough context in old_string to uniquely identify the location
+  - Keep edits concise and focused on the specific change requested
+  - Do not include long runs of unchanged lines
+
+  Returns a success/failure message indicating whether edits were applied."
     (if (and file-path (not (string= file-path "")) file-edits)
         (with-current-buffer (get-buffer-create "*edit-file-non-interactive*")
           (erase-buffer)
@@ -3292,6 +3299,12 @@ Temporarily use my patch:
   - :old_string - The exact string to find and replace
   - :new_string - The replacement string
 
+  EDITING RULES:
+  - The old_string must EXACTLY MATCH the existing file content at the specified line
+  - Include enough context in old_string to uniquely identify the location
+  - Keep edits concise and focused on the specific change requested
+  - Do not include long runs of unchanged lines
+
   After applying edits, opens ediff to compare original vs modified versions,
   allowing user to review and selectively apply changes before saving.
   Returns a success/failure message indicating whether edits were applied."
@@ -3330,7 +3343,7 @@ Temporarily use my patch:
 
   This tool applies the specified edits and opens an ediff session for review.
   Each edit specifies a line number, old string to find, and new string replacement.
-  
+
   After applying edits, ediff opens to compare original vs modified versions,
   allowing interactive review and selective application of changes before saving.
   This provides a safe way to review changes before committing them to disk."
