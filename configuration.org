@@ -3133,7 +3133,7 @@ Temporarily use my patch:
                      (with-temp-file full-path
                        (insert new_content))
                      (format "Successfully replaced content in %s" full-path))))
-     :name "replace_file_contents_new"
+     :name "replace_file_contents"
      :description "Replaces the entire content of a specified file with new content. This tool should be used as a FALLBACK if 'apply_diff' or 'apply_diff_fenced' fail repeatedly, as it requires more tokens to send the entire file content. IMPORTANT: This tool will completely overwrite the existing file content."
      :args (list
             '(:name "file_path"
