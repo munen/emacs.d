@@ -3311,7 +3311,150 @@ Temporarily use my patch:
 
 #+end_src
 
-*** list_directory
+**** edit_file_non_interactive
+
+#+begin_src emacs-lisp
+  (defun munen-gptel--edit-file-non-interactive (file-path &optional file-edits)
+    "Edit FILE-PATH by applying FILE-EDITS and save changes automatically (non-interactive).
+
+  This function directly modifies the file on disk without user confirmation.
+  Each edit in FILE-EDITS should specify:
+  - :line_number - The 1-based line number where the edit occurs
+  - :old_string - The exact string to find and replace
+  - :new_string - The replacement string
+
+  Returns a success/failure message indicating whether edits were applied.
+  WARNING: This modifies files without confirmation - use with caution!"
+    (if (and file-path (not (string= file-path "")) file-edits)
+        (with-current-buffer (get-buffer-create "*edit-file-non-interactive*")
+          (erase-buffer)
+          (insert-file-contents (expand-file-name file-path))
+          (let ((inhibit-read-only t)
+                (case-fold-search nil)
+                (target-file-name (expand-file-name file-path))
+                (edit-success nil))
+            ;; apply changes
+            (dolist (file-edit (seq-into file-edits 'list))
+              (when-let ((line-number (plist-get file-edit :line_number))
+                         (old-string (plist-get file-edit :old_string))
+                         (new-string (plist-get file-edit :new_string))
+                         (is-valid-old-string (not (string= old-string ""))))
+                (goto-char (point-min))
+                (forward-line (1- line-number))
+                (when (search-forward old-string nil t)
+                  (replace-match new-string t t)
+                  (setq edit-success t))))
+            ;; return result to gptel
+            (if edit-success
+                (progn
+                  ;; Save the buffer's contents to the original file
+                  (write-file target-file-name nil)
+                  (kill-buffer (current-buffer)) ; Clean up the temporary buffer
+                  (format "Successfully edited and saved %s" target-file-name))
+              (progn
+                (kill-buffer (current-buffer)) ; Clean up the temporary buffer even on failure
+                (format "Failed to apply edits to %s. File was not saved." target-file-name)))))
+      (format "Failed to edit %s (invalid path or no edits provided)." file-path)))
+
+  (gptel-make-tool
+   :function #'munen-gptel--edit-file-non-interactive
+   :name "edit_file_non_interactive"
+   :description "Edit a file non-interactively by applying a list of edits and automatically saving changes.
+
+  This tool modifies the target file directly on disk without user confirmation or review.
+  Each edit specifies a line number, old string to find, and new string replacement.
+
+  WARNING: This tool directly modifies and saves files without interactive review. Use with caution!
+  All successful edits are applied and the file is saved automatically."
+   :args (list '(:name "file-path"
+                       :type string
+                       :description "The full path of the file to edit.")
+               '(:name "file-edits"
+                       :type array
+                       :items (:type object
+                                     :properties
+                                     (:line_number
+                                      (:type integer :description "The line number (1-based) where the old_string is expected.")
+                                      :old_string
+                                      (:type string :description "The exact string to be replaced on the specified line.")
+                                      :new_string
+                                      (:type string :description "The new string to replace old_string.")))
+                       :description "A list of edits to apply to the file. Each edit must contain line_number, old_string, and new_string."))
+   :category "filesystem"
+   :include t)
+#+end_src
+
+**** edit_file_interactively
+
+#+begin_src emacs-lisp
+  (defun munen-gptel--edit-file-interactive (file-path file-edits)
+    "Edit FILE-PATH by applying FILE-EDITS with interactive review using ediff.
+
+  This function applies the specified edits to the file and then opens an ediff
+  session to review changes before saving. Each edit in FILE-EDITS should specify:
+  - :line_number - The 1-based line number where the edit occurs  
+  - :old_string - The exact string to find and replace
+  - :new_string - The replacement string
+
+  After applying edits, opens ediff to compare original vs modified versions,
+  allowing user to review and selectively apply changes before saving.
+  Returns a success/failure message indicating whether edits were applied."
+    (if (and file-path (not (string= file-path "")) file-edits)
+        (with-current-buffer (get-buffer-create "*edit-file*")
+          (erase-buffer)
+          (insert-file-contents (expand-file-name file-path))
+          (let ((inhibit-read-only t)
+                (case-fold-search nil)
+                (file-name (expand-file-name file-path))
+                (edit-success nil))
+            ;; apply changes
+            (dolist (file-edit (seq-into file-edits 'list))
+              (when-let ((line-number (plist-get file-edit :line_number))
+                         (old-string (plist-get file-edit :old_string))
+                         (new-string (plist-get file-edit :new_string))
+                         (is-valid-old-string (not (string= old-string ""))))
+                (goto-char (point-min))
+                (forward-line (1- line-number))
+                (when (search-forward old-string nil t)
+                  (replace-match new-string t t)
+                  (setq edit-success t))))
+            ;; return result to gptel
+            (if edit-success
+                (progn
+                  ;; show diffs
+                  (ediff-buffers (find-file-noselect file-name) (current-buffer))
+                  (format "Successfully edited %s" file-name))
+              (format "Failed to edited %s" file-name))))
+      (format "Failed to edited %s" file-path)))
+
+  (gptel-make-tool
+     :function #'munen-gptel--edit-file-interactive
+     :name "edit_file_interactive"
+     :description "Edit a file interactively by applying a list of edits with review via ediff.
+
+  This tool applies the specified edits and opens an ediff session for review.
+  Each edit specifies a line number, old string to find, and new string replacement.
+  
+  After applying edits, ediff opens to compare original vs modified versions,
+  allowing interactive review and selective application of changes before saving.
+  This provides a safe way to review changes before committing them to disk."
+     :args (list '(:name "file-path"
+                         :type string
+                         :description "The full path of the file to edit")
+                 '(:name "file-edits"
+                         :type array
+                         :items (:type object
+                                       :properties
+                                       (:line_number
+                                        (:type integer :description "The line number of the file where edit starts.")
+                                        :old_string
+                                        (:type string :description "The old-string to be replaced.")
+                                        :new_string
+                                        (:type string :description "The new-string to replace old-string.")))
+                         :description "The list of edits to apply on the file"))
+     :category "filesystem")
+#+end_src
+**** list_directory
 
 This tool emulates =tree= behavior, but it adheres to =.gitignore= and
 it's written entirely in elisp, so it is platform independent.
@@ -3453,7 +3596,7 @@ it's written entirely in elisp, so it is platform independent.
    :include t)
 #+end_src
 
-*** read_file
+**** read_file
 
 #+begin_src emacs-lisp
   (gptel-make-tool
@@ -3481,9 +3624,9 @@ it's written entirely in elisp, so it is platform independent.
      :include t)
 #+end_src
 
-**** Config
+***** Config
 
-***** gptel-read-file-ignore-patterns
+****** gptel-read-file-ignore-patterns
 
 A list of patterns that prevent the =read_file= tool from accessing certain files.
 
@@ -3498,7 +3641,7 @@ A list of patterns that prevent the =read_file= tool from accessing certain file
   instead of file contents
 - Use in =.dir-locals.el= for project-specific configuration
 
-*** file_lint_with_flycheck
+**** file_lint_with_flycheck
 
 #+begin_src emacs-lisp
   (gptel-make-tool
@@ -3597,126 +3740,6 @@ A list of patterns that prevent the =read_file= tool from accessing certain file
              errors-string)
          (error (format "Error linting file %s: %s"
                         original-filename (error-message-string err)))))))
-#+end_src
-
-*** apply_diff_fenced
-
-#+begin_src emacs-lisp
-
-  (gptel-make-tool
-   :name "apply_diff_fenced"
-   :description (concat
-                 "Applies a diff (patch) to a specified file using fenced diff content. This is the PREFERRED method for modifying files as it is more token-efficient."
-                 "USE THIS TOOL ONLY FOR GEMINI MODELS (other LLMs should use apply_diff). "
-                 "The diff must be provided within fenced code blocks (=diff or =patch) and be in unified format. "
-                 "The LLM should generate the diff such that the file paths within the diff "
-                 "(e.g., '--- a/filename' '+++ b/filename') are appropriate for the 'file_path' argument and chosen 'patch_options'. "
-                 "Common 'patch_options' include: '' (empty, if paths in diff are exact or relative to current dir of file_path), "
-                 "'-p0' (if diff paths are full or exactly match the target including prefixes like 'a/'), "
-                 "'-p1' (if diff paths have one leading directory to strip, e.g., diff has 'a/src/file.c' and you want to patch 'src/file.c' from project root). "
-                 "Default options are '-N' (ignore already applied patches).")
-   :args (list
-          '(:name "file_path"
-                  :type string
-                  :description "The path to the file that needs to be patched.")
-          '(:name "diff_content"
-                  :type string
-                  :description "The diff content within fenced code blocks (=diff or =patch) in unified format.")
-          '(:name "patch_options"
-                  :type string
-                  :optional t
-                  :description "Optional: Additional options for the 'patch' command (e.g., '-p1', '-p0', '-R'). Defaults to '-N'. Prepend other options if needed, e.g., '-p1 -N'.")
-          '(:name "working_dir"
-                  :type string
-                  :optional t
-                  :description "Optional: The directory in which to interpret file_path and run patch. Defaults to the current buffer's directory if not specified."))
-   :category "filesystem"
-   :function
-   (lambda (file_path diff_content &optional patch_options working_dir)
-     ;; Extract diff content from fenced blocks
-     (let ((extracted-diff 
-            (if (string-match "=\\(?:diff\\|patch\\)?\n\\(\\(?:.\\|\n\\)*?\\)\n=" diff_content)
-                (match-string 1 diff_content)
-              ;; If no fenced block found, try to use content as-is but warn
-              (progn
-                (message "Warning: No fenced diff block found, using content as-is")
-                diff_content))))
-       
-       ;; Continue with original logic using extracted diff
-       (setq diff_content extracted-diff))
-     
-     (let ((original-default-directory default-directory)
-           (user-patch-options (if (and patch_options (not (string-empty-p patch_options)))
-                                   (split-string patch_options " " t)
-                                 nil))
-           ;; Combine user options with -N, ensuring -N is there.
-           ;; If user provides -N or --forward, use their version. Otherwise, add -N.
-           (base-options '("-N"))
-           (effective-patch-options '()))
-
-       (if user-patch-options
-           (if (or (member "-N" user-patch-options) (member "--forward" user-patch-options))
-               (setq effective-patch-options user-patch-options)
-             (setq effective-patch-options (append user-patch-options base-options)))
-         (setq effective-patch-options base-options))
-
-       (let* ((out-buf-name (generate-new-buffer-name "*patch-stdout*"))
-              (err-buf-name (generate-new-buffer-name "*patch-stderr*"))
-              (target-file nil)
-              (exit-status -1) ; Initialize to a known non-zero value
-              (result-output "")
-              (result-error ""))
-         (unwind-protect
-             (progn
-               (when (and working_dir (not (string-empty-p working_dir)))
-                 (setq default-directory (expand-file-name working_dir)))
-
-               (setq target-file (expand-file-name file_path))
-
-               (unless (file-exists-p target-file)
-                 ;; Use error to signal failure, which gptel should catch.
-                 (error "File to patch does not exist: %s" target-file))
-
-               (with-temp-message (format "Applying diff to: `%s` with options: %s" target-file effective-patch-options)
-                 (with-temp-buffer
-                   (insert diff_content)
-                   (unless (eq (char-before (point-max)) ?\n)
-                     (goto-char (point-max))
-                     (insert "\n"))
-
-                   ;; Pass buffer *names* to call-process-region
-                   (setq exit-status (apply #'call-process-region
-                                            (point-min) (point-max)
-                                            "patch"       ; Command
-                                            nil           ; delete region (no)
-                                            (list out-buf-name err-buf-name) ; stdout/stderr buffer names
-                                            nil           ; display (no)
-                                            (append effective-patch-options (list target-file))))))
-
-               ;; Retrieve content from buffers using their names
-               (let ((stdout-buf (get-buffer out-buf-name))
-                     (stderr-buf (get-buffer err-buf-name)))
-                 (when stdout-buf
-                   (with-current-buffer stdout-buf
-                     (setq result-output (buffer-string))))
-                 (when stderr-buf
-                   (with-current-buffer stderr-buf
-                     (setq result-error (buffer-string)))))
-
-               (if (= exit-status 0)
-                   (format "Diff successfully applied to %s.\nPatch command options: %s\nPatch STDOUT:\n%s\nPatch STDERR:\n%s"
-                           target-file effective-patch-options result-output result-error)
-                 ;; Signal an Elisp error, which gptel will catch and display.
-                 ;; The arguments to 'error' become the error message.
-                 (error "Failed to apply diff to %s (exit status %s).\nPatch command options: %s\nPatch STDOUT:\n%s\nPatch STDERR:\n%s"
-                        target-file exit-status effective-patch-options result-output result-error)))
-           ;; Cleanup clause of unwind-protect
-           (setq default-directory original-default-directory)
-           (let ((stdout-buf-obj (get-buffer out-buf-name))
-                 (stderr-buf-obj (get-buffer err-buf-name)))
-             (when (buffer-live-p stdout-buf-obj) (kill-buffer stdout-buf-obj))
-             (when (buffer-live-p stderr-buf-obj) (kill-buffer stderr-buf-obj)))))))
-   :include t)
 #+end_src
 
 ** aidermacs
