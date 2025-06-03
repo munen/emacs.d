@@ -3283,7 +3283,7 @@ Temporarily use my patch:
                                       :new_string
                                       (:type string :description "The new string to replace old_string.")))
                        :description "A list of edits to apply to the file. Each edit must contain line_number, old_string, and new_string."))
-   :category "filesystem"
+   :category "emacs"
    :include t)
 #+end_src
 
