@@ -2936,6 +2936,8 @@ file and not wanting to be overwhelmed by the whole list, for example.
 * AI
 ** =gptel=
 
+*** Setup
+
 https://github.com/karthink/gptel
 
 Temporarily use my patch:
@@ -2958,9 +2960,9 @@ Temporarily use my patch:
   (add-hook 'gptel-post-response-functions 'gptel-end-of-response)
 
   (gptel-make-ollama "Ollama"             
-                     :host "localhost:11434"               
-                     :stream t                            
-                     :models '("codellama"))        
+    :host "localhost:11434"               
+    :stream t                            
+    :models '("codellama"))        
 
   (global-set-key (kbd "C-c g m") 'gptel-menu)
   (global-set-key (kbd "C-c g c") 'gptel)
@@ -3209,10 +3211,10 @@ Temporarily use my patch:
 
 #+end_src
 
-**** edit_file_non_interactive
+**** edit_file
 
 #+begin_src emacs-lisp
-  (defun munen-gptel--edit-file-non-interactive (file-path &optional file-edits)
+  (defun munen-gptel--edit-file (file-path &optional file-edits)
     "Edit FILE-PATH by applying FILE-EDITS and save changes automatically (non-interactive).
 
   This function directly modifies the file on disk without user confirmation.
@@ -3229,7 +3231,7 @@ Temporarily use my patch:
 
   Returns a success/failure message indicating whether edits were applied."
     (if (and file-path (not (string= file-path "")) file-edits)
-        (with-current-buffer (get-buffer-create "*edit-file-non-interactive*")
+        (with-current-buffer (get-buffer-create "*edit-file*")
           (erase-buffer)
           (insert-file-contents (expand-file-name file-path))
           (let ((inhibit-read-only t)
@@ -3260,8 +3262,8 @@ Temporarily use my patch:
       (format "Failed to edit %s (invalid path or no edits provided)." file-path)))
 
   (gptel-make-tool
-   :function #'munen-gptel--edit-file-non-interactive
-   :name "edit_file_non_interactive"
+   :function #'munen-gptel--edit-file
+   :name "edit_file"
    :description "Edit a file non-interactively by applying a list of edits and automatically saving changes.
 
   This tool modifies the target file directly on disk without user confirmation or review.
@@ -3283,7 +3285,7 @@ Temporarily use my patch:
                                       :new_string
                                       (:type string :description "The new string to replace old_string.")))
                        :description "A list of edits to apply to the file. Each edit must contain line_number, old_string, and new_string."))
-   :category "emacs"
+   :category "filesystem"
    :include t)
 #+end_src
 
@@ -3361,7 +3363,7 @@ Temporarily use my patch:
                                         :new_string
                                         (:type string :description "The new-string to replace old-string.")))
                          :description "The list of edits to apply on the file"))
-     :category "filesystem")
+     :category "emacs")
 #+end_src
 **** list_directory
 
@@ -3651,6 +3653,56 @@ A list of patterns that prevent the =read_file= tool from accessing certain file
                         original-filename (error-message-string err)))))))
 #+end_src
 
+**** run_clojure_in_repl
+
+#+begin_src emacs-lisp
+  (gptel-make-tool
+   :function (lambda (code host port working_dir)
+               (let* ((eff-host (if (or (null host) (string= host "")) "localhost" host))
+                      (eff-port (if (or (null port) (and (integerp port) (= port 0))) 7888 port))
+                      (eff-working-dir (let ((base-dir (or default-directory ".")))
+                                         (if (or (null working_dir) (string= working_dir ""))
+                                             base-dir
+                                           (expand-file-name working_dir base-dir))))
+                      (shell-command (format "echo \"%s\" | lein repl :connect %s:%s"
+                                             code eff-host eff-port)))
+                 (with-temp-message (format "Executing: %s" shell-command)
+                   (let ((default-directory eff-working-dir)) ; Temporarily set default-directory
+                     (shell-command-to-string shell-command)))))
+   :name "run_clojure_in_repl"
+   :description (concat
+                 "Executes arbitrary Clojure code in a connected Leiningen nREPL session and returns the output. "
+                 "This tool constructs and executes a shell command like 'echo \"<your_code_arg>\" | lein repl :connect host:port'.\n\n"
+                 "IMPORTANT LLM USAGE INSTRUCTIONS FOR THE 'code' ARGUMENT:\n"
+                 "1. The 'code' argument string you provide will be wrapped *directly* in double quotes by the 'echo' command "
+                 "(e.g., the tool effectively does: echo \"<your_code_arg>\").\n"
+                 "2. Because of this, if your Clojure code contains string literals that use double quotes, YOU MUST ESCAPE THOSE "
+                 "INTERNAL DOUBLE QUOTES as '\\\\\"' within the 'code' argument string you provide. "
+                 "   Example: To run the Clojure `(println \"Hello \"World\"!\")`, you must provide the 'code' argument as "
+                 "   \'\'\'(println \\\\\"Hello \\\\\\\\\\\\\\\"World\\\\\\\\\\\\\\\"!\")\'\'\' (note the escaped internal quotes for the 'code' arg string).\n"
+                 "3. Single quotes (e.g., `(quote foo)` or `'foo`) and reader macros (like `#'foo/bar`) within your Clojure code "
+                 "   generally do NOT need special escaping for this tool *beyond what's needed by Clojure itself*, as they will be "
+                 "   protected by the outer double quotes of the 'echo' command.\n"
+                 "4. As per standard tool usage, if you wrap your 'code' argument in \'\'\'...\'\'\' for the tool call and the Clojure "
+                 "   code *itself* contains a literal \'\'\' sequence, you must escape that as '\\'\\'\\''.\n\n"
+                 "This tool allows execution of arbitrary Clojure code within the REPL. Useful for evaluation, running specific test functions with fixtures, or any other REPL interaction. "
+                 "Requires a Leiningen nREPL server to be running and connectable.")
+   :args (list
+          '(:name "code"
+                  :type string
+                  :description "The Clojure code string to execute. CRITICAL: See main tool description for how to format and escape this string, especially internal double quotes.")
+          '(:name "host"
+                  :type string
+                  :description "Optional: The hostname of the nREPL server. Defaults to 'localhost' if empty string or not provided.")
+          '(:name "port"
+                  :type integer
+                  :description "Optional: The port number of the nREPL server. Defaults to 7888 if 0, empty or not provided.")
+          '(:name "working_dir"
+                  :type string
+                  :description "Optional: The directory in which to run the 'lein repl :connect' command. Defaults to the current Emacs default-directory if empty string or not specified."))
+   :category "clojure"
+   :include t)
+#+end_src
 ** aidermacs
 https://github.com/MatthewZMD/aidermacs
 
