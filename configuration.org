@@ -2942,7 +2942,7 @@ https://github.com/karthink/gptel
 
 Temporarily use my patch:
 #+begin_src emacs-lisp
-  ;; (add-to-list 'load-path "~/src/gptel-clone")
+  (add-to-list 'load-path "~/src/gptel-clone")
   (require 'gptel)
 
   (setq gptel-log-level 'info)
@@ -2952,12 +2952,13 @@ Temporarily use my patch:
   (setq gptel-default-mode 'org-mode)
   (setq gptel-track-media t)
 
-  ;; The chats can have long lines.
-  (add-hook 'gptel-mode-hook 'visual-line-mode)
+  (with-eval-after-load 'gptel
+    ;; The chats can have long lines.
+    (add-hook 'gptel-mode-hook 'visual-line-mode)
 
-  ;; And can be pages long.
-  (add-hook 'gptel-post-stream-hook 'gptel-auto-scroll)
-  (add-hook 'gptel-post-response-functions 'gptel-end-of-response)
+    ;; And can be pages long.
+    (add-hook 'gptel-post-stream-hook 'gptel-auto-scroll)
+    (add-hook 'gptel-post-response-functions 'gptel-end-of-response))
 
   (gptel-make-ollama "Ollama"             
     :host "localhost:11434"               
