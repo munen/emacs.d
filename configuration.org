@@ -2942,7 +2942,7 @@ https://github.com/karthink/gptel
 
 Temporarily use my patch:
 #+begin_src emacs-lisp
-  (add-to-list 'load-path "~/src/gptel-clone")
+  ;; (add-to-list 'load-path "~/src/gptel-clone")
   (require 'gptel)
 
   (setq gptel-log-level 'info)
@@ -3136,7 +3136,7 @@ Temporarily use my patch:
                        (insert new_content))
                      (format "Successfully replaced content in %s" full-path))))
      :name "replace_file_contents"
-     :description "Replaces the entire content of a specified file with new content. This tool should be used as a FALLBACK if 'apply_diff' or 'apply_diff_fenced' fail repeatedly, as it requires more tokens to send the entire file content. IMPORTANT: This tool will completely overwrite the existing file content."
+     :description "Replaces the entire content of a file. Use this tool ONLY as a last resort if both 'edit_file' and 'apply_diff' fail. It is highly token-inefficient as it requires sending the full file content. WARNING: This operation completely overwrites the target file."
      :args (list
             '(:name "file_path"
                     :type string
@@ -3264,13 +3264,12 @@ Temporarily use my patch:
   (gptel-make-tool
    :function #'munen-gptel--edit-file
    :name "edit_file"
-   :description "Edit a file non-interactively by applying a list of edits and automatically saving changes.
+   :description "Edits a file by applying specific line-based changes. This is a primary method for file modification.
 
-  This tool modifies the target file directly on disk without user confirmation or review.
-  Each edit specifies a line number, old string to find, and new string replacement.
+  If this tool fails, try 'apply_diff'. As a last resort, use 'replace_file_contents'.
+  This tool modifies the file directly on disk without user confirmation.
 
-  WARNING: This tool directly modifies and saves files without interactive review. Use with caution!
-  All successful edits are applied and the file is saved automatically."
+  Each edit requires a line number, the exact old string to replace, and the new string."
    :args (list '(:name "file-path"
                        :type string
                        :description "The full path of the file to edit.")
@@ -3371,13 +3370,12 @@ Temporarily use my patch:
 (gptel-make-tool
    :name "apply_diff"
    :description (concat
-                 "Applies a diff (patch) to a specified file. "
-                 "The diff must be in the unified format (output of 'diff -u original_file new_file'). "
-                 "The LLM should generate the diff such that the file paths within the diff "
-                 "(e.g., '--- a/filename' '+++ b/filename') are appropriate for the 'file_path' argument and chosen 'patch_options'. "
-                 "Common 'patch_options' include: '' (empty, if paths in diff are exact or relative to current dir of file_path), "
-                 "'-p0' (if diff paths are full or exactly match the target including prefixes like 'a/'), "
-                 "'-p1' (if diff paths have one leading directory to strip, e.g., diff has 'a/src/file.c' and you want to patch 'src/file.c' from project root). "
+                 "Applies a diff (patch) to a file. This is a primary method for file modification. "
+                 "If this tool fails, try 'edit_file'. As a last resort, use 'replace_file_contents'. "
+                 "The diff must be in the unified format ('diff -u'). "
+                 "Ensure file paths in the diff (e.g., '--- a/file', '+++ b/file') match the 'file_path' argument and 'patch_options'. "
+                 "Common 'patch_options' include: '' (for exact/relative paths), "
+                 "'-p0' (if diff paths are full), '-p1' (to strip one leading directory). "
                  "Default options are '-N' (ignore already applied patches).")
    :args (list
           '(:name "file_path"
