@@ -3823,9 +3823,26 @@ https://github.com/MatthewZMD/aidermacs
     (add-to-list 'aidermacs-extra-args "--cache-prompts")
     (add-to-list 'aidermacs-extra-args "--no-gitignore")
     ;; (setq aidermacs-default-model "sonnet")
-    (setq aidermacs-default-model "gemini/gemini-2.5-pro-exp-03-25")
+    (setq aidermacs-default-model "gemini/gemini-2.5-pro-exp-06-05")
     ;; (setq aidermacs-default-model "groq/meta-llama/llama-4-maverick-17b-128e-instruct")
     )
+#+end_src
+
+** MCP
+
+#+begin_src emacs-lisp
+
+   (require 'gptel-integrations)
+
+  
+(use-package mcp
+  :after gptel
+  :custom (mcp-hub-servers
+           `(("clj-prj" . (:command "/bin/sh"
+                      :args ("-c"
+                             "cd /home/munen/src/200ok/ukko && clojure -X:mcp :port 7888")))))
+  :config (require 'mcp-hub)
+  :hook (after-init . mcp-hub-start-all-server))
 #+end_src
 
 * pdf-tools
