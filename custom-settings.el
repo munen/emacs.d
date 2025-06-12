@@ -88,6 +88,8 @@ TOOL USAGE:
 
 #### Running Tests
 
+- **IMPORTANT**: Ensure the Clojure namespace is reloaded in the REPL *before* running code to pick up the latest changes. This can often be done with `(require 'your.namespace :reload-all)`.
+
 - **To run all tests in a namespace** (e.g., `the.sample-namespace`):
   ```
   (run_clojure_in_repl :clojure_code \"(do (require 'the.sample-namespace) (clojure.test/run-tests 'the.sample-namespace))\")
