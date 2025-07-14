@@ -69,9 +69,23 @@ that =require= just works.
   ;; Single directory
   ;; (add-to-list 'load-path "~/.guix-profile/share/emacs/site-lisp/mu4e")
 
-  ;; All sub directories
-  (let ((default-directory  "~/.guix-profile/share/emacs/site-lisp/"))
-    (normal-top-level-add-subdirs-to-load-path))
+  ;; This was enough pre Emacs 30.1: All sub directories
+  ;; (let ((default-directory  "~/.guix-profile/share/emacs/site-lisp/"))
+  ;;   (normal-top-level-add-subdirs-to-load-path))
+
+  ;; This was required from Emacs 30.1 to ensure that packages installed
+  ;; via Guix have precedence over the versions that come with Emacs
+  ;; pre-installed:
+  (let ((guix-site-lisp "~/.guix-profile/share/emacs/site-lisp/"))
+    (when (file-directory-p guix-site-lisp)
+      ;; Get a list of all subdirectories, but ignore "." and ".."
+      (let ((package-dirs (directory-files guix-site-lisp nil "^[^.]")))
+        ;; Prepend each package directory to the load-path.
+        ;; We reverse the list to maintain a predictable order.
+        (dolist (dir (reverse package-dirs))
+          (let ((path (expand-file-name dir guix-site-lisp)))
+            (when (file-directory-p path)
+              (add-to-list 'load-path path)))))))
 #+END_SRC
 
 **** Automatically tangle Guix manifest
