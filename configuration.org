@@ -2726,7 +2726,8 @@ This will render the same time as above as:
                                   (concat org-directory "reference.org")
                                   (concat org-directory "media.org")
                                   (concat org-directory "shared_with_monika/shared_alain_and_monika.org")
-                                  "~/src/200ok/admin/THINGS.org"
+                                  "~/src/200ok/admin/ACTIVE_THINGS.org"
+                                  ;; "~/src/200ok/admin/THINGS.org"
                                   (when (file-directory-p "~/src/200ok/admin/pm/")
                                     (find-lisp-find-files "~/src/200ok/admin/pm/" "^pm.*\.org$"))))))
 
@@ -3908,8 +3909,9 @@ https://github.com/MatthewZMD/aidermacs
     (setq aidermacs-auto-accept-architect t)
     (add-to-list 'aidermacs-extra-args "--cache-prompts")
     (add-to-list 'aidermacs-extra-args "--no-gitignore")
+    (add-to-list 'aidermacs-extra-args "--analytics-disable")
     ;; (setq aidermacs-default-model "sonnet")
-    (setq aidermacs-default-model "gemini/gemini-2.5-pro-exp-06-05")
+    (setq aidermacs-default-model "gemini/gemini-2.5-pro")
     ;; (setq aidermacs-default-model "groq/meta-llama/llama-4-maverick-17b-128e-instruct")
     )
 #+end_src
@@ -3917,16 +3919,14 @@ https://github.com/MatthewZMD/aidermacs
 ** MCP
 
 #+begin_src emacs-lisp
-
-   (require 'gptel-integrations)
-
+(require 'gptel-integrations)
   
 (use-package mcp
   :after gptel
   :custom (mcp-hub-servers
            `(("clj-prj" . (:command "/bin/sh"
                       :args ("-c"
-                             "cd /home/munen/ && clojure -X:mcp :port 7888")))))
+                             "cd /home/munen/ && clojure -X:mcp :port 7890")))))
   :config (require 'mcp-hub)
   :hook (after-init . mcp-hub-start-all-server))
 #+end_src
