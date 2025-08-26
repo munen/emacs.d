@@ -209,6 +209,11 @@ TOOL USAGE:
      "verification code"))
  '(safe-local-variable-values
    '((eval progn
+           (setq cider-path-translations
+                 '(("/home/alephdam/alephdam/modules/ravenna"
+                    . "/home/munen/src/200ok/alephdam/modules/ravenna")
+                   ("/home/alephdam" . "/home/munen"))))
+     (eval progn
            (setq gptel-read-file-ignore-patterns
                  '("doc/*" "fixtures/*" "recordings/*" "dev/*"
                    "resources/*" "config/*" ".sourceme" ".sourceme/*"

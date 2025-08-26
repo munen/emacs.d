@@ -3910,10 +3910,7 @@ https://github.com/MatthewZMD/aidermacs
     (add-to-list 'aidermacs-extra-args "--cache-prompts")
     (add-to-list 'aidermacs-extra-args "--no-gitignore")
     (add-to-list 'aidermacs-extra-args "--analytics-disable")
-    ;; (setq aidermacs-default-model "sonnet")
-    (setq aidermacs-default-model "gemini/gemini-2.5-pro")
-    ;; (setq aidermacs-default-model "groq/meta-llama/llama-4-maverick-17b-128e-instruct")
-    )
+    (add-to-list 'aidermacs-extra-args "--notifications"))
 #+end_src
 
 ** MCP
