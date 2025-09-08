@@ -209,10 +209,28 @@ TOOL USAGE:
      "verification code"))
  '(safe-local-variable-values
    '((eval progn
+           (defvar user-cider-path-configs
+             '(("munen"
+                ("/home/alephdam/modules/ravenna"
+                 . "/home/munen/src/200ok/alephdam/modules/ravenna")
+                ("/home/alephdam" . "/home/munen"))
+               ("phil"
+                ("/home/alephdam/modules/ravenna"
+                 . "/home/phil/src/ok/alephdam/modules/ravenna")
+                ("/home/alephdam" . "/home/phil"))))
+           (let ((current-user (getenv "USER")))
+             (setq cider-path-translations
+                   (cdr (assoc current-user user-cider-path-configs)))))
+     (eval progn
            (setq cider-path-translations
                  '(("/home/alephdam/alephdam/modules/ravenna"
                     . "/home/munen/src/200ok/alephdam/modules/ravenna")
                    ("/home/alephdam" . "/home/munen"))))
+     (eval progn
+           (setq gptel-read-file-ignore-patterns
+                 (setq cider-path-translations
+                       '(("/home/alephdam/alephdam"
+                          . "/home/munen/src/200ok/alephdam")))))
      (eval progn
            (setq gptel-read-file-ignore-patterns
                  '("doc/*" "fixtures/*" "recordings/*" "dev/*"

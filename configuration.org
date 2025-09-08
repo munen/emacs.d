@@ -5165,52 +5165,6 @@ This part of the configuration was kindly provided by [[https://github.com/SirPs
      (s-trim (concat (ph/git-branch-name)))))
  #+END_SRC
 
-**** Tramp
-
- Tramp offers the following file name syntax to refer to files on other machines.
-
- #+BEGIN_SRC text
- /method:host:filename
- /method:user@host:filename
- /method:user@host#port:filename
- #+END_SRC
-
- The following segemnts display the current buffer's =method= and =user@host=.
-
- #+BEGIN_SRC emacs-lisp
- (spaceline-define-segment ph/remote-method
-   (when (and default-directory
-              (file-remote-p default-directory 'method))
-     (file-remote-p default-directory 'method)))
-
- (spaceline-define-segment ph/remote-user-and-host
-   (when (and default-directory
-              (or
-               (file-remote-p default-directory 'user)
-               (file-remote-p default-directory 'host)))
-     (concat
-      (file-remote-p default-directory 'user) "@"
-      (file-remote-p default-directory 'host))))
- #+END_SRC
-
- Default faces for the tramp segments.
-
- #+BEGIN_SRC emacs-lisp
- (defface ph/spaceline-tramp-user-host-face
-   '((t :inherit 'mode-line
-        :foreground "black"
-        :background "#fce94f"))
-   "Tramp User@Host Face"
-   :group 'spaceline)
-
- (defface ph/spaceline-tramp-method-face
-   '((t :inherit 'mode-line
-        :foreground "black"
-        :background "#ff5d17"))
-   "Tramp Method Face"
-   :group 'spaceline)
- #+END_SRC
-
 **** Mu4e Context
 
 I'm not using Mu4e contexts, yet, because my configuration started
