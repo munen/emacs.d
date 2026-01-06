@@ -2739,6 +2739,7 @@ This will render the same time as above as:
                             (list (concat org-directory "things.org")
                                   (concat org-directory "reference.org")
                                   (concat org-directory "media.org")
+                                  (concat org-directory "habits.org")
                                   (concat org-directory "shared_with_monika/shared_alain_and_monika.org")
                                   "~/src/200ok/admin/ACTIVE_THINGS.org"
                                   ;; "~/src/200ok/admin/THINGS.org"
@@ -2813,10 +2814,21 @@ An extension to restclient.el for emacs that provides org-babel support.
 ** Org habits
 https://orgmode.org/manual/Tracking-your-habits.html
 
-Show habits outside of today's agenda view:
+Don't show habits outside of today's agenda view:
 
 #+begin_src emacs-lisp
   (setq org-habit-show-habits-only-for-today t)
+#+end_src
+
+Include habits in today's agenda that are done:
+#+begin_src emacs-lisp
+  (setq org-habit-show-all-today t)
+#+end_src
+
+Move habit column to the far right.
+
+#+begin_src emacs-lisp
+  (setq org-habit-graph-column 120)
 #+end_src
 ** Tables
 
@@ -5806,6 +5818,9 @@ When evaluating the src-block above, it'll yield a table like:
              ("c" "Custom agenda, ignore 200ok tag"
               ((agenda ""))
               ((org-agenda-tag-filter-preset '("-200ok"))))
+             ("h" "Habits Agenda"
+              ((agenda ""))
+              ((org-agenda-files (list (expand-file-name "habits.org" org-directory)))))
              ;; Define a custom command to save the org agenda to a file
              ("X" agenda "" nil ,(list org-agenda-private-local-path))))
 
