@@ -168,7 +168,7 @@ down in this file, some are used with the default configuration.
                         flycheck-package
                         forge
                         gnuplot
-                        ;; gptel
+                        gptel
                         hcl-mode
                         hide-mode-line
                         impatient-mode
@@ -2382,7 +2382,7 @@ Allow ‘a.’, ‘A.’, ‘a)’ and ‘A) as list elements:
      (dot . t)
      (js . t)
      (ruby . t)
-     ))
+     (sql . t)))
 
   (add-hook 'org-mode-hook 'auto-fill-mode)
   (add-hook 'org-mode-hook 'flyspell-mode)
@@ -2438,6 +2438,20 @@ result can actually be seen.
 
   (add-hook 'imenu-after-jump-hook 'ok-imenu-show-entry)
 #+END_SRC
+
+** Error buffer
+
+This will prevent warning buffers with lower severity than =:error= from
+appearing automatically.
+
+#+begin_src emacs-lisp
+(setq warning-minimum-level :error)
+#+end_src
+
+Even with these settings, you can manually view the output buffer when
+compilation fails:
+
+- Use =C-x b= *Org PDF LaTeX Output* to switch to the buffer
 
 ** KOMA Script export
 
@@ -2802,7 +2816,7 @@ https://orgmode.org/manual/Tracking-your-habits.html
 Show habits outside of today's agenda view:
 
 #+begin_src emacs-lisp
-  (setq org-habit-show-habits-only-for-today nil)
+  (setq org-habit-show-habits-only-for-today t)
 #+end_src
 ** Tables
 
@@ -2957,7 +2971,7 @@ https://github.com/karthink/gptel
 
 Temporarily use my patch:
 #+begin_src emacs-lisp
-  (add-to-list 'load-path "~/src/gptel-clone")
+  ;;(add-to-list 'load-path "~/src/gptel-clone")
   (require 'gptel)
 
   (setq gptel-log-level 'info)
@@ -3916,16 +3930,19 @@ https://github.com/MatthewZMD/aidermacs
 ** MCP
 
 #+begin_src emacs-lisp
-(require 'gptel-integrations)
-  
-(use-package mcp
-  :after gptel
-  :custom (mcp-hub-servers
-           `(("clj-prj" . (:command "/bin/sh"
-                      :args ("-c"
-                             "cd /home/munen/ && clojure -X:mcp :port 7890")))))
-  :config (require 'mcp-hub)
-  :hook (after-init . mcp-hub-start-all-server))
+  (require 'gptel-integrations)
+
+  (use-package mcp
+    :after gptel
+    :custom (mcp-hub-servers
+             `(("playwright" . (:command "npx"
+                      :args ("@playwright/mcp@latest")))
+               ;; ("clj-prj" . (:command "/bin/sh"
+               ;;          :args ("-c"
+               ;;                 "cd /home/munen/ && clojure -X:mcp :port 7890")))
+               ))
+    :config (require 'mcp-hub)
+    :hook (after-init . mcp-hub-start-all-server))
 #+end_src
 
 * pdf-tools
@@ -4657,7 +4674,7 @@ automatically delete duplicates - maybe with procmail.
 
 #+begin_src emacs-lisp
   ;; Disabled for the moment.
-  ;; (setq mu4e-headers-skip-duplicates t)
+  (setq mu4e-headers-skip-duplicates nil)
 #+end_src
 
 **** Calendar invitations
@@ -5163,6 +5180,52 @@ This part of the configuration was kindly provided by [[https://github.com/SirPs
    "Version control information."
    (when vc-mode
      (s-trim (concat (ph/git-branch-name)))))
+ #+END_SRC
+
+**** Tramp
+
+ Tramp offers the following file name syntax to refer to files on other machines.
+
+ #+BEGIN_SRC text
+ /method:host:filename
+ /method:user@host:filename
+ /method:user@host#port:filename
+ #+END_SRC
+
+ The following segemnts display the current buffer's =method= and =user@host=.
+
+ #+BEGIN_SRC emacs-lisp
+   ;; (spaceline-define-segment ph/remote-method
+   ;;   (when (and default-directory
+   ;;              (file-remote-p default-directory 'method))
+   ;;     (file-remote-p default-directory 'method)))
+
+   ;; (spaceline-define-segment ph/remote-user-and-host
+   ;;   (when (and default-directory
+   ;;              (or
+   ;;               (file-remote-p default-directory 'user)
+   ;;               (file-remote-p default-directory 'host)))
+   ;;     (concat
+   ;;      (file-remote-p default-directory 'user) "@"
+   ;;      (file-remote-p default-directory 'host))))
+ #+END_SRC
+
+ Default faces for the tramp segments.
+
+ #+BEGIN_SRC emacs-lisp
+   ;; (defface ph/spaceline-tramp-user-host-face
+   ;;   '((t :inherit 'mode-line
+   ;;        :foreground "black"
+   ;;        :background "#fce94f"))
+   ;;   "Tramp User@Host Face"
+   ;;   :group 'spaceline)
+
+   ;; (defface ph/spaceline-tramp-method-face
+   ;;   '((t :inherit 'mode-line
+   ;;        :foreground "black"
+   ;;        :background "#ff5d17"))
+   ;;   "Tramp Method Face"
+   ;;   :group 'spaceline)
  #+END_SRC
 
 **** Mu4e Context

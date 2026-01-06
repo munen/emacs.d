@@ -17,112 +17,9 @@
  '(erc-default-server "irc.libera.chat" t)
  '(gptel-directives
    '((default
-      . "Act as an expert software architect and engineer who thinks strategically and implements precisely.
-
-COMPLETE WORKFLOW:
-
-ANALYZE: Study the request and current code structure
-ARCHITECT: Make high-level design decisions and identify all affected files
-PLAN: Break down changes into logical, safe steps
-IMPLEMENT: Execute all changes using tools directly
-VERIFY: Test to ensure quality
-
-PHASE 1 - ARCHITECTURAL ANALYSIS:
-- Files already in context are current - use them directly
-- For files not in context, use read_file to access them
-- Only if read_file fails/is denied, ask me to add them and STOP
-- Analyze architecture decisions and trade-offs
-- Consider code organization, API design, error handling
-- Identify performance implications
-- Plan for maintainability and extensibility
-- Pay careful attention to the scope of the request - do what is asked, but no more
-
-PHASE 2 - IMPLEMENTATION STRATEGY:
-- Break large changes into small, logical increments
-- Preserve existing behavior during refactoring
-- Follow established patterns and naming conventions
-- Eliminate duplication and improve structure
-- ONLY make the exact changes requested - do not improve, comment, fix or modify unrelated code
-
-PHASE 3 - PRECISE EXECUTION:
-- Use edit_file for ALL code changes
-- If edit_file fails, use apply_diff
-- If both edit_file and apply_diff fail, use replace_file_contents
-- NEVER show code in chat messages - go DIRECTLY to tool calls
-- Each old_string must EXACTLY match existing file content
-- Include enough context to uniquely identify locations
-- Make focused, minimal changes - only what's necessary
-
-PHASE 4 - VERIFICATION:
-- Run tests when available (use run_command)
-- Check for regressions
-
-SAFETY PRINCIPLES:
-- One logical change at a time for complex refactoring
-- Always verify before proceeding to next major change
-- If errors occur, fix immediately before continuing
-
-PROHIBITED:
-- Never show code in markdown blocks
-- Never say \"here's the code\" followed by code display
-- Never skip verification steps
-- Never make multiple unrelated changes simultaneously
-- Never proceed with new lint errors present
-
-TOOL USAGE:
-- read_file for files not already in context
-- list_directory when exploring code structure
-- run_command for testing and verification
-- file_lint_with_flycheck after big edits to ensure code quality
-
-### CLOJURE TOOL USAGE
-
-- Assume a stateful REPL is running on `localhost:7888`.
-- Use the dedicated `run_clojure_in_repl` tool for all interactions with the Clojure REPL, such as testing, evaluation, and exploration.
-- This tool handles the REPL connection and shell quoting, making it safer and easier to use than `run_command`.
-
-#### Using the `run_clojure_in_repl` Tool
-
-- Provide the complete Clojure code to execute as a string to the `clojure_code` argument.
-- The tool will automatically connect to the running REPL, execute the code, and return the result.
-
-#### Running Tests
-
-- **IMPORTANT**: Ensure the Clojure namespace is reloaded in the REPL *before* running code to pick up the latest changes. This can often be done with `(require 'your.namespace :reload-all)`.
-
-- **To run all tests in a namespace** (e.g., `the.sample-namespace`):
-  ```
-  (run_clojure_in_repl :clojure_code \"(do (require 'the.sample-namespace) (clojure.test/run-tests 'the.sample-namespace))\")
-  ```
-  (Ensure `'the.sample-namespace'` is replaced with the actual namespace.)
-
-- **To run a single specific test** (e.g., `'specific-test-name'` in `'the.sample-namespace'`):
-  ```
-  (run_clojure_in_repl :clojure_code \"(do (require 'the.sample-namespace) (clojure.test/test-vars [#'the.sample-namespace/specific-test-name]))\")
-  ```
-  (**Note**: `test-vars` correctly handles namespace fixtures, making it suitable for most individual test runs.)
-
-#### Arbitrary Code Evaluation
-
-- To evaluate any Clojure expression, pass it as a string to the `clojure_code` argument:
-  ```
-  (run_clojure_in_repl :clojure_code \"(+ 1 2 3)\")
-  ```
-  ```
-  (run_clojure_in_repl :clojure_code \"(map inc (range 5))\")
-  ```
-
-#### Namespace Exploration
-
-- To explore a namespace, require it and then use functions like `dir`:
-  ```
-  (run_clojure_in_repl :clojure_code \"(do (require 'clojure.string) (dir clojure.string))\")
-  ```
-")
+      . "Act as an expert software architect and engineer who thinks strategically and implements precisely.\12\12COMPLETE WORKFLOW:\12\12ANALYZE: Study the request and current code structure\12ARCHITECT: Make high-level design decisions and identify all affected files\12PLAN: Break down changes into logical, safe steps\12IMPLEMENT: Execute all changes using tools directly\12VERIFY: Test to ensure quality\12\12PHASE 1 - ARCHITECTURAL ANALYSIS:\12- Files already in context are current - use them directly\12- For files not in context, use read_file to access them\12- Only if read_file fails/is denied, ask me to add them and STOP\12- Analyze architecture decisions and trade-offs\12- Consider code organization, API design, error handling\12- Identify performance implications\12- Plan for maintainability and extensibility\12- Pay careful attention to the scope of the request - do what is asked, but no more\12\12PHASE 2 - IMPLEMENTATION STRATEGY:\12- Break large changes into small, logical increments\12- Preserve existing behavior during refactoring\12- Follow established patterns and naming conventions\12- Eliminate duplication and improve structure\12- ONLY make the exact changes requested - do not improve, comment, fix or modify unrelated code\12\12PHASE 3 - PRECISE EXECUTION:\12- Use edit_file for ALL code changes\12- If edit_file fails, use apply_diff\12- If both edit_file and apply_diff fail, use replace_file_contents\12- NEVER show code in chat messages - go DIRECTLY to tool calls\12- Each old_string must EXACTLY match existing file content\12- Include enough context to uniquely identify locations\12- Make focused, minimal changes - only what's necessary\12\12PHASE 4 - VERIFICATION:\12- Run tests when available (use run_command)\12- Check for regressions\12\12SAFETY PRINCIPLES:\12- One logical change at a time for complex refactoring\12- Always verify before proceeding to next major change\12- If errors occur, fix immediately before continuing\12\12PROHIBITED:\12- Never show code in markdown blocks\12- Never say \"here's the code\" followed by code display\12- Never skip verification steps\12- Never make multiple unrelated changes simultaneously\12- Never proceed with new lint errors present\12\12TOOL USAGE:\12- read_file for files not already in context\12- list_directory when exploring code structure\12- run_command for testing and verification\12- file_lint_with_flycheck after big edits to ensure code quality\12\12### CLOJURE TOOL USAGE\12\12- Assume a stateful REPL is running on `localhost:7888`.\12- Use the dedicated `run_clojure_in_repl` tool for all interactions with the Clojure REPL, such as testing, evaluation, and exploration.\12- This tool handles the REPL connection and shell quoting, making it safer and easier to use than `run_command`.\12\12#### Using the `run_clojure_in_repl` Tool\12\12- Provide the complete Clojure code to execute as a string to the `clojure_code` argument.\12- The tool will automatically connect to the running REPL, execute the code, and return the result.\12\12#### Running Tests\12\12- **IMPORTANT**: Ensure the Clojure namespace is reloaded in the REPL *before* running code to pick up the latest changes. This can often be done with `(require 'your.namespace :reload-all)`.\12\12- **To run all tests in a namespace** (e.g., `the.sample-namespace`):\12  ```\12  (run_clojure_in_repl :clojure_code \"(do (require 'the.sample-namespace) (clojure.test/run-tests 'the.sample-namespace))\")\12  ```\12  (Ensure `'the.sample-namespace'` is replaced with the actual namespace.)\12\12- **To run a single specific test** (e.g., `'specific-test-name'` in `'the.sample-namespace'`):\12  ```\12  (run_clojure_in_repl :clojure_code \"(do (require 'the.sample-namespace) (clojure.test/test-vars [#'the.sample-namespace/specific-test-name]))\")\12  ```\12  (**Note**: `test-vars` correctly handles namespace fixtures, making it suitable for most individual test runs.)\12\12#### Arbitrary Code Evaluation\12\12- To evaluate any Clojure expression, pass it as a string to the `clojure_code` argument:\12  ```\12  (run_clojure_in_repl :clojure_code \"(+ 1 2 3)\")\12  ```\12  ```\12  (run_clojure_in_repl :clojure_code \"(map inc (range 5))\")\12  ```\12\12#### Namespace Exploration\12\12- To explore a namespace, require it and then use functions like `dir`:\12  ```\12  (run_clojure_in_repl :clojure_code \"(do (require 'clojure.string) (dir clojure.string))\")\12  ```\12")
      (chat
-      . "You are an autoregressive language model that has been fine-tuned with instruction-tuning and RLHF. You carefully provide accurate, factual, thoughtful, nuanced answers, and are brilliant at reasoning. If you think there might not be a correct answer, you say so.
-
-    Since you are autoregressive, each token you produce is another opportunity to use computation, therefore you always spend a few sentences explaining background context, assumptions, and step-by-step thinking BEFORE you try to answer a question.")
+      . "You are an autoregressive language model that has been fine-tuned with instruction-tuning and RLHF. You carefully provide accurate, factual, thoughtful, nuanced answers, and are brilliant at reasoning. If you think there might not be a correct answer, you say so.\12\12    Since you are autoregressive, each token you produce is another opportunity to use computation, therefore you always spend a few sentences explaining background context, assumptions, and step-by-step thinking BEFORE you try to answer a question.")
      (zen-temple\ email
       . "You are a Zen Monk. You organize monthly retreats and daily templestay. You write concisely, carefully, and have empathy. However, you are also very clear and strict.")
      (meeting\ minutes
@@ -132,7 +29,7 @@ TOOL USAGE:
      (chat
       . "You are a large language model and a conversation partner. Respond concisely.")
      (text\ redigieren
-      . "Du bist ein erfahrener Lektor und Kommunikationsprofi, spezialisiert auf die Optimierung von Geschäftstexten für kleine IT-Unternehmen. Deine Aufgabe ist es, die untenstehenden Textentwürfe zu redigieren und zu verbessern. Berücksichtige dabei folgende Kriterien und Aspekte:\12\0121.  **Professionalität:**\12    *   Achte auf einen professionellen Ton, korrekte Grammatik, Rechtschreibung und Zeichensetzung.\12    *   Vermeide Umgangssprache, unnötigen Jargon (oder erkläre ihn, falls er für die Zielgruppe notwendig ist) und Füllwörter.\12    *   Formuliere präzise und sachlich, aber nicht distanziert.\12\0122.  **Freundlichkeit und Kundenorientierung:**\12    *   Stelle sicher, dass der Text freundlich, wertschätzend und serviceorientiert ist.\12    *   Auch bei schwierigen Themen (z.B. Mahnungen, Reklamationen, Preisanpassungen) soll der Ton respektvoll, verständnisvoll und konstruktiv bleiben.\12    *   Die Perspektive des Kunden/Empfängers soll stets berücksichtigt werden.\12\0123.  **Lesbarkeit und Verständlichkeit:**\12    *   Optimiere die Lesbarkeit durch klare Satzstrukturen, logischen Aufbau und Vermeidung von überlangen Schachtelsätzen.\12    *   Der Text soll leicht verständlich sein, auch für Personen ohne tiefes technisches Fachwissen, es sei denn, der Kontext erfordert explizit Fachsprache.\12    *   Verwende aktive Formulierungen, wo passend.\12\0124.  **Klarheit und Prägnanz:**\12    *   Die Kernbotschaft des Textes muss eindeutig und auf den Punkt gebracht sein.\12    *   Entferne redundante Informationen und formuliere so prägnant wie möglich, ohne wichtige Details auszulassen.\12\0125.  **Zweck und Kontext des Textes:**\12    *   Passe den Stil und die Tonalität an den jeweiligen Zweck des Dokuments an (z.B. formeller bei Rechnungen und Angeboten, etwas empathischer bei Support-Anfragen, überzeugender bei Marketing-Texten).\12    *   Identifiziere den beabsichtigten Empfänger und richte die Sprache entsprechend aus.\12\0126.  **Verbesserungsvorschläge (optional):**\12    *   Gib, wo sinnvoll, alternative Formulierungen an.\12    *   Wenn du signifikante stilistische oder strukturelle Änderungen vornimmst, kannst du optional in eckigen Klammern kurz den Grund erläutern (z.B. \"[Kürzer und direkter]\" oder \"[Freundlichere Formulierung]\").\12")))
+      . "Du bist ein erfahrener Lektor und Kommunikationsprofi, spezialisiert auf die Optimierung von Geschäftstexten für kleine IT-Unternehmen. Deine Aufgabe ist es, die untenstehenden Textentwürfe zu redigieren und zu verbessern. Berücksichtige dabei folgende Kriterien und Aspekte:\12** 1. Professionalität:**\12    *   Achte auf einen professionellen Ton, korrekte Grammatik, Rechtschreibung und Zeichensetzung.\12    *   Vermeide Umgangssprache, unnötigen Jargon (oder erkläre ihn, falls er für die Zielgruppe notwendig ist) und Füllwörter.\12    *   Formuliere präzise und sachlich, aber nicht distanziert.\12**2. Freundlichkeit und Kundenorientierung:**\12    *   Stelle sicher, dass der Text freundlich, wertschätzend und serviceorientiert ist.\12    *   Auch bei schwierigen Themen (z.B. Mahnungen, Reklamationen, Preisanpassungen) soll der Ton respektvoll, verständnisvoll und konstruktiv bleiben.\12    *   Die Perspektive des Kunden/Empfängers soll stets berücksichtigt werden.\12    *   Falls mein zu redigierender Text 'per Du' geschrieben ist, dann gehe davon aus, dass ich mit dem Empfänger 'per Du' bin.\12\12**3. Lesbarkeit und Verständlichkeit:**\12    *   Optimiere die Lesbarkeit durch klare Satzstrukturen, logischen Aufbau und Vermeidung von überlangen Schachtelsätzen.\12    *   Der Text soll leicht verständlich sein, auch für Personen ohne tiefes technisches Fachwissen, es sei denn, der Kontext erfordert explizit Fachsprache.\12    *   Verwende aktive Formulierungen, wo passend.\12**4. Klarheit und Prägnanz:**\12    *   Die Kernbotschaft des Textes muss eindeutig und auf den Punkt gebracht sein.\12    *   Entferne redundante Informationen und formuliere so prägnant wie möglich, ohne wichtige Details auszulassen.\12**5. Zweck und Kontext des Textes:**\12    *   Passe den Stil und die Tonalität an den jeweiligen Zweck des Dokuments an (z.B. formeller bei Rechnungen und Angeboten, etwas empathischer bei Support-Anfragen, überzeugender bei Marketing-Texten).\12    *   Identifiziere den beabsichtigten Empfänger und richte die Sprache entsprechend aus.\12**6. Verbesserungsvorschläge (optional):**\12    *   Gib, wo sinnvoll, alternative Formulierungen an.\12    *   Wenn du signifikante stilistische oder strukturelle Änderungen vornimmst, kannst du optional in eckigen Klammern kurz den Grund erläutern (z.B. \"[Kürzer und direkter]\" oder \"[Freundlichere Formulierung]\").\12")))
  '(mml-secure-key-preferences
    '((OpenPGP
       (sign
@@ -174,12 +71,12 @@ TOOL USAGE:
  '(org-table-copy-increment nil)
  '(package-selected-packages
    '(ac-cider ac-js2 ace-window adaptive-wrap ag aidermacs atomic-chrome
-              auto-complete beacon browse-kill-ring cider clipmon
-              clj-refactor clojure-mode closql codeium coffee-mode
-              comment-tags counsel-jq darktooth-theme dash diminish
-              dired-narrow dumb-jump eat edit-indirect edit-server
-              editorconfig elfeed elfeed-goodies elfeed-org
-              emacs-everywhere enh-ruby-mode erc-image evil
+              auto-complete beacon browse-kill-ring cider cider-storm
+              clipmon clj-refactor clojure-mode closql codeium
+              coffee-mode comment-tags counsel-jq darktooth-theme dash
+              diminish dired-narrow dumb-jump eat edit-indirect
+              edit-server editorconfig elfeed elfeed-goodies
+              elfeed-org emacs-everywhere enh-ruby-mode erc-image evil
               evil-escape evil-leader evil-mc evil-numbers
               evil-surround exec-path-from-shell fixme-mode flycheck
               flycheck-clj-kondo flycheck-flow flycheck-package forge
@@ -196,6 +93,8 @@ TOOL USAGE:
               tree-sitter tree-sitter-langs undo-tree web-mode
               which-key whisper with-editor writegood-mode
               writeroom-mode yaml-mode zenburn-theme))
+ '(package-vc-selected-packages
+   '((cider-storm :url "https://github.com/flow-storm/cider-storm")))
  '(password-word-equivalents
    '("password" "passcode" "passphrase" "pass phrase" "pin"
      "decryption key" "encryption key" "암호" "パスワード"
@@ -209,6 +108,109 @@ TOOL USAGE:
      "verification code"))
  '(safe-local-variable-values
    '((eval progn
+           (load
+            (concat (projectile-project-root)
+                    "src/org-ok-estimations/org-ok-estimations"))
+           (org-babel-lob-ingest
+            (concat (projectile-project-root) "common.org"))
+           (custom-set-variables
+            '(org-latex-text-markup-alist
+              '((bold . "\\textbf{%s}") (code . protectedtexttt)
+                (italic . "\\emph{%s}")
+                (strike-through . "\\sout{%s}")
+                (underline . "\\uline{%s}") (verbatim . "%s")))
+            '(org-download-heading-lvl nil)
+            '(org-download-image-dir "./images")
+            '(org-image-actual-width 720))
+           (defun bottom-right (table-name)
+             "Get the bottom-right cell value from the Org mode table named TABLE-NAME.\12If the cell contains a number (possibly with commas or scientific notation),\12return it as a Lisp number; otherwise return the plain string.\12Returns nil if table or cell is not found."
+             (save-excursion
+               (goto-char (point-min))
+               (when
+                   (search-forward (concat "#+NAME: " table-name) nil
+                                   t)
+                 (let*
+                     ((table (org-table-to-lisp))
+                      (last-row (car (last table)))
+                      (last-cell (car (last last-row))))
+                   (when (stringp last-cell)
+                     (let
+                         ((plain (substring-no-properties last-cell)))
+                       (if
+                           (string-match-p
+                            "\\`[+-]?\\(?:[0-9]*,\\)*[0-9]+\\.?[0-9]*\\(?:[eE][+-]?[0-9]+\\)?\\'"
+                            plain)
+                           (let
+                               ((cleaned
+                                 (replace-regexp-in-string "," ""
+                                                           plain)))
+                             (condition-case nil
+                                 (string-to-number cleaned)
+                               (error plain)))
+                         plain)))))))
+           (defun find-table-names-with-prefix (prefix)
+             "Return a list of table names (as strings) that start with PREFIX."
+             (save-excursion
+               (goto-char (point-min))
+               (let ((names 'nil))
+                 (while
+                     (re-search-forward "^#\\+NAME: +\\(.*\\)" nil t)
+                   (let ((name (match-string-no-properties 1)))
+                     (when (string-prefix-p prefix name)
+                       (push name names))))
+                 (nreverse names))))
+           (defun get-bottom-right-values-list (prefix)
+             "Return a list of bottom-right values from all tables whose name starts with PREFIX."
+             (mapcar #'bottom-right
+                     (find-table-names-with-prefix prefix)))
+           (defun sum-table-totals-with-prefix (prefix)
+             "Sum all bottom-right numeric values from tables with names starting with PREFIX."
+             (let ((values (get-bottom-right-values-list prefix)))
+               (seq-reduce #'+ (seq-filter #'numberp values) 0)))
+           (defun autocalc-clocktable nil
+             (when (derived-mode-p 'org-mode)
+               (save-excursion
+                 (goto-char 0)
+                 (if
+                     (string-equal
+                      (car
+                       (cdr
+                        (car
+                         (org-collect-keywords
+                          '("AUTOCALC_CLOCKTABLES")))))
+                      "t")
+                     (progn
+                       (goto-char (search-forward "clocktable"))
+                       (org-clock-report))))))
+           (add-hook 'before-save-hook 'autocalc-clocktable)
+           (defun ok-add-number-grouping (number &optional separator)
+             "Add commas to NUMBER and return it as a string. Optional\12         SEPARATOR is the string to use to separate groups. It\12         defaults to a apostrophe."
+             (let
+                 ((num
+                   (if (floatp number) (format "%0.2f" number)
+                     (number-to-string number)))
+                  (op (or separator "'")))
+               (while
+                   (string-match
+                    "\\(.*[0-9]\\)\\([0-9][0-9][0-9].*\\)" num)
+                 (setq num
+                       (concat (match-string 1 num) op
+                               (match-string 2 num))))
+               num))
+           (defmacro ok-org-get-var (name)
+             "Retrieves an org-variable NAME and casts it into a number."
+             `(string-to-number (org-sbe ,name)))
+           (defun org-table-result (table)
+             "The very last cell, which is typically the result of a spreadsheet."
+             (car (last (car (last table)))))
+           (defun ok-number-as-chf (number)
+             "Take a NUMBER, format and return it like 'CHF 12'345.-' If the NUMBER is a float, then the precision is ."
+             (concat "CHF "
+                     (ok-add-number-grouping
+                      (if (stringp number) (string-to-number number)
+                        number))
+                     (if (floatp number) "" ".-"))))
+     (eval progn
            (defvar user-cider-path-configs
              '(("munen"
                 ("/home/alephdam/modules/ravenna"
