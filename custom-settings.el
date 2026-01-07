@@ -90,7 +90,7 @@
               restclient rfc-mode rjsx-mode robe rust-mode sass-mode
               seeing-is-believing smex solarized-theme sops spaceline
               spacemacs-theme tern tern-auto-complete tide transient
-              tree-sitter tree-sitter-langs undo-tree web-mode
+              tree-sitter tree-sitter-langs undo-tree vterm web-mode
               which-key whisper with-editor writegood-mode
               writeroom-mode yaml-mode zenburn-theme))
  '(package-vc-selected-packages

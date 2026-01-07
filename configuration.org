@@ -185,22 +185,23 @@ down in this file, some are used with the default configuration.
                         org-mime
                         package-lint
                         pdf-tools
-                        projectile
-                        rainbow-mode
-                        rjsx-mode
                         ob-restclient
+                        projectile
+                        quelpa
+                        rainbow-mode
                         restclient
+                        rjsx-mode
                         robe
                         sass-mode
                         smex
                         synosaurus
                         tide
                         visual-fill-column
+                        vterm
                         web-mode
                         which-key
                         writegood-mode
                         writeroom-mode
-                        quelpa
                         yaml-mode
                         zenburn-theme))
 #+END_SRC
