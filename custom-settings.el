@@ -70,20 +70,22 @@
      "\\`https://screenshots\\.200ok\\.ch\\(?:/\\|\\'\\)"))
  '(org-table-copy-increment nil)
  '(package-selected-packages
-   '(ac-cider ac-js2 ace-window adaptive-wrap ag aidermacs atomic-chrome
+   '(ac-cider ac-js2 ace-window adaptive-wrap ag agent-shell
+              agent-shell-attention aidermacs atomic-chrome
               auto-complete beacon browse-kill-ring cider cider-storm
-              clipmon clj-refactor clojure-mode closql codeium
-              coffee-mode comment-tags counsel-jq darktooth-theme dash
-              diminish dired-narrow dumb-jump eat edit-indirect
-              edit-server editorconfig elfeed elfeed-goodies
-              elfeed-org emacs-everywhere enh-ruby-mode erc-image evil
-              evil-escape evil-leader evil-mc evil-numbers
-              evil-surround exec-path-from-shell fixme-mode flycheck
-              flycheck-clj-kondo flycheck-flow flycheck-package forge
-              ggtags gnuplot gptel graphviz-dot-mode handlebars-mode
-              haskell-mode hcl-mode hl-todo ido-vertical-mode
-              impatient-mode intero js-comint js2-mode js2-refactor
-              json-mode keycast ledger-mode logview magit magit-delta
+              claude-code-ide clipmon clj-refactor clojure-mode closql
+              codeium coffee-mode comment-tags counsel-jq
+              darktooth-theme dash diminish dired-narrow dumb-jump eat
+              edit-indirect edit-server editorconfig elfeed
+              elfeed-goodies elfeed-org emacs-everywhere enh-ruby-mode
+              erc-image evil evil-escape evil-leader evil-mc
+              evil-numbers evil-surround exec-path-from-shell
+              fixme-mode flycheck flycheck-clj-kondo flycheck-flow
+              flycheck-package forge ggtags gnuplot gptel
+              graphviz-dot-mode handlebars-mode haskell-mode hcl-mode
+              hl-todo ido-vertical-mode impatient-mode intero
+              js-comint js2-mode js2-refactor json-mode keycast
+              knockknock ledger-mode logview magit magit-delta
               magit-section markdown-mode mcp mustache-mode
               ob-restclient org org-ai org-download org-mime org-ql
               package-lint parinfer pdf-tools projectile rainbow-mode
@@ -94,7 +96,12 @@
               which-key whisper with-editor writegood-mode
               writeroom-mode yaml-mode zenburn-theme))
  '(package-vc-selected-packages
-   '((cider-storm :url "https://github.com/flow-storm/cider-storm")))
+   '((knockknock :url "https://github.com/konrad1977/knockknock")
+     (agent-shell-attention :url
+                            "https://github.com/ultronozm/agent-shell-attention.el")
+     (claude-code-ide :url
+                      "https://github.com/manzaltu/claude-code-ide.el")
+     (cider-storm :url "https://github.com/flow-storm/cider-storm")))
  '(password-word-equivalents
    '("password" "passcode" "passphrase" "pass phrase" "pin"
      "decryption key" "encryption key" "암호" "パスワード"
