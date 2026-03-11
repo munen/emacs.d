@@ -3799,12 +3799,12 @@ A list of patterns that prevent the =read_file= tool from accessing certain file
 #+begin_src emacs-lisp
   (use-package agent-shell
     :ensure t
-    :ensure-system-package
-    ;; Add agent installation configs here
-    ((claude . "brew install claude-code")
-     (claude-code-acp . "npm install -g @zed-industries/claude-code-acp")))
-
-  (setq agent-shell-preferred-agent-config (agent-shell-anthropic-make-claude-code-config))
+    :config
+    ;; Default agent: OpenCode
+    (setq agent-shell-preferred-agent-config
+          (agent-shell-opencode-make-agent-config))
+    ;; Default model: gpt-5.3-codex
+    (setq agent-shell-opencode-default-model-id "openai/gpt-5.3-codex"))
 #+end_src
 
 ** aidermacs
@@ -3841,7 +3841,11 @@ https://github.com/MatthewZMD/aidermacs
                ;;                 "cd /home/munen/ && clojure -X:mcp :port 7890")))
                ))
     :config (require 'mcp-hub)
-    :hook (after-init . mcp-hub-start-all-server))
+    ;; This works, but I don't want to always start all servers for all
+    ;; instances of emacs.
+
+     ;; :hook (after-init . mcp-hub-start-all-server)
+    )
 #+end_src
 
 * pdf-tools
