@@ -2201,6 +2201,15 @@ With an OS keybinding of =Shift + Alt + r=, I run =emacsclient -c
   (define-key global-map (kbd "C-x R") 'ok-audio-transcription--record-dwim)
 #+end_src
 
+* Edge TTS
+
+#+begin_src emacs-lisp
+(defun edge-tts-speak-region (start end)
+  "Send the selected region to the local Edge TTS service."
+  (interactive "r")
+  (shell-command-on-region start end "~/bin/edge_tts"))
+#+end_src
+
 * Org mode
 
 Outline-based notes management and organizer. It is an outline-mode
