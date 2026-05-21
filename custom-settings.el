@@ -73,31 +73,33 @@
    '(ac-cider ac-js2 ace-window acp adaptive-wrap ag agent-shell
               agent-shell-attention aidermacs atomic-chrome
               auto-complete auto-package-update beacon
-              browse-kill-ring cider cider-storm claude-code-ide
-              clipmon clj-refactor clojure-mode closql codeium
-              coffee-mode comment-tags counsel-jq darktooth-theme dash
-              diminish dired-narrow dumb-jump eat edit-indirect
-              edit-server editorconfig elfeed elfeed-goodies
-              elfeed-org emacs-everywhere enh-ruby-mode erc-image evil
-              evil-escape evil-leader evil-mc evil-numbers
-              evil-surround exec-path-from-shell fixme-mode flycheck
-              flycheck-clj-kondo flycheck-flow flycheck-package forge
-              ggtags gnuplot gptel graphviz-dot-mode handlebars-mode
-              haskell-mode hcl-mode hl-todo ido-vertical-mode
-              impatient-mode intero js-comint js2-mode js2-refactor
-              json-mode keycast knockknock ledger-mode logview magit
-              magit-delta magit-section markdown-mode mcp msgpack
-              mustache-mode ob-restclient org org-ai org-download
-              org-mime org-ql package-lint parinfer pdf-tools
-              projectile rainbow-mode restclient rfc-mode rjsx-mode
-              robe rust-mode sass-mode seeing-is-believing shell-maker
-              smex solarized-theme sops spaceline spacemacs-theme tern
-              tern-auto-complete tide transient tree-sitter
-              tree-sitter-langs undo-tree vterm web-mode which-key
-              whisper with-editor writegood-mode writeroom-mode
-              yaml-mode zenburn-theme))
+              browse-kill-ring buffer-to-pdf cider cider-storm
+              claude-code-ide clipmon clj-refactor clojure-mode closql
+              codeium coffee-mode comment-tags counsel-jq
+              darktooth-theme dash diminish dired-narrow dumb-jump eat
+              edit-indirect edit-server editorconfig elfeed
+              elfeed-goodies elfeed-org emacs-everywhere enh-ruby-mode
+              erc-image evil evil-escape evil-leader evil-mc
+              evil-numbers evil-surround exec-path-from-shell
+              fixme-mode flycheck flycheck-clj-kondo flycheck-flow
+              flycheck-package forge ggtags gnuplot gptel
+              graphviz-dot-mode handlebars-mode haskell-mode hcl-mode
+              hl-todo ido-vertical-mode impatient-mode intero
+              js-comint js2-mode js2-refactor json-mode keycast
+              knockknock ledger-mode logview magit magit-delta
+              magit-section markdown-mode mcp msgpack mustache-mode
+              ob-restclient org org-ai org-download org-mime org-ql
+              package-lint parinfer pdf-tools projectile rainbow-mode
+              restclient rfc-mode rjsx-mode robe rust-mode sass-mode
+              seeing-is-believing shell-maker smex solarized-theme
+              sops spaceline spacemacs-theme tern tern-auto-complete
+              tide transient tree-sitter tree-sitter-langs undo-tree
+              vterm web-mode which-key whisper with-editor
+              writegood-mode writeroom-mode yaml-mode zenburn-theme))
  '(package-vc-selected-packages
-   '((claude-code-ide :url
+   '((buffer-to-pdf :vc-backend Git :url
+                    "https://github.com/protesilaos/buffer-to-pdf.git")
+     (claude-code-ide :url
                       "https://github.com/manzaltu/claude-code-ide.el")
      (knockknock :url "https://github.com/konrad1977/knockknock")
      (agent-shell-attention :url

@@ -961,6 +961,40 @@ that are just in the vicinity and also shown in the diff.
 
 I add the result of =productivity-of-the-day= to my i3 status bar
 (polybar), so it's always visible. [[https://github.com/munen/dotfiles/commit/53b912cf12ddfb9769958690f14c1f80171a0e13][Here's the config for it]].
+** Export current buffer as PDF
+
+Similar to =ps-print-buffer=, but exporting a PDF.
+
+#+begin_src emacs-lisp
+(defun print-buffer-to-pdf (filename)
+  "Export the whole current buffer to PDF using `ps-print-buffer` output."
+  (interactive
+   (list
+    (read-file-name
+     "Write PDF file: "
+     nil nil nil
+     (concat
+      (file-name-base (or buffer-file-name (buffer-name)))
+      ".pdf"))))
+  (require 'ps-print)
+  (unless (executable-find "ps2pdf")
+    (user-error "Cannot find ps2pdf; install Ghostscript"))
+  (let ((ps-file (make-temp-file "emacs-ps-print-" nil ".ps"))
+        (pdf-file (expand-file-name filename)))
+    (unwind-protect
+        (progn
+          (ps-print-buffer ps-file)
+          (let ((status
+                 (call-process "ps2pdf" nil "*ps2pdf*" nil
+                               ps-file pdf-file)))
+            (unless (zerop status)
+              (pop-to-buffer "*ps2pdf*")
+              (user-error "ps2pdf failed with exit status %s" status)))
+          (message "Wrote %s" pdf-file))
+      (when (file-exists-p ps-file)
+        (delete-file ps-file)))))
+#+end_src
+
 
 * General
 This section contains settings for non-built-in Emacs features that
@@ -3812,8 +3846,7 @@ A list of patterns that prevent the =read_file= tool from accessing certain file
     ;; Default agent: OpenCode
     (setq agent-shell-preferred-agent-config
           (agent-shell-opencode-make-agent-config))
-    ;; Default model: gpt-5.3-codex
-    (setq agent-shell-opencode-default-model-id "openai/gpt-5.3-codex"))
+    (setq agent-shell-opencode-default-model-id "openai/gpt-5.5"))
 #+end_src
 
 ** aidermacs
