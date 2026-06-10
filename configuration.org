@@ -4390,10 +4390,29 @@ mu init --my-address=alain.lafon@dispatched.ch --my-address=alain@200ok.ch --my-
  For mail completion, only consider emails that have been seen in the
  last 6 months. This gets rid of legacy mail addresses of people.
 
- #+BEGIN_SRC emacs-lisp
-   (setq mu4e-compose-complete-only-after (format-time-string
-                                           "%Y-%m-%d"
-                                           (time-subtract (current-time) (days-to-time 150))))
+  #+BEGIN_SRC emacs-lisp
+    (defvar ok/mu4e-completion-blocklist
+      '("sophia.benz@bos-schweiz.ch")
+      "Email addresses that should not be offered by mu4e completion.")
+
+    (defun ok/mu4e-compose-complete-handler-filter (orig-fun str pred action)
+      "Filter blocklisted contacts before calling ORIG-FUN."
+      (let ((blocked-regexp (regexp-opt ok/mu4e-completion-blocklist))
+            (case-fold-search t))
+        (funcall orig-fun str
+                 (lambda (contact &rest args)
+                   (and (not (string-match-p blocked-regexp contact))
+                        (or (null pred) (apply pred contact args))))
+                 action)))
+
+    (unless (advice-member-p #'ok/mu4e-compose-complete-handler-filter
+                             'mu4e--compose-complete-handler)
+      (advice-add 'mu4e--compose-complete-handler
+                  :around #'ok/mu4e-compose-complete-handler-filter))
+
+    (setq mu4e-compose-complete-only-after (format-time-string
+                                            "%Y-%m-%d"
+                                            (time-subtract (current-time) (days-to-time 150))))
 
 
  #+END_SRC
