@@ -2802,7 +2802,34 @@ file and not wanting to be overwhelmed by the whole list, for example.
         (narrow-to-region start end))))
 
 #+end_src
+*** Copy current Org path
 
+Copy current Org path as: =filename.org / Parent / Child / Current
+heading=. With prefix argument FULL-PATH, use the full file path
+instead of just the file name.
+
+#+begin_src emacs-lisp
+  (defun ok/org-copy-current-path (&optional full-path)
+    "Copy current Org path as: filename.org / Parent / Child / Current
+  heading. With prefix argument FULL-PATH, use the full file path
+  instead of just the file name."
+    (interactive "P")
+    (unless (derived-mode-p 'org-mode)
+      (user-error "Not in an Org buffer"))
+    (let* ((file (if buffer-file-name
+                     (if full-path
+                         (abbreviate-file-name buffer-file-name)
+                       (file-name-nondirectory buffer-file-name))
+                   (buffer-name)))
+           (headings
+            (unless (org-before-first-heading-p)
+              ;; t means include the current heading, not just parents.
+              (mapcar #'substring-no-properties
+                      (org-get-outline-path t))))
+           (path (string-join (cons file headings) " / ")))
+      (kill-new path)
+      (message "Copied: %s" path)))
+#+end_src
 ** WIP Notifications / appointment reminders
 
  This is a work-in-progress, but already working.
