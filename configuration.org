@@ -222,6 +222,21 @@ source.
 * Default Settings
 This section contains settings for built-in Emacs features.
 
+** UTF-8
+
+Use UTF-8 consistently for file contents, file names, terminal input,
+and terminal output. This avoids buffers being visited as raw bytes when
+the Emacs daemon inherits an incomplete or non-UTF-8 locale.
+
+#+BEGIN_SRC emacs-lisp
+  (set-language-environment "UTF-8")
+  (prefer-coding-system 'utf-8-unix)
+  (set-default-coding-systems 'utf-8-unix)
+  (set-terminal-coding-system 'utf-8-unix)
+  (set-keyboard-coding-system 'utf-8-unix)
+  (setq default-file-name-coding-system 'utf-8-unix)
+#+END_SRC
+
 ** Gnu Elpa TLS Fix
 
 Emacs 26.1 (for example in Debian Buster) requests the GNU Elpa repo
@@ -5420,7 +5435,7 @@ apt install hunspell hunspell-de-de hunspell-en-gb hunspell-en-us hunspell-de-ch
       ;; Configure `LANG`, otherwise ispell.el cannot find a 'default
       ;; dictionary' even though multiple dictionaries will be configured
       ;; in next line.
-      (setenv "LANG" "en_US")
+      (setenv "LANG" "en_US.utf8")
       (setq ispell-program-name "hunspell")
       ;; Configure German, Swiss German, and two variants of English.
       (setq ispell-dictionary "de_DE,de_CH,en_GB,en_US")
