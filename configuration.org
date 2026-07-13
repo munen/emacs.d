@@ -5360,6 +5360,47 @@ https://github.com/hlissner/emacs-hide-mode-line
    (add-hook 'pdf-view-mode-hook #'hide-mode-line-mode)
  #+END_SRC
 
+* ghost.el
+https://dakra.github.io/ghostel/#quick-start
+
+#+begin_src emacs-lisp
+  (use-package ghostel
+    :ensure t
+    :commands (ghostel
+               ghostel-project
+               ghostel-project-list-buffers)
+    :bind (("C-x m" . ghostel)
+           :map ghostel-semi-char-mode-map
+           ("C-s" . consult-line)
+           ("C-k" . my/ghostel-send-C-k-and-kill)
+           ("M-<backspace>" . ghostel-backward-kill-word)
+           ("M-p" . my/ghostel-history-previous)
+           ("M-n" . my/ghostel-history-next)
+           :map project-prefix-map
+           ("m" . ghostel-project)
+           ("M" . ghostel-project-list-buffers))
+    :config
+    (defun my/ghostel-send-C-k-and-kill ()
+      "Kill to the end of the line and send C-k to Ghostel."
+      (interactive)
+      (kill-ring-save (point) (line-end-position))
+      (ghostel-send-key "k" "ctrl"))
+
+    (defun my/ghostel-history-previous ()
+      "Send C-p to the terminal."
+      (interactive)
+      (ghostel-send-key "p" "ctrl"))
+
+    (defun my/ghostel-history-next ()
+      "Send C-n to the terminal."
+      (interactive)
+      (ghostel-send-key "n" "ctrl")))
+
+  (use-package evil-ghostel
+    :ensure t
+    :after (ghostel evil)
+    :hook (ghostel-mode . evil-ghostel-mode))
+#+end_src
 * Write Quality
 
 ** =writegood-mode=
