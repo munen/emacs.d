@@ -3167,8 +3167,8 @@ Temporarily use my patch:
           '(:name "working_dir"
                   :type string
                   :description "Optional: The directory in which to run the command. Defaults to the current directory if not specified."))
-   :category "command"
-   :include t)
+    :category "command"
+    :include t)
 
   (gptel-make-tool
    :function (lambda (query)
@@ -3203,10 +3203,48 @@ Temporarily use my patch:
   (gptel-make-tool
    :name "TrafilaturaFetch"
    :function #'munen-gptel--trafilatura-fetch-url
-   :description "Fetch content from a URL using trafilatura, which extracts main content and metadata while removing boilerplate, navigation and ads."
+   :description (concat
+                 "Fetch content from a URL using trafilatura, which extracts main content and metadata "
+                 "while removing boilerplate, navigation and ads. "
+                 "Use this for articles, blog posts and news pages where you only want the main text. "
+                 "It may return empty output on non-article pages (docs, dashboards, listings); "
+                 "in that case, or when you need the complete page content, use the 'read_url' tool instead.")
    :args '((:name "url"
-                  :type string
-                  :description "URL to fetch content from"))
+                   :type string
+                   :description "URL to fetch content from"))
+   :category "web"
+   :include t)
+
+  (defun munen-gptel--read-url (url)
+    "Fetch URL and render its full HTML contents as text using Emacs' built-in shr."
+    (with-temp-message (format "Reading URL: %s" url)
+      (condition-case err
+          (with-current-buffer (url-retrieve-synchronously url t t)
+            (unless (buffer-live-p (current-buffer))
+              (error "Failed to retrieve %s" url))
+            (goto-char (point-min))
+            (forward-paragraph)
+            (let ((dom (libxml-parse-html-region (point) (point-max))))
+              (kill-buffer (current-buffer))
+              (with-temp-buffer
+                (shr-insert-document dom)
+                (buffer-substring-no-properties (point-min) (point-max)))))
+        (error (format "Error reading URL %s: %s" url (error-message-string err))))))
+
+  (gptel-make-tool
+   :name "read_url"
+   :function #'munen-gptel--read-url
+   :description (concat
+                 "Fetch and read the contents of a URL by rendering the full page DOM as text "
+                 "(via Emacs' built-in url-retrieve and shr). "
+                 "This includes everything on the page: navigation, headers, footers and boilerplate. "
+                 "Use this for non-article pages (documentation, listings, dashboards) or when you need "
+                 "content that content extraction might strip (comments, sidebars, tables). "
+                 "For articles or blog posts where you only want the main content in clean markdown, "
+                 "prefer the 'TrafilaturaFetch' tool instead.")
+   :args '((:name "url"
+                   :type string
+                   :description "The URL to read"))
    :category "web"
    :include t)
 
