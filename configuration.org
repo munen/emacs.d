@@ -2980,274 +2980,335 @@ Temporarily use my patch:
 **** Misc
 
 #+begin_src emacs-lisp
-  (gptel-make-tool
-   :function (lambda (buffer)
-               (with-temp-message (format "Reading buffer: %s" buffer)
-                 (condition-case err
-                     (if (buffer-live-p (get-buffer buffer))
-                         (with-current-buffer buffer
-                           (buffer-substring-no-properties (point-min) (point-max)))
-                       (format "Error: buffer %s is not live." buffer))
-                   (error (format "Error reading buffer %s: %s" 
-                                  buffer (error-message-string err))))))
-   :name "read_buffer"
-   :description "Return the contents of an Emacs buffer"
-   :args (list '(:name "buffer"
-                       :type string
-                       :description "The name of the buffer whose contents are to be retrieved"))
-   :category "emacs"
-   :include t)
-
-  (gptel-make-tool
-   :function (lambda (buffer text)
-               (with-temp-message (format "Appending to buffer: %s" buffer)
-                 (condition-case err
-                     (if (buffer-live-p (get-buffer buffer))
-                         (with-current-buffer buffer
-                           (goto-char (point-max))
-                           (insert text)
-                           (format "Successfully appended text to buffer %s." buffer))
-                       (format "Error: buffer %s is not live or does not exist." buffer))
-                   (error (format "Error appending to buffer %s: %s"
-                                  buffer (error-message-string err))))))
-   :name "append_to_buffer"
-   :description "Append the given text to the end of an Emacs buffer. Returns a success or error message."
-   :args (list
-          '(:name "buffer"
-                  :type string
-                  :description "The name of the buffer to append to.")
-          '(:name "text"
-                  :type string
-                  :description "The text to append to the buffer."))
-   :category "emacs"
-   :include t)
-
-  (defun gptel-read-documentation (symbol)
-    "Read the documentation for SYMBOL, which can be a function or variable."
-    (with-temp-message (format "Reading documentation for: %s" symbol)
-      (condition-case err
-          (let ((sym (intern symbol)))
-            (cond
-             ((fboundp sym)
-              (documentation sym))
-             ((boundp sym)
-              (documentation-property sym 'variable-documentation))
-             (t
-              (format "No documentation found for %s" symbol))))
-        (error (format "Error reading documentation for %s: %s" 
-                       symbol (error-message-string err))))))
-
-  (gptel-make-tool
-   :name "read_documentation"
-   :function #'gptel-read-documentation
-   :description "Read the documentation for a given function or variable"
-   :args (list '(:name "name"
-                       :type string
-                       :description "The name of the function or variable whose documentation is to be retrieved"))
-   :category "emacs"
-   :include t)
-
-
-  (gptel-make-tool
-   :function (lambda (text)
-               (with-temp-message (format "Sending message: %s" text)
-                 (message "%s" text)
-                 (format "Message sent: %s" text)))
-   :name "echo_message"
-   :description "Send a message to the *Messages* buffer"
-   :args (list '(:name "text"
-                       :type string
-                       :description "The text to send to the messages buffer"))
-   :category "emacs"
-   :include t)
-
-   (gptel-make-tool
-   :function (lambda (buffer_name content)
-               (with-temp-message (format "Replacing buffer contents: `%s`" buffer_name)
-                 (if (get-buffer buffer_name)
-                     (with-current-buffer buffer_name
-                       (erase-buffer)
-                       (insert content)
-                       (format "Buffer contents replaced: %s" buffer_name))
-                   (format "Error: Buffer '%s' not found" buffer_name))))
-   :name "replace_buffer"
-   :description "Completely overwrites buffer contents with the provided content."
-   :args (list
-          '(:name "buffer_name"
-                  :type string
-                  :description "The name of the buffer whose contents will be replaced.")
-          '(:name "content"
-                  :type string
-                  :description "The new content to write to the buffer, replacing all existing content."))
-   :category "emacs"
-   :include t)
-
-  (gptel-make-tool
-   :function (lambda (path filename content)
-               (with-temp-message (format "Creating file: %s in %s" filename path)
-                 (condition-case err
-                     (let ((full-path (expand-file-name filename path)))
-                       (with-temp-buffer
-                         (insert content)
-                         (write-file full-path))
-                       (format "Created file %s in %s" filename path))
-                   (error (format "Error creating file %s in %s: %s" 
-                                  filename path (error-message-string err))))))
-   :name "create_file"
-   :description "Create a new file with the specified content"
-   :args (list '(:name "path"
-                       :type string
-                       :description "The directory where to create the file")
-               '(:name "filename"
-                       :type string
-                       :description "The name of the file to create")
-               '(:name "content"
-                       :type string
-                       :description "The content to write to the file"))
-   :category "filesystem"
-   :include t)
-
-
-
-  (gptel-make-tool
-   :function (lambda (parent name)
-               (with-temp-message (format "Creating directory: %s in %s" name parent)
-                 (condition-case err
-                     (progn
-                       (make-directory (expand-file-name name parent) t)
-                       (format "Directory %s created/verified in %s" name parent))
-                   (error (format "Error creating directory %s in %s: %s" 
-                                  name parent (error-message-string err))))))
-   :name "make_directory"
-   :description "Create a new directory with the given name in the specified parent directory"
-   :args (list '(:name "parent"
-                       :type string
-                       :description "The parent directory where the new directory should be created, e.g. /tmp")
-               '(:name "name"
-                       :type string
-                       :description "The name of the new directory to create, e.g. testdir"))
-   :category "filesystem"
-   :include t)
+    (gptel-make-tool
+     :function (lambda (buffer)
+                 (with-temp-message (format "Reading buffer: %s" buffer)
+                   (condition-case err
+                       (if (buffer-live-p (get-buffer buffer))
+                           (with-current-buffer buffer
+                             (buffer-substring-no-properties (point-min) (point-max)))
+                         (format "Error: buffer %s is not live." buffer))
+                     (error (format "Error reading buffer %s: %s"
+                                    buffer (error-message-string err))))))
+     :name "read_buffer"
+     :description "Return the contents of an Emacs buffer"
+     :args (list '(:name "buffer"
+                         :type string
+                         :description "The name of the buffer whose contents are to be retrieved"))
+     :category "emacs"
+     :include t)
 
     (gptel-make-tool
-     :function (lambda (file_path new_content)
-                 (with-temp-message (format "Replacing content in file: `%s`" file_path)
-                   (let ((full-path (expand-file-name file_path)))
-                     (with-temp-file full-path
-                       (insert new_content))
-                     (format "Successfully replaced content in %s" full-path))))
-     :name "replace_file_contents"
-     :description "Replaces the entire content of a file. Use this tool ONLY as a last resort if both 'edit_file' and 'apply_diff' fail. It is highly token-inefficient as it requires sending the full file content. WARNING: This operation completely overwrites the target file."
+     :function (lambda (buffer text)
+                 (with-temp-message (format "Appending to buffer: %s" buffer)
+                   (condition-case err
+                       (if (buffer-live-p (get-buffer buffer))
+                           (with-current-buffer buffer
+                             (goto-char (point-max))
+                             (insert text)
+                             (format "Successfully appended text to buffer %s." buffer))
+                         (format "Error: buffer %s is not live or does not exist." buffer))
+                     (error (format "Error appending to buffer %s: %s"
+                                    buffer (error-message-string err))))))
+     :name "append_to_buffer"
+     :description "Append the given text to the end of an Emacs buffer. Returns a success or error message."
      :args (list
-            '(:name "file_path"
+            '(:name "buffer"
                     :type string
-                    :description "The path to the file that needs to be replaced.")
-            '(:name "new_content"
+                    :description "The name of the buffer to append to.")
+            '(:name "text"
                     :type string
-                    :description "The new content for the file."))
+                    :description "The text to append to the buffer."))
+     :category "emacs"
+     :include t)
+
+    (defun gptel-read-documentation (symbol)
+      "Read the documentation for SYMBOL, which can be a function or variable."
+      (with-temp-message (format "Reading documentation for: %s" symbol)
+        (condition-case err
+            (let ((sym (intern symbol)))
+              (cond
+               ((fboundp sym)
+                (documentation sym))
+               ((boundp sym)
+                (documentation-property sym 'variable-documentation))
+               (t
+                (format "No documentation found for %s" symbol))))
+          (error (format "Error reading documentation for %s: %s"
+                         symbol (error-message-string err))))))
+
+    (gptel-make-tool
+     :name "read_documentation"
+     :function #'gptel-read-documentation
+     :description "Read the documentation for a given function or variable"
+     :args (list '(:name "name"
+                         :type string
+                         :description "The name of the function or variable whose documentation is to be retrieved"))
+     :category "emacs"
+     :include t)
+
+
+    (gptel-make-tool
+     :function (lambda (text)
+                 (with-temp-message (format "Sending message: %s" text)
+                   (message "%s" text)
+                   (format "Message sent: %s" text)))
+     :name "echo_message"
+     :description "Send a message to the *Messages* buffer"
+     :args (list '(:name "text"
+                         :type string
+                         :description "The text to send to the messages buffer"))
+     :category "emacs"
+     :include t)
+
+     (gptel-make-tool
+     :function (lambda (buffer_name content)
+                 (with-temp-message (format "Replacing buffer contents: `%s`" buffer_name)
+                   (if (get-buffer buffer_name)
+                       (with-current-buffer buffer_name
+                         (erase-buffer)
+                         (insert content)
+                         (format "Buffer contents replaced: %s" buffer_name))
+                     (format "Error: Buffer '%s' not found" buffer_name))))
+     :name "replace_buffer"
+     :description "Completely overwrites buffer contents with the provided content."
+     :args (list
+            '(:name "buffer_name"
+                    :type string
+                    :description "The name of the buffer whose contents will be replaced.")
+            '(:name "content"
+                    :type string
+                    :description "The new content to write to the buffer, replacing all existing content."))
+     :category "emacs"
+     :include t)
+
+    (gptel-make-tool
+     :function (lambda (path filename content)
+                 (with-temp-message (format "Creating file: %s in %s" filename path)
+                   (condition-case err
+                       (let ((full-path (expand-file-name filename path)))
+                         (with-temp-buffer
+                           (insert content)
+                           (write-file full-path))
+                         (format "Created file %s in %s" filename path))
+                     (error (format "Error creating file %s in %s: %s"
+                                    filename path (error-message-string err))))))
+     :name "create_file"
+     :description "Create a new file with the specified content"
+     :args (list '(:name "path"
+                         :type string
+                         :description "The directory where to create the file")
+                 '(:name "filename"
+                         :type string
+                         :description "The name of the file to create")
+                 '(:name "content"
+                         :type string
+                         :description "The content to write to the file"))
      :category "filesystem"
      :include t)
 
-  (gptel-make-tool
-   :function (lambda (command &optional working_dir)
-               (with-temp-message (format "Executing command: `%s`" command)
-                 (let ((default-directory (if (and working_dir (not (string= working_dir "")))
-                                              (expand-file-name working_dir)
-                                            default-directory)))
-                   (shell-command-to-string command))))
-   :name "run_command"
-   :description (concat
-                 "Executes a shell command and returns the output as a string. IMPORTANT: This tool allows execution of arbitrary code."
-                 "Installed commandline tools: coreutils, git, patch, findutils, the-silver-searcher curl"
-                 "NOTE: You can use a combination of `find` and `the-silver-searcher` to find your way around a codebase")
-   :args (list
-          '(:name "command"
-                  :type string
-                  :description "The complete shell command to execute.")
-          '(:name "working_dir"
-                  :type string
-                  :description "Optional: The directory in which to run the command. Defaults to the current directory if not specified."))
-    :category "command"
-    :include t)
 
-  (gptel-make-tool
-   :function (lambda (query)
-               (with-temp-message (format "Searching for: `%s`" query)
-                 (let ((url (format "https://%s:%s@search.twohundredok.com/search?q=%s&format=json"
-                                    munen-gptel--twohundredok-user
-                                    munen-gptel--twohundredok-password
-                                    (url-hexify-string query))))
-                   (with-temp-buffer
-                     (url-insert-file-contents url)
-                     (let ((json-response (json-read)))
-                       (mapconcat (lambda (result)
-                                    (format "%s - %s\n%s" (cdr (assoc 'title result)) (cdr (assoc 'url result)) (cdr (assoc 'content result))))
-                                  (cdr (assoc 'results json-response))
-                                  "\n\n"))))))
-   :name "search_web"
-   :description "Searches the web using SearXNG metasearch engine and returns formatted results including titles, URLs, and content excerpts."
-   :args (list
-          '(:name "query"
-                  :type string
-                  :description "The search query to execute against the search engine."))
-   :category "web"
-   :include t)
 
-  (defun munen-gptel--trafilatura-fetch-url (url)
-    "Fetch content from URL using trafilatura and return it as a string."
-    (with-temp-message (format "Fetching content from: %s" url)
-      (with-temp-buffer
-        (call-process "trafilatura" nil t nil "--output-format=markdown" "--with-metadata" "-u" url)
-        (buffer-string))))
+    (gptel-make-tool
+     :function (lambda (parent name)
+                 (with-temp-message (format "Creating directory: %s in %s" name parent)
+                   (condition-case err
+                       (progn
+                         (make-directory (expand-file-name name parent) t)
+                         (format "Directory %s created/verified in %s" name parent))
+                     (error (format "Error creating directory %s in %s: %s"
+                                    name parent (error-message-string err))))))
+     :name "make_directory"
+     :description "Create a new directory with the given name in the specified parent directory"
+     :args (list '(:name "parent"
+                         :type string
+                         :description "The parent directory where the new directory should be created, e.g. /tmp")
+                 '(:name "name"
+                         :type string
+                         :description "The name of the new directory to create, e.g. testdir"))
+     :category "filesystem"
+     :include t)
 
-  (gptel-make-tool
-   :name "TrafilaturaFetch"
-   :function #'munen-gptel--trafilatura-fetch-url
-   :description (concat
-                 "Fetch content from a URL using trafilatura, which extracts main content and metadata "
-                 "while removing boilerplate, navigation and ads. "
-                 "Use this for articles, blog posts and news pages where you only want the main text. "
-                 "It may return empty output on non-article pages (docs, dashboards, listings); "
-                 "in that case, or when you need the complete page content, use the 'read_url' tool instead.")
-   :args '((:name "url"
-                   :type string
-                   :description "URL to fetch content from"))
-   :category "web"
-   :include t)
+      (gptel-make-tool
+       :function (lambda (file_path new_content)
+                   (with-temp-message (format "Replacing content in file: `%s`" file_path)
+                     (let ((full-path (expand-file-name file_path)))
+                       (with-temp-file full-path
+                         (insert new_content))
+                       (format "Successfully replaced content in %s" full-path))))
+       :name "replace_file_contents"
+       :description "Replaces the entire content of a file. Use this tool ONLY as a last resort if both 'edit_file' and 'apply_diff' fail. It is highly token-inefficient as it requires sending the full file content. WARNING: This operation completely overwrites the target file."
+       :args (list
+              '(:name "file_path"
+                      :type string
+                      :description "The path to the file that needs to be replaced.")
+              '(:name "new_content"
+                      :type string
+                      :description "The new content for the file."))
+       :category "filesystem"
+       :include t)
 
-  (defun munen-gptel--read-url (url)
-    "Fetch URL and render its full HTML contents as text using Emacs' built-in shr."
-    (with-temp-message (format "Reading URL: %s" url)
-      (condition-case err
-          (with-current-buffer (url-retrieve-synchronously url t t)
-            (unless (buffer-live-p (current-buffer))
-              (error "Failed to retrieve %s" url))
-            (goto-char (point-min))
-            (forward-paragraph)
-            (let ((dom (libxml-parse-html-region (point) (point-max))))
-              (kill-buffer (current-buffer))
-              (with-temp-buffer
-                (shr-insert-document dom)
-                (buffer-substring-no-properties (point-min) (point-max)))))
-        (error (format "Error reading URL %s: %s" url (error-message-string err))))))
+    (gptel-make-tool
+     :function (lambda (command &optional working_dir)
+                 (with-temp-message (format "Executing command: `%s`" command)
+                   (let ((default-directory (if (and working_dir (not (string= working_dir "")))
+                                                (expand-file-name working_dir)
+                                              default-directory)))
+                     (shell-command-to-string command))))
+     :name "run_command"
+     :description (concat
+                   "Executes a shell command and returns the output as a string. IMPORTANT: This tool allows execution of arbitrary code."
+                   "Installed commandline tools: coreutils, git, patch, findutils, the-silver-searcher curl"
+                   "NOTE: You can use a combination of `find` and `the-silver-searcher` to find your way around a codebase")
+     :args (list
+            '(:name "command"
+                    :type string
+                    :description "The complete shell command to execute.")
+            '(:name "working_dir"
+                    :type string
+                    :description "Optional: The directory in which to run the command. Defaults to the current directory if not specified."))
+      :category "command"
+      :include t)
 
-  (gptel-make-tool
-   :name "read_url"
-   :function #'munen-gptel--read-url
-   :description (concat
-                 "Fetch and read the contents of a URL by rendering the full page DOM as text "
-                 "(via Emacs' built-in url-retrieve and shr). "
-                 "This includes everything on the page: navigation, headers, footers and boilerplate. "
-                 "Use this for non-article pages (documentation, listings, dashboards) or when you need "
-                 "content that content extraction might strip (comments, sidebars, tables). "
-                 "For articles or blog posts where you only want the main content in clean markdown, "
-                 "prefer the 'TrafilaturaFetch' tool instead.")
-   :args '((:name "url"
-                   :type string
-                   :description "The URL to read"))
-   :category "web"
-   :include t)
+    ;; (gptel-make-tool
+    ;;  :function (lambda (query)
+    ;;              (with-temp-message (format "Searching for: `%s`" query)
+    ;;                (let ((url (format "https://%s:%s@search.twohundredok.com/search?q=%s&format=json"
+    ;;                                   munen-gptel--twohundredok-user
+    ;;                                   munen-gptel--twohundredok-password
+    ;;                                   (url-hexify-string query))))
+    ;;                  (with-temp-buffer
+    ;;                    (url-insert-file-contents url)
+    ;;                    (let ((json-response (json-read)))
+    ;;                      (mapconcat (lambda (result)
+    ;;                                   (format "%s - %s\n%s" (cdr (assoc 'title result)) (cdr (assoc 'url result)) (cdr (assoc 'content result))))
+    ;;                                 (cdr (assoc 'results json-response))
+    ;;                                 "\n\n"))))))
+    ;;  :name "search_web"
+    ;;  :description "Searches the web using SearXNG metasearch engine and returns formatted results including titles, URLs, and content excerpts."
+    ;;  :args (list
+    ;;         '(:name "query"
+    ;;                 :type string
+    ;;                 :description "The search query to execute against the search engine."))
+    ;;  :category "web"
+    ;;  :include t)
 
+    (defun munen-gptel--ddgs-search (query &optional max-results timelimit)
+      "Search the web via the ddgs CLI for QUERY.
+  MAX-RESULTS limits the number of results (default 10).
+  TIMELIMIT restricts recency: \"d\" (day), \"w\" (week), \"m\" (month), \"y\" (year)."
+      (with-temp-message (format "Searching ddgs for: `%s`" query)
+        (condition-case err
+             (let* ((json-file (make-temp-file "gptel-ddgs-" nil ".json"))
+                    (args `("text"
+                            "-q" ,query
+                            "-m" ,(number-to-string (if (and (numberp max-results) (> max-results 0))
+                                                        max-results 10))
+                            "-r" "us-en"
+                            "-s" "moderate"
+                            "-b" "auto"
+                            "-nc"
+                            "-o" ,json-file)))
+              (when (and timelimit (not (string-empty-p timelimit)))
+                (setq args (append args (list "-t" timelimit))))
+              (unwind-protect
+                  (progn
+                    (let ((exit-code (apply #'call-process "ddgs" nil nil nil args)))
+                      (unless (zerop exit-code)
+                        (error "ddgs exited with status %s" exit-code))
+                      (with-temp-buffer
+                        (insert-file-contents json-file)
+                        (let* ((results (json-read))
+                               (formatted (mapconcat
+                                           (lambda (result)
+                                             (format "%s - %s\n%s"
+                                                     (cdr (assoc 'title result))
+                                                     (cdr (assoc 'href result))
+                                                     (cdr (assoc 'body result))))
+                                           results "\n\n")))
+                          (if (string-empty-p formatted)
+                              "No results found."
+                            formatted)))))
+                (delete-file json-file nil)))
+          (error (format "Error searching with ddgs: %s" (error-message-string err))))))
+
+    (gptel-make-tool
+     :function #'munen-gptel--ddgs-search
+     :name "ddgs_search"
+     :description (concat
+                   "Search the web using the ddgs metasearch CLI (DuckDuckGo-backed, aggregating multiple backends) "
+                   "and return formatted results with titles, URLs and content excerpts. "
+                   "Query operators like site:example.com, \"exact phrase\", -excluded and filetype:pdf are supported "
+                   "directly in the query. Use the optional timelimit for recent results (news, releases).")
+     :args (list
+            '(:name "query"
+                    :type string
+                    :description "The search query. Prefer precise queries that disambiguate the subject.")
+            '(:name "max-results"
+                    :type integer
+                    :optional t
+                    :description "Optional: Maximum number of results to return (default: 10).")
+            '(:name "timelimit"
+                    :type string
+                    :optional t
+                    :description "Optional: Restrict results by recency: \"d\" (day), \"w\" (week), \"m\" (month), \"y\" (year). Omit for no restriction."))
+     :category "web"
+     :include t)
+
+    (defun munen-gptel--trafilatura-fetch-url (url)
+      "Fetch content from URL using trafilatura and return it as a string."
+      (with-temp-message (format "Fetching content from: %s" url)
+        (with-temp-buffer
+          (call-process "trafilatura" nil t nil "--output-format=markdown" "--with-metadata" "-u" url)
+          (buffer-string))))
+
+    (gptel-make-tool
+     :name "TrafilaturaFetch"
+     :function #'munen-gptel--trafilatura-fetch-url
+     :description (concat
+                   "Fetch content from a URL using trafilatura, which extracts main content and metadata "
+                   "while removing boilerplate, navigation and ads. "
+                   "Use this for articles, blog posts and news pages where you only want the main text. "
+                   "It may return empty output on non-article pages (docs, dashboards, listings); "
+                   "in that case, or when you need the complete page content, use the 'read_url' tool instead.")
+     :args '((:name "url"
+                     :type string
+                     :description "URL to fetch content from"))
+     :category "web"
+     :include t)
+
+    (defun munen-gptel--read-url (url)
+      "Fetch URL and render its full HTML contents as text using Emacs' built-in shr."
+      (with-temp-message (format "Reading URL: %s" url)
+        (condition-case err
+            (with-current-buffer (url-retrieve-synchronously url t t)
+              (unless (buffer-live-p (current-buffer))
+                (error "Failed to retrieve %s" url))
+              (goto-char (point-min))
+              (forward-paragraph)
+              (let ((dom (libxml-parse-html-region (point) (point-max))))
+                (kill-buffer (current-buffer))
+                (with-temp-buffer
+                  (shr-insert-document dom)
+                  (buffer-substring-no-properties (point-min) (point-max)))))
+          (error (format "Error reading URL %s: %s" url (error-message-string err))))))
+
+    (gptel-make-tool
+     :name "read_url"
+     :function #'munen-gptel--read-url
+     :description (concat
+                   "Fetch and read the contents of a URL by rendering the full page DOM as text "
+                   "(via Emacs' built-in url-retrieve and shr). "
+                   "This includes everything on the page: navigation, headers, footers and boilerplate. "
+                   "Use this for non-article pages (documentation, listings, dashboards) or when you need "
+                   "content that content extraction might strip (comments, sidebars, tables). "
+                   "For articles or blog posts where you only want the main content in clean markdown, "
+                   "prefer the 'TrafilaturaFetch' tool instead.")
+     :args '((:name "url"
+                     :type string
+                     :description "The URL to read"))
+     :category "web"
+     :include t)
 #+end_src
 
 **** edit_file
