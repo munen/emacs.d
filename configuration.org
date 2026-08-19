@@ -2456,7 +2456,7 @@ Org Capture Templates are explained [[http://orgmode.org/manual/Capture-template
     (setq org-default-notes-file (concat org-directory "inbox.org"))
     (define-key global-map "\C-cc" 'org-capture)
 
-    (setq things-file (expand-file-name "things.org" org-directory))
+    (setq things-file (expand-file-name "active_things.org" org-directory))
     (setq reference-file (expand-file-name "reference.org" org-directory))
     (setq media-file (expand-file-name "media.org" org-directory))
 
@@ -2608,7 +2608,7 @@ manually be started without clocking in via =M-x pomodoro-start=.
 #+BEGIN_SRC emacs-lisp
   ;; Configure primary org pomodoro buffer to which the timers will get
   ;; attached to.
-  (setq ok-pomodoro-buffer "things.org")
+  (setq ok-pomodoro-buffer "active_things.org")
   (load "~/.emacs.d/org-pomodoro")
 #+END_SRC
 ** Keyword sets
@@ -2891,7 +2891,7 @@ instead of just the file name.
    ;; ; (3) ... When TODO.txt is saved
    ;; (add-hook 'after-save-hook
    ;;           '(lambda ()
-   ;;              (if (string= (buffer-file-name) (concat (getenv "HOME") "/Dropbox/org/things.org"))
+   ;;              (if (string= (buffer-file-name) (concat (getenv "HOME") "/Dropbox/org/active_things.org"))
    ;;                  (my-org-agenda-to-appt))))
 
    ;; ; Display appointments as a window manager notification
@@ -4793,7 +4793,7 @@ agenda).
 #+begin_src emacs-lisp
   (require 'mu4e-icalendar)
   (mu4e-icalendar-setup)
-  (setq gnus-icalendar-org-capture-file "~/Dropbox/org/things.org")
+  (setq gnus-icalendar-org-capture-file "~/Dropbox/org/active_things.org")
   (setq gnus-icalendar-org-capture-headline '("Calendar"))
   (gnus-icalendar-org-setup)
 #+end_src
