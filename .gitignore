@@ -35,3 +35,5 @@ games
 /quelpa/
 /forge-database-v9-20231013-1702.sqlite
 /codeium/
+/org-persist/
+/forge-database-*.sqlite
