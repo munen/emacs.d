@@ -2577,39 +2577,43 @@ Enable the =<s TAB= syntax for [[https://orgmode.org/manual/Structure-Templates.
 
 ** Pomodoro
 
-A lightweight implementation of the Pomodoro Technique is implemented
-through customizing Org mode. These are the commands:
+A lightweight implementation of the Pomodoro Technique on top of Org
+mode, in [[file:ok-pomodoro.el][ok-pomodoro.el]]. These are the commands:
 
-- =ok-pomodoro-start=
-- =ok-pomodoro-cancel=
-- =ok-pomodoro-break=
-- =ok-pomodoro-reset=: Reset the completed and cancelled counters.
+- =ok-pomodoro-start=: Start the next Pomodoro.
+- =ok-pomodoro-set-todo=: Ask for a task, then start a Pomodoro on it.
+  Empty input continues the current or last task.
+- =ok-pomodoro-break=: Take the break of the current cycle step.
+- =ok-pomodoro-cancel=: Cancel the running Pomodoro or break.
+- =ok-pomodoro-reset=: Restart the cycle at its first pair.
+- =ok-pomodoro-stats=: Open the log with refreshed clocktables.
 
-It sets the following stats:
-  
-- =ok-pomodoro-completed=
-- =ok-pomodoro-cancelled=
+Work and break lengths follow =ok-pomodoro-pattern=, a cycle of
+=(WORK . BREAK)= pairs in minutes. The default is the classic
+technique: three times 25/5, then 25/15. Cancelled Pomodoros don't
+advance the cycle. A new day, or a break at least as long as the
+longest break in the pattern, restarts it.
+
+Breaks are not enforced. Every Pomodoro is logged as a heading with a
+=CLOCK= line in =ok-pomodoro-file=, grouped by day with a clocktable.
+The entry is written as =running= on start and closed when the
+Pomodoro completes or is cancelled. The break actually taken before
+the next Pomodoro is stored in its =BREAK= property. The log stays in
+the background; open it with =ok-pomodoro-stats=.
+
+A Pomodoro running when Emacs exits is logged as =interrupted=. If
+Emacs did not exit cleanly, the next start closes the leftover entry
+as =interrupted=, without counting its time.
 
 Alternatively, if you do not want to manually start a pomodoro, you
 can hook into the Org mode clocking mechanism. When
-=ok-pomodoro-auto-clock-in= is set, for every Clock that is started
-(=C-c C-x C-i=) an automatic Timer is scheduled to 25min. After these
-25min are up, a "Time to take a break!" message is played and a pop-up
-notification is shown.
-
-The timer is not automatically stopped on clocking out, because clocking
-in should still work on new tasks without resetting the Pomodoro.
-
-The timer can manually be stopped with =M-x org-timer-stop=.
-
-A break can be started with =M-x pomodoro-break=. A pomodoro can also
-manually be started without clocking in via =M-x pomodoro-start=.
+=ok-pomodoro-auto-clock-in= is set, every Clock that is started
+(=C-c C-x C-i=) also starts a Pomodoro on that task, unless one is
+already running. The Pomodoro is not stopped on clocking out, because
+clocking in should still work on new tasks without resetting it.
 
 #+BEGIN_SRC emacs-lisp
-  ;; Configure primary org pomodoro buffer to which the timers will get
-  ;; attached to.
-  (setq ok-pomodoro-buffer "active_things.org")
-  (load "~/.emacs.d/org-pomodoro")
+  (load "~/.emacs.d/ok-pomodoro")
 #+END_SRC
 ** Keyword sets
 
@@ -5359,7 +5363,7 @@ the future.
 
 **** Org Timer
 
-I like to set timers, for example through [[file:org-pomodoro.el][org-pomodoro.el]]
+I like to set timers, for example through [[file:ok-pomodoro.el][ok-pomodoro.el]]
 
 #+BEGIN_SRC emacs-lisp
   (spaceline-define-segment org-timer-left-time
