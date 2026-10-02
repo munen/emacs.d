@@ -401,7 +401,7 @@ Seconds are shown in 15s steps, except during the last 15 seconds."
          (concat "Break +" (ok-pomodoro--format-clock
                             (float-time (time-subtract nil ok-pomodoro--end-time))))
        ""))
-    (_ (or ok-pomodoro-current ""))))
+    (_ "")))
 
 ;;; Org clock integration
 
