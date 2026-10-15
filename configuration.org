@@ -4365,7 +4365,7 @@ mu init --my-address=alain.lafon@dispatched.ch --my-address=alain@200ok.ch --my-
             ((string-match "^/zen-tempel.*"
                            (mu4e-message-field msg :maildir))
              "/zen-tempel/INBOX.Archive")
-            ((string-match "^/200ok.*"
+            ((string-match "^/200ok/"
                            (mu4e-message-field msg :maildir))
              "/200ok/INBOX.Archive")
             ((string-match "^/200ok-support.*"
