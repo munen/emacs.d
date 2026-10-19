@@ -4829,6 +4829,26 @@ org-mime can be used to send HTML email using Org-mode HTML export.
 
   ;; Replace the old hook with our conditional version
   (add-hook 'message-send-hook #'conditional-org-mime-htmlize)
+
+  (defun ok/mu4e-strip-stale-mime-headers ()
+    "Drop single-part MIME headers from drafts written by other clients.
+  mu4e opens a draft as a raw file, and `message-encode-message-body'
+  uses an existing Content-Type header as the type of the generated
+  body, turning org-mime's multipart/alternative into
+  multipart/text/plain."
+    (when (eq mu4e-compose-type 'edit)
+      (save-restriction
+        (message-narrow-to-headers)
+        (let ((type (message-fetch-field "Content-Type"))
+              (cte (message-fetch-field "Content-Transfer-Encoding"))
+              (modified (buffer-modified-p)))
+          (when (and type
+                     (string-match-p "\\`text/plain\\b" type)
+                     (or (null cte) (member (downcase cte) '("7bit" "8bit"))))
+            (message-remove-header "Content-Type")
+            (message-remove-header "Content-Transfer-Encoding")
+            (set-buffer-modified-p modified))))))
+  (add-hook 'mu4e-compose-mode-hook #'ok/mu4e-strip-stale-mime-headers)
 #+end_src
 
 Usage:
