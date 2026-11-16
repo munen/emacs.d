@@ -474,8 +474,10 @@ default to not confuse beginners.
 ** Set $MANPATH, $PATH and exec-path from shell even when started from GUI helpers like =dmenu= or =Spotlight=
 
 #+BEGIN_SRC emacs-lisp
-;; Safeguard, so this only runs on Linux (or MacOS)
-(when (memq window-system '(mac ns x))
+;; Safeguard, so this only runs on Linux (or MacOS). A daemon has no
+;; window-system during init, and on macOS (launchd) it otherwise gets only
+;; the bare system PATH, without ~/.local/bin etc.
+(when (or (memq window-system '(mac ns x)) (daemonp))
   (exec-path-from-shell-initialize))
 #+END_SRC
 ** =ace-window=
