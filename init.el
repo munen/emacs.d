@@ -1,4 +1,4 @@
-;;; package --- Alain M. Lafon <alain@200ok.ch> Emacs config
+;;; package --- Alain M. Lafon <alain@200ok.ch> Emacs config  -*- lexical-binding: nil -*-
 ;;; Commentary:
 ;;   - All of the configuration is within `configuration.org`
 ;;; Code:

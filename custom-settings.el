@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: nil -*-
 ;; custom-set-variables was added by Custom.
 (custom-set-variables
  ;; custom-set-variables was added by Custom.

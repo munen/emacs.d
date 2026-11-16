@@ -1,4 +1,4 @@
-;;; package --- unofficial dict.cc elisp wrapper
+;;; package --- unofficial dict.cc elisp wrapper  -*- lexical-binding: nil -*-
 ;;; Commentary: This is a wrapper application around the dict.cc translation service
 ;;; Code:
 

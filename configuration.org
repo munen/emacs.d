@@ -53,7 +53,7 @@ Spread throughout this config, there are source blocks with
 tangled into one Emacs manifest, so that all things Emacs are well
 defined in just one config file.
 
-#+begin_src fundamental :tangle ~/.config/guix/manifests/emacs.scm :noweb yes
+#+begin_src fundamental :tangle (if (eq system-type 'gnu/linux) "~/.config/guix/manifests/emacs.scm" "no") :noweb yes
   (specifications->manifest
    '("emacs"
      <<packages>>
@@ -66,6 +66,11 @@ This adds the installed packages to the standard Emacs load path, so
 that =require= just works.
 
 #+BEGIN_SRC emacs-lisp
+;; -*- lexical-binding: nil -*-
+  ;; ^ Must stay the first line of the tangled configuration.el. Emacs 31
+  ;; warns about files without an explicit cookie; nil keeps the
+  ;; dynamic binding this config has always used.
+
   ;; Single directory
   ;; (add-to-list 'load-path "~/.guix-profile/share/emacs/site-lisp/mu4e")
 
@@ -131,6 +136,7 @@ down in this file, some are used with the default configuration.
 
   (defvar my-packages '(ace-window
                         ac-js2
+                        adaptive-wrap
                         ag
                         aidermacs
                         atomic-chrome
@@ -179,6 +185,7 @@ down in this file, some are used with the default configuration.
                         ledger-mode
                         magit-delta
                         markdown-mode
+                        mcp
                         org-ai
                         org-mime
                         package-lint
@@ -1266,6 +1273,30 @@ https://github.com/auto-complete/auto-complete
 Basic Configuration
 #+BEGIN_SRC emacs-lisp
   (ac-config-default)
+#+END_SRC
+
+Emacs 31 made obarrays (and therefore abbrev tables) an opaque type.
+=ac-source-abbrev= still collects abbrevs with =vconcat=, which signals
+=(wrong-type-argument sequencep #<obarray>)= from the idle timer on
+every keystroke. Redefine the source with =all-completions=, which
+works on obarrays in every Emacs version.
+
+#+BEGIN_SRC emacs-lisp
+  (with-eval-after-load 'auto-complete-config
+    (setq ac-source-abbrev
+          '((candidates
+             . (let (cands)
+                 (dolist (table (flatten-tree (list local-abbrev-table
+                                                    global-abbrev-table)))
+                   (when (obarrayp table)
+                     (setq cands
+                           (nconc (all-completions
+                                   "" table (lambda (sym) (symbol-value sym)))
+                                  cands))))
+                 cands))
+            (action . expand-abbrev)
+            (symbol . "a")
+            (cache))))
 #+END_SRC
 *** Tabs
 Set tab width to 2 for all buffers
@@ -5696,8 +5727,16 @@ Requires the =fonts-symbola= Debian package
 #+BEGIN_SRC emacs-lisp
 (when (eq system-type 'darwin)
   (set-frame-font "Menlo 14")
+  ; No title bar / traffic lights, but keep the native rounded corners
+  ; (undecorated-round comes from emacs-plus' round-undecorated-frame patch).
+  ; default-frame-alist also covers frames created by emacsclient -c.
+  (add-to-list 'default-frame-alist '(undecorated-round . t))
   ; Use Spotlight to search with M-x locate
-  (setq locate-command "mdfind"))
+  (setq locate-command "mdfind")
+  ;; SMTP passwords from KeePassXC instead of ~/.authinfo.gpg
+  ;; (from ~/dotfiles_macos, package "mail")
+  (let ((f "~/.config/emacs-macos/mail-keepassxc.el"))
+    (when (file-exists-p f) (load f))))
 #+END_SRC
 * Presentation / Beamer
 ** Set safe themes (to execute LISP code)
@@ -5908,7 +5947,7 @@ When evaluating the src-block above, it'll yield a table like:
 ** Export Org Mode TODO headers into estimation table
 #+BEGIN_SRC emacs-lisp
   (setq ok-export-org-estimations-file "~/src/200ok/admin/src/org-ok-estimations/org-ok-estimations.el")
-  (unless (file-exists-p ok-export-org-estimations-file)
+  (when (file-exists-p ok-export-org-estimations-file)
     (load-file ok-export-org-estimations-file))
 #+END_SRC
 ** General config
