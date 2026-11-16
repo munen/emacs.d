@@ -2710,10 +2710,10 @@ This will render the same time as above as:
                                   (concat org-directory "media.org")
                                   (concat org-directory "habits.org")
                                   (concat org-directory "shared_with_monika/shared_alain_and_monika.org")
-                                  "~/src/200ok/admin/ACTIVE_THINGS.org"
-                                  ;; "~/src/200ok/admin/THINGS.org"
-                                  (when (file-directory-p "~/src/200ok/admin/pm/")
-                                    (find-lisp-find-files "~/src/200ok/admin/pm/" "^pm.*\.org$"))))))
+                                  "~/Dropbox/src/200ok/admin/ACTIVE_THINGS.org"
+                                  ;; "~/Dropbox/src/200ok/admin/THINGS.org"
+                                  (when (file-directory-p "~/Dropbox/src/200ok/admin/pm/")
+                                    (find-lisp-find-files "~/Dropbox/src/200ok/admin/pm/" "^pm.*\.org$"))))))
 
   (set-org-agenda-files)
 
