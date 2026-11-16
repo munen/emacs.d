@@ -4747,10 +4747,27 @@ Without temp file: [mu4e] Found 500 matching messages; 0 hidden; search: 181.3 m
 
   http://three.sentenc.es/
 
+Desktop notifications work on Linux (=notify-send=) and macOS
+(=osascript=). Arguments are passed without a shell, so message text
+can't inject commands.
+
 #+BEGIN_SRC emacs-lisp
+(defun ok-desktop-notify (title &optional body urgent)
+  "Show a desktop notification with TITLE and optional BODY.
+With URGENT, use critical urgency where supported (notify-send)."
+  (cond ((executable-find "notify-send")
+         (apply #'call-process "notify-send" nil 0 nil
+                (append (when urgent '("-u" "critical"))
+                        (list title)
+                        (when body (list body)))))
+        ((eq system-type 'darwin)
+         (call-process "osascript" nil 0 nil "-e"
+                       (format "display notification %S with title %S"
+                               (or body "") title)))))
+
 (add-hook 'mu4e-compose-mode-hook
   (defun ok-mu4e-keep-to-three-sentences ()
-    (shell-command "notify-send -u critical 'Keep to three sentences.'")
+    (ok-desktop-notify "Keep to three sentences." nil t)
     (message "Keep to three sentences.")))
 #+END_SRC
 
@@ -5194,9 +5211,9 @@ machine irc.libera.chat login "munen" password SECRET_PASSWORD
 
 #+BEGIN_SRC emacs-lisp
   (setq erc-pals '("phi|" "branch14"))
-  ;; The quotes around %s are super important to prevent shell injection
-  (add-hook 'erc-text-matched-hook '(lambda(match-type nickuserhost msg)
-                                      (shell-command-to-string (format "notify-send erc '%s'" msg))))
+  ;; ok-desktop-notify passes msg without a shell (no injection).
+  (add-hook 'erc-text-matched-hook (lambda (_match-type _nickuserhost msg)
+                                     (ok-desktop-notify "erc" msg)))
 #+END_SRC
 
 * Modeline
