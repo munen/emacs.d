@@ -8,7 +8,9 @@
  '(cider-boot-parameters "cider repl -s wait")
  '(counsel-jq-command "yq")
  '(custom-safe-themes
-   '("c433c87bd4b64b8ba9890e8ed64597ea0f8eb0396f4c9a9e01bd20a04d15d358"
+   '("b3b26dbbd5d713b1202924785a588d3e2eba94f31e56f7063b3dd7036c24685b"
+     "9af2b1c0728d278281d87dc91ead7f5d9f2287b1ed66ec8941e97ab7a6ab73c0"
+     "c433c87bd4b64b8ba9890e8ed64597ea0f8eb0396f4c9a9e01bd20a04d15d358"
      "0fffa9669425ff140ff2ae8568c7719705ef33b7a927a0ba7c5e2ffcfac09b75"
      "df3e05e16180d77732ceab47a43f2fcdb099714c1c47e91e8089d2fcf5882ea3"
      "d09467d742f713443c7699a546c0300db1a75fed347e09e3f178ab2f3aa2c617"
@@ -80,10 +82,10 @@
               darktooth-theme dash diminish dired-narrow dumb-jump eat
               edit-indirect edit-server editorconfig elfeed
               elfeed-goodies elfeed-org emacs-everywhere enh-ruby-mode
-              erc-image evil evil-escape evil-leader evil-mc
-              evil-numbers evil-surround exec-path-from-shell
+              erc-image evil evil-escape evil-ghostel evil-leader
+              evil-mc evil-numbers evil-surround exec-path-from-shell
               fixme-mode flycheck flycheck-clj-kondo flycheck-flow
-              flycheck-package forge ggtags gnuplot gptel
+              flycheck-package forge ggtags ghostel gnuplot gptel
               graphviz-dot-mode handlebars-mode haskell-mode hcl-mode
               hl-todo ido-vertical-mode impatient-mode intero
               js-comint js2-mode js2-refactor json-mode keycast
