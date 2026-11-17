@@ -4613,7 +4613,6 @@ Without temp file: [mu4e] Found 500 matching messages; 0 hidden; search: 181.3 m
  (require 'mu4e-contrib)
  (setq mu4e-html2text-command 'mu4e-shr2text)
  ;;(setq mu4e-html2text-command "iconv -c -t utf-8 | pandoc -f html -t plain")
- (add-to-list 'mu4e-view-actions '("ViewInBrowser" . mu4e-action-view-in-browser) t)
 
  #+END_SRC
 
@@ -4731,7 +4730,7 @@ Without temp file: [mu4e] Found 500 matching messages; 0 hidden; search: 181.3 m
  This only adds =:bcc=.
 
 #+BEGIN_SRC emacs-lisp
-  (setq mu4e-view-fields '(:from :to :cc :bcc :subject :flags :date :maildir :mailing-list :tags :attachments :signature :decryption))
+  (setq mu4e-view-fields '(:from :to :cc :bcc :subject :flags :date :maildir :mailing-list :tags))
 #+END_SRC
 
 **** Close mu4e without asking
@@ -5752,6 +5751,10 @@ Requires the =fonts-symbola= Debian package
   (add-to-list 'default-frame-alist '(undecorated-round . t))
   ; Use Spotlight to search with M-x locate
   (setq locate-command "mdfind")
+  ;; Open links (and mu4e "view in browser") in Firefox
+  (setq browse-url-browser-function 'browse-url-generic
+        browse-url-generic-program "open"
+        browse-url-generic-args '("-a" "Firefox"))
   ;; SMTP passwords from KeePassXC instead of ~/.authinfo.gpg
   ;; (from ~/dotfiles_macos, package "mail")
   (let ((f "~/.config/emacs-macos/mail-keepassxc.el"))
