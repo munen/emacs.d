@@ -49,12 +49,6 @@
         "D465337B218A0216ECDC368E137099B38E1FC0E9")
        ("tpo@sourcepole.ch" "549A598550F2C6DB416F287C9EF854EDFC992520")))
      (CMS (sign) (encrypt))))
- '(org-agenda-files
-   '("/home/munen/Dropbox/org/things.org"
-     "/home/munen/Dropbox/org/reference.org"
-     "/home/munen/Dropbox/org/media.org"
-     "/home/munen/Dropbox/org/shared_with_monika/shared_alain_and_monika.org"
-     "/home/munen/src/200ok/admin/THINGS.org"))
  '(org-download-heading-lvl nil)
  '(org-download-image-dir "./images")
  '(org-habit-graph-column 90)
