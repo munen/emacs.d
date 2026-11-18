@@ -462,6 +462,15 @@ default to not confuse beginners.
 #+BEGIN_SRC emacs-lisp
 (scroll-bar-mode -1)
 #+END_SRC
+
+** Resize frames pixelwise
+Let frames take any pixel size instead of rounding to whole character
+cells. Otherwise tiling window managers (AeroSpace, i3) leave a small
+gap below Emacs frames.
+
+#+BEGIN_SRC emacs-lisp
+(setq frame-resize-pixelwise t)
+#+END_SRC
 ** Remember the cursor position of files when reopening them
 #+BEGIN_SRC emacs-lisp
   (setq save-place-file "~/.emacs.d/saveplace")
