@@ -2654,8 +2654,21 @@ can hook into the Org mode clocking mechanism. When
 already running. The Pomodoro is not stopped on clocking out, because
 clocking in should still work on new tasks without resetting it.
 
+On macOS, the hosts in =ok-pomodoro-blocked-hosts= are unreachable
+while a Pomodoro runs. Starting a Pomodoro starts a [[https://selfcontrolapp.com/][SelfControl]] block
+(=brew install --cask selfcontrol=) that ends with the work phase, so
+breaks are free. SelfControl also blocks common subdomains such as
+=www=. It cannot end a block early: a cancelled Pomodoro keeps the
+hosts blocked until its planned end. Without SelfControl (e.g. on
+Linux), nothing is blocked.
+
 #+BEGIN_SRC emacs-lisp
   (load "~/.emacs.d/ok-pomodoro")
+  (setq ok-pomodoro-blocked-hosts
+        '("news.ycombinator.com"
+          "reddit.com"
+          "youtube.com"
+          "instagram.com"))
 #+END_SRC
 ** Keyword sets
 

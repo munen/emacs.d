@@ -25,12 +25,19 @@
 ;; A Pomodoro running when Emacs exits is logged as interrupted.  If
 ;; Emacs did not exit cleanly, the next start closes the leftover entry
 ;; as interrupted, without counting its time.
+;;
+;; On macOS, the hosts in `ok-pomodoro-blocked-hosts' are blocked with
+;; SelfControl (https://selfcontrolapp.com/) for the length of each
+;; Pomodoro.  The block ends with the work phase, so breaks are free.
+;; SelfControl cannot end a block early: a cancelled Pomodoro keeps the
+;; hosts blocked until its planned end.
 
 ;;; Code:
 
 (require 'org)
 (require 'org-clock)
 (require 'notifications)
+(require 'xml)
 
 (defgroup ok-pomodoro nil
   "Simple Pomodoro technique built on top of Org mode."
@@ -59,6 +66,17 @@ A short break that runs a little long keeps the cycle going."
 (defcustom ok-pomodoro-speak-command "espeak"
   "Program used to speak notifications aloud, or nil for silence."
   :type '(choice string (const :tag "Silent" nil)))
+
+(defcustom ok-pomodoro-blocked-hosts nil
+  "Hosts blocked during a Pomodoro, e.g. (\"reddit.com\").
+SelfControl also blocks common subdomains such as www.  Nothing is
+blocked when this is nil or `ok-pomodoro-selfcontrol-cli' is missing."
+  :type '(repeat string))
+
+(defcustom ok-pomodoro-selfcontrol-cli
+  "/Applications/SelfControl.app/Contents/MacOS/selfcontrol-cli"
+  "Path to the SelfControl command line tool."
+  :type 'file)
 
 (defvar ok-pomodoro-current nil
   "The current Pomodoro task.")
@@ -133,6 +151,53 @@ A short break that runs a little long keeps the cycle going."
     (cancel-timer ok-pomodoro--timer))
   (setq ok-pomodoro--timer nil
         ok-pomodoro--phase nil))
+
+;;; Site blocking
+
+(defun ok-pomodoro--write-blocklist (hosts)
+  "Write HOSTS to a new SelfControl blocklist file and return its name."
+  (let ((file (make-temp-file "ok-pomodoro-" nil ".selfcontrol")))
+    (with-temp-file file
+      (insert "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+              "<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\""
+              " \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">\n"
+              "<plist version=\"1.0\">\n<dict>\n"
+              "  <key>HostBlacklist</key>\n  <array>\n")
+      (dolist (host hosts)
+        (insert "    <string>" (xml-escape-string host) "</string>\n"))
+      (insert "  </array>\n"
+              "  <key>BlockAsWhitelist</key>\n  <false/>\n"
+              "</dict>\n</plist>\n"))
+    file))
+
+(defun ok-pomodoro--block-sites (end)
+  "Block `ok-pomodoro-blocked-hosts' with SelfControl until time END.
+Runs asynchronously and reports failures in the echo area."
+  (when (and ok-pomodoro-blocked-hosts
+             (file-executable-p ok-pomodoro-selfcontrol-cli))
+    (let ((file (ok-pomodoro--write-blocklist ok-pomodoro-blocked-hosts))
+          (buffer (generate-new-buffer " *ok-pomodoro-selfcontrol*")))
+      (make-process
+       :name "ok-pomodoro-selfcontrol"
+       :buffer buffer
+       :command (list ok-pomodoro-selfcontrol-cli "start"
+                      "--blocklist" file
+                      "--enddate" (format-time-string "%FT%TZ" end t))
+       :connection-type 'pipe
+       :sentinel
+       (lambda (process _event)
+         (unless (process-live-p process)
+           (let ((output (with-current-buffer buffer (buffer-string))))
+             (cond
+              ((zerop (process-exit-status process)))
+              ((string-match-p "already running" output)
+               (message "Sites are still blocked by an earlier block."))
+              (t
+               (message "ok-pomodoro: SelfControl failed (exit %d): %s"
+                        (process-exit-status process)
+                        (car (last (split-string output "\n" t)))))))
+           (kill-buffer buffer)
+           (delete-file file)))))))
 
 ;;; Log file
 
@@ -307,6 +372,7 @@ BREAK-SECONDS is the break just taken, or nil."
   (setq ok-pomodoro--phase 'work)
   (ok-pomodoro--run-timer (car (ok-pomodoro--pair)) #'ok-pomodoro--work-done)
   (ok-pomodoro--log-start ok-pomodoro-current ok-pomodoro--start-time)
+  (ok-pomodoro--block-sites ok-pomodoro--end-time)
   (message "Pomodoro started (%s min)." (car (ok-pomodoro--pair))))
 
 (defun ok-pomodoro-set-todo ()
