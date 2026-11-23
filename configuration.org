@@ -2625,6 +2625,7 @@ mode, in [[file:ok-pomodoro.el][ok-pomodoro.el]]. These are the commands:
 - =ok-pomodoro-start=: Start the next Pomodoro.
 - =ok-pomodoro-set-todo=: Ask for a task, then start a Pomodoro on it.
   Empty input continues the current or last task.
+- =ok-pomodoro-rename=: Rename the running Pomodoro, also in the log.
 - =ok-pomodoro-break=: Take the break of the current cycle step.
 - =ok-pomodoro-cancel=: Cancel the running Pomodoro or break.
 - =ok-pomodoro-reset=: Restart the cycle at its first pair.

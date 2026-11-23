@@ -11,6 +11,7 @@
 ;;
 ;; - `ok-pomodoro-start': Start the next Pomodoro.
 ;; - `ok-pomodoro-set-todo': Ask for a task, then start a Pomodoro on it.
+;; - `ok-pomodoro-rename': Rename the running Pomodoro.
 ;; - `ok-pomodoro-break': Take the break of the current pair.
 ;; - `ok-pomodoro-cancel': Cancel the running Pomodoro or break.
 ;; - `ok-pomodoro-reset': Restart the cycle at its first pair.
@@ -282,6 +283,20 @@ If the running entry cannot be found, log a complete entry instead."
       (org-entry-put nil "OUTCOME" (symbol-name outcome))
       (ok-pomodoro--refresh-day day))))
 
+(defun ok-pomodoro--log-rename (start task)
+  "Rename the running log entry started at START to TASK."
+  (when (file-exists-p ok-pomodoro-file)
+    (ok-pomodoro--with-log
+      (goto-char (point-min))
+      (when (re-search-forward
+             (concat "^[ \t]*CLOCK: "
+                     (regexp-quote (ok-pomodoro--timestamp start))
+                     "[ \t]*$")
+             nil t)
+        (org-back-to-heading t)
+        (org-edit-headline task)
+        (ok-pomodoro--refresh-day (ok-pomodoro--today start))))))
+
 (defun ok-pomodoro--record-break ()
   "Log the break since today's last Pomodoro and return its seconds.
 Return nil when there was no Pomodoro earlier today."
@@ -383,6 +398,23 @@ Empty input continues the current or last task."
          (input (read-string (format-prompt "Next Pomodoro" default)
                              nil 'ok-pomodoro--task-history default)))
     (ok-pomodoro-start (or (ok-pomodoro--clean-task input) default))))
+
+(defun ok-pomodoro-rename (task)
+  "Rename the running Pomodoro to TASK, also in its log entry."
+  (interactive
+   (progn
+     (unless (eq ok-pomodoro--phase 'work)
+       (user-error "No Pomodoro is running"))
+     (list (read-string "Rename Pomodoro: " ok-pomodoro-current
+                        'ok-pomodoro--task-history))))
+  (unless (eq ok-pomodoro--phase 'work)
+    (user-error "No Pomodoro is running"))
+  (let ((task (or (ok-pomodoro--clean-task task)
+                  (user-error "Task must not be empty"))))
+    (setq ok-pomodoro-current task
+          ok-pomodoro--last-task task)
+    (ok-pomodoro--log-rename ok-pomodoro--start-time task)
+    (message "Pomodoro renamed to: %s" task)))
 
 (defun ok-pomodoro-break ()
   "Take the break of the current pair in `ok-pomodoro-pattern'."
