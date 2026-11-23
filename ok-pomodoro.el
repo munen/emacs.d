@@ -18,9 +18,9 @@
 ;;
 ;; Breaks are not enforced.  The break actually taken (the gap
 ;; between the end of a Pomodoro and the start of the next one) is
-;; logged as the BREAK property of the earlier Pomodoro.  A break at
-;; least as long as the longest break in the pattern, or a new day,
-;; restarts the cycle.
+;; logged as the BREAK property of the earlier Pomodoro.  A break of
+;; at least `ok-pomodoro-reset-after' minutes, or a new day, restarts
+;; the cycle.
 ;;
 ;; A Pomodoro running when Emacs exits is logged as interrupted.  If
 ;; Emacs did not exit cleanly, the next start closes the leftover entry
@@ -41,6 +41,11 @@
   "Cycle of (WORK . BREAK) lengths in minutes.
 After the last pair, the cycle starts again from the first."
   :type '(repeat (cons (number :tag "Work") (number :tag "Break"))))
+
+(defcustom ok-pomodoro-reset-after 30
+  "Break length in minutes after which the cycle restarts.
+A short break that runs a little long keeps the cycle going."
+  :type 'number)
 
 (defcustom ok-pomodoro-file
   (expand-file-name "pomodoro.org" org-directory)
@@ -274,16 +279,15 @@ entries may belong to a Pomodoro on another machine and are kept."
 (defun ok-pomodoro--advance-cycle (break-seconds)
   "Move to the pair for the next Pomodoro.
 BREAK-SECONDS is the break just taken, or nil."
-  (let ((longest-break (apply #'max (mapcar #'cdr ok-pomodoro-pattern))))
-    (cond
-     ((or (not (equal ok-pomodoro--day (ok-pomodoro--today)))
-          (and break-seconds (>= break-seconds (* 60 longest-break))))
-      (setq ok-pomodoro--position 0))
-     (ok-pomodoro--advance
-      (setq ok-pomodoro--position
-            (mod (1+ ok-pomodoro--position) (length ok-pomodoro-pattern)))))
-    (setq ok-pomodoro--advance nil
-          ok-pomodoro--day (ok-pomodoro--today))))
+  (cond
+   ((or (not (equal ok-pomodoro--day (ok-pomodoro--today)))
+        (and break-seconds (>= break-seconds (* 60 ok-pomodoro-reset-after))))
+    (setq ok-pomodoro--position 0))
+   (ok-pomodoro--advance
+    (setq ok-pomodoro--position
+          (mod (1+ ok-pomodoro--position) (length ok-pomodoro-pattern)))))
+  (setq ok-pomodoro--advance nil
+        ok-pomodoro--day (ok-pomodoro--today)))
 
 ;;; Commands
 

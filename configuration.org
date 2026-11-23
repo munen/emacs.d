@@ -2633,8 +2633,8 @@ mode, in [[file:ok-pomodoro.el][ok-pomodoro.el]]. These are the commands:
 Work and break lengths follow =ok-pomodoro-pattern=, a cycle of
 =(WORK . BREAK)= pairs in minutes. The default is the classic
 technique: three times 25/5, then 25/15. Cancelled Pomodoros don't
-advance the cycle. A new day, or a break at least as long as the
-longest break in the pattern, restarts it.
+advance the cycle. A new day, or a break of at least
+=ok-pomodoro-reset-after= minutes (default 30), restarts it.
 
 Breaks are not enforced. Every Pomodoro is logged as a heading with a
 =CLOCK= line in =ok-pomodoro-file=, grouped by day with a clocktable.
