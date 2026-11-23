@@ -2668,7 +2668,8 @@ Linux), nothing is blocked.
         '("news.ycombinator.com"
           "reddit.com"
           "youtube.com"
-          "instagram.com"))
+          "instagram.com"
+          "lobste.rs"))
 #+END_SRC
 ** Keyword sets
 
