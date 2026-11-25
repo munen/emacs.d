@@ -4110,6 +4110,15 @@ When using =evil-mode= and =pdf-tools= and looking at a zoomed PDF, it
 will blink, because the cursor blinks. This configuration disables
 this whilst retaining the blinking cursor in other modes.
 
+Activate =pdf-tools= on every OS. =pdf-loader-install= defers loading
+until the first PDF is opened and (re)builds the =epdfinfo= server when
+it is missing, e.g. after a package upgrade. On macOS, the build needs
+=brew install poppler automake=.
+
+#+BEGIN_SRC emacs-lisp
+(pdf-loader-install t)
+#+END_SRC
+
 #+BEGIN_SRC emacs-lisp
 (evil-set-initial-state 'pdf-view-mode 'emacs)
 (add-hook 'pdf-view-mode-hook
@@ -5731,9 +5740,7 @@ called =fonts-firacode=, in Guix it's =font-fira-code=.
     (setq browse-url-browser-function 'browse-url-generic
           browse-url-generic-program "firefox"
           browse-url-new-window-flag t)
-    (menu-bar-mode -1)
-    ;; enable pdf-tools
-    (pdf-tools-install))
+    (menu-bar-mode -1))
 #+END_SRC
 *** Guix packages
 
