@@ -1063,6 +1063,31 @@ https://github.com/tecosaur/emacs-everywhere/
   "xwininfo"
 #+end_src
 
+On macOS, the package compiles its AppleScript helpers with
+=osacompile -r scpt:128=, which stores the script in the resource
+fork and leaves the file empty. Current macOS no longer runs those
+files ("script error -1758"), so emacs-everywhere cannot tell which
+app to return to, and the text is never pasted back. Compile them as
+plain data-fork scripts instead, in the package directory.
+
+#+begin_src emacs-lisp
+  (when (eq system-type 'darwin)
+    (with-eval-after-load 'emacs-everywhere
+      (defvar munen/emacs-everywhere-scripts-compiled nil
+        "Non-nil once the AppleScript helpers were compiled this session.")
+      (defun emacs-everywhere--ensure-oscascript-compiled (&optional force)
+        "Compile the AppleScript helpers as data-fork scripts (macOS).
+  Deletes old files first: a leftover resource fork takes precedence
+  over the data fork and keeps failing."
+        (when (or force (not munen/emacs-everywhere-scripts-compiled))
+          (let ((default-directory emacs-everywhere--dir))
+            (dolist (name '("app-name" "window-geometry" "window-title"))
+              (when (file-exists-p name) (delete-file name))
+              (call-process "osacompile" nil nil nil
+                            "-o" name (concat name ".applescript"))))
+          (setq munen/emacs-everywhere-scripts-compiled t)))))
+#+end_src
+
 ** =gnuplot=
 https://github.com/emacs-gnuplot/gnuplot
 
