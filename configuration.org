@@ -4956,6 +4956,27 @@ org-mime can be used to send HTML email using Org-mode HTML export.
             (message-remove-header "Content-Transfer-Encoding")
             (set-buffer-modified-p modified))))))
   (add-hook 'mu4e-compose-mode-hook #'ok/mu4e-strip-stale-mime-headers)
+
+  (defun ok/mu4e-strip-agent-draft-headers ()
+    "Drop marker headers of agent-written drafts when editing them.
+  The imap-mail agent tool marks its drafts with
+  `X-Uniform-Type-Identifier: com.apple.mail-draft' (so Apple Mail
+  removes them from Drafts on send) and an `X-Mailer: imap-mail
+  (agent draft ...)' header.  Apple Mail drops the first on send,
+  mu4e does not, so remove both before the mail goes out."
+    (when (eq mu4e-compose-type 'edit)
+      (save-restriction
+        (message-narrow-to-headers)
+        (let ((uti (message-fetch-field "X-Uniform-Type-Identifier"))
+              (mailer (message-fetch-field "X-Mailer"))
+              (modified (buffer-modified-p)))
+          (when (and uti (string= (string-trim uti) "com.apple.mail-draft"))
+            (message-remove-header "X-Uniform-Type-Identifier"))
+          (when (and mailer
+                     (string-prefix-p "imap-mail (agent draft" (string-trim mailer)))
+            (message-remove-header "X-Mailer"))
+          (set-buffer-modified-p modified)))))
+  (add-hook 'mu4e-compose-mode-hook #'ok/mu4e-strip-agent-draft-headers)
 #+end_src
 
 Usage:
